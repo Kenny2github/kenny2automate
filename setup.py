@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
 	name='kenny2automate',
-	version='0.0',
+	version='1.0',
 	description='A Python Discord bot',
 	url='https://github.com/Kenny2github/kenny2automate',
 	author='Kenny2github',
