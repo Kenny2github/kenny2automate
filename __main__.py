@@ -1,4 +1,6 @@
+import sys
 import re
+import os
 import logging
 import random
 import json
@@ -9,7 +11,9 @@ from discord.ext.commands import Bot
 from discord.ext.commands import command
 from discord.ext.commands import bot_has_permissions
 from discord.ext import commands as c
-from aiohttp import ClientSession
+import aiohttp
+
+DGOWNERID = 329097918181146625
 
 logfmt = logging.Formatter(
 	fmt='{asctime} {invoker}: {message}',
@@ -17,16 +21,23 @@ logfmt = logging.Formatter(
 	style='{'
 )
 
-class CustomHandler(logging.Handler):
-	def emit(self, record):
-		print(self.format(record))
+class LoggerWriter(object):
+	def __init__(self, level):
+		self.level = level
+	def write(self, message):
+		if message.strip():
+			self.level(message, extra={'invoker': '(logger)'})
+	def flush(self):
+		pass
 
-handler = CustomHandler()
+handler = logging.FileHandler('runbot.log', 'w')
 handler.setFormatter(logfmt)
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.INFO if len(sys.argv) < 2 else logging.DEBUG)
 logger.addHandler(handler)
+sys.stderr = LoggerWriter(logger.error)
+sys.stdout = LoggerWriter(logger.debug)
 
 client = Bot(description="A testing Discord bot.", command_prefix=";")
 
@@ -38,7 +49,7 @@ class Regexes(object):
 	@command()
 	async def search(self, ctx, pattern, string, flags=None):
 		"""Make a Python-flavored regex search! All groups are shown."""
-		logger.info('Regexes.search: \"' + '\" \"'.join((pattern, string, flags)) + '\"', extra={'invoker': ctx.message.author.name})
+		logger.info('Regexes.search: \"' + '\" \"'.join(map(str, (pattern, string, flags))) + '\"', extra={'invoker': ctx.message.author.name})
 		if flags is not None:
 			exp = '(?' + flags.lower().replace('l', 'L') + ')(?:' + pattern + ')'
 		else:
@@ -61,7 +72,7 @@ class Regexes(object):
 	@command()
 	async def findall(self, ctx, pattern, string, flags=None):
 		"""Use a Python-flavor regex to find all occurences of a pattern!"""
-		logger.info('Regexes.findall: \"' + '\" \"'.join((pattern, string, flags)) + '\"', extra={'invoker': ctx.message.author.name})
+		logger.info('Regexes.findall: \"' + '\" \"'.join(map(str, (pattern, string, flags))) + '\"', extra={'invoker': ctx.message.author.name})
 		if flags is not None:
 			exp = '(?' + flags.lower().replace('l', 'L') + ')(?:' + pattern + ')'
 		else:
@@ -151,16 +162,18 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 	channels_occupied = set()
 
 	@command()
-	async def hangman(self, ctx):
-		"""Yes, it's hangman!
+	async def crudehangman(self, ctx):
+		"""Hangman for less permissions
 
 		Use this first in the server, to start the game in that channel;
 		Next, send the word in a DM with the bot, to set it.
 		Once that's been done, guess a letter by sending it.
 		"""
-		logger.info('Games.hangman', extra={'invoker': ctx.message.author.name})
+		logger.info('Games.crudehangman', extra={'invoker': ctx.message.author.name})
 		if ctx.channel in self.channels_occupied:
-			return await ctx.send("There is already a game going on in this channel!")
+			await ctx.send("There is already a game going on in this channel!")
+			if ctx.author.id != DGOWNERID:
+				return
 		self.channels_occupied.add(ctx.channel)
 		await ctx.send("Awaiting DM with word...")
 		WORD = await ctx.bot.wait_for('message',
@@ -197,16 +210,19 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 
 	@command()
 	@bot_has_permissions(manage_messages=True)
-	async def localhangman(self, ctx):
-		"""Hangman completely within one channel!
+	async def hangman(self, ctx):
+		"""Hangman!
 
 		Use this in the channel to start the game there,
-		send the word to set it,
+		DM the bot the word to set it
 		then send letters to guess them.
+		Requires the "Manage Messages" permission.
 		"""
-		logger.info('Games.localhangman', extra={'invoker': ctx.message.author.name})
+		logger.info('Games.hangman', extra={'invoker': ctx.message.author.name})
 		if ctx.channel in self.channels_occupied:
 			await ctx.send('There is already a game going on in this channel!')
+			if ctx.author.id != DGOWNERID:
+				return
 		self.channels_occupied.add(ctx.channel)
 		await ctx.send('Awaiting DM with word...')
 		msg = await ctx.bot.wait_for('message',
@@ -243,15 +259,13 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 			await ctx.send('You lost! The word was \"{}\".'.format(WORD))
 		self.channels_occupied.remove(ctx.channel)
 
-	@localhangman.error
-	async def on_localhangman_err(self, ctx, error):
-		logger.error('Games.localhangman failed: ' + str(error), extra={'invoker': ctx.message.author.name})
+	@hangman.error
+	async def on_hangman_err(self, ctx, error):
+		logger.error('Games.hangman failed: ' + str(error), extra={'invoker': ctx.message.author.name})
 		if isinstance(error, c.BotMissingPermissions):
 			await ctx.send(str(error))
 
 client.add_cog(Games(client))
-
-SESH = None
 
 class Wiki(object):
 	def __init__(self, bot):
@@ -260,8 +274,10 @@ class Wiki(object):
 	@staticmethod
 	async def req(params):
 		params['format'] = 'json'
-		async with SESH.get('https://en.scratch-wiki.info/w/api.php', params=params) as resp:
-			return await resp.json()
+		resp = await aiohttp.get('https://en.scratch-wiki.info/w/api.php', params=params)
+		cont = await resp.json()
+		resp.close()
+		return cont
 
 	@command()
 	async def page(self, ctx, *, title):
@@ -276,21 +292,23 @@ class Wiki(object):
 					'rvlimit': '1',
 					'rvprop': 'content',
 				})
-			except Exception:
+			except Exception as exc:
+				logger.error('Fetching page content failed: ' + str(exc), extra={'invoker': 'Wiki.page'})
 				await ctx.send('Fetching content failed. The page is likely too large. Sorry!')
 				return
 			content = list(content['query']['pages'].values())[0]['revisions'][0]['*']
 			content = content.splitlines()
-			contents = ['```\n']
+			contents = ['```html\n']
 			i = 0
 			for line in content:
-				contents[i] += line + '\n'
-				if len(contents[i]) + 3 > 2000:
-					contents.append('```')
-					contents[i], contents[i+1] = contents[i].rsplit('\n', 1)
+				if len(contents[i]) + 11 > 2000:
+					contents.append('```html\n')
+					temp = contents[i][:1997].rsplit('\n', 1)
+					contents[i], contents[i+1] = temp[0], temp[1] + contents[i][1997:]
 					contents[i] += '```'
 					i += 1
-					contents[i] = '```\n' + contents[i]
+					contents[i] = '```html\n' + contents[i]
+				contents[i] += line + '\n'
 			contents[-1] += '```'
 			for msg in contents:
 				await ctx.send(msg)
@@ -357,7 +375,7 @@ class Wiki(object):
 			'rnnamespace': '0'
 		})
 		title = rn['query']['random'][0]['title']
-		title = title.replace(' ', '_').capitalize()
+		title = title.replace(' ', '_')
 		title = quote(title, safe='/:')
 		await ctx.send('https://en.scratch-wiki.info/wiki/' + title)
 
@@ -369,11 +387,12 @@ class Scratch(object):
 
 	@staticmethod
 	async def req(url):
-		async with SESH.get(url) as resp:
-			if resp.status >= 400:
-				return None
-			else:
-				return await resp.text()
+		resp = await aiohttp.get(url)
+		result = None
+		if resp.status < 400:
+			result = await resp.text()
+		resp.close()
+		return result
 
 	@command()
 	async def randomproject(self, ctx):
@@ -393,10 +412,10 @@ class Scratch(object):
 		async with ctx.channel.typing():
 			username = name
 			if username is None:
-				username = ctx.message.author.name
+				username = getattr(ctx.message.author, 'nick', '_')
 			resp = await self.req('https://api.scratch.mit.edu/users/' + username + '/messages/count')
 			if resp is None and name is None:
-				username = getattr(ctx.message.author, 'nick', '_')
+				username = ctx.message.author.name
 				resp = await self.req('https://api.scratch.mit.edu/users/' + username + '/messages/count')
 			logger.info('Scratch.messagecount: ' + username, extra={'invoker': ctx.message.author.name})
 			if resp is None:
@@ -423,9 +442,7 @@ client.add_cog(Scratch(client))
 
 @client.event
 async def on_ready(*_, **__):
-	global SESH
 	logger.info('Ready!', extra={'invoker': '(core)'})
-	SESH = ClientSession()
 	await client.change_presence(game=d.Game(name=';help'))
 
 @client.command()
@@ -503,9 +520,20 @@ async def on_votetoban_err(ctx, error):
 	else:
 		raise error
 
+WATCHED_FILES_MTIMES = [(f, os.path.getmtime(f)) for f in ('/home/pi/login.txt', __file__)]
+
+async def update_if_changed():
+	await client.wait_until_ready()
+	while 1:
+		for f, mtime in WATCHED_FILES_MTIMES:
+			if os.path.getmtime(f) > mtime:
+				await client.close()
+		await a.sleep(1)
+
 print('Defined stuff')
 
-with open('login.txt') as f:
+with open('/home/pi/login.txt') as f:
 	token = f.read().strip()
 
+client.loop.create_task(update_if_changed())
 client.run(token)
