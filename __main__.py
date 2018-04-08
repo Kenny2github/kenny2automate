@@ -130,7 +130,7 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 			await ctx.send("What's yer guess, matey?")
 			result = ''
 			guess = await ctx.bot.wait_for('message',
-				check=lambda m: m.channel == ctx.channel and re.match('[0-9]+', m.content))
+				check=lambda m: m.channel == ctx.channel and re.match('^[0-9]+$', m.content))
 			guess = int(guess.content)
 			if guess == secret:
 				break
@@ -264,6 +264,159 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 		logger.error('Games.hangman failed: ' + str(error), extra={'invoker': ctx.message.author.name})
 		if isinstance(error, c.BotMissingPermissions):
 			await ctx.send(str(error))
+
+	@command()
+	@bot_has_permissions(manage_messages=True, add_reactions=True, read_message_history=True)
+	async def connect4(self, ctx):
+		logger.info('Games.connect4', extra={'invoker': ctx.message.author.name})
+		BLUE, RED, BLACK, SHAKE, NEIN = '🔵 🔴 ⚫ 🤝 ❌'.split(' ')
+		REGA, REGB, REGC, REGD, REGE, REGF, REGG = REGS = '🇦 🇧 🇨 🇩 🇪 🇫 🇬'.split(' ')
+		msg = await ctx.send(embed=d.Embed(
+			title='Playing Connect 4',
+			description='Player 1: {}\nReact with {} to join!'.format(ctx.author.nick or ctx.author.name, SHAKE)
+		))
+		await msg.add_reaction(SHAKE)
+		player1 = ctx.author
+		reaction, user = await self.bot.wait_for(
+			'reaction_add',
+			check=lambda r, u: \
+				r.emoji == SHAKE \
+				and r.message.id == msg.id \
+				and u.id != self.bot.user.id \
+				and r.message.channel == ctx.channel
+		)
+		if user.id == ctx.author.id:
+			await ctx.send('Game cancelled by starter.')
+			return
+		player2 = user
+		del reaction, user, msg
+		board = []
+		for i in range(7):
+			board.append([])
+			for j in range(7):
+				board[i].append(BLACK)
+		redwon, bluewon = False, False
+		def checkwin(board, tile):
+			BH = len(board[0])
+			BW = len(board)
+			#check -
+			for y in range(BH):
+				for x in range(BW - 3):
+					if board[x][y] == tile and board[x+1][y] == tile and board[x+2][y] == tile and board[x+3][y] == tile:
+						return True
+			#check |
+			for x in range(BW):
+				for y in range(BH - 3):
+					if board[x][y] == tile and board[x][y+1] == tile and board[x][y+2] == tile and board[x][y+3] == tile:
+						return True
+			#check \
+			for x in range(BW - 3):
+				for y in range(3, BH):
+					if board[x][y] == tile and board[x+1][y-1] == tile and board[x+2][y-2] == tile and board[x+3][y-3] == tile:
+						return True
+			#check /
+			for x in range(BW - 3):
+				for y in range(BH - 3):
+					if board[x][y] == tile and board[x+1][y+1] == tile and board[x+2][y+2] == tile and board[x+3][y+3] == tile:
+						return True
+			#all false
+			return False
+
+		def constructboard(board, players, whose):
+			boardmsgcont = RED + ' = ' + (players[0].nick or players[0].name) + '\n'
+			boardmsgcont += BLUE + ' = ' + (players[1].nick or players[1].name) + '\n'
+			boardmsgcont += " ".join(REGS) + '\n'
+			for row in zip(*board):
+				for column in row:
+					boardmsgcont += column + ' '
+				boardmsgcont += '\n'
+			boardmsgcont += "It is currently {}'s turn".format(players[whose].nick or players[whose].name)
+			return boardmsgcont
+
+		boardmsg = await ctx.send('_ _')
+		reaction, user = None, None
+
+		while not (redwon or bluewon):
+			boardmsgcont = constructboard(board, (player1, player2), 0)
+			await boardmsg.edit(embed=d.Embed(
+				title="Board",
+				description=boardmsgcont
+			))
+			if reaction is None:
+				await boardmsg.clear_reactions()
+				for reg in REGS:
+					await boardmsg.add_reaction(reg)
+			else:
+				await boardmsg.remove_reaction(reaction, user)
+			reaction, user = await self.bot.wait_for(
+				'reaction_add',
+				check=lambda r, u: \
+					r.message.id == boardmsg.id \
+					and str(r) in REGS \
+					and str(r) != NEIN \
+					and u.id == player1.id
+			)
+			idx = REGS.index(str(reaction))
+			hit = False
+			for rown in range(len(board[idx])):
+				if board[idx][rown] != BLACK:
+					board[idx][rown-1] = RED
+					hit = True
+					break
+			if not hit:
+				board[idx][-1] = RED
+			if board[idx].count(BLACK) == 0:
+				REGS[idx] = NEIN
+			redwon, bluewon = checkwin(board, RED), checkwin(board, BLUE)
+			if redwon or bluewon:
+				break
+			boardmsgcont = constructboard(board, (player1, player2), 1)
+			await boardmsg.edit(embed=d.Embed(
+				title="Board",
+				description=boardmsgcont
+			))
+			await boardmsg.remove_reaction(reaction, user)
+			reaction, user = await self.bot.wait_for(
+				'reaction_add',
+				check=lambda r, u: \
+					r.message.id == boardmsg.id \
+					and str(r) in REGS \
+					and str(r) != NEIN \
+					and u.id == player2.id
+			)
+			idx = REGS.index(str(reaction))
+			hit = False
+			for rown in range(len(board[idx])):
+				if board[idx][rown] != BLACK:
+					board[idx][rown-1] = BLUE
+					hit = True
+					break
+			if not hit:
+				board[idx][-1] = BLUE
+			if board[idx].count(BLACK) == 0:
+				REGS[idx] = NEIN
+			redwon, bluewon = checkwin(board, RED), checkwin(board, BLUE)
+		boardmsgcont = constructboard(board, (player1, player2), int(bluewon))
+		await boardmsg.edit(embed=d.Embed(
+			title="Board",
+			description=boardmsgcont,
+		))
+		await ctx.send(embed=d.Embed(
+			title="Game Over!",
+			description='''
+The game is over!
+Winner: {} ({})
+Loser: {} ({})
+'''.format(RED if redwon else BLUE, (player1.nick or player1.name) if redwon else (player2.nick or player2.name),
+RED if bluewon else BLUE, (player1.nick or player1.name) if bluewon else (player2.nick or player2.name)),
+			color=0xff0000 if redwon else 0x55acee
+		))
+
+#	@connect4.error
+#	async def on_connect4_err(self, ctx, error):
+#		logger.error('Games.connect4 failed: ' + str(error), extra={'invoker': ctx.message.author.name})
+#		if isinstance(error, c.BotMissingPermissions):
+#			await ctx.send(str(error))
 
 client.add_cog(Games(client))
 
@@ -474,7 +627,7 @@ async def votetoban(ctx, *, user: d.Member):
 	if ctx.guild.id != DGBANSERVERID:
 		return
 	for member in ctx.guild.members:
-		if (not str(member.status) == 'offline') \
+		if (str(member.status) == 'online') \
 				and ctx.channel.permissions_for(member).administrator:
 			await ctx.send(member.mention + ', someone requests for ' + user.mention + ' to be banned!')
 			return
@@ -487,7 +640,7 @@ async def votetoban(ctx, *, user: d.Member):
 		await ctx.bot.wait_for('member_update',
 			check=lambda o, m: \
 				ctx.channel.permissions_for(m).administrator \
-				and not str(m.status) == 'offline',
+				and str(m.status) == 'online',
 			timeout=180.0
 		)
 		await msg.delete()
