@@ -209,7 +209,7 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 		self.channels_occupied.remove(ctx.channel)
 
 	@command()
-	@bot_has_permissions(manage_messages=True)
+	@bot_has_permissions(manage_messages=True, add_reactions=True, read_message_history=True)
 	async def hangman(self, ctx):
 		"""Hangman!
 
@@ -218,12 +218,10 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 		then send letters to guess them.
 		Requires the "Manage Messages" permission.
 		"""
+		REGS = '🇦 🇧 🇨 🇩 🇪 🇫 🇬 🇭 🇮 🇯 🇰 🇱 🇲 🇳 🇴 🇵 🇶 🇷 🇸 🇹 🇺 🇻 🇼 🇽 🇾 🇿'.split(' ')
+		REGS1, REGS2 = REGS[:13], REGS[13:]
+		NEIN = '❌'
 		logger.info('Games.hangman', extra={'invoker': ctx.message.author.name})
-		if ctx.channel in self.channels_occupied:
-			await ctx.send('There is already a game going on in this channel!')
-			if ctx.author.id != DGOWNERID:
-				return
-		self.channels_occupied.add(ctx.channel)
 		await ctx.send('Awaiting DM with word...')
 		msg = await ctx.bot.wait_for('message',
 			check=lambda m: isinstance(m.channel, d.DMChannel) and m.author == ctx.author)
@@ -234,17 +232,39 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 			'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
 			'w', 'x', 'y', 'z'
 		)
+		translate = {}
+		for regn in range(len(REGS)):
+			translate[REGS[regn]] = lowers[regn]
 		for i in range(len(WORD)):
 			if WORD[i] not in lowers:
 				letters[i] = WORD[i]
 		missed = []
 		shanpe = 0
-		status = await ctx.send(DGHANGMANSHANPES[shanpe] + '\nMissed: ' + ', '.join(missed) + '\nGotten: `' + "".join(letters) + '`')
+		status = await ctx.send(DGHANGMANSHANPES[shanpe] + '\nMissed: ' + ', '.join(missed) + '\nGotten: `' + "".join(letters) + '`\n**WAIT DON\'T GUESS YET**')
+		reactionmsg1 = await ctx.send('_ _')
+		reactionmsg2 = await ctx.send('_ _')
+		await status.add_reaction(NEIN)
+		for reg in REGS1:
+			await reactionmsg1.add_reaction(reg)
+		for reg in REGS2:
+			await reactionmsg2.add_reaction(reg)
+		await status.edit(content=status.content[:-25])
 		while "".join(letters) != WORD and shanpe < len(DGHANGMANSHANPES) - 1:
-			guess = await ctx.bot.wait_for('message',
-				check=lambda m: m.channel == ctx.channel and m.content in lowers)
-			letter = guess.content
-			await guess.delete()
+			reaction, user = await ctx.bot.wait_for(
+				'reaction_add',
+				check=lambda r, u: \
+					r.message.id in (status.id, reactionmsg1.id, reactionmsg2.id) \
+					and str(r) in REGS + [NEIN] \
+					and u.id != self.bot.user.id
+			)
+			if str(reaction) == NEIN and user.id == ctx.author.id:
+				await status.edit(content='Game cancelled by starter.')
+				await status.clear_reactions()
+				await reactionmsg1.delete()
+				await reactionmsg2.delete()
+				return
+			letter = translate[str(reaction)]
+			await reaction.message.remove_reaction(reaction, user)
 			if WORD.find(letter) != -1:
 				for i in self.substrs(letter, WORD):
 					letters[i] = letter
@@ -257,7 +277,6 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 			await ctx.send('Congratulations! You have guessed the complete word!')
 		else:
 			await ctx.send('You lost! The word was \"{}\".'.format(WORD))
-		self.channels_occupied.remove(ctx.channel)
 
 	@hangman.error
 	async def on_hangman_err(self, ctx, error):
@@ -267,29 +286,38 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 
 	@command()
 	@bot_has_permissions(manage_messages=True, add_reactions=True, read_message_history=True)
-	async def connect4(self, ctx):
+	async def connect4(self, ctx, lonely: lambda a: bool(a) = False):
+		"""Play some connect4!
+
+		If you want to play against yourself or you have someone next to you,
+		do ;connect4 lonely.
+		"""
 		logger.info('Games.connect4', extra={'invoker': ctx.message.author.name})
 		BLUE, RED, BLACK, SHAKE, NEIN = '🔵 🔴 ⚫ 🤝 ❌'.split(' ')
 		REGA, REGB, REGC, REGD, REGE, REGF, REGG = REGS = '🇦 🇧 🇨 🇩 🇪 🇫 🇬'.split(' ')
 		msg = await ctx.send(embed=d.Embed(
 			title='Playing Connect 4',
-			description='Player 1: {}\nReact with {} to join!'.format(ctx.author.nick or ctx.author.name, SHAKE)
+			description='Player 1: {}'.format(ctx.author.nick or ctx.author.name) + ('\nReact with {} to join!'.format(SHAKE) if not lonely else '\nPlayer 2: {}'.format(ctx.author.nick or ctx.author.name))
 		))
-		await msg.add_reaction(SHAKE)
 		player1 = ctx.author
-		reaction, user = await self.bot.wait_for(
-			'reaction_add',
-			check=lambda r, u: \
-				r.emoji == SHAKE \
-				and r.message.id == msg.id \
-				and u.id != self.bot.user.id \
-				and r.message.channel == ctx.channel
-		)
-		if user.id == ctx.author.id:
-			await ctx.send('Game cancelled by starter.')
-			return
-		player2 = user
-		del reaction, user, msg
+		if not lonely:
+			await msg.add_reaction(SHAKE)
+			reaction, user = await self.bot.wait_for(
+				'reaction_add',
+				check=lambda r, u: \
+					r.emoji == SHAKE \
+					and r.message.id == msg.id \
+					and u.id != self.bot.user.id \
+					and r.message.channel == ctx.channel
+			)
+			if user.id == ctx.author.id:
+				await ctx.send('Game cancelled by starter.')
+				return
+			player2 = user
+			del reaction, user
+		else:
+			player2 = player1
+		del msg
 		board = []
 		for i in range(7):
 			board.append([])
@@ -340,7 +368,8 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 			boardmsgcont = constructboard(board, (player1, player2), 0)
 			await boardmsg.edit(embed=d.Embed(
 				title="Board",
-				description=boardmsgcont
+				description=boardmsgcont,
+				color=0xff0000
 			))
 			if reaction is None:
 				await boardmsg.clear_reactions()
@@ -373,7 +402,8 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 			boardmsgcont = constructboard(board, (player1, player2), 1)
 			await boardmsg.edit(embed=d.Embed(
 				title="Board",
-				description=boardmsgcont
+				description=boardmsgcont,
+				color=0x55acee
 			))
 			await boardmsg.remove_reaction(reaction, user)
 			reaction, user = await self.bot.wait_for(
