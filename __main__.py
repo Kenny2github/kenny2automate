@@ -257,13 +257,15 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 					and str(r) in REGS + [NEIN] \
 					and u.id != self.bot.user.id
 			)
-			if str(reaction) == NEIN and user.id == ctx.author.id:
-				await status.edit(content='Game cancelled by starter.')
-				await status.clear_reactions()
-				await reactionmsg1.delete()
-				await reactionmsg2.delete()
-				return
-			letter = translate[str(reaction)]
+			if str(reaction) == NEIN:
+				if user.id == ctx.author.id:
+					await status.edit(content='Game cancelled by starter.')
+					await status.clear_reactions()
+					await reactionmsg1.delete()
+					await reactionmsg2.delete()
+					return
+			else:
+				letter = translate[str(reaction)]
 			await reaction.message.remove_reaction(reaction, user)
 			if WORD.find(letter) != -1:
 				for i in self.substrs(letter, WORD):
