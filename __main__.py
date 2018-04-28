@@ -129,8 +129,13 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 		while guess != secret and tries > 0:
 			await ctx.send("What's yer guess, matey?")
 			result = ''
-			guess = await ctx.bot.wait_for('message',
-				check=lambda m: m.channel == ctx.channel and re.match('^[0-9]+$', m.content))
+			try:
+				guess = await ctx.bot.wait_for('message',
+					check=lambda m: m.channel == ctx.channel and re.match('^[0-9]+$', m.content),
+					timeout=60.0)
+			except a.TimeoutError:
+				await ctx.send("Ye landlubberin' swabs didn't guess anythin' for a minute! Ye don't get to play with me no more!")
+				return
 			guess = int(guess.content)
 			if guess == secret:
 				break
@@ -223,8 +228,13 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 		NEIN = '❌'
 		logger.info('Games.hangman', extra={'invoker': ctx.message.author.name})
 		await ctx.send('Awaiting DM with word...')
-		msg = await ctx.bot.wait_for('message',
-			check=lambda m: isinstance(m.channel, d.DMChannel) and m.author == ctx.author)
+		try:
+			msg = await ctx.bot.wait_for('message',
+				check=lambda m: isinstance(m.channel, d.DMChannel) and m.author == ctx.author,
+				timeout=60.0)
+		except a.TimeoutError:
+			await ctx.send("The word didn't arrive for a minute! The game has been automatically cancelled.")
+			return
 		WORD = msg.content.lower()
 		letters = ['_'] * len(WORD)
 		lowers = (
@@ -250,13 +260,21 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 			await reactionmsg2.add_reaction(reg)
 		await status.edit(content=status.content[:-25])
 		while "".join(letters) != WORD and shanpe < len(DGHANGMANSHANPES) - 1:
-			reaction, user = await ctx.bot.wait_for(
-				'reaction_add',
-				check=lambda r, u: \
-					r.message.id in (status.id, reactionmsg1.id, reactionmsg2.id) \
-					and str(r) in REGS + [NEIN] \
-					and u.id != self.bot.user.id
-			)
+			try:
+				reaction, user = await ctx.bot.wait_for(
+					'reaction_add',
+					check=lambda r, u: \
+						r.message.id in (status.id, reactionmsg1.id, reactionmsg2.id) \
+						and str(r) in REGS + [NEIN] \
+						and u.id != self.bot.user.id,
+					timeout=600.0
+				)
+			except a.TimeoutError:
+				await status.edit(content='Nobody guessed a letter for ten minutes! The game has been automatically cancelled.')
+				await status.clear_reactions()
+				await reactionmsg1.delete()
+				await reactionmsg2.delete()
+				return
 			if str(reaction) == NEIN:
 				if user.id == ctx.author.id:
 					await status.edit(content='Game cancelled by starter.')
@@ -264,6 +282,8 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 					await reactionmsg1.delete()
 					await reactionmsg2.delete()
 					return
+				else:
+					continue
 			else:
 				letter = translate[str(reaction)]
 			await reaction.message.remove_reaction(reaction, user)
@@ -288,37 +308,86 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 
 	@command()
 	@bot_has_permissions(manage_messages=True, add_reactions=True, read_message_history=True)
-	async def connect4(self, ctx, lonely: lambda a: bool(a) = False):
+	async def connect4(self, ctx, against: d.Member = None):
 		"""Play some connect4!
 
 		If you want to play against yourself or you have someone next to you,
-		do ;connect4 lonely.
+		do ;connect4 and mention yourself.
+		If you want to play against a specific person, do ;connect4 and mention them.
 		"""
 		logger.info('Games.connect4', extra={'invoker': ctx.message.author.name})
 		BLUE, RED, BLACK, SHAKE, NEIN = '🔵 🔴 ⚫ 🤝 ❌'.split(' ')
 		REGA, REGB, REGC, REGD, REGE, REGF, REGG = REGS = '🇦 🇧 🇨 🇩 🇪 🇫 🇬'.split(' ')
 		msg = await ctx.send(embed=d.Embed(
 			title='Playing Connect 4',
-			description='Player 1: {}'.format(ctx.author.nick or ctx.author.name) + ('\nReact with {} to join!'.format(SHAKE) if not lonely else '\nPlayer 2: {}'.format(ctx.author.nick or ctx.author.name))
+			description='Player 1: {}'.format(
+				ctx.author.nick or ctx.author.name
+			) + (
+				'\nReact with {} to join!'.format(SHAKE)
+				if against is None
+				else (
+					'\nPlayer 2: {}'.format(
+						ctx.author.nick or ctx.author.name
+					)
+				) if against.id == ctx.author.id
+				else (
+					'\nPlayer 2: {}'.format(
+						against.nick or against.name
+					) + '\nWaiting for Player 2 to join...'
+				)
+			)
 		))
 		player1 = ctx.author
-		if not lonely:
+		if against is None:
 			await msg.add_reaction(SHAKE)
-			reaction, user = await self.bot.wait_for(
-				'reaction_add',
-				check=lambda r, u: \
-					r.emoji == SHAKE \
-					and r.message.id == msg.id \
-					and u.id != self.bot.user.id \
-					and r.message.channel == ctx.channel
-			)
+			try:
+				reaction, user = await self.bot.wait_for(
+					'reaction_add',
+					check=lambda r, u: \
+						r.emoji == SHAKE \
+						and r.message.id == msg.id \
+						and u.id != self.bot.user.id \
+						and r.message.channel == ctx.channel,
+					timeout=60.0
+				)
+			except a.TimeoutError:
+				await msg.edit(content='Nobody joined after a minute! The game has been automatically cancelled.', embed=None)
+				await msg.clear_reactions()
+				return
 			if user.id == ctx.author.id:
 				await ctx.send('Game cancelled by starter.')
 				return
 			player2 = user
 			del reaction, user
-		else:
+		elif ctx.author.id == against.id:
 			player2 = player1
+		elif against.bot:
+			await ctx.send("Wait, you can't play against a bot! Game cancelled.")
+			return
+		elif str(against.status) == 'offline':
+			await ctx.send("Wait, Player 2 is offline! Game cancelled.")
+			return
+		else:
+			await msg.add_reaction(SHAKE)
+			try:
+				reaction, user = await self.bot.wait_for(
+					'reaction_add',
+					check=lambda r, u: \
+						r.emoji == SHAKE \
+						and r.message.id == msg.id \
+						and u.id in (against.id, ctx.author.id) \
+						and r.message.channel == ctx.channel,
+					timeout=60.0
+				)
+			except a.TimeoutError:
+				await msg.edit(content="Player 2 didn\'t join after a minute! The game has been automatically cancelled.", embed=None)
+				await msg.clear_reactions()
+				return
+			if user.id == ctx.author.id:
+				await ctx.send('Game cancelled by starter.')
+				return
+			player2 = user
+			del reaction, user
 		del msg
 		board = []
 		for i in range(7):
@@ -379,14 +448,20 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 					await boardmsg.add_reaction(reg)
 			else:
 				await boardmsg.remove_reaction(reaction, user)
-			reaction, user = await self.bot.wait_for(
-				'reaction_add',
-				check=lambda r, u: \
-					r.message.id == boardmsg.id \
-					and str(r) in REGS \
-					and str(r) != NEIN \
-					and u.id == player1.id
-			)
+			try:
+				reaction, user = await self.bot.wait_for(
+					'reaction_add',
+					check=lambda r, u: \
+						r.message.id == boardmsg.id \
+						and str(r) in REGS \
+						and str(r) != NEIN \
+						and u.id == player1.id,
+					timeout=600.0
+				)
+			except a.TimeoutError:
+				await boardmsg.edit(content='Nobody made a move for ten minutes! The game has been cancelled.', embed=None)
+				await boardmsg.clear_reactions()
+				return
 			idx = REGS.index(str(reaction))
 			hit = False
 			for rown in range(len(board[idx])):
@@ -408,14 +483,20 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 				color=0x55acee
 			))
 			await boardmsg.remove_reaction(reaction, user)
-			reaction, user = await self.bot.wait_for(
-				'reaction_add',
-				check=lambda r, u: \
-					r.message.id == boardmsg.id \
-					and str(r) in REGS \
-					and str(r) != NEIN \
-					and u.id == player2.id
-			)
+			try:
+				reaction, user = await self.bot.wait_for(
+					'reaction_add',
+					check=lambda r, u: \
+						r.message.id == boardmsg.id \
+						and str(r) in REGS \
+						and str(r) != NEIN \
+						and u.id == player2.id,
+					timeout=600.0
+				)
+			except a.TimeoutError:
+				await boardmsg.edit(content='Nobody made a move for ten minutes! The game has been automatically cancelled.', embed=None)
+				await boardmsg.clear_reactions()
+				return
 			idx = REGS.index(str(reaction))
 			hit = False
 			for rown in range(len(board[idx])):
@@ -595,14 +676,20 @@ class Scratch(object):
 	async def messagecount(self, ctx, name=None):
 		"""How many messages do you have on Scratch?"""
 		async with ctx.channel.typing():
-			username = name
-			if username is None:
-				username = getattr(ctx.message.author, 'nick', '_')
-			resp = await self.req('https://api.scratch.mit.edu/users/' + username + '/messages/count')
-			if resp is None and name is None:
-				username = ctx.message.author.name
-				resp = await self.req('https://api.scratch.mit.edu/users/' + username + '/messages/count')
-			logger.info('Scratch.messagecount: ' + username, extra={'invoker': ctx.message.author.name})
+			if name is not None:
+				logger.info('Scratch.messagecount: ' + name, extra={'invoker': ctx.message.author.name})
+				resp = await self.req('https://api.scratch.mit.edu/users/' + name + '/messages/count')
+				username = name
+			else:
+				resp = None
+				if ctx.author.nick is not None:
+					logger.info('Scratch.messagecount: ' + ctx.author.nick, extra={'invoker': ctx.message.author.name})
+					resp = await self.req('https://api.scratch.mit.edu/users/' + ctx.author.nick + '/messages/count')
+					username = ctx.author.nick
+				if resp is None:
+					logger.info('Scratch.messagecount: ' + ctx.author.name, extra={'invoker': ctx.message.author.name})
+					resp = await self.req('https://api.scratch.mit.edu/users/' + ctx.author.name + '/messages/count')
+					username = ctx.author.name
 			if resp is None:
 				await ctx.send("Couldn't get message count for " + username)
 			else:
@@ -660,7 +747,8 @@ async def votetoban(ctx, *, user: d.Member):
 		return
 	for member in ctx.guild.members:
 		if (str(member.status) == 'online') \
-				and ctx.channel.permissions_for(member).administrator:
+				and ctx.channel.permissions_for(member).administrator \
+				and not member.bot:
 			await ctx.send(member.mention + ', someone requests for ' + user.mention + ' to be banned!')
 			return
 	DOBAN = '🚫'
@@ -672,6 +760,7 @@ async def votetoban(ctx, *, user: d.Member):
 		await ctx.bot.wait_for('member_update',
 			check=lambda o, m: \
 				ctx.channel.permissions_for(m).administrator \
+				and not m.bot \
 				and str(m.status) == 'online',
 			timeout=180.0
 		)
