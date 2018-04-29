@@ -321,7 +321,7 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 		"""
 		logger.info('Games.connect4', extra={'ctx': ctx})
 		BLUE, RED, BLACK, SHAKE, NEIN, DOWN = '🔵 🔴 ⚫ 🤝 ❌ ⬇'.split(' ')
-		REGA, REGB, REGC, REGD, REGE, REGF, REGG = REGS = '🇦 🇧 🇨 🇩 🇪 🇫 🇬'.split(' ')
+		REGA, REGB, REGC, REGD, REGE, REGF, REGG = REGS = '1⃣ 2⃣ 3⃣ 4⃣ 5⃣ 6⃣ 7⃣'.split(' ')
 		msg = await ctx.send(embed=d.Embed(
 			title='Playing Connect 4',
 			description='Player 1: {}'.format(
@@ -428,10 +428,10 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 		def constructboard(board, players, whose):
 			boardmsgcont = RED + ' = ' + (players[0].nick or players[0].name) + '\n'
 			boardmsgcont += BLUE + ' = ' + (players[1].nick or players[1].name) + '\n'
-			boardmsgcont += " ".join(REGS) + '\n'
+			boardmsgcont += "".join(REGS) + '\n'
 			for row in zip(*board):
 				for column in row:
-					boardmsgcont += column + ' '
+					boardmsgcont += column
 				boardmsgcont += '\n'
 			boardmsgcont += "It is currently {}'s turn".format(players[whose].nick or players[whose].name)
 			return boardmsgcont
