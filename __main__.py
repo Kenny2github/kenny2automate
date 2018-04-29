@@ -16,17 +16,21 @@ import aiohttp
 DGOWNERID = 329097918181146625
 
 logfmt = logging.Formatter(
-	fmt='{asctime} {invoker}: {message}',
+	fmt='{asctime} {ctx.author.name}: {message}',
 	datefmt='%Y-%m-%dT%H:%M:%SZ',
 	style='{'
 )
+
+class DummyCtx(object):
+	def __init__(self, **kwargs):
+		self.__dict__.update(kwargs)
 
 class LoggerWriter(object):
 	def __init__(self, level):
 		self.level = level
 	def write(self, message):
 		if message.strip():
-			self.level(message, extra={'invoker': '(logger)'})
+			self.level(message, extra={'ctx': DummyCtx(author=DummyCtx(name='(logger)'))})
 	def flush(self):
 		pass
 
@@ -49,7 +53,7 @@ class Regexes(object):
 	@command()
 	async def search(self, ctx, pattern, string, flags=None):
 		"""Make a Python-flavored regex search! All groups are shown."""
-		logger.info('Regexes.search: \"' + '\" \"'.join(map(str, (pattern, string, flags))) + '\"', extra={'invoker': ctx.message.author.name})
+		logger.info('Regexes.search: \"' + '\" \"'.join(map(str, (pattern, string, flags))) + '\"', extra={'ctx': ctx})
 		if flags is not None:
 			exp = '(?' + flags.lower().replace('l', 'L') + ')(?:' + pattern + ')'
 		else:
@@ -72,7 +76,7 @@ class Regexes(object):
 	@command()
 	async def findall(self, ctx, pattern, string, flags=None):
 		"""Use a Python-flavor regex to find all occurences of a pattern!"""
-		logger.info('Regexes.findall: \"' + '\" \"'.join(map(str, (pattern, string, flags))) + '\"', extra={'invoker': ctx.message.author.name})
+		logger.info('Regexes.findall: \"' + '\" \"'.join(map(str, (pattern, string, flags))) + '\"', extra={'ctx': ctx})
 		if flags is not None:
 			exp = '(?' + flags.lower().replace('l', 'L') + ')(?:' + pattern + ')'
 		else:
@@ -117,7 +121,7 @@ class Games(object):
 	@command()
 	async def numguess(self, ctx):
 		"""Play a fun number-guessing game!"""
-		logger.info('Games.numguess', extra={'invoker': ctx.message.author.name})
+		logger.info('Games.numguess', extra={'ctx': ctx})
 		guess = None
 		limDn = 0
 		limUp = 100
@@ -174,7 +178,7 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 		Next, send the word in a DM with the bot, to set it.
 		Once that's been done, guess a letter by sending it.
 		"""
-		logger.info('Games.crudehangman', extra={'invoker': ctx.message.author.name})
+		logger.info('Games.crudehangman', extra={'ctx': ctx})
 		if ctx.channel in self.channels_occupied:
 			await ctx.send("There is already a game going on in this channel!")
 			if ctx.author.id != DGOWNERID:
@@ -226,7 +230,7 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 		REGS = '🇦 🇧 🇨 🇩 🇪 🇫 🇬 🇭 🇮 🇯 🇰 🇱 🇲 🇳 🇴 🇵 🇶 🇷 🇸 🇹 🇺 🇻 🇼 🇽 🇾 🇿'.split(' ')
 		REGS1, REGS2 = REGS[:13], REGS[13:]
 		NEIN = '❌'
-		logger.info('Games.hangman', extra={'invoker': ctx.message.author.name})
+		logger.info('Games.hangman', extra={'ctx': ctx})
 		await ctx.send('Awaiting DM with word...')
 		try:
 			msg = await ctx.bot.wait_for('message',
@@ -302,7 +306,7 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 
 	@hangman.error
 	async def on_hangman_err(self, ctx, error):
-		logger.error('Games.hangman failed: ' + str(error), extra={'invoker': ctx.message.author.name})
+		logger.error('Games.hangman failed: ' + str(error), extra={'ctx': ctx})
 		if isinstance(error, c.BotMissingPermissions):
 			await ctx.send(str(error))
 
@@ -315,8 +319,8 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 		do ;connect4 and mention yourself.
 		If you want to play against a specific person, do ;connect4 and mention them.
 		"""
-		logger.info('Games.connect4', extra={'invoker': ctx.message.author.name})
-		BLUE, RED, BLACK, SHAKE, NEIN = '🔵 🔴 ⚫ 🤝 ❌'.split(' ')
+		logger.info('Games.connect4', extra={'ctx': ctx})
+		BLUE, RED, BLACK, SHAKE, NEIN, DOWN = '🔵 🔴 ⚫ 🤝 ❌ ⬇'.split(' ')
 		REGA, REGB, REGC, REGD, REGE, REGF, REGG = REGS = '🇦 🇧 🇨 🇩 🇪 🇫 🇬'.split(' ')
 		msg = await ctx.send(embed=d.Embed(
 			title='Playing Connect 4',
@@ -446,22 +450,38 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 				await boardmsg.clear_reactions()
 				for reg in REGS:
 					await boardmsg.add_reaction(reg)
+				await boardmsg.add_reaction(DOWN)
 			else:
 				await boardmsg.remove_reaction(reaction, user)
-			try:
-				reaction, user = await self.bot.wait_for(
-					'reaction_add',
-					check=lambda r, u: \
-						r.message.id == boardmsg.id \
-						and str(r) in REGS \
-						and str(r) != NEIN \
-						and u.id == player1.id,
-					timeout=600.0
-				)
-			except a.TimeoutError:
-				await boardmsg.edit(content='Nobody made a move for ten minutes! The game has been cancelled.', embed=None)
-				await boardmsg.clear_reactions()
-				return
+			reaction = DOWN
+			while str(reaction) == DOWN:
+				try:
+					reaction, user = await self.bot.wait_for(
+						'reaction_add',
+						check=lambda r, u: \
+							(r.message.id == boardmsg.id \
+							and str(r) in REGS \
+							and str(r) != NEIN \
+							and u.id == player1.id) \
+							or (r.message.id == boardmsg.id \
+							and str(r) == DOWN \
+							and u.id in (player1.id, player2.id)),
+						timeout=600.0
+					)
+				except a.TimeoutError:
+					await boardmsg.edit(content='Nobody made a move for ten minutes! The game has been cancelled.', embed=None)
+					await boardmsg.clear_reactions()
+					return
+				if str(reaction) == DOWN:
+					await boardmsg.delete()
+					boardmsg = await ctx.send(embed=d.Embed(
+						title="Board",
+						description=boardmsgcont,
+						color=0xff0000
+					))
+					for reg in REGS:
+						await boardmsg.add_reaction(reg)
+					await boardmsg.add_reaction(DOWN)
 			idx = REGS.index(str(reaction))
 			hit = False
 			for rown in range(len(board[idx])):
@@ -483,20 +503,35 @@ Send a number to guess it.""".format(limDn, limUp, tries))
 				color=0x55acee
 			))
 			await boardmsg.remove_reaction(reaction, user)
-			try:
-				reaction, user = await self.bot.wait_for(
-					'reaction_add',
-					check=lambda r, u: \
-						r.message.id == boardmsg.id \
-						and str(r) in REGS \
-						and str(r) != NEIN \
-						and u.id == player2.id,
-					timeout=600.0
-				)
-			except a.TimeoutError:
-				await boardmsg.edit(content='Nobody made a move for ten minutes! The game has been automatically cancelled.', embed=None)
-				await boardmsg.clear_reactions()
-				return
+			reaction = DOWN
+			while str(reaction) == DOWN:
+				try:
+					reaction, user = await self.bot.wait_for(
+						'reaction_add',
+						check=lambda r, u: \
+							(r.message.id == boardmsg.id \
+							and str(r) in REGS \
+							and str(r) != NEIN \
+							and u.id == player2.id) \
+							or (r.message.id == boardmsg.id \
+							and str(r) == DOWN \
+							and u.id in (player1.id, player2.id)),
+						timeout=600.0
+					)
+				except a.TimeoutError:
+					await boardmsg.edit(content='Nobody made a move for ten minutes! The game has been cancelled.', embed=None)
+					await boardmsg.clear_reactions()
+					return
+				if str(reaction) == DOWN:
+					await boardmsg.delete()
+					boardmsg = await ctx.send(embed=d.Embed(
+						title="Board",
+						description=boardmsgcont,
+						color=0x55acee
+					))
+					for reg in REGS:
+						await boardmsg.add_reaction(reg)
+					await boardmsg.add_reaction(DOWN)
 			idx = REGS.index(str(reaction))
 			hit = False
 			for rown in range(len(board[idx])):
@@ -525,11 +560,11 @@ RED if bluewon else BLUE, (player1.nick or player1.name) if bluewon else (player
 			color=0xff0000 if redwon else 0x55acee
 		))
 
-#	@connect4.error
-#	async def on_connect4_err(self, ctx, error):
-#		logger.error('Games.connect4 failed: ' + str(error), extra={'invoker': ctx.message.author.name})
-#		if isinstance(error, c.BotMissingPermissions):
-#			await ctx.send(str(error))
+	@connect4.error
+	async def on_connect4_err(self, ctx, error):
+		logger.error('Games.connect4 failed: ' + str(error), extra={'ctx': ctx})
+		if isinstance(error, c.BotMissingPermissions):
+			await ctx.send(str(error))
 
 client.add_cog(Games(client))
 
@@ -548,7 +583,7 @@ class Wiki(object):
 	@command()
 	async def page(self, ctx, *, title):
 		"""Get the contents of a page."""
-		logger.info('Wiki.page: ' + title, extra={'invoker': ctx.message.author.name})
+		logger.info('Wiki.page: ' + title, extra={'ctx': ctx})
 		async with ctx.channel.typing():
 			try:
 				content = await self.req({
@@ -559,7 +594,7 @@ class Wiki(object):
 					'rvprop': 'content',
 				})
 			except Exception as exc:
-				logger.error('Fetching page content failed: ' + str(exc), extra={'invoker': 'Wiki.page'})
+				logger.error('Fetching page content failed: ' + str(exc), extra={'ctx': DummyCtx(author=DummyCtx(name='Wiki.page'))})
 				await ctx.send('Fetching content failed. The page is likely too large. Sorry!')
 				return
 			content = list(content['query']['pages'].values())[0]['revisions'][0]['*']
@@ -582,7 +617,7 @@ class Wiki(object):
 	@command()
 	async def recentchanges(self, ctx, limit=50):
 		"""Get recent changes on the Wiki."""
-		logger.info('Wiki.recentchanges: ' + str(limit), extra={'invoker': ctx.message.author.name})
+		logger.info('Wiki.recentchanges: ' + str(limit), extra={'ctx': ctx})
 		twenties, limit = divmod(limit, 20)
 		async with ctx.channel.typing():
 			result = ['']
@@ -633,7 +668,7 @@ class Wiki(object):
 	@command()
 	async def randompage(self, ctx):
 		"""Get a link to a random Wiki page!"""
-		logger.info('Wiki.randompage', extra={'invoker': ctx.message.author.name})
+		logger.info('Wiki.randompage', extra={'ctx': ctx})
 		rn = await self.req({
 			'action': 'query',
 			'list': 'random',
@@ -663,7 +698,7 @@ class Scratch(object):
 	@command()
 	async def randomproject(self, ctx):
 		"""Get a random project link!"""
-		logger.info('Scratch.randomproject', extra={'invoker': ctx.message.author.name})
+		logger.info('Scratch.randomproject', extra={'ctx': ctx})
 		async with ctx.channel.typing():
 			count = json.loads(await self.req('https://api.scratch.mit.edu/projects/count/all'))['count']
 			comments = None
@@ -677,23 +712,23 @@ class Scratch(object):
 		"""How many messages do you have on Scratch?"""
 		async with ctx.channel.typing():
 			if name is not None:
-				logger.info('Scratch.messagecount: ' + name, extra={'invoker': ctx.message.author.name})
+				logger.info('Scratch.messagecount: ' + name, extra={'ctx': ctx})
 				resp = await self.req('https://api.scratch.mit.edu/users/' + name + '/messages/count')
 				username = name
 			else:
 				resp = None
 				if ctx.author.nick is not None:
-					logger.info('Scratch.messagecount: ' + ctx.author.nick, extra={'invoker': ctx.message.author.name})
+					logger.info('Scratch.messagecount: ' + ctx.author.nick, extra={'ctx': ctx})
 					resp = await self.req('https://api.scratch.mit.edu/users/' + ctx.author.nick + '/messages/count')
 					username = ctx.author.nick
 				if resp is None:
-					logger.info('Scratch.messagecount: ' + ctx.author.name, extra={'invoker': ctx.message.author.name})
+					logger.info('Scratch.messagecount: ' + ctx.author.name, extra={'ctx': ctx})
 					resp = await self.req('https://api.scratch.mit.edu/users/' + ctx.author.name + '/messages/count')
 					username = ctx.author.name
 			if resp is None:
 				await ctx.send("Couldn't get message count for " + username)
 			else:
-				await ctx.send('{} has {} messages'.format(
+				await ctx.send('{} has {} message(s)'.format(
 					username,
 					json.loads(resp)['count']
 				))
@@ -701,7 +736,7 @@ class Scratch(object):
 	@command()
 	async def news(self, ctx):
 		"""Get Scratch news."""
-		logger.info('Scratch.news', extra={'invoker': ctx.message.author.name})
+		logger.info('Scratch.news', extra={'ctx': ctx})
 		content = await self.req('https://api.scratch.mit.edu/news')
 		content = json.loads(content)
 		for new in content[:5]:
@@ -714,25 +749,25 @@ client.add_cog(Scratch(client))
 
 @client.event
 async def on_ready(*_, **__):
-	logger.info('Ready!', extra={'invoker': '(core)'})
+	logger.info('Ready!', extra={'ctx': DummyCtx(author=DummyCtx(name='(core)'))})
 	await client.change_presence(game=d.Game(name=';help'))
 
 @client.command()
 async def repeat(ctx, *, arg):
 	"""Repeat what you say, right back at ya."""
-	logger.info('repeat: ' + arg, extra={'invoker': ctx.message.author.name})
+	logger.info('repeat: ' + arg, extra={'ctx': ctx})
 	await ctx.send(arg)
 
 @client.command()
 async def hello(ctx):
 	"""Test whether the bot is running! Simply says "Hello World!"."""
-	logger.info('Hello World!', extra={'invoker': ctx.message.author.name})
+	logger.info('Hello World!', extra={'ctx': ctx})
 	await ctx.send('Hello World!')
 
 @client.command()
 async def hmmst(ctx):
 	"""hmmst"""
-	logger.info('hmmst', extra={'invoker': ctx.message.author.name})
+	logger.info('hmmst', extra={'ctx': ctx})
 	await ctx.send('hmmst')
 
 DGBANSERVERID = 328938947717890058
@@ -742,7 +777,7 @@ DGBANSERVERID = 328938947717890058
 @bot_has_permissions(ban_members=True, add_reactions=True, read_message_history=True)
 async def votetoban(ctx, *, user: d.Member):
 	"""Start a vote to ban someone from the server. Abuse results in a ban."""
-	logger.info('votetoban: ' + user.mention, extra={'invoker': ctx.message.author.name})
+	logger.info('votetoban: ' + user.mention, extra={'ctx': ctx})
 	if ctx.guild.id != DGBANSERVERID:
 		return
 	for member in ctx.guild.members:
@@ -788,7 +823,7 @@ async def votetoban(ctx, *, user: d.Member):
 
 @votetoban.error
 async def on_votetoban_err(ctx, error):
-	logger.error('votetoban failed: ' + str(error), extra={'invoker': ctx.message.author.name})
+	logger.error('votetoban failed: ' + str(error), extra={'ctx': ctx})
 	if isinstance(error, c.BotMissingPermissions):
 		await ctx.send(str(error))
 	else:
