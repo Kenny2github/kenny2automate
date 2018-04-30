@@ -45,6 +45,17 @@ sys.stdout = LoggerWriter(logger.debug)
 
 client = Bot(description="A testing Discord bot.", command_prefix=";")
 
+DGDELETEHANDLERS = {}
+
+@client.event
+async def on_message_delete(msg):
+	if msg.id in DGDELETEHANDLERS:
+		await DGDELETEHANDLERS[msg.id](msg)
+		del DGDELETEHANDLERS[msg.id]
+
+def add_delete_handler(msg, handler):
+	DGDELETEHANDLERS[msg.id] = handler
+
 class Regexes(object):
 	"""Regex commands - Python flavored."""
 	def __init__(self, bot):
@@ -756,7 +767,10 @@ async def on_ready(*_, **__):
 async def repeat(ctx, *, arg):
 	"""Repeat what you say, right back at ya."""
 	logger.info('repeat: ' + arg, extra={'ctx': ctx})
-	await ctx.send(arg)
+	msg = await ctx.send(arg)
+	async def handle_delete(m):
+		await msg.delete()
+	add_delete_handler(ctx.message, handle_delete)
 
 @client.command()
 async def hello(ctx):
