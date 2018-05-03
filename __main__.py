@@ -583,10 +583,22 @@ class Wiki(object):
 	def __init__(self, bot):
 		self.bot = bot
 
+	WIKIS = {
+		'de': 'https://scratch-dach.info',
+		'en': 'https://en.scratch-wiki.info',
+		'id': 'https://scratch-indo.info',
+		'nl': 'https://nl.scratch-wiki.info',
+		'hu': 'https://hu.scratch-wiki.info',
+		'ru': 'https://scratch-ru.info',
+		'fr': 'https://fr.scratch-wiki.info',
+		'ja': 'https://ja.scratch-wiki.info',
+		'test': 'https://test.scratch-wiki.info',
+	}
+
 	@staticmethod
-	async def req(params):
+	async def req(params, wiki='en'):
 		params['format'] = 'json'
-		resp = await aiohttp.get('https://en.scratch-wiki.info/w/api.php', params=params)
+		resp = await aiohttp.get(Wiki.WIKIS[wiki] + '/w/api.php', params=params)
 		cont = await resp.json()
 		resp.close()
 		return cont
@@ -690,6 +702,111 @@ class Wiki(object):
 		title = title.replace(' ', '_')
 		title = quote(title, safe='/:')
 		await ctx.send('https://en.scratch-wiki.info/wiki/' + title)
+
+	@command()
+	async def iwstats(self, ctx):
+		"""Get statistics for the international wikis!"""
+		logger.info('Wiki.wikistats', extra={'ctx': ctx})
+		async with ctx.channel.typing():
+			try:
+				content = await self.req({
+					'action': 'query',
+					'prop': 'revisions',
+					'titles': 'User:InterwikiBot/International Stats',
+					'rvlimit': '1',
+					'rvprop': 'content',
+				})
+			except Exception as exc:
+				logger.error('Fetching wiki stats failed: ' + str(exc), extra={'ctx': DummyCtx(author=DummyCtx(name='Wiki.wikistats'))})
+				await ctx.send('Fetching stats failed. Oops!')
+				return
+			content = list(content['query']['pages'].values())[0]['revisions'][0]['*']
+		exp = re.compile(r"""\|-
+\|(?P<Time>[^\|]+)
+\|(?P<Pages>[0-9]+)
+\|(?P<Articles>[0-9]+)
+\|(?P<Edits>[0-9]+)
+\|(?P<Images>[0-9]+)
+\|(?P<Users>[0-9]+)
+\|(?P<ActiveUsers>[0-9]+)
+\|(?P<Admins>[0-9]+)
+""")
+		for match in re.finditer(r'(?P<cont>==\s*(?P<code>[a-z][a-z])\s*==[\s\S]+?\|\})', content, re.I|re.S):
+			embed = d.Embed(
+				title='{}wiki Stats'.format(match.group('code')),
+				description='Here are stats for the {}wiki.'.format(match.group('code')),
+				color=random.randint(0, 0xffffff)
+			)
+			for fieldtitle, value in list(
+					re.finditer(exp, match.group('cont'))
+					)[-1].groupdict().items():
+				embed.add_field(
+					name=re.sub('([a-z])([A-Z])', r'\1 \2', fieldtitle),
+					value=value,
+					inline=True
+				)
+			await ctx.send(embed=embed)
+			await a.sleep(1)
+
+	@command()
+	async def wikistats(self, ctx, wiki):
+		"""Get stats for the ``wiki``wiki."""
+		async with ctx.channel.typing():
+			try:
+				data = await self.req({
+					'action': 'query',
+					'meta': 'siteinfo',
+					'siprop': 'statistics'
+				}, wiki)
+			except Exception as exc:
+				logger.error('Fetching wiki stats failed: ' + str(exc), extra={'ctx': DummyCtx(author=DummyCtx(name='Wiki.wikistats'))})
+				await ctx.send('Fetching stats failed. You likely specified a nonexistent wiki.')
+				return
+			data = data['query']['statistics']
+			embed = d.Embed(
+				title='{}wiki Stats'.format(wiki),
+				description='Here are some statistics for the {}wiki.'.format(wiki),
+			)
+			for fieldtitle, value in data.items():
+				embed.add_field(
+					name='Active Users' if fieldtitle == 'activeusers' else fieldtitle.title(),
+					value=str(value),
+				)
+			await ctx.send(embed=embed)
+
+async def embedtest(ctx):
+	"""Testing embedded content..."""
+	embed = d.Embed(
+		title='Wiki Statistics',
+		description='Here are some Scratch Wiki statistics:'
+	)
+	embed.add_field(
+		name='Test block',
+		value='asdf asdf',
+		inline=False
+	)
+	embed.add_field(
+		name='Test inline 1',
+		value='asdf 1',
+	)
+	embed.add_field(
+		name='Test inline 2',
+		value='asdf 2',
+	)
+	embed.add_field(
+		name='Test block 2',
+		value='asdf 3',
+		inline=False,
+	)
+	embed.add_field(
+		name='Test inline 3',
+		value='fdsa',
+	)
+	embed.add_field(
+		name='Test inline 4',
+		value='fdsa',
+	)
+	await ctx.send(embed=embed)
 
 client.add_cog(Wiki(client))
 
