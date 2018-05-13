@@ -293,7 +293,7 @@ class Games(object):
 			)
 		))
 		player1 = ctx.author
-		global_ = against is None or against.id == self.bot.user.id
+		global_ = against is not None and against.id == self.bot.user.id
 		if against is None:
 			await msg.add_reaction(SHAKE)
 			try:
@@ -439,22 +439,6 @@ class Games(object):
 		reaction, user = None, None
 
 		while not (redwon or bluewon):
-			boardmsgcont = constructboard(board, (player1, player2), 0)
-			await boardmsg.edit(embed=d.Embed(
-				title="Board",
-				description=boardmsgcont + (
-					'\nYou are {}'.format(RED)
-					if global_
-					else ''
-				),
-				color=0xff0000
-			))
-			if global_:
-				await boardmsg2.edit(embed=d.Embed(
-					title="Board",
-					description=boardmsgcont + '\nYou are {}'.format(BLUE),
-					color=0xff0000
-				))
 			if reaction is None:
 				await boardmsg.clear_reactions()
 				for reg in REGS:
@@ -472,6 +456,22 @@ class Games(object):
 						await boardmsg2.remove_reaction(reaction, user)
 				except d.NotFound:
 					pass
+			boardmsgcont = constructboard(board, (player1, player2), 0)
+			await boardmsg.edit(embed=d.Embed(
+				title="Board",
+				description=boardmsgcont + (
+					'\nYou are {}'.format(RED)
+					if global_
+					else ''
+				),
+				color=0xff0000
+			))
+			if global_:
+				await boardmsg2.edit(embed=d.Embed(
+					title="Board",
+					description=boardmsgcont + '\nYou are {}'.format(BLUE),
+					color=0xff0000
+				))
 			reaction = DOWN
 			while str(reaction) == DOWN:
 				try:
@@ -620,8 +620,8 @@ class Games(object):
 		embed = d.Embed(
 			title="Game Over!",
 			description='The game is over!\nWinner: {}{}\nLoser: {}{}\n'.format(
-				RED if redwon else BLUE, (' (' + (player1.nick or player1.name) if redwon else (player2.nick or player2.name) + ')') if not global_ else '',
-				RED if bluewon else BLUE, (' (' + (player1.nick or player1.name) if bluewon else (player2.nick or player2.name) + ')') if not global_ else ''
+				RED if redwon else BLUE, (' (' + ((player1.nick or player1.name) if redwon else (player2.nick or player2.name)) + ')') if not global_ else '',
+				RED if bluewon else BLUE, (' (' + ((player1.nick or player1.name) if bluewon else (player2.nick or player2.name)) + ')') if not global_ else ''
 			),
 			color=0xff0000 if redwon else 0x55acee
 		)
