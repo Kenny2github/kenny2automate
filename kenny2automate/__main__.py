@@ -49,7 +49,18 @@ db = dbw.cursor()
 with open(os.path.join(os.path.dirname(__file__), 'start.sql')) as f:
 	db.executescript(f.read())
 
-client = Bot(description="A testing Discord bot.", command_prefix=";")
+def get_command_prefix(bot, msg):
+	res = db.execute('SELECT prefix FROM user_prefixes WHERE user_id=?', (msg.author.id,)).fetchone()
+	if res is None:
+		return ';'
+	return res['prefix']
+
+client = Bot(
+	description="The most awesome bot to walk(?) the earth.",
+	command_prefix=get_command_prefix,
+	pm_help=True,
+	activity=d.Game(name=';help')
+)
 
 DGDELETEHANDLERS = {}
 
@@ -75,7 +86,6 @@ client.add_cog(Regexes(client, logger))
 @client.event
 async def on_ready(*_, **__):
 	logger.info('Ready!', extra={'ctx': DummyCtx(author=DummyCtx(name='(core)'))})
-	await client.change_presence(game=d.Game(name=';help'))
 
 @client.command()
 async def repeat(ctx, *, arg):
@@ -97,6 +107,66 @@ async def hmmst(ctx):
 	"""hmmst"""
 	logger.info('hmmst', extra={'ctx': ctx})
 	await ctx.send('hmmst')
+
+@client.command()
+async def whoami(ctx):
+	"""Get some information about yourself."""
+	embed = d.Embed(
+		title="User information for {}".format(ctx.author.nick or ctx.author.name),
+		description="Here is some information about {}".format(ctx.author.nick or ctx.author.name)
+	)
+	embed.set_thumbnail(url=ctx.author.avatar_url)
+	things = {
+		'status': 'Status',
+		'game': 'Game',
+		'id': 'ID',
+		'created_at': 'Created at',
+		'joined_at': 'Joined at',
+	}
+	for key, name in things.items():
+		value = getattr(ctx.author, key)
+		embed.add_field(name=name, value=getattr(value, 'name', value))
+	role_list = []
+	for role in ctx.author.roles:
+		role_list.append(role.name.replace('@', '\\@'))
+	embed.add_field(name='Roles', value=', '.join(role_list), inline=False)
+	await ctx.send(embed=embed)
+
+#@client.command()
+async def timer(ctx, *, seconds=0):
+	"""Mention you after `seconds` seconds."""
+	seconds = int(seconds)
+	logger.info('timer: ' + str(seconds), extra={'ctx': ctx})
+	if seconds > 18000:
+		await ctx.send("Sorry, it's a waste of resources to wait more than 5 hours.")
+		return
+	await ctx.send("I'll mention you in {} seconds...".format(seconds))
+	await a.sleep(seconds)
+	await ctx.send("{}, time's up!".format(ctx.author.mention))
+
+@client.command()
+async def prefix(ctx, *, prefix: str=None):
+	"""Change the bot's prefix for yourself.
+
+	Omit the `prefix` parameter to reset it to default.
+	"""
+	logger.info('prefix: ' + str(prefix), extra={'ctx': ctx})
+	if prefix is None:
+		db.execute('DELETE FROM user_prefixes WHERE user_id=?', (ctx.author.id,))
+		await ctx.send('Successfully reset prefix for {}'.format(ctx.author.mention))
+		return
+	res = db.execute('SELECT prefix FROM user_prefixes WHERE user_id=?', (ctx.author.id,)).fetchone()
+	if res is None:
+		db.execute('INSERT INTO user_prefixes VALUES (?, ?)', (ctx.author.id, prefix))
+	else:
+		db.execute('UPDATE user_prefixes SET prefix=? WHERE user_id=?', (prefix, ctx.author.id))
+	await ctx.send('Successfully set prefix for {} to `{}`'.format(ctx.author.mention, prefix))
+
+@client.command()
+@c.is_owner()
+async def resetprefix(ctx, user: d.Member):
+	db.execute('DELETE FROM user_prefixes WHERE user_id=?', (user.id,))
+	await ctx.send('Successfully reset prefix for {}'.format(user.mention))
 
 @client.command()
 @bot_has_permissions(ban_members=True, add_reactions=True, read_message_history=True)

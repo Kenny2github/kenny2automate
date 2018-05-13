@@ -88,7 +88,8 @@ class Games(object):
 		self.logger.info('Games.crudehangman', extra={'ctx': ctx})
 		if self.db.execute('SELECT channel_id FROM ch_channels_occupied WHERE channel_id=?', (ctx.channel.id,)).fetchone() is not None:
 			await ctx.send("There is already a game going on in this channel!")
-			if ctx.author.id != DGOWNERID:
+			ownerq = await self.bot.is_owner(ctx.author)
+			if not ownerq:
 				return
 		self.db.execute('INSERT INTO ch_channels_occupied VALUES (?)', (ctx.channel.id,))
 		await ctx.send("Awaiting DM with word...")
@@ -272,23 +273,17 @@ class Games(object):
 		REGA, REGB, REGC, REGD, REGE, REGF, REGG = REGS = '1⃣ 2⃣ 3⃣ 4⃣ 5⃣ 6⃣ 7⃣'.split(' ')
 		msg = await ctx.send(embed=d.Embed(
 			title='Playing Connect 4',
-			description='Player 1: {}'.format(
-				ctx.author.nick or ctx.author.name
-			) + (
+			description='Player 1: {}'.format(ctx.author.display_name) + (
 				'\nReact with {} to join!'.format(SHAKE)
 				if against is None
 				else (
-					'\nPlayer 2: {}'.format(
-						ctx.author.nick or ctx.author.name
-					)
+					'\nPlayer 2: {}'.format(ctx.author.display_name)
 				) if against.id == ctx.author.id
 				else (
 					'\nWaiting for someone from another server to join...'
 				) if against.id == self.bot.user.id
 				else (
-					'\nPlayer 2: {}'.format(
-						against.nick or against.name
-					) + '\nWaiting for Player 2 to join...'
+					'\nPlayer 2: {}'.format(against.display_name) + '\nWaiting for Player 2 to join...'
 				)
 			)
 		))

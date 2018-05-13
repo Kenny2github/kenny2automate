@@ -1,14 +1,17 @@
 import re
 import random
+import functools
 from urllib.parse import quote
 import asyncio as a
 import discord as d
 from discord.ext.commands import command
-import aiohttp
+import requests
 
 class DummyCtx(object):
 	def __init__(self, **kwargs):
 		self.__dict__.update(kwargs)
+
+DGSWIKISERVER = 328938947717890058
 
 class Wiki(object):
 	def __init__(self, bot, logger, loop, server):
@@ -16,8 +19,6 @@ class Wiki(object):
 		self.logger = logger
 		self.loop = loop
 		self.serverid = server
-
-	session = None
 
 	WIKIS = {
 		'de': 'https://scratch-dach.info',
@@ -31,26 +32,56 @@ class Wiki(object):
 		'test': 'https://test.scratch-wiki.info',
 	}
 
+	@staticmethod
+	def __global_check(ctx):
+		return ctx.guild.id == DGSWIKISERVER
+
 	async def req(self, params, wiki='en'):
-		if self.session is None:
-			self.session = aiohttp.ClientSession()
 		params['format'] = 'json'
-		resp = await self.session.get(Wiki.WIKIS[wiki] + '/w/api.php', params=params)
-		cont = await resp.json()
-		resp.close()
-		return cont
+		resp = await self.bot.loop.run_in_executor(
+			None,
+			functools.partial(
+				requests.get,
+				Wiki.WIKIS[wiki] + '/w/api.php',
+				params=params
+			)
+		)
+		return resp.json()
 
 	@command()
 	async def page(self, ctx, *, title):
-		"""Get a link to the contents of a page."""
-		title = title.replace(' ', '_')
-		ns, name = title.split(':', 1)
-		ns = ns[:1].upper() + ns[1:]
-		name = name[:1].upper() + name[1:]
-		title = ns + ':' + name
-		title = quote(title, safe='/:')
-		await ctx.send('https://en.scratch-wiki.info/w/index.php?title={}&action=edit'.format(title))
+		"""Get the contents of a page."""
 		self.logger.info('Wiki.page: ' + title, extra={'ctx': ctx})
+		async with ctx.channel.typing():
+			try:
+				content = await self.req({
+					'action': 'query',
+					'prop': 'revisions',
+					'titles': title,
+					'rvlimit': 1,
+					'rvprop': 'content',
+				})
+			except Exception as exc:
+				logger.error('Fetching page content failed: ' + str(exc),
+					extra={'ctx': DummyCtx(author=DummyCtx(name='Wiki.page'))})
+				await ctx.send('Fetching page content failed. Sorry!')
+				return
+		content = list(content['query']['pages'].values())[0]['revisions'][0]['*']
+		content = content.splitlines()
+		contents = ['```html\n']
+		i = 0
+		for line in content:
+			if len(contents[i]) + 11 > 2000:
+				contents.append('```html\n')
+				temp = contents[i][:1997].rsplit('\n', 1)
+				contents[i], contents[i+1] = temp[0], temo[1] + contents[i][1997:]
+				contents[i] += '```'
+				i += 1
+				contents[i] = '```html\n' + contents[i]
+			contents[i] += line + '\n'
+		contents[-1] += '```'
+		for msg in contents:
+			await ctx.send(msg)
 
 	@command()
 	async def recentchanges(self, ctx, limit=50):
@@ -188,8 +219,3 @@ class Wiki(object):
 					value=str(value),
 				)
 			await ctx.send(embed=embed)
-
-	def __del__(self):
-		if self.session is None:
-			return
-		self.loop.create_task(self.session.close())

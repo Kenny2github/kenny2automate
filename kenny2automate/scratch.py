@@ -1,7 +1,9 @@
 import json
 import random
 from discord.ext.commands import command
-import aiohttp
+import requests
+
+DGSWIKISERVER = 328938947717890058
 
 class Scratch(object):
 	def __init__(self, bot, logger, loop):
@@ -9,16 +11,15 @@ class Scratch(object):
 		self.logger = logger
 		self.loop = loop
 
-	session = None
+	@staticmethod
+	def __global_check(ctx):
+		return ctx.guild.id == DGSWIKISERVER
 
 	async def req(self, url):
-		if self.session is None:
-			self.session = aiohttp.ClientSession()
-		resp = await self.session.get(url)
+		resp = await self.bot.loop.run_in_executor(None, requests.get, url)
 		result = None
-		if resp.status < 400:
-			result = await resp.text()
-		resp.close()
+		if resp.status_code < 400:
+			result = resp.text
 		return result
 
 	@command()
@@ -70,7 +71,3 @@ class Scratch(object):
 				'**' + new['headline'] + '**'
 				+ '\n' + new['copy'] + '\n' + new['url']
 			)
-	def __del__(self):
-		if self.session is None:
-			return
-		self.loop.create_task(self.session.close())

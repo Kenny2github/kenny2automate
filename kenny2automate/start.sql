@@ -10,4 +10,11 @@ CREATE TABLE IF NOT EXISTS gcf_guilds (
 	channel_id integer unsigned NOT NULL,
 	-- role ID to mention for new games
 	role_id integer unsigned NOT NULL DEFAULT 0
-)
+);
+
+CREATE TABLE IF NOT EXISTS user_prefixes (
+	-- user ID
+	user_id integer unsigned NOT NULL,
+	-- prefix
+	prefix char(1) NOT NULL
+);
