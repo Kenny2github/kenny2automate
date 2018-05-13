@@ -32,10 +32,6 @@ class Wiki(object):
 		'test': 'https://test.scratch-wiki.info',
 	}
 
-	@staticmethod
-	def __global_check(ctx):
-		return ctx.guild.id == DGSWIKISERVER
-
 	async def req(self, params, wiki='en'):
 		params['format'] = 'json'
 		resp = await self.bot.loop.run_in_executor(

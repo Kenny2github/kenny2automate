@@ -8,7 +8,6 @@ from discord.ext.commands import Bot
 from discord.ext.commands import bot_has_permissions
 from discord.ext import commands as c
 
-DGOWNERID = 329097918181146625
 DGBANSERVERID = 328938947717890058
 #DGBANSERVERID = 337100820371996675
 
@@ -39,9 +38,6 @@ logger.setLevel(logging.INFO if len(sys.argv) < 2 else logging.DEBUG)
 logger.addHandler(handler)
 sys.stderr = LoggerWriter(logger.error)
 sys.stdout = LoggerWriter(logger.debug)
-logger.error('Testing stderr', extra={'ctx': DummyCtx(author=DummyCtx(name='(logger)'))})
-print('Testing stderr2', file=sys.stderr)
-print('Testing stdout', file=sys.stdout)
 
 dbw = sql.connect('kenny2automate.db')
 dbw.row_factory = sql.Row
@@ -86,6 +82,7 @@ client.add_cog(Regexes(client, logger))
 @client.event
 async def on_ready(*_, **__):
 	logger.info('Ready!', extra={'ctx': DummyCtx(author=DummyCtx(name='(core)'))})
+	await client.change_presence(game=d.Game(name=';help'))
 
 @client.command()
 async def repeat(ctx, *, arg):

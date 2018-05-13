@@ -220,14 +220,14 @@ class Games(object):
 
 	@command()
 	@has_permissions(administrator=True)
-	async def connect4_config(self, ctx, channel: d.TextChannel = None, role: d.Role = None):
+	async def connect4_config(self, ctx, operation='get', channel: d.TextChannel = None, role: d.Role = None):
 		"""Get or set global connect4 configuration for this server.
 
 		If specified without parameters, gets the current configuration.
 		To set the channel to announce global connect4 games, run ;connect4_config <channel mention>
 		To set a role to mention when a game is happening as well, run ;connect4_config <channel mention> <role name or mention>
 		"""
-		if channel is None and role is None:
+		if operation == 'get':
 			res = self.db.execute('SELECT channel_id, role_id FROM gcf_guilds WHERE guild_id=?', (ctx.guild.id,)).fetchone()
 			if res is None:
 				await ctx.send('Nothing is set for this server! Run ;help connect4_config to see how to set it.')
@@ -240,23 +240,28 @@ class Games(object):
 				await ctx.send('Channel for global connect4: {}\nRole to mention: {}'.format(channel.mention, role.name))
 			else:
 				await ctx.send('Channel for global connect4: {}'.format(channel.mention))
-			return
-		res = self.db.execute('SELECT (channel_id) FROM gcf_guilds WHERE guild_id=?', (ctx.guild.id,)).fetchone()
-		if channel is not None:
-			if res is not None:
-				self.db.execute('UPDATE gcf_guilds SET channel_id=? WHERE guild_id=?', (channel.id, ctx.guild.id))
-			else:
-				self.db.execute('INSERT INTO gcf_guilds (guild_id, channel_id) VALUES (?, ?)', (ctx.guild.id, channel.id))
-			await ctx.send('Successfully set channel for global connect4 to {}'.format(channel.mention))
-		if role is not None:
-			if res is not None:
-				self.db.execute('UPDATE gcf_guilds SET role_id=? WHERE guild_id=?', (role.id, ctx.guild.id))
-			elif channel is not None:
-				self.db.execute('INSERT INTO gcf_guilds (guild_id, channel_id, role_id) VALUES (?, ?, ?)', (ctx.guild.id, channel.id, role.id))
-			else:
-				await ctx.send('Cannot set global connect4 mention without setting a channel.')
-				return
-			await ctx.send('Successfully set role for global connect4 to {}'.format(role.name))
+		elif operation == 'reset':
+			self.db.execute('DELETE FROM gcf_guilds WHERE guild_id=?', (ctx.guild.id,))
+			await ctx.send('Successfully removed config for this server.')
+		elif channel is None and role is None:
+			await ctx.send('Cannot set config with no parameters...')
+		else:
+			res = self.db.execute('SELECT (channel_id) FROM gcf_guilds WHERE guild_id=?', (ctx.guild.id,)).fetchone()
+			if channel is not None:
+				if res is not None:
+					self.db.execute('UPDATE gcf_guilds SET channel_id=? WHERE guild_id=?', (channel.id, ctx.guild.id))
+				else:
+					self.db.execute('INSERT INTO gcf_guilds (guild_id, channel_id) VALUES (?, ?)', (ctx.guild.id, channel.id))
+				await ctx.send('Successfully set channel for global connect4 to {}'.format(channel.mention))
+			if role is not None:
+				if res is not None:
+					self.db.execute('UPDATE gcf_guilds SET role_id=? WHERE guild_id=?', (role.id, ctx.guild.id))
+				elif channel is not None:
+					self.db.execute('INSERT INTO gcf_guilds (guild_id, channel_id, role_id) VALUES (?, ?, ?)', (ctx.guild.id, channel.id, role.id))
+				else:
+					await ctx.send('Cannot set global connect4 mention without setting a channel.')
+					return
+				await ctx.send('Successfully set role for global connect4 to {}'.format(role.name))
 
 	@command()
 	@bot_has_permissions(manage_messages=True, add_reactions=True, read_message_history=True)

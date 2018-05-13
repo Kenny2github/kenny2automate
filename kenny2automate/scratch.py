@@ -11,10 +11,6 @@ class Scratch(object):
 		self.logger = logger
 		self.loop = loop
 
-	@staticmethod
-	def __global_check(ctx):
-		return ctx.guild.id == DGSWIKISERVER
-
 	async def req(self, url):
 		resp = await self.bot.loop.run_in_executor(None, requests.get, url)
 		result = None
