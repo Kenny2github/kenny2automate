@@ -71,13 +71,13 @@ class Games(object):
 	def substrs(sub, string):
 		last_found = -1
 		while 1:
-			last_found = string.find(sub, last_found + 1)
+			last_found = string.lower().find(sub, last_found + 1)
 			if last_found == -1:
 				break
 			yield last_found
 
 	@command()
-	@bot_has_permissions(manage_messages=False)
+	@c.check(lambda ctx: not ctx.channel.permissions_for(ctx.guild.me).manage_messages)
 	async def crudehangman(self, ctx):
 		"""Hangman for less permissions
 
@@ -95,7 +95,7 @@ class Games(object):
 		await ctx.send("Awaiting DM with word...")
 		WORD = await ctx.bot.wait_for('message',
 			check=lambda m: isinstance(m.channel, d.DMChannel) and m.author == ctx.message.author)
-		WORD = WORD.content.lower()
+		WORD = WORD.content
 		letters = ['_'] * len(WORD)
 		lowers = (
 			'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
@@ -103,7 +103,7 @@ class Games(object):
 			'u', 'v', 'w', 'x', 'y', 'z'
 		)
 		for i in range(len(WORD)):
-			if WORD[i] not in lowers:
+			if WORD[i].lower() not in lowers:
 				letters[i] = WORD[i]
 		missed = []
 		shanpe = 0
@@ -111,9 +111,9 @@ class Games(object):
 		while "".join(letters) != WORD and shanpe < len(DGHANGMANSHANPES) - 1:
 			letter = (await ctx.bot.wait_for('message',
 				check=lambda m: m.channel == ctx.channel and m.content in lowers)).content
-			if WORD.find(letter) != -1:
+			if WORD.lower().find(letter) != -1:
 				for i in self.substrs(letter, WORD):
-					letters[i] = letter
+					letters[i] = WORD[i]
 			else:
 				if letter not in missed:
 					missed.append(letter)
@@ -147,7 +147,7 @@ class Games(object):
 		except a.TimeoutError:
 			await ctx.send("The word didn't arrive for a minute! The game has been automatically cancelled.")
 			return
-		WORD = msg.content.lower()
+		WORD = msg.content
 		letters = ['_'] * len(WORD)
 		lowers = (
 			'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
@@ -158,7 +158,7 @@ class Games(object):
 		for regn in range(len(REGS)):
 			translate[REGS[regn]] = lowers[regn]
 		for i in range(len(WORD)):
-			if WORD[i] not in lowers:
+			if WORD[i].lower() not in lowers:
 				letters[i] = WORD[i]
 		missed = []
 		shanpe = 0
@@ -199,9 +199,9 @@ class Games(object):
 			else:
 				letter = translate[str(reaction)]
 			await reaction.message.remove_reaction(reaction, user)
-			if WORD.find(letter) != -1:
+			if WORD.lower().find(letter) != -1:
 				for i in self.substrs(letter, WORD):
-					letters[i] = letter
+					letters[i] = WORD[i]
 			else:
 				if letter not in missed:
 					missed.append(letter)
