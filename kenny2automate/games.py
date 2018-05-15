@@ -639,3 +639,69 @@ class Games(object):
 		traceback.print_exception(type(error), error, None)
 		if isinstance(error, (c.BotMissingPermissions, c.MissingPermissions)):
 			await ctx.send(str(error))
+
+	@bot_has_permissions(manage_messages=True)
+	async def battleship(self, ctx, against: d.Member = None):
+		raise NotImplementedError('stub')
+		self.logger.info('Games.battleship', extra={'ctx': ctx})
+		BLACK, BLUE, RED, SHAKE = '⬛ 🔵 🔴 🤝'.split(' ')
+		msg = await ctx.send(embed=d.Embed(
+			title='Playing Battleship',
+			description='Player 1: {}\nReact with {} to join!'.format(
+				player1.nick or player1.name,
+				SHAKE
+			)
+		))
+		player1 = ctx.author
+		if against is None:
+			await msg.add_reaction(SHAKE)
+			try:
+				reaction, user = await ctx.bot.wait_for('reaction_add', check=lambda r, u:
+					r.emoji == SHAKE
+					and r.message.id == msg.id
+					and u.id != self.bot.user.id
+					and r.message.channel.id == ctx.channel.id,
+					timeout=60.0
+			except a.TimeoutError:
+				await msg.edit(content='Nobody joined for a minute! The game has been automatically cancelled.', embed=None)
+				await msg.clear_reactions()
+				return
+			if user.id == ctx.author.id:
+				await ctx.send('Game cancelled by starter.')
+				return
+			player2 = user
+			del reaction, user
+		elif against.bot:
+			await ctx.send("Wait, you can't play against a bot! Game cancelled.")
+			return
+		elif str(against.status) == 'offline':
+			await ctx.send("Wait, Player 2 is offline! Game cancelled.")
+			return
+		else:
+			await msg.add_reaction(SHAKE)
+			try:
+				reaction, user = await self.bot.wait_for('reaction_add', check=lambda r, u:
+					r.emoji == SHAKE
+					and r.message.id == msg.id
+					and u.id in (against.id, ctx.author.id)
+					and r.message.channel.id == ctx.channel.id,
+					timeout=60.0
+				)
+			except a.TimeoutError:
+				await msg.edit(content="Player 2 didn't join for a minute! The game has been automatically cancelled.", embed=None)
+				await msg.clear_reactions()
+				return
+			if user.id == ctx.author.id:
+				await ctx.send('Game cancelled by starter.')
+				return
+			player2 = user
+			del reaction, user
+		del msg
+		board1 = [[BLUE for _ in range(10)] for _ in range(10)]
+		board2 = [[BLUE for _ in range(10)] for _ in range(10)]
+		def checkdead(board):
+			for i in board:
+				for j in i:
+					if j == BLACK:
+						return False
+			return True
