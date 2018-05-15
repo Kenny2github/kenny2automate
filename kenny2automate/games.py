@@ -645,6 +645,8 @@ class Games(object):
 		raise NotImplementedError('stub')
 		self.logger.info('Games.battleship', extra={'ctx': ctx})
 		BLACK, BLUE, RED, SHAKE = '⬛ 🔵 🔴 🤝'.split(' ')
+		NUMBERS = '1⃣ 2⃣ 3⃣ 4⃣ 5⃣ 6⃣ 7⃣ 8⃣ 9⃣ 🔟'.split(' ')
+		LETTERS = '🇦 🇧 🇨 🇩 🇪 🇫 🇬 🇭 🇮 🇯'.split(' ')
 		msg = await ctx.send(embed=d.Embed(
 			title='Playing Battleship',
 			description='Player 1: {}\nReact with {} to join!'.format(
@@ -662,6 +664,7 @@ class Games(object):
 					and u.id != self.bot.user.id
 					and r.message.channel.id == ctx.channel.id,
 					timeout=60.0
+				)
 			except a.TimeoutError:
 				await msg.edit(content='Nobody joined for a minute! The game has been automatically cancelled.', embed=None)
 				await msg.clear_reactions()
