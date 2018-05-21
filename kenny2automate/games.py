@@ -51,6 +51,7 @@ class Games(object):
 		else:
 			await ctx.send("No more tries, matey! Better luck next time! The secret number was {}.".format(secret))
 
+	#@command()
 	@bot_has_permissions(manage_messages=True)
 	async def memory(self, ctx):
 		#raise NotImplementedError('stub')
@@ -66,7 +67,6 @@ class Games(object):
 			('\U0001F440', '\U0001F4F7'),
 			('\U0001F4F9', '\U0001F4FC'),
 			('\U0001F500', '\U0001F53C'),
-			('\U0001F540', '\U0001F543'),
 			('\U0001F550', '\U0001F567'),
 			('\U0001F5FB', '\U0001F5FF')
 		)
@@ -98,27 +98,32 @@ class Games(object):
 		#	if not ownerq:
 		#		return
 		#self.db.execute('INSERT INTO mem_channels_occupied VALUES (?)', (ctx.channel.id,))
-		BLACK = '\u2b1b'.split(' ')
-		NUMBERS = '1\u20e3 2\u20e3 3\u20e3 4\u20e3 5\u20e3 6\u20e3 7\u20e3 8\u20e3 9\u20e3 \U0001f51f'.split(' ')
-		LETTERS = '\U0001f1e6 \U0001f1e7 \U0001f1e8 \U0001f1e9 \U0001f1ea \U0001f1eb \U0001f1ec \U0001f1ed \U0001f1ee \U0001f1ef'.split(' ')
-		_emojis_used = []
-		_emojis_used_twice = []
+		BLACK, QUESTION = '\u2b1b \u2753'.split(' ')
+		NUMBERS = '1\u20e3 2\u20e3 3\u20e3 4\u20e3 5\u20e3 6\u20e3 7\u20e3 8\u20e3'.split(' ')
+		LETTERS = '\U0001f1e6 \U0001f1e7 \U0001f1e8 \U0001f1e9 \U0001f1ea \U0001f1eb \U0001f1ec \U0001f1ed \U0001f1ee \U0001f1ef \U0001f1f0'.split(' ')
+		ALETTERS = 'abcdefgh'
+		_once = []
 		board = []
-		for row in range(7):
-			board.append([])
-			for __ in range(7):
+		_ems = []
+		for i in range(32):
+			_em = random_emoji()
+			while _em in _ems:
 				_em = random_emoji()
-				while _em in _emojis_used_twice:
-					_em = random_emoji()
-					if _em in _emojis_used:
-						_emojis_used_twice.append(_em)
-					else:
-						_emojis_used.append(_em)
-				board[row].append(_em)
-		del _emojis_used, _emojis_used_twice
+			_ems.append(_em)
+		for i in range(8):
+			board.append([])
+			for j in range(8):
+				_em = random.choice(_ems)
+				if _em in _once:
+					_ems.remove(_em)
+				else:
+					_once.append(_em)
+				board[i].append([_em, False])
+		del _once, _ems
 		def constructboard(board):
-			boardmsg = ''
-			for row in board:
+			boardmsg = QUESTION + "".join(NUMBERS) + '\n'
+			for i, row in enumerate(board):
+				boardmsg += LETTERS[i]
 				for column in row:
 					if column[-1]:
 						boardmsg += column[0]
@@ -126,5 +131,35 @@ class Games(object):
 						boardmsg += BLACK
 				boardmsg += '\n'
 			return boardmsg
-		await ctx.send(constructboard(board))
+		def checkdone(board):
+			for row in board:
+				for emoji, found in row:
+					if not found:
+						return False
+			return True
+		boardmsg = await ctx.send(constructboard(board))
+		while not checkdone(board):
+			msg = await ctx.bot.wait_for('message', check=lambda m:
+				m.channel.id == ctx.channel.id \
+				and re.match('^[a-hA-H][1-8]$', m.content)
+			)
+			grid1 = msg.content.lower()
+			thing1 = board[ALETTERS.index(grid1[0])][int(grid1[1]) - 1]
+			thing1[-1] = True
+			await msg.delete()
+			await boardmsg.edit(content=constructboard(board))
+			msg = await ctx.bot.wait_for('message', check=lambda m:
+				m.channel.id == ctx.channel.id \
+				and re.match('^[a-hA-H][1-8]$', m.content) \
+				and m.content.lower() != grid1
+			)
+			grid2 = msg.content.lower()
+			thing2 = board[ALETTERS.index(grid2[0])][int(grid2[1]) - 1]
+			thing2[-1] = True
+			await msg.delete()
+			await boardmsg.edit(content=constructboard(board))
+			if thing1[0] != thing2[0]:
+				thing1[-1], thing2[-1] = False, False
+				await a.sleep(2)
+				await boardmsg.edit(content=constructboard(board))
 		#self.db.execute('DELETE FROM mem_channels_occupied WHERE channel_id=?', (ctx.channel.id,))
