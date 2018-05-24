@@ -3,6 +3,7 @@ import random
 from itertools import accumulate
 from bisect import bisect
 import asyncio as a
+import discord as d
 from discord.ext.commands import command
 from discord.ext.commands import bot_has_permissions
 
@@ -99,20 +100,20 @@ class Games(object):
 		#		return
 		#self.db.execute('INSERT INTO mem_channels_occupied VALUES (?)', (ctx.channel.id,))
 		BLACK, QUESTION = '\u2b1b \u2753'.split(' ')
-		NUMBERS = '1\u20e3 2\u20e3 3\u20e3 4\u20e3 5\u20e3 6\u20e3 7\u20e3 8\u20e3'.split(' ')
-		LETTERS = '\U0001f1e6 \U0001f1e7 \U0001f1e8 \U0001f1e9 \U0001f1ea \U0001f1eb \U0001f1ec \U0001f1ed \U0001f1ee \U0001f1ef \U0001f1f0'.split(' ')
-		ALETTERS = 'abcdefgh'
+		NUMBERS = '1\u20e3 2\u20e3 3\u20e3 4\u20e3 5\u20e3 6\u20e3'.split(' ')# 7\u20e3 8\u20e3'.split(' ')
+		LETTERS = '\U0001f1e6 \U0001f1e7 \U0001f1e8 \U0001f1e9 \U0001f1ea \U0001f1eb'.split(' ')# \U0001f1ec \U0001f1ed \U0001f1ee \U0001f1ef \U0001f1f0'.split(' ')
+		ALETTERS = 'abcdef'#gh'
 		_once = []
 		board = []
 		_ems = []
-		for i in range(32):
+		for i in range(len(ALETTERS) ** 2 // 2):
 			_em = random_emoji()
 			while _em in _ems:
 				_em = random_emoji()
 			_ems.append(_em)
-		for i in range(8):
+		for i in range(len(ALETTERS)):
 			board.append([])
-			for j in range(8):
+			for j in range(len(ALETTERS)):
 				_em = random.choice(_ems)
 				if _em in _once:
 					_ems.remove(_em)
@@ -130,36 +131,42 @@ class Games(object):
 					else:
 						boardmsg += BLACK
 				boardmsg += '\n'
-			return boardmsg
+			return d.Embed(description=boardmsg)
 		def checkdone(board):
 			for row in board:
 				for emoji, found in row:
 					if not found:
 						return False
 			return True
-		boardmsg = await ctx.send(constructboard(board))
+		boardmsg = await ctx.send(embed=constructboard(board))
+		grid1 = None
+		def check_msg(msg):
+			global grid1
+			if msg.channel.id != ctx.channel.id:
+				return False
+			if not re.match('^[' + ALETTERS + ALETTERS.upper()
+					+ '][1-' + str(len(ALETTERS)) + ']$', msg.content):
+				return False
+			if grid1 is not None and msg.content.lower() == grid1:
+				return False
+			gr = msg.content.lower()
+			return not board[ALETTERS.index(gr[0])][int(gr[1]) - 1][-1]
 		while not checkdone(board):
-			msg = await ctx.bot.wait_for('message', check=lambda m:
-				m.channel.id == ctx.channel.id \
-				and re.match('^[a-hA-H][1-8]$', m.content)
-			)
+			grid1 = None
+			msg = await ctx.bot.wait_for('message', check=check_msg)
 			grid1 = msg.content.lower()
 			thing1 = board[ALETTERS.index(grid1[0])][int(grid1[1]) - 1]
 			thing1[-1] = True
 			await msg.delete()
-			await boardmsg.edit(content=constructboard(board))
-			msg = await ctx.bot.wait_for('message', check=lambda m:
-				m.channel.id == ctx.channel.id \
-				and re.match('^[a-hA-H][1-8]$', m.content) \
-				and m.content.lower() != grid1
-			)
+			await boardmsg.edit(embed=constructboard(board))
+			msg = await ctx.bot.wait_for('message', check=check_msg)
 			grid2 = msg.content.lower()
 			thing2 = board[ALETTERS.index(grid2[0])][int(grid2[1]) - 1]
 			thing2[-1] = True
 			await msg.delete()
-			await boardmsg.edit(content=constructboard(board))
+			await boardmsg.edit(embed=constructboard(board))
 			if thing1[0] != thing2[0]:
 				thing1[-1], thing2[-1] = False, False
 				await a.sleep(2)
-				await boardmsg.edit(content=constructboard(board))
+				await boardmsg.edit(embed=constructboard(board))
 		#self.db.execute('DELETE FROM mem_channels_occupied WHERE channel_id=?', (ctx.channel.id,))
