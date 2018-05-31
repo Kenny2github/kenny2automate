@@ -20,6 +20,11 @@ class Wiki(object):
 		self.loop = loop
 		self.serverid = server
 
+	def __local_check(self, ctx):
+		if ctx.guild is None:
+			return False
+		return ctx.guild.id == DGSWIKISERVER
+
 	WIKIS = {
 		'de': 'https://scratch-dach.info',
 		'en': 'https://en.scratch-wiki.info',
@@ -58,7 +63,7 @@ class Wiki(object):
 					'rvprop': 'content',
 				})
 			except Exception as exc:
-				logger.error('Fetching page content failed: ' + str(exc),
+				self.logger.error('Fetching page content failed: ' + str(exc),
 					extra={'ctx': DummyCtx(author=DummyCtx(name='Wiki.page'))})
 				await ctx.send('Fetching page content failed. Sorry!')
 				return
@@ -70,7 +75,7 @@ class Wiki(object):
 			if len(contents[i]) + 11 > 2000:
 				contents.append('```html\n')
 				temp = contents[i][:1997].rsplit('\n', 1)
-				contents[i], contents[i+1] = temp[0], temo[1] + contents[i][1997:]
+				contents[i], contents[i+1] = temp[0], temp[1] + contents[i][1997:]
 				contents[i] += '```'
 				i += 1
 				contents[i] = '```html\n' + contents[i]

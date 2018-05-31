@@ -32,7 +32,7 @@ class Hangman(object):
 			yield last_found
 
 	@command()
-	@c.check(lambda ctx: not ctx.channel.permissions_for(ctx.guild.me).manage_messages)
+	@c.check(lambda ctx: ctx.guild and (not ctx.channel.permissions_for(ctx.guild.me).manage_messages))
 	async def crudehangman(self, ctx):
 		"""Hangman for less permissions
 
@@ -166,9 +166,3 @@ class Hangman(object):
 			await ctx.send('Congratulations! You have guessed the complete word!')
 		else:
 			await ctx.send('You lost! The word was \"{}\".'.format(WORD))
-
-	@hangman.error
-	async def on_hangman_err(self, ctx, error):
-		self.logger.error('Games.hangman failed: ' + str(error), extra={'ctx': ctx})
-		if isinstance(error, c.BotMissingPermissions):
-			await ctx.send(str(error))

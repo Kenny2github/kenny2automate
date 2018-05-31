@@ -1,11 +1,13 @@
 import sys
 import os
 import logging
+import traceback
 import sqlite3 as sql
 import asyncio as a
 import discord as d
 from discord.ext.commands import Bot
 from discord.ext.commands import bot_has_permissions
+from discord.ext.commands import has_permissions
 from discord.ext import commands as c
 
 DGBANSERVERID = 328938947717890058
@@ -62,12 +64,39 @@ DGDELETEHANDLERS = {}
 
 @client.event
 async def on_message_delete(msg):
+	if msg.mentions:
+		logger.info('Message with mentions deleted: {}'.format(msg.content), extra={'ctx': DummyCtx(author=DummyCtx(name=msg.author.name))})
 	if msg.id in DGDELETEHANDLERS:
 		await DGDELETEHANDLERS[msg.id](msg)
 		del DGDELETEHANDLERS[msg.id]
 
 def add_delete_handler(msg, handler):
 	DGDELETEHANDLERS[msg.id] = handler
+
+@client.event
+async def on_command_error(ctx, exc):
+	logger.error('{} failed: {}'.format(ctx.command, exc), extra={'ctx': ctx})
+	if isinstance(exc, (
+		c.BotMissingPermissions,
+		c.MissingPermissions,
+		c.MissingRequiredArgument,
+	)):
+		return await ctx.send(exc)
+	if isinstance(exc, (
+		c.CheckFailure,
+		c.CommandNotFound,
+		c.TooManyArguments,
+	)):
+		return
+	if hasattr(ctx.command, 'on_error'):
+		return
+	cog = ctx.cog
+	if cog:
+		attr = '_{0.__class__.__name__}__error'.format(cog)
+		if hasattr(cog, attr):
+			return
+	print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
+	traceback.print_exception(type(exc), exc, exc.__traceback__, file=sys.stderr)
 
 from kenny2automate.scratch import Scratch
 from kenny2automate.games import Games
@@ -166,8 +195,32 @@ async def prefix(ctx, *, prefix: str=None):
 @client.command()
 @c.is_owner()
 async def resetprefix(ctx, user: d.Member):
+	"""Reset someone's prefix."""
+	logger.info('resetprefix: ' + str(user.mention), extra={'ctx': ctx})
 	db.execute('DELETE FROM user_prefixes WHERE user_id=?', (user.id,))
 	await ctx.send('Successfully reset prefix for {}'.format(user.mention))
+
+@client.command()
+@has_permissions(administrator=True)
+@bot_has_permissions(manage_messages=True, read_message_history=True)
+async def purge(ctx, limit: int = 100, user: d.Member = None, *, matches: str = None):
+	"""Purge all messages, optionally from ``user``
+	or contains ``matches``."""
+	logger.info('purge', extra={'ctx': ctx})
+	def check_msg(msg):
+		if msg.id == ctx.message.id:
+			return True
+		if user is not None:
+			if msg.author.id != user.id:
+				return False
+		if matches is not None:
+			if matches not in msg.content:
+				return False
+		return True
+	deleted = await ctx.channel.purge(limit=limit, check=check_msg)
+	msg = await ctx.send('Purged {} messages'.format(len(deleted)))
+	await a.sleep(2)
+	await msg.delete()
 
 @client.command()
 @bot_has_permissions(ban_members=True, add_reactions=True, read_message_history=True)
@@ -216,14 +269,6 @@ async def votetoban(ctx, *, user: d.Member):
 					+ ' when admins were gone.')
 		else:
 			await ctx.send('{} votes for and {} votes against. The user stays.'.format(dos, nos))
-
-@votetoban.error
-async def on_votetoban_err(ctx, error):
-	logger.error('votetoban failed: ' + str(error), extra={'ctx': ctx})
-	if isinstance(error, c.BotMissingPermissions):
-		await ctx.send(str(error))
-	else:
-		raise error
 
 WATCHED_FILES_MTIMES = [
 	(f, os.path.getmtime(f))

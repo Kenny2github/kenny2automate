@@ -426,10 +426,3 @@ class Connect4(object):
 				description=boardmsgcont
 			))
 			await ctx2.send(embed=embed)
-
-	@connect4.error
-	async def on_connect4_err(self, ctx, error):
-		self.logger.error('Games.connect4 failed:', extra={'ctx': ctx})
-		traceback.print_exception(type(error), error, None)
-		if isinstance(error, (c.BotMissingPermissions, c.MissingPermissions)):
-			await ctx.send(str(error))
