@@ -104,6 +104,7 @@ from kenny2automate.wiki import Wiki
 from kenny2automate.regexes import Regexes
 from kenny2automate.connect4 import Connect4
 from kenny2automate.hangman import Hangman
+from kenny2automate.card_games import CardGames
 
 client.add_cog(Scratch(client, logger, client.loop))
 client.add_cog(Games(client, logger, db))
@@ -111,6 +112,7 @@ client.add_cog(Wiki(client, logger, client.loop, DGBANSERVERID))
 client.add_cog(Regexes(client, logger))
 client.add_cog(Connect4(client, logger, db))
 client.add_cog(Hangman(client, logger, db))
+client.add_cog(CardGames(client, logger, db))
 
 @client.event
 async def on_ready(*_, **__):
