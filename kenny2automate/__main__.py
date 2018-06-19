@@ -1,5 +1,6 @@
 import sys
 import os
+import re
 import logging
 import traceback
 import sqlite3 as sql
@@ -63,6 +64,17 @@ client = Bot(
 DGDELETEHANDLERS = {}
 
 @client.event
+async def on_message(msg):
+	ctx = await client.get_context(msg)
+	if ctx.channel.permissions_for(ctx.guild.me).manage_messages \
+			and ctx.guild.id == DGBANSERVERID:
+		if re.search(r'https?://discord(\.gg|app\.com/invite)',
+				msg.content, re.I):
+			await msg.delete()
+			return
+	await client.invoke(ctx)
+
+@client.event
 async def on_message_delete(msg):
 	if msg.mentions:
 		logger.info('Message with mentions deleted: {}'.format(msg.content), extra={'ctx': DummyCtx(author=DummyCtx(name=msg.author.name))})
@@ -80,6 +92,7 @@ async def on_command_error(ctx, exc):
 		c.BotMissingPermissions,
 		c.MissingPermissions,
 		c.MissingRequiredArgument,
+		c.BadArgument,
 	)):
 		return await ctx.send(exc)
 	if isinstance(exc, (
