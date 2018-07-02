@@ -72,9 +72,9 @@ class PrivateGames(object):
 				await msg.edit(content="Player 2 didn't join after a minute! The game has been automatically cancelled.", embed=None)
 				await msg.clear_reactions()
 				return
-#			if user.id == ctx.author.id:
-#				await ctx.send('Game cancelled by starter.')
-#				return
+			if user.id == ctx.author.id:
+				await ctx.send('Game cancelled by starter.')
+				return
 			player2 = user
 			del reaction, user
 		if not player1.dm_channel:
@@ -82,7 +82,7 @@ class PrivateGames(object):
 		if not player2.dm_channel:
 			await player2.create_dm()
 		qyoo = a.Queue()
-		await a.wait([coro1(ctx, player1, qyoo, **kwargs), coro2(ctx, player2, qyoo, **kwargs)])
+		await a.gather(coro1(ctx, player1, qyoo, **kwargs), coro2(ctx, player2, qyoo, **kwargs))
 
 	@staticmethod
 	def unblock_me(qyoo):
@@ -106,7 +106,7 @@ class PrivateGames(object):
 			await qyoo.join()
 		return data2
 
-	@command()
+#	@command()
 	async def test_game(self, ctx, against: d.Member = None):
 		async def player1_coro(ctx, player1, player2, qyoo):
 			await a.sleep(2)

@@ -66,8 +66,10 @@ DGDELETEHANDLERS = {}
 @client.event
 async def on_message(msg):
 	ctx = await client.get_context(msg)
-	if ctx.channel.permissions_for(ctx.guild.me).manage_messages \
-			and ctx.guild.id == DGBANSERVERID:
+	if (ctx.guild
+		and ctx.channel.permissions_for(ctx.guild.me).manage_messages
+		and ctx.guild.id == DGBANSERVERID
+	):
 		if re.search(r'https?://discord(\.gg|app\.com/invite)',
 				msg.content, re.I):
 			await msg.delete()
