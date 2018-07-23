@@ -207,8 +207,13 @@ class Connect4(object):
 				for y in range(BH - 3):
 					if board[x][y] == tile and board[x+1][y+1] == tile and board[x+2][y+2] == tile and board[x+3][y+3] == tile:
 						return True
-			#all false
-			return False
+			#check + because if it's full and no 4s everyone won
+			for row in board:
+				for i in row:
+					if i == BLACK:
+						return False
+			#all full and no rows
+			return True
 
 		def constructboard(board, players, whose):
 			#only add names if not global to avoid inappropriate names x-server
@@ -411,14 +416,20 @@ class Connect4(object):
 			title="Board",
 			description=boardmsgcont,
 		))
-		embed = d.Embed(
-			title="Game Over!",
-			description='The game is over!\nWinner: {}{}\nLoser: {}{}\n'.format(
-				RED if redwon else BLUE, (' (' + ((player1.nick or player1.name) if redwon else (player2.nick or player2.name)) + ')') if not global_ else '',
-				RED if bluewon else BLUE, (' (' + ((player1.nick or player1.name) if bluewon else (player2.nick or player2.name)) + ')') if not global_ else ''
-			),
-			color=0xff0000 if redwon else 0x55acee
-		)
+		if redwon and bluewon:
+			embed = d.Embed(
+				title="Game Over!",
+				description="The game is tied! The board is full and no 4-in-a-rows have been made."
+			)
+		else:
+			embed = d.Embed(
+				title="Game Over!",
+				description='The game is over!\nWinner: {}{}\nLoser: {}{}\n'.format(
+					RED if redwon else BLUE, (' (' + ((player1.nick or player1.name) if redwon else (player2.nick or player2.name)) + ')') if not global_ else '',
+					RED if bluewon else BLUE, (' (' + ((player1.nick or player1.name) if bluewon else (player2.nick or player2.name)) + ')') if not global_ else ''
+				),
+				color=0xff0000 if redwon else 0x55acee
+			)
 		await ctx.send(embed=embed)
 		if global_:
 			await boardmsg2.edit(embed=d.Embed(

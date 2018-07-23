@@ -95,6 +95,7 @@ async def on_command_error(ctx, exc):
 		c.MissingPermissions,
 		c.MissingRequiredArgument,
 		c.BadArgument,
+		c.CommandOnCooldown,
 	)):
 		return await ctx.send(exc)
 	if isinstance(exc, (
@@ -133,6 +134,16 @@ client.add_cog(CardGames(client, logger, db))
 async def on_ready(*_, **__):
 	logger.info('Ready!', extra={'ctx': DummyCtx(author=DummyCtx(name='(core)'))})
 	await client.change_presence(game=d.Game(name=';help'))
+
+@client.command('eval')
+@c.is_owner()
+async def eval_(ctx, *, arg):
+	"""Execute Python code. Only available to owner."""
+	logger.info('exec: ' + arg, extra={'ctx': ctx})
+	try:
+		await eval(arg, globals(), locals())
+	except BaseException as e:
+		await ctx.send(e)
 
 @client.command()
 async def repeat(ctx, *, arg):
@@ -252,8 +263,8 @@ async def votetoban(ctx, *, user: d.Member):
 				and not member.bot:
 			await ctx.send(member.mention + ', someone requests for ' + user.mention + ' to be banned!')
 			return
-	DOBAN = '🚫'
-	NOBAN = '😇'
+	DOBAN = '\U0001f6ab'
+	NOBAN = '\U0001f607'
 	msg = await ctx.send('**Vote to ban ' + user.mention + '**\nReact ' + DOBAN + ' to vote to ban; react ' + NOBAN + ' to vote to keep.')
 	await msg.add_reaction(DOBAN)
 	await msg.add_reaction(NOBAN)
