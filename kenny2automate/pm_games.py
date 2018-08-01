@@ -17,7 +17,7 @@ class PrivateGames(object):
 		perms = ctx.channel.permissions_for(self.bot.user)
 		return perms.manage_messages and perms.add_reactions and perms.read_message_history
 
-	async def _game(self, ctx, name, against, coro1, coro2, **kwargs):
+	async def _gather_game(self, ctx, name, against):
 		SHAKE = '\U0001f91d'
 		msg = await ctx.send(embed=d.Embed(
 			title='Playing {}'.format(name),
@@ -81,6 +81,10 @@ class PrivateGames(object):
 			await player1.create_dm()
 		if not player2.dm_channel:
 			await player2.create_dm()
+		return (player1, player2)
+
+	async def _game(self, ctx, name, against, coro1, coro2, **kwargs):
+                player1, player2 = await self._gather_game(ctx, name, against)
 		qyoo = a.Queue()
 		await a.gather(coro1(ctx, player1, qyoo, **kwargs), coro2(ctx, player2, qyoo, **kwargs))
 
