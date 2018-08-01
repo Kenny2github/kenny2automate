@@ -84,7 +84,7 @@ class PrivateGames(object):
 		return (player1, player2)
 
 	async def _game(self, ctx, name, against, coro1, coro2, **kwargs):
-                player1, player2 = await self._gather_game(ctx, name, against)
+		player1, player2 = await self._gather_game(ctx, name, against)
 		qyoo = a.Queue()
 		await a.gather(coro1(ctx, player1, qyoo, **kwargs), coro2(ctx, player2, qyoo, **kwargs))
 

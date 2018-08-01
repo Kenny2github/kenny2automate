@@ -134,7 +134,7 @@ class CardGames(PrivateGames):
 		hand2 = [deck.pop() for _ in range(7)]
 		hand2.sort(key=lambda c: c.number)
 		books2 = []
-		async def stats(pid, footer):
+		def stats(pid, footer):
 			embed = d.Embed(
 				title='Situation',
 				description='Your hand and books.',
@@ -142,7 +142,7 @@ class CardGames(PrivateGames):
 			)
 			embed.add_field(name='Hand', value=' '.join(str(c) for c in (hand1 if pid==1 else hand2)) or 'Empty', inline=False)
 			embed.add_field(name='Books', value='\n'.join(' '.join(str(c) for c in b) for b in (books1 if pid==1 else books2)) or 'None', inline=False)
-			embed.set_footer(text=footer)
+			embed.add_field(name='Status', value=footer, inline=False)
 			return embed
 		def checc1(m):
 			if m.channel.id != dmx1.id or m.author.id != player1.id:
@@ -175,7 +175,7 @@ class CardGames(PrivateGames):
 			for num, count in counts.items():
 				if count >= 4:
 					newbook = [c for c in (hand1 if pid==1 else hand2) if c.number == num]
-					newbook.sort(lambda c: c.number)
+					newbook.sort(key=lambda c: c.suit)
 					newbooks.append(newbook)
 					(books1 if pid==1 else books2).append(newbook)
 					tmp = [c for c in (hand1 if pid==1 else hand2) if c.number != num]
@@ -184,7 +184,7 @@ class CardGames(PrivateGames):
 			if newbooks:
 				await (dmx1 if pid==1 else dmx2).send(embed=d.Embed(
 					title='New books',
-					description='\n'.join(' '.join(c for c in b) for b in newbooks)
+					description='\n'.join(' '.join(str(c) for c in b) for b in newbooks)
 				))
 		await checkbooks(1)
 		await checkbooks(2)
@@ -192,26 +192,29 @@ class CardGames(PrivateGames):
 			'card': 'Send a card number (e.g. Q or 10) to ask for it.',
 			'wait': "Waiting for opponent's question..."
 		}
-		await dmx2.send(stats(2, M['wait']))
+		await dmx2.send(embed=stats(2, M['wait']))
 		await dmx1.send(embed=stats(1, M['card']))
 		while hand1 and hand2 and deck:
 			matches = True
-			while matches:
+			while matches and hand1:
 				msg = await ctx.bot.wait_for('message', check=checc1)
 				num = ('A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K').index(msg.content.upper().strip())
-				matches = [c for c in hand2 if c.number == question]
+				matches = [c for c in hand2 if c.number == num]
 				count = len(matches)
-				hand2 = [c for c in hand2 if c.number != question]
+				hand2 = [c for c in hand2 if c.number != num]
 				if matches:
 					await dmx2.send('Your opponent asked for {}s - since you had {}, you were forced to hand them over.'.format(Card.NUMBERS[num], count))
 					hand1.extend(matches)
+					hand1.sort(key=lambda c: c.number)
 					await dmx1.send(content='You got: {}'.format(' '.join(str(c) for c in matches)), embed=stats(1, M['card']))
 				else:
 					draw = deck.pop()
 					hand1.append(draw)
+					hand1.sort(key=lambda c: c.number)
 					if draw.number == num:
+						matches = True
 						await dmx2.send('Your opponent asked for {}s - although you had {}, you are not safe yet.'.format(Card.NUMBERS[num], count))
-						await dmx1.send(content="Go fish! You got a {} - it's what you asked for!", embed=stats(1, M['card']))
+						await dmx1.send(content="Go fish! You got a {} - it's what you asked for!".format(Card.NUMBERS[num]), embed=stats(1, M['card']))
 					else:
 						await dmx2.send(
 							content='Your opponent asked for {}s - since you had {}, you are safe.'.format(Card.NUMBERS[num], count),
@@ -220,39 +223,42 @@ class CardGames(PrivateGames):
 						await dmx1.send(content="Go fish! You got a {}.".format(draw), embed=stats(1, M['wait']))
 				await checkbooks(1)
 			matches = True
-			while matches:
+			while matches and hand2:
 				msg = await ctx.bot.wait_for('message', check=checc2)
 				num = ('A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K').index(msg.content.upper().strip())
-				matches = [c for c in hand1 if c.number == question]
+				matches = [c for c in hand1 if c.number == num]
 				count = len(matches)
-				hand1 = [c for c in hand1 if c.number != question]
+				hand1 = [c for c in hand1 if c.number != num]
 				if matches:
 					await dmx1.send('Your opponent asked for {}s - since you had {}, you were forced to hand them over.'.format(Card.NUMBERS[num], count))
 					hand2.extend(matches)
+					hand2.sort(key=lambda c: c.number)
 					await dmx2.send(content='You got: {}'.format(' '.join(str(c) for c in matches)), embed=stats(2, M['card']))
 				else:
 					draw = deck.pop()
 					hand2.append(draw)
+					hand2.sort(key=lambda c: c.number)
 					if draw.number == num:
+						matches = True
 						await dmx1.send('Your opponent asked for {}s - although you had {}, you are not safe yet.'.format(Card.NUMBERS[num], count))
-						await dmx2.send(content="Go fish! You got a {} - it's what you asked for!", embed=stats(2, M['card']))
+						await dmx2.send(content="Go fish! You got a {} - it's what you asked for!".format(Card.NUMBERS[num]), embed=stats(2, M['card']))
 					else:
 						await dmx1.send(
-                                                        content='Your opponent asked for {}s - since you had {}, you are safe.'.format(Card.NUMBERS[num], count),
-                                                        embed=stats(2, M['card'])
-                                                )
+							content='Your opponent asked for {}s - since you had {}, you are safe.'.format(Card.NUMBERS[num], count),
+							embed=stats(1, M['card'])
+						)
 						await dmx2.send("Go fish! You got a {}.".format(draw))
 				await checkbooks(2)
 		books1 = len(books1)
 		books2 = len(books2)
 		if books1 > books2:
-                        msg1 = 'You won! You had more books ({} > {})'
-                        msg2 = 'You lost! You had less books ({} < {})'
-                elif books1 < books2:
-                        msg1 = 'You lost! You had less books ({} < {})'
-                        msg2 = 'You won! You had more books ({} > {})'
-                else:
-                        msg1 = "It's a tie! You had the same number of books ({} = {})"
-                        msg2 = msg1
-                await dmx1.send(msg1.format(books1, books2))
-                await dmx2.send(msg2.format(books1, books2))
+			msg1 = 'You won! You had more books ({} > {})'
+			msg2 = 'You lost! You had less books ({} < {})'
+		elif books1 < books2:
+			msg1 = 'You lost! You had less books ({} < {})'
+			msg2 = 'You won! You had more books ({} > {})'
+		else:
+			msg1 = "It's a tie! You had the same number of books ({} = {})"
+			msg2 = msg1
+		await dmx1.send(msg1.format(books1, books2))
+		await dmx2.send(msg2.format(books1, books2))
