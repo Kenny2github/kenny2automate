@@ -1,11 +1,5 @@
-import re
-import random
-from itertools import accumulate
-from bisect import bisect
 import asyncio as a
 import discord as d
-from discord.ext.commands import command
-from discord.ext.commands import bot_has_permissions
 
 class PrivateGames(object):
 	def __init__(self, bot, logger, db):
@@ -82,6 +76,42 @@ class PrivateGames(object):
 		if not player2.dm_channel:
 			await player2.create_dm()
 		return (player1, player2)
+
+	async def _gather_multigame(self, ctx, name):
+		SHAKE = '\U0001f91d'
+		CHECK = '\u2705'
+		msg = await ctx.send(embed=d.Embed(
+			title='Playing {}'.format(name),
+			description='Player 1: {}'.format(ctx.author.display_name) + (
+				'\nReact with {} to join!'.format(SHAKE)
+			),
+		))
+		players = [ctx.author]
+		await msg.add_reaction(SHAKE)
+		await msg.add_reaction(CHECK)
+		try:
+			reaction, user = await self.bot.wait_for('reaction_add',
+				check=lambda r, u: \
+					r.emoji in (CHECK, SHAKE) \
+					and r.message.id == msg.id \
+					and u.id == ctx.author.id,
+				timeout=60.0
+			)
+		except a.TimeoutError:
+			pass
+		if reaction.emoji == SHAKE:
+			await ctx.send('Game cancelled by starter.')
+			return
+		for r in msg.reactions:
+			if r.emoji == SHAKE:
+				async for u in r.users():
+					if u.id != self.bot.user.id:
+						players.append(u)
+		del reaction, user
+		for player in players:
+			if not player.dm_channel:
+				await player.create_dm()
+		return players
 
 	async def _game(self, ctx, name, against, coro1, coro2, **kwargs):
 		player1, player2 = await self._gather_game(ctx, name, against)

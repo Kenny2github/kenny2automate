@@ -1,7 +1,5 @@
 import re
 import random
-from itertools import accumulate
-from bisect import bisect
 import asyncio as a
 import discord as d
 from discord.ext.commands import command
@@ -116,149 +114,142 @@ class CardGames(PrivateGames):
 		await self._game(ctx, 'Blackjack', against, coro1, coro2, deck=deck)
 
 	@command()
+	@bot_has_permissions(add_reactions=True, read_message_history=True)
 	async def fish(self, ctx, against: d.Member = None):
 		"""Play Go Fish! Do ;fish to let anyone join
 		or ;fish @mention to get a specific person.
 		"""
 		try:
-			player1, player2 = await self._gather_game(ctx, 'Go Fish', against)
+			players = await self._gather_game(ctx, 'Go Fish', against)
 		except (TypeError, ValueError):
 			return
 		deck = [Card(i, j) for i in range(4) for j in range(13)]
 		random.shuffle(deck)
-		dmx1 = player1.dm_channel
-		dmx2 = player2.dm_channel
-		hand1 = [deck.pop() for _ in range(7)]
-		hand1.sort(key=lambda c: c.number)
-		books1 = []
-		hand2 = [deck.pop() for _ in range(7)]
-		hand2.sort(key=lambda c: c.number)
-		books2 = []
+		dmx = [player.dm_channel for player in players]
+		hands = [[deck.pop() for _ in range(7)] for _ in players]
+		for hand in hands:
+			hand.sort(key=lambda c: c.number)
+		books = [[] for _ in players]
 		def stats(pid, footer):
 			embed = d.Embed(
 				title='Situation',
 				description='Your hand and books.',
 				color=0x0000FF,
 			)
-			embed.add_field(name='Hand', value=' '.join(str(c) for c in (hand1 if pid==1 else hand2)) or 'Empty', inline=False)
-			embed.add_field(name='Books', value='\n'.join(' '.join(str(c) for c in b) for b in (books1 if pid==1 else books2)) or 'None', inline=False)
+			embed.add_field(name='Hand', value=' '.join(str(c) for c in hands[pid]) or 'Empty', inline=False)
+			embed.add_field(name='Books', value='\n'.join(' '.join(str(c) for c in b) for b in books[pid]) or 'None', inline=False)
 			embed.add_field(name='Status', value=footer, inline=False)
 			return embed
-		def checc1(m):
-			if m.channel.id != dmx1.id or m.author.id != player1.id:
-				return False
-			if not re.fullmatch('(?:[JQKA2-9]|10)', m.content, re.I):
-				return False
-			num = ('A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K').index(m.content.upper())
-			for card in hand1:
-				if card.number == num:
-					return True
-			return False
-		def checc2(m):
-			if m.channel.id != dmx2.id or m.author.id != player2.id:
-				return False
-			if not re.fullmatch('(?:[JQKA2-9]|10)', m.content, re.I):
-				return False
-			num = ('A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K').index(m.content.upper())
-			for card in hand2:
-				if card.number == num:
-					return True
-			return False
 		async def checkbooks(pid):
 			counts = {}
 			newbooks = []
-			for card in (hand1 if pid==1 else hand2):
+			for card in hands[pid]:
 				if card.number not in counts:
 					counts[card.number] = 1
 				else:
 					counts[card.number] += 1
 			for num, count in counts.items():
 				if count >= 4:
-					newbook = [c for c in (hand1 if pid==1 else hand2) if c.number == num]
+					newbook = [c for c in hands[pid] if c.number == num]
 					newbook.sort(key=lambda c: c.suit)
 					newbooks.append(newbook)
-					(books1 if pid==1 else books2).append(newbook)
-					tmp = [c for c in (hand1 if pid==1 else hand2) if c.number != num]
-					(hand1 if pid==1 else hand2).clear()
-					(hand1 if pid==1 else hand2).extend(tmp)
+					books[pid].append(newbook)
+					hands[pid] = [c for c in hands[pid] if c.number != num]
 			if newbooks:
-				await (dmx1 if pid==1 else dmx2).send(embed=d.Embed(
+				await dmx[pid].send(embed=d.Embed(
 					title='New books',
 					description='\n'.join(' '.join(str(c) for c in b) for b in newbooks)
 				))
-		await checkbooks(1)
-		await checkbooks(2)
+		for pid in range(len(players)):
+			await checkbooks(pid)
 		M = {
 			'card': 'Send a card number (e.g. Q or 10) to ask for it.',
-			'wait': "Waiting for opponent's question..."
+			'wait': "Waiting for next player's question..."
 		}
-		await dmx2.send(embed=stats(2, M['wait']))
-		await dmx1.send(embed=stats(1, M['card']))
-		while hand1 and hand2 and deck:
-			matches = True
-			while matches and hand1:
-				msg = await ctx.bot.wait_for('message', check=checc1)
-				num = ('A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K').index(msg.content.upper().strip())
-				matches = [c for c in hand2 if c.number == num]
-				count = len(matches)
-				hand2 = [c for c in hand2 if c.number != num]
-				if matches:
-					await dmx2.send('Your opponent asked for {}s - since you had {}, you were forced to hand them over.'.format(Card.NUMBERS[num], count))
-					hand1.extend(matches)
-					hand1.sort(key=lambda c: c.number)
-					await dmx1.send(content='You got: {}'.format(' '.join(str(c) for c in matches)), embed=stats(1, M['card']))
-				else:
-					draw = deck.pop()
-					hand1.append(draw)
-					hand1.sort(key=lambda c: c.number)
-					if draw.number == num:
-						matches = True
-						await dmx2.send('Your opponent asked for {}s - although you had {}, you are not safe yet.'.format(Card.NUMBERS[num], count))
-						await dmx1.send(content="Go fish! You got a {} - it's what you asked for!".format(Card.NUMBERS[num]), embed=stats(1, M['card']))
+		for i, dm in enumerate(dmx[1:]):
+			await dm.send(embed=stats(i+1, M['wait']))
+		await dmx[0].send(embed=stats(1, M['card']))
+		while all(hands) and deck:
+			for pid, player in enumerate(players):
+				matches = True
+				while matches and hands[pid]:
+					def checc(m):
+						if m.channel.id != dmx[pid].id or m.author.id != player.id:
+							return False
+						if not re.fullmatch('(?:[JQKA2-9]|10)', m.content, re.I):
+							return False
+						num = ('A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K').index(m.content.upper())
+						for card in hands[pid]:
+							if card.number == num:
+								return True
+						return False
+					msg = await ctx.bot.wait_for('message', check=checc)
+					num = ('A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K').index(msg.content.upper().strip())
+					matches = []
+					for pid2, player2 in enumerate(players):
+						if player2 == player:
+							continue
+						matches2 = [c for c in hands[pid2] if c.number == num]
+						matches.extend(matches2)
+						count = len(matches2)
+						hands[pid2] = [c for c in hands[pid2] if c.number != num]
+						if matches2:
+							await dmx[pid2].send('{} asked for {}s - since you had {}, you were forced to hand them over.'.format(
+								player.display_name,
+								Card.NUMBERS[num],
+								count
+							))
+							hands[pid].extend(matches)
+					if matches:
+						hands[pid].sort(key=lambda c: c.number)
+						await dmx[pid].send(content='You got: {}'.format(' '.join(str(c) for c in matches)), embed=stats(pid, M['card']))
 					else:
-						await dmx2.send(
-							content='Your opponent asked for {}s - since you had {}, you are safe.'.format(Card.NUMBERS[num], count),
-							embed=stats(2, M['card'])
-						)
-						await dmx1.send(content="Go fish! You got a {}.".format(draw), embed=stats(1, M['wait']))
-				await checkbooks(1)
-			matches = True
-			while matches and hand2:
-				msg = await ctx.bot.wait_for('message', check=checc2)
-				num = ('A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K').index(msg.content.upper().strip())
-				matches = [c for c in hand1 if c.number == num]
-				count = len(matches)
-				hand1 = [c for c in hand1 if c.number != num]
-				if matches:
-					await dmx1.send('Your opponent asked for {}s - since you had {}, you were forced to hand them over.'.format(Card.NUMBERS[num], count))
-					hand2.extend(matches)
-					hand2.sort(key=lambda c: c.number)
-					await dmx2.send(content='You got: {}'.format(' '.join(str(c) for c in matches)), embed=stats(2, M['card']))
-				else:
-					draw = deck.pop()
-					hand2.append(draw)
-					hand2.sort(key=lambda c: c.number)
-					if draw.number == num:
-						matches = True
-						await dmx1.send('Your opponent asked for {}s - although you had {}, you are not safe yet.'.format(Card.NUMBERS[num], count))
-						await dmx2.send(content="Go fish! You got a {} - it's what you asked for!".format(Card.NUMBERS[num]), embed=stats(2, M['card']))
-					else:
-						await dmx1.send(
-							content='Your opponent asked for {}s - since you had {}, you are safe.'.format(Card.NUMBERS[num], count),
-							embed=stats(1, M['card'])
-						)
-						await dmx2.send("Go fish! You got a {}.".format(draw))
-				await checkbooks(2)
-		books1 = len(books1)
-		books2 = len(books2)
-		if books1 > books2:
-			msg1 = 'You won! You had more books ({} > {})'
-			msg2 = 'You lost! You had less books ({} < {})'
-		elif books1 < books2:
-			msg1 = 'You lost! You had less books ({} < {})'
-			msg2 = 'You won! You had more books ({} > {})'
+						draw = deck.pop()
+						hands[pid].append(draw)
+						hands[pid].sort(key=lambda c: c.number)
+						if draw.number == num:
+							matches = True
+							for pid2, player2 in enumerate(players):
+								if player2 == player:
+									continue
+								await dmx[pid2].send('{} asked for {}s - although you had {}, you are not safe yet.'.format(
+									player.display_name,
+									Card.NUMBERS[num],
+									count
+								))
+							await dmx[pid].send(
+								content="Go fish! You got a {} - it's what you asked for!".format(Card.NUMBERS[num]),
+								embed=stats(pid, M['card'])
+							)
+						else:
+							for pid2, player2 in enumerate(players):
+								if player2 == player:
+									continue
+								await dmx[pid2].send('{} asked for {}s - since you had {}, you are safe.'.format(
+									player.display_name,
+									Card.NUMBERS[num],
+									count
+								))
+							await dmx[pid].send(content="Go fish! You got a {}.".format(draw), embed=stats(pid, M['wait']))
+					await checkbooks(pid)
+		books = tuple(map(len, books))
+		max_books = max(books)
+		winners = [i for i, j in enumerate(books) if j == max_books]
+		winners = tuple(players[i] for i in winners)
+		if len(winners) > 1:
+			embed = d.Embed(
+				title='Winners',
+				description='The winners are {}! Congratulations!'.format(
+					', '.join(player.display_name for player in winners[:-1])
+					+ ', and ' + winners[-1].display_name
+				)
+			)
 		else:
-			msg1 = "It's a tie! You had the same number of books ({} = {})"
-			msg2 = msg1
-		await dmx1.send(msg1.format(books1, books2))
-		await dmx2.send(msg2.format(books1, books2))
+			embed = d.Embed(
+				title='Winner',
+				description='The winner is {}! Congratulations!'.format(
+					winners[0].display_name
+				)
+			)
+		for dm in dmx:
+			dm.send(embed=embed)
