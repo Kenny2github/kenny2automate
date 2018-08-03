@@ -102,6 +102,8 @@ class PrivateGames(object):
 		if reaction.emoji == SHAKE:
 			await ctx.send('Game cancelled by starter.')
 			return
+		msg = await ctx.get_message(msg.id)
+		print(msg.reactions)
 		for r in msg.reactions:
 			if r.emoji == SHAKE:
 				async for u in r.users():

@@ -250,6 +250,32 @@ async def purge(ctx, limit: int = 100, user: d.Member = None, *, matches: str = 
 	await a.sleep(2)
 	await msg.delete()
 
+@client.command(name='8ball')
+async def ball(ctx, *, question: str):
+	choice = sum(question.encode('utf8')) % 20
+	await ctx.send((
+		'It is certain.',
+		'It is decidedly so.',
+		'Without a doubt.',
+		'Yes - definitely.',
+		'You may rely on it.',
+		'As I see it, yes.',
+		'Most likely.',
+		'Outlook good.',
+		'Yes.',
+		'Signs point to yes.',
+		'Reply hazy, try again.',
+		'Ask again later.',
+		'Better not tell you now.',
+		'Cannot predict now.',
+		'Concentrate and ask again.',
+		"Don't count on it.",
+		'My reply is no.',
+		'My sources say no.',
+		'Outlook not so good.',
+		'Very doubtful.'
+	)[choice])
+
 @client.command()
 @bot_has_permissions(ban_members=True, add_reactions=True, read_message_history=True)
 async def votetoban(ctx, *, user: d.Member):
