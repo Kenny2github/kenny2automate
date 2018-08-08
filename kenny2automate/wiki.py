@@ -51,6 +51,7 @@ class Wiki(object):
 		return resp.json()
 
 	@command()
+	@c.cooldown(1, 3600.0, c.BucketType.guild)
 	async def page(self, ctx, *, title):
 		"""Get the contents of a page."""
 		self.logger.info('Wiki.page: ' + title, extra={'ctx': ctx})

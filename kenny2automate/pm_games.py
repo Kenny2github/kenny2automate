@@ -97,11 +97,11 @@ class PrivateGames(object):
 					and u.id == ctx.author.id,
 				timeout=60.0
 			)
+			if reaction.emoji == SHAKE:
+				await ctx.send('Game cancelled by starter.')
+				return
 		except a.TimeoutError:
 			pass
-		if reaction.emoji == SHAKE:
-			await ctx.send('Game cancelled by starter.')
-			return
 		msg = await ctx.get_message(msg.id)
 		print(msg.reactions)
 		for r in msg.reactions:
@@ -109,7 +109,6 @@ class PrivateGames(object):
 				async for u in r.users():
 					if u.id != self.bot.user.id:
 						players.append(u)
-		del reaction, user
 		for player in players:
 			if not player.dm_channel:
 				await player.create_dm()

@@ -174,9 +174,12 @@ class CardGames(PrivateGames):
 				for pid2, player2 in enumerate(players):
 					if player2 == player:
 						continue
+					print("sending turn msg to {}".format(player2.display_name))
 					await dmx[pid2].send("It is now {}'s turn.".format(player.display_name))
+				print('sending stats to {}'.format(player.display_name))
 				await dmx[pid].send(embed=stats(pid, M['card']))
 				while matches and hands[pid]:
+					print('{} hand: {}'.format(player.display_name, hands[pid]))
 					def checc(m):
 						if m.channel.id != dmx[pid].id or m.author.id != player.id:
 							return False
@@ -187,35 +190,46 @@ class CardGames(PrivateGames):
 							if card.number == num:
 								return True
 						return False
+					print('waiting for {} to send card'.format(player.display_name))
 					msg = await ctx.bot.wait_for('message', check=checc)
+					print('received card from {}: {}'.format(player.display_name, msg.content))
 					num = ('A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K').index(msg.content.upper().strip())
 					matches = []
 					for pid2, player2 in enumerate(players):
 						if player2 == player:
 							continue
+						print('getting {} matches'.format(player2.display_name))
 						matches2 = [c for c in hands[pid2] if c.number == num]
 						matches.extend(matches2)
+						print('{} matches: {}; all: {}'.format(player2.display_name, matches2, matches))
 						count = len(matches2)
 						hands[pid2] = [c for c in hands[pid2] if c.number != num]
 						if matches2:
+							print('sending {} cards taken to {}'.format(count, player2.display_name))
 							await dmx[pid2].send('{} asked for {}s - since you had {}, you were forced to hand them over.'.format(
 								player.display_name,
 								Card.NUMBERS[num],
 								count
 							))
 							hands[pid].extend(matches)
-					print('{}: {}'.format(player.display_name, hands[pid]))
+					print('{}: {} (matched {})'.format(player.display_name, hands[pid], matches))
 					if matches:
 						hands[pid].sort(key=lambda c: c.number)
+						print('checking books for {}'.format(player.display_name))
 						await checkbooks(pid)
+						print('{}: {}'.format(player.display_name, hands[pid]))
 						if not hands[pid]:
 							break
+						print('sending what got to {}'.format(player.display_name))
 						await dmx[pid].send(content='You got: {}'.format(' '.join(str(c) for c in matches)), embed=stats(pid, M['card']))
 					else:
 						draw = deck.pop()
+						print('{} fished {}'.format(player.display_name, draw))
 						hands[pid].append(draw)
 						hands[pid].sort(key=lambda c: c.number)
+						print('{}: {} (about to check books)'.format(player.display_name, hands[pid]))
 						await checkbooks(pid)
+						print('{}: {}'.format(player.display_name, hands[pid]))
 						if not hands[pid]:
 							break
 						if draw.number == num:
@@ -242,12 +256,17 @@ class CardGames(PrivateGames):
 									count
 								))
 							await dmx[pid].send(content="Go fish! You got a {}.".format(draw), embed=stats(pid, M['wait']))
+				print('all: {} on: {}'.format(hands, deck))
 				if not (all(hands) and deck):
 					break
+		print('getting books')
 		books = tuple(map(len, books))
+		print('book counts: {}'.format(books))
 		max_books = max(books)
+		print('max: {}'.format(max_books))
 		winners = [i for i, j in enumerate(books) if j == max_books]
 		winners = tuple(players[i] for i in winners)
+		print('winners: {}'.format(winners))
 		if len(winners) > 1:
 			embed = d.Embed(
 				title='Winners',
@@ -263,5 +282,7 @@ class CardGames(PrivateGames):
 					winners[0].display_name
 				)
 			)
+		print(embed)
 		for dm in dmx:
-			dm.send(embed=embed)
+			print('sending winner(s) to {}'.format(player.display_name))
+			await dm.send(embed=embed)
