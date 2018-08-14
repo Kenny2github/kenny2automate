@@ -52,7 +52,7 @@ def get_command_prefix(bot, msg):
 	res = db.execute('SELECT prefix FROM user_prefixes WHERE user_id=?', (msg.author.id,)).fetchone()
 	if res is None:
 		return ';'
-	return res['prefix']
+	return (res['prefix'], ';')
 
 client = Bot(
 	description="The most awesome bot to walk(?) the earth.",
@@ -138,7 +138,7 @@ async def on_ready(*_, **__):
 @c.is_owner()
 async def eval_(ctx, *, arg):
 	"""Execute Python code. Only available to owner."""
-	logger.info('exec: ' + arg, extra={'ctx': ctx})
+	logger.info('eval: ' + arg, extra={'ctx': ctx})
 	try:
 		await eval(arg, globals(), locals())
 	except BaseException as e:
