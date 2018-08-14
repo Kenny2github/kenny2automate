@@ -229,7 +229,7 @@ async def resetprefix(ctx, user: d.Member):
 	await ctx.send('Successfully reset prefix for {}'.format(user.mention))
 
 @client.command()
-@has_permissions(administrator=True)
+@has_permissions(manage_messages=True, read_message_history=True)
 @bot_has_permissions(manage_messages=True, read_message_history=True)
 async def purge(ctx, limit: int = 100, user: d.Member = None, *, matches: str = None):
 	"""Purge all messages, optionally from ``user``
@@ -318,7 +318,7 @@ async def votetoban(ctx, *, user: d.Member):
 			await ctx.send('Not enough people voted! ({} total, minimum is 3.) The user stays.'.format(dos + nos))
 		elif dos > nos:
 			await ctx.send('{} votes for and {} votes against. The user has been banned.'.format(dos, nos))
-			await user.ban(reason='Banned after vote'
+			await ctx.guild.ban(user, reason='Banned after vote'
 					+ ' {} against {}'.format(dos, nos)
 					+ ' when admins were gone.')
 		else:
