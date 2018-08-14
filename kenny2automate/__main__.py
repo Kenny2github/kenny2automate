@@ -58,7 +58,7 @@ client = Bot(
 	description="The most awesome bot to walk(?) the earth.",
 	command_prefix=get_command_prefix,
 	pm_help=True,
-	activity=d.Game(name=';help')
+	activity=d.Activity(type=d.ActivityType.watching, name='out for ;help')
 )
 
 DGDELETEHANDLERS = {}
@@ -133,7 +133,6 @@ client.add_cog(CardGames(client, logger, db))
 @client.event
 async def on_ready(*_, **__):
 	logger.info('Ready!', extra={'ctx': DummyCtx(author=DummyCtx(name='(core)'))})
-	await client.change_presence(game=d.Game(name=';help'))
 
 @client.command('eval')
 @c.is_owner()
