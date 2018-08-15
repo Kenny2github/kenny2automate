@@ -1,0 +1,9 @@
+{
+  "search-result": "```\nグループ:\n{0}\n{1}\n```",
+  "search-error": "```\n式に誤りがあります。\n```",
+  "search-result-nomatch": "```\nマッチしないみたいです。 :(\n```",
+  "findall-result": "```\n結果:\n{0}```",
+  "findall-gp": "Gp{0}",
+  "findall-error": "式に誤りがあります。\n",
+  "findall-result-none": "結果なし :(\n"
+}
