@@ -1,0 +1,23 @@
+{
+  "hello": "世界よ、こんにちは!",
+  "hmmst": "ふーん",
+  "whoami-title": "{0}についての情報",
+  "whoami-description": "{0}についての情報です。",
+  "whoami-status": "ステータス",
+  "whoami-activity": "やっていること",
+  "whoami-id": "ID",
+  "whoami-created-at": "作成した日",
+  "whoami-joined-at": "参加した日",
+  "whoami-roles": "役職",
+  "prefix-reset": "{0}用の接頭辞設定を解除しました。",
+  "prefix-set": "{0}用の接頭辞を`{1}`にしました。",
+  "resetprefix": "{0}用の接頭辞設定を解除しました。",
+  "purge": "{0}個のメッセージは消え去った。",
+  "votetoban-ping-admin": "{0}、{1}さんへのブロック依頼です! (Someone wants {1} to be banned)",
+  "votetoban-msg": "**投稿ブロック依頼 {0}**\n{1} でブロック; {2} で残す.",
+  "votetoban-cancelled": "管理者がやってきました。投票は取り消します。これからは直接聞いてネ。",
+  "votetoban-few": "参加者が足りませんでした! (合計 {0} , 最少 3.) 残しましょう。",
+  "votetoban-banned": "賛成 {0} 反対 {1} ブロックされました。",
+  "votetoban-ban-reason": "(投票ブロック: 管理者不在時に{0}対{1})Banned after vote {0} against {1} when admins were gone.",
+  "votetoban-innocent": "賛成 {0} 反対 {1} 残しましょう。"
+}
