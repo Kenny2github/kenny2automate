@@ -87,7 +87,7 @@ class I18n(object):
             await ctx.send(
                 'Unrecognized language: {}. Valid languages are:\n{}'.format(
                     lang, ', '.join(
-                        i[:2]
+                        i[:-5]
                         for i in os.listdir(i18ndir)
                         if i.endswith('.json')
                     )
