@@ -1,7 +1,7 @@
 {
   "numguess-intro": "Arr! I'm the Dread Pirate Roberts, and I have a secret!\nIt's a number from {0} to {1}. I'll give you {2} tries.\nSend a number to guess it.",
   "numguess-guess": "What's yer guess, matey?",
-  "numguess-timeout": "Ye landlubberin' swabs didn't guess anything for {0} seconds! Ye don't get to play with me no more!",
+  "numguess-timeout": "Ye landlubberin' swab didn't guess anything for {0} seconds! Ye don't get to play with me no more!",
   "numguess-oor": "Out of range, ye swab!",
   "numguess-low": "Too low, ye scurvy dog!",
   "numguess-high": "Too high, landlubber!",
