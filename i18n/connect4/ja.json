@@ -1,0 +1,19 @@
+{
+  "config-nothing-set": "管理者用:未設定エラー ;help connect4_config 参照",
+  "config-all-set": "グローバル対戦 {0}\nメンションする役職: {1}",
+  "config-channel-set": "グローバル対戦チャンネル: {0}",
+  "config-reset": "設定はリセットされました。",
+  "config-no-empty": "設定エラー: 設定項目が足りません。",
+  "config-set-channel": "グローバル対戦チャンネルを {0} に設定しました。",
+  "config-no-channel-but-role": "グローバル対戦用のチャンネルが未設定です。",
+  "config-set-role": "グローバル対戦チャンネルを {0} に、メンションする役職を {1} にしました。",
+  "ready-player-self": "プレイヤー2: {0}",
+  "ready-player-global": "ほかのサーバーの対戦者を待っています。",
+  "board-turn": "{0}のターンです。",
+  "board-title": "ボード",
+  "board-you-are": "\nあなたは {0}",
+  "game-timeout": "{0} 秒以内に次の動作が行われなかったため、中止します。",
+  "game-over-title": "ゲームオーバー!",
+  "game-over-tied": "同点です! ボードがいっぱいで、かつ四つ並んでいません。",
+  "game-over-description": "終了!\n勝者: {0}{1}\n敗者:{2}{3}"
+}
