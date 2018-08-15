@@ -15,5 +15,5 @@
   "game-timeout": "Nobody made a move for {0} seconds! The game has been cancelled.",
   "game-over-title": "Game Over!",
   "game-over-tied": "The game is tied! The board is full and no 4-in-a-rows have been made.",
-  "game-over-description": "The game is over!\nWinner: {0}{1}\nLoser:{2}{3}"
+  "game-over-description": "The game is over!\nWinner: {0}{1}\nLoser: {2}{3}"
 }
