@@ -325,7 +325,7 @@ async def votetoban(ctx, *, user: d.Member):
 
 WATCHED_FILES_MTIMES = [
 	(f, os.path.getmtime(f))
-	for f in ('/home/pi/login.txt',)
+	for f in ('login.txt',)
 	+ tuple(
 		os.path.join(os.path.dirname(__file__), i)
 		for i in os.listdir(os.path.dirname(__file__) or '.')
@@ -343,7 +343,7 @@ async def update_if_changed():
 
 print('Defined stuff')
 
-with open('/home/pi/login.txt') as f:
+with open('login.txt') as f:
 	token = f.read().strip()
 
 try:
