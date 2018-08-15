@@ -7,6 +7,7 @@ import discord as d
 from discord.ext.commands import command
 from discord.ext import commands as c
 import requests
+from .i18n import i18n
 
 class DummyCtx(object):
 	def __init__(self, **kwargs):
@@ -67,9 +68,10 @@ class Wiki(object):
 			except Exception as exc:
 				self.logger.error('Fetching page content failed: ' + str(exc),
 					extra={'ctx': DummyCtx(author=DummyCtx(name='Wiki.page'))})
-				await ctx.send('Fetching page content failed. Sorry!')
+				await ctx.send(i18n(ctx, 'wiki/page-failed'))
 				return
-		content = list(content['query']['pages'].values())[0]['revisions'][0]['*']
+		content = list(content['query']['pages']
+			.values())[0]['revisions'][0]['*']
 		content = content.splitlines()
 		contents = ['```html\n']
 		i = 0
@@ -77,7 +79,8 @@ class Wiki(object):
 			if len(contents[i]) + 11 > 2000:
 				contents.append('```html\n')
 				temp = contents[i][:1997].rsplit('\n', 1)
-				contents[i], contents[i+1] = temp[0], temp[1] + contents[i][1997:]
+				contents[i], contents[i+1] = \
+					temp[0], temp[1] + contents[i][1997:]
 				contents[i] += '```'
 				i += 1
 				contents[i] = '```html\n' + contents[i]
@@ -85,57 +88,6 @@ class Wiki(object):
 		contents[-1] += '```'
 		for msg in contents:
 			await ctx.send(msg)
-
-	@command()
-	async def recentchanges(self, ctx, limit=50):
-		"""Get recent changes on the Wiki."""
-		self.logger.info('Wiki.recentchanges: ' + str(limit), extra={'ctx': ctx})
-		twenties, limit = divmod(limit, 20)
-		async with ctx.channel.typing():
-			result = ['']
-			changes = []
-			start = 'now'
-			for i in [20 for j in range(twenties)] + [limit]:
-				resp = await self.req({
-					'action': 'query',
-					'list': 'recentchanges',
-					'rcprop': 'user|timestamp|comment|title|sizes|flags',
-						'rctype': 'edit|new',
-					'rclimit': i,
-					'rcstart': start
-				})
-				changes.extend(resp['query']['recentchanges'])
-				start = resp['query']['recentchanges'][-1]['timestamp']
-			i = 0
-			for ch in changes:
-				change = '\n'
-				change += ch['timestamp']
-				change += ': '
-				change += ch['title']
-				change += '; '
-				sizechange = ch['newlen'] - ch['oldlen']
-				if sizechange <= -500 or sizechange >= 500:
-					change += '**'
-				change += '('
-				if sizechange <= 0:
-					change += str(sizechange)
-				if sizechange > 0:
-					change += '+' + str(sizechange)
-				change += ')'
-				if sizechange <= -500 or sizechange >= 500:
-					change += '**'
-				change += ' . . '
-				change += ch['user']
-				change += ' _('
-				change += ch['comment'].replace('*', '\\*').replace('_', '\\_').replace('`', '\\`')
-				change += ')_'
-				result[i] += change
-				if len(result[i]) > 2000:
-					result.append('')
-					result[i], result[i+1] = result[i].rsplit('\n', 1)
-					i += 1
-			for r in result:
-				await ctx.send(r)
 
 	@command()
 	async def randompage(self, ctx):
@@ -167,30 +119,37 @@ class Wiki(object):
 				})
 			except Exception as exc:
 				self.logger.error('Fetching wiki stats failed: ' + str(exc), extra={'ctx': DummyCtx(author=DummyCtx(name='Wiki.wikistats'))})
-				await ctx.send('Fetching stats failed. Oops!')
+				await ctx.send(i18n(ctx, 'wiki/iwstats-failed'))
 				return
-			content = list(content['query']['pages'].values())[0]['revisions'][0]['*']
+			content = list(content['query']['pages']
+				.values())[0]['revisions'][0]['*']
 		exp = re.compile(r"""\|-
-\|(?P<Time>[^\|]+)
-\|(?P<Pages>[0-9]+)
-\|(?P<Articles>[0-9]+)
-\|(?P<Edits>[0-9]+)
-\|(?P<Images>[0-9]+)
-\|(?P<Users>[0-9]+)
-\|(?P<ActiveUsers>[0-9]+)
-\|(?P<Admins>[0-9]+)
+\|(?P<time>[^\|]+)
+\|(?P<pages>[0-9]+)
+\|(?P<articles>[0-9]+)
+\|(?P<edits>[0-9]+)
+\|(?P<images>[0-9]+)
+\|(?P<users>[0-9]+)
+\|(?P<activeusers>[0-9]+)
+\|(?P<admins>[0-9]+)
 """)
-		for match in re.finditer(r'(?P<cont>==\s*(?P<code>[a-z][a-z])\s*==[\s\S]+?\|\})', content, re.I|re.S):
+		for match in re.finditer(
+			r'(?P<cont>==\s*(?P<code>[a-z][a-z])\s*==[\s\S]+?\|\})',
+			content,
+			re.I | re.S
+		):
 			embed = d.Embed(
-				title='{}wiki Stats'.format(match.group('code')),
-				description='Here are stats for the {}wiki.'.format(match.group('code')),
+				title=i18n(ctx, 'wiki/iwstats-title', match.group('code')),
+				description=i18n(
+					ctx, 'wiki/iwstats-description', match.group('code')
+				),
 				color=random.randint(0, 0xffffff)
 			)
 			for fieldtitle, value in list(
 					re.finditer(exp, match.group('cont'))
 					)[-1].groupdict().items():
 				embed.add_field(
-					name=re.sub('([a-z])([A-Z])', r'\1 \2', fieldtitle),
+					name=i18n(ctx, 'wiki/iwstats-' + fieldtitle),
 					value=value,
 					inline=True
 				)
@@ -209,16 +168,16 @@ class Wiki(object):
 				}, wiki)
 			except Exception as exc:
 				self.logger.error('Fetching wiki stats failed: ' + str(exc), extra={'ctx': DummyCtx(author=DummyCtx(name='Wiki.wikistats'))})
-				await ctx.send('Fetching stats failed. You likely specified a nonexistent wiki.')
+				await ctx.send(i18n(ctx, 'wiki/wikistats-failed'))
 				return
 		data = data['query']['statistics']
 		embed = d.Embed(
-			title='{}wiki Stats'.format(wiki),
-			description='Here are some statistics for the {}wiki.'.format(wiki),
+			title=i18n(ctx, 'wiki/iwstats-title', wiki),
+			description=i18n(ctx, 'wiki/iwstats-description', wiki),
 		)
 		for fieldtitle, value in data.items():
 			embed.add_field(
-				name='Active Users' if fieldtitle == 'activeusers' else fieldtitle.title(),
+				name=i18n(ctx, 'wiki/iwstats-' + fieldtitle),
 				value=str(value),
 			)
 		await ctx.send(embed=embed)
@@ -239,7 +198,7 @@ class Wiki(object):
 				}, wiki)
 			except Exception as exc:
 				self.logger.error('Fetching wiki stats failed: ' + str(exc), extra={'ctx': DummyCtx(author=DummyCtx(name='Wiki.analyzega'))})
-				await ctx.send('Fetching stats failed. You likely specified a nonexistent wiki.')
+				await ctx.send(i18n(ctx, 'wiki/wikistats-failed'))
 				return
 		data = list(data['query']['pages'].values())[0]['revisions'][0]
 		content = data['*']
@@ -247,7 +206,10 @@ class Wiki(object):
 
 		MASTER_VIEWS = [
 			(m.group(1).replace('_', ' '), int(m.group(2)))
-			for m in re.finditer(r'\n#\s*\[\[([^\]]+)\]\]\s*\((\d+) views\)', content)
+			for m in re.finditer(
+				r'\n#\s*\[\[([^\]]+)\]\]\s*\((\d+) views\)',
+				content
+			)
 		]
 		print(MASTER_VIEWS)
 		MASTER_VIEWS.sort(key=lambda i: i[1], reverse=True) #sanity check
@@ -263,7 +225,8 @@ class Wiki(object):
 				+ views_unnamed[count // 2 - 1])
 				/ 2))
 
-		diffs = [i - views_unnamed[n+1] for n, i in enumerate(views_unnamed[:-1])]
+		diffs = [i - views_unnamed[n+1]
+			for n, i in enumerate(views_unnamed[:-1])]
 		diffcount = len(diffs)
 		# ;Average difference between pageviews
 		average_diff = sum(diffs) / diffcount
@@ -273,7 +236,8 @@ class Wiki(object):
 			else ((diffs[diffcount // 2]
 				+ diffs[diffcount // 2 - 1])
 				/ 2))
-		mults = [i / views_unnamed[n+1] for n, i in enumerate(views_unnamed[:-1])]
+		mults = [i / views_unnamed[n+1]
+			for n, i in enumerate(views_unnamed[:-1])]
 		multcount = len(mults)
 		# ;Average multiple of one page's views to the next highest page's views
 		average_mult = sum(mults) / multcount
@@ -339,8 +303,8 @@ class Wiki(object):
 			diff_avg_mult_from_median = average_mult - avg_mult_wo_median
 		else:
 			# ;Views
-			(median_title, median_views), (median2_title, median2_views) = MASTER_VIEWS[
-				count // 2 - 1], MASTER_VIEWS[count // 2]
+			(median_title, median_views), (median2_title, median2_views) \
+				= MASTER_VIEWS[count // 2 - 1], MASTER_VIEWS[count // 2]
 			views_wo_median = views_unnamed[:]
 			views_wo_median.pop(count // 2 - 1)
 			views_wo_median.pop(count // 2 - 1)
@@ -358,38 +322,84 @@ class Wiki(object):
 			# ;Changes average multiple by
 			diff_avg_mult_from_median = average_mult - avg_mult_wo_median
 		print('generate')
-		embed = d.Embed(title='Total stats', description='Total statistics overall')
-		embed.add_field(name='Average pageviews per page', value='{} views'.format(average_pageviews))
-		embed.add_field(name='Median pageviews per page', value='{} views'.format(median_pageviews))
-		embed.add_field(name='Average difference between pageviews', value='{} views per 2 pages'.format(average_diff))
-		embed.add_field(name='Median difference between pageviews', value='{} views'.format(median_diff))
-		embed.add_field(name='Average multiple of views', value='{} times per 2 pages'.format(average_mult))
-		embed.add_field(name='Median multiple of views', value='{} times'.format(median_mult))
-		embed.add_field(name='Total pageviews', value='{} views'.format(total))
+		embed = d.Embed(
+			title=i18n(ctx, 'wiki/analyzega-total-title'),
+			description=i18n(ctx, 'wiki/analyzega-total-description')
+		)
+		embed.add_field(name=i18n(ctx, 'wiki/analyzega-total-appp'),
+			value=i18n(ctx, 'wiki/analyzega-views', average_pageviews))
+		embed.add_field(name=i18n(ctx, 'wiki/analyzega-total-mppp'),
+			value=i18n(ctx, 'wiki/analyzega-views', median_pageviews))
+		embed.add_field(name=i18n(ctx, 'wiki/analyzega-total-adbp'),
+			value=i18n(ctx, 'wiki/analyzega-views-per-pages', average_diff))
+		embed.add_field(name=i18n(ctx, 'wiki/analyzega-total-mdbp'),
+			value=i18n(ctx, 'wiki/analyzega-views', median_diff))
+		embed.add_field(name=i18n(ctx, 'wiki/analyzega-total-amov'),
+			value=i18n(ctx, 'wiki/analyzega-times-per-pages', average_mult))
+		embed.add_field(name=i18n(ctx, 'wiki/analyzega-total-mmov'),
+			value=i18n(ctx, 'wiki/analyzega-times', median_mult))
+		embed.add_field(name=i18n(ctx, 'wiki/analyzega-total-tp'),
+			value=i18n(ctx, 'wiki/analyzega-views', total))
 		await ctx.send(embed=embed)
-		embed = d.Embed(title='Stats for highest datapoint: {}'.format(highest_title), description='Stats for the highest-ranked page')
-		embed.add_field(name='Views', value=str(highest_views))
-		embed.add_field(name='Pulls up average viewcount by', value='{} views'.format(diff_avg_from_high))
-		embed.add_field(name='Difference to next highest, {}'.format(next_high_title), value='{} views'.format(diff_next_high))
-		embed.add_field(name='Pulls up average difference by', value='{} views per 2 pages'.format(diff_avg_diff_from_high))
-		embed.add_field(name='Multiple of next highest, {}'.format(next_high_title), value='{} is {} times more popular'.format(highest_title, mult_next_high))
+		embed = d.Embed(
+			title=i18n(ctx, 'wiki/analyzega-highest-title', highest_title),
+			description=i18n(ctx, 'wiki/analyzega-highest-description')
+		)
+		embed.add_field(name=i18n(ctx, 'wiki/analyzega-views-title'),
+			value=str(highest_views))
+		embed.add_field(name=i18n(ctx, 'wiki/analyzega-highest-puavb'),
+			value=i18n(ctx, 'wiki/analyzega-views', diff_avg_from_high))
+		embed.add_field(name=i18n(ctx, 'wiki/analyzega-highest-dtnh',
+			next_high_title),
+			value=i18n(ctx, 'wiki/analyzega-views', diff_next_high))
+		embed.add_field(name=i18n(ctx, 'wiki/analyzega-highest-puadb'),
+			value=i18n(ctx, 'wiki/analyzega-views-per-pages',
+				diff_avg_diff_from_high))
+		embed.add_field(name=i18n(ctx, 'wiki/analyzega-highest-monh',
+			next_high_title),
+			value=i18n(ctx, 'wiki/analyzega-highest-monh-value', highest_title,
+				mult_next_high))
 		await ctx.send(embed=embed)
-		embed = d.Embed(title='Stats for lowest datapoint: {}'.format(lowest_title), description='Stats for the lowest-ranked page')
-		embed.add_field(name='Views', value=str(lowest_views))
-		embed.add_field(name='Pulls down average viewcount by', value='{} views'.format(diff_avg_from_low))
-		embed.add_field(name='Difference to next lowest, {}'.format(next_low_title), value='{} views'.format(diff_next_low))
-		embed.add_field(name='Pulls down average difference by', value='{} views per 2 pages'.format(diff_avg_diff_from_low))
-		embed.add_field(name='Fraction of next lowest, {}'.format(next_low_title), value='{} is {} times more popular'.format(next_low_title, mult_next_low))
+		embed = d.Embed(
+			title=i18n(ctx, 'wiki/analyzega-lowest-title', lowest_title),
+			description=i18n(ctx, 'wiki/analyzega-lowest-description')
+		)
+		embed.add_field(name=i18n(ctx, 'wiki/analyzega-views-title'),
+			value=str(lowest_views))
+		embed.add_field(name=i18n(ctx, 'wiki/analyzega-lowest-pdavb'),
+			value=i18n(ctx, 'wiki/analyzega-views', diff_avg_from_low))
+		embed.add_field(name=i18n(ctx, 'wiki/analyzega-lowest-dtnl', next_low_title),
+			value=i18n(ctx, 'wiki/analyzega-views', diff_next_low))
+		embed.add_field(name=i18n(ctx, 'wiki/analyzega-lowest-pdadb'),
+			value=i18n(ctx, 'wiki/analyzega-views-per-pages',
+				diff_avg_diff_from_low))
+		embed.add_field(name=i18n(ctx, 'wiki/analyzega-lowest-fonl', next_low_title),
+			value=i18n(ctx, 'wiki/analyzega-lowest-fonl-value', next_low_title,
+				mult_next_low))
 		await ctx.send(embed=embed)
 		if count % 2:
-			embed = d.Embed(title='Stats for median datapoint: {}'.format(median_title), description='Stats for the middle-ranked page')
-			embed.add_field(name='Views', value=str(median_views))
+			embed = d.Embed(
+				title=i18n(ctx, 'wiki/analyzega-median-title1', median_title),
+				description=i18n(ctx, 'wiki/analyzega-median-description1')
+			)
+			embed.add_field(name=i18n(ctx, 'wiki/analyzega-views-title'),
+				value=str(median_views))
 		else:
-			embed = d.Embed(title='Stats for median datapoints: {} and {}'.format(median_title, median2_title), description='Stats for the middle-ranked pages')
-			embed.add_field(name='Views', value='{} and {}'.format(median_views, median2_views))
-		embed.add_field(name='Changes average viewcount by', value='{} views'.format(diff_avg_from_median))
-		embed.add_field(name='Changes average difference by', value='{} views per 2 pages'.format(diff_avg_diff_from_median))
-		embed.add_field(name='Changes average multiple by', value='{} times'.format(diff_avg_mult_from_median))
+			embed = d.Embed(
+				title=i18n(ctx, 'wiki/analyzega-median-title2', median_title,
+					median2_title),
+				description=i18n(ctx, 'wiki/analyzega-median-description2')
+			)
+			embed.add_field(name=i18n(ctx, 'wiki/analyzega-views-title'),
+				value=i18n(ctx, 'wiki/analyzega-median-views', median_views,
+					median2_views))
+		embed.add_field(name=i18n(ctx, 'wiki/analyzega-median-cavb'),
+			value=i18n(ctx, 'wiki/analyzega-views', diff_avg_from_median))
+		embed.add_field(name=i18n(ctx, 'wiki/analyzega-median-cadb'),
+			value=i18n(ctx, 'wiki/analyzega-views-per-pages',
+				diff_avg_diff_from_median))
+		embed.add_field(name=i18n(ctx, 'wiki/analyzega-median-camb'),
+			value=i18n(ctx, 'wiki/analyzega-views', diff_avg_mult_from_median))
 		print('generated')
 		await ctx.send(embed=embed)
 		print('sent?')

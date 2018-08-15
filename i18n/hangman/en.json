@@ -1,0 +1,11 @@
+{
+  "crudehangman-occupied": "There is already a game going on in this channel!",
+  "awaiting-dm": "Awaiting DM with word...",
+  "main": "{0}\nMissed: {1}\nGotten: `{2}`{3}",
+  "comma-sep": ",",
+  "won": "Congratulations! You have guessed the complete word!",
+  "lost": "You lost! The word was \"{0}\".",
+  "timeout": "The word didn't arrive for a minute! The game has been automatically cancelled.",
+  "wait": "WAIT DON'T GUESS YET",
+  "timeout2": "Nobody guessed a letter for ten minutes! The game has been automatically cancelled."
+}

@@ -6,6 +6,7 @@ import asyncio as a
 import discord as d
 from discord.ext.commands import command
 from discord.ext.commands import bot_has_permissions
+from .i18n import i18n
 
 class Games(object):
 	def __init__(self, bot, logger, db):
@@ -22,35 +23,35 @@ class Games(object):
 		limUp = 100
 		tries = 7
 		secret = random.randint(1, 100)
-		await ctx.send("Arr! I'm the Dread Pirate Roberts, and I have a secret!\nIt's a number from {} to {}. I'll give you {} tries.\nSend a number to guess it.".format(limDn, limUp, tries))
+		await ctx.send(i18n(ctx, 'games/numguess-intro', limDn, limUp, tries))
 		while guess != secret and tries > 0:
-			await ctx.send("What's yer guess, matey?")
+			await ctx.send(i18n(ctx, 'games/numguess-guess'))
 			result = ''
 			try:
 				guess = await ctx.bot.wait_for('message',
 					check=lambda m: m.channel == ctx.channel and re.match('^[0-9]+$', m.content),
 					timeout=60.0)
 			except a.TimeoutError:
-				await ctx.send("Ye landlubberin' swabs didn't guess anythin' for a minute! Ye don't get to play with me no more!")
+				await ctx.send(i18n(ctx, 'games/numguess-timeout', 60))
 				return
 			guess = int(guess.content)
 			if guess == secret:
 				break
 			elif guess < limDn or guess > limUp:
-				result += "Out of range, ye swab!\n"
+				result += i18n(ctx, 'games/numguess-oor')
 			elif guess < secret:
-				result += "Too low, ye scurvy dog!\n"
+				result += i18n(ctx, 'games/numguess-low')
 				limDn = guess
 			elif guess > secret:
-				result += "Too high, landlubber!\n"
+				result += i18n(ctx, 'games/numguess-high')
 				limUp = guess
 			tries -= 1
-			result += "Yer range is {} to {}; ye have {} tries left.".format(limDn, limUp, tries)
+			result += i18n(ctx, 'games/numguess-range', limDn, limUp, tries)
 			await ctx.send(result)
 		if guess == secret:
-			await ctx.send("Avast! Ye got it! Found my secret, ye did! With {} tries left!".format(tries))
+			await ctx.send(i18n(ctx, 'games/numguess-correct', tries))
 		else:
-			await ctx.send("No more tries, matey! Better luck next time! The secret number was {}.".format(secret))
+			await ctx.send(i18n(ctx, 'games/numguess-oot', secret))
 
 	#@command()
 	@bot_has_permissions(manage_messages=True)

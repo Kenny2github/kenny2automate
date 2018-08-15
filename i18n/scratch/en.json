@@ -1,0 +1,4 @@
+{
+  "messagecount-failed": "Couldn't get message count for {0}",
+  "messagecount": "{0} has {1} message(s)"
+}

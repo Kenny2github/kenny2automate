@@ -2,6 +2,7 @@ import json
 import random
 from discord.ext.commands import command
 import requests
+from .i18n import i18n
 
 DGSWIKISERVER = 328938947717890058
 
@@ -28,11 +29,16 @@ class Scratch(object):
 		"""Get a random project link!"""
 		self.logger.info('Scratch.randomproject', extra={'ctx': ctx})
 		async with ctx.channel.typing():
-			count = json.loads(await self.req('https://api.scratch.mit.edu/projects/count/all'))['count']
+			count = json.loads(await self.req(
+				'https://api.scratch.mit.edu/projects/count/all'
+			))['count']
 			comments = None
 			while comments is None:
 				pid = random.randint(1, count)
-				comments = await self.req('https://scratch.mit.edu/site-api/comments/project/' + str(pid))
+				comments = await self.req(
+					'https://scratch.mit.edu/site-api/comments/project/'
+					+ str(pid)
+				)
 			await ctx.send('https://scratch.mit.edu/projects/' + str(pid))
 
 	@command()
@@ -41,22 +47,35 @@ class Scratch(object):
 		async with ctx.channel.typing():
 			if name is not None:
 				self.logger.info('Scratch.messagecount: ' + name, extra={'ctx': ctx})
-				resp = await self.req('https://api.scratch.mit.edu/users/' + name + '/messages/count')
+				resp = await self.req(
+					'https://api.scratch.mit.edu/users/{}/messages/count'
+					.format(name)
+				)
 				username = name
 			else:
 				resp = None
 				if ctx.author.nick is not None:
 					self.logger.info('Scratch.messagecount: ' + ctx.author.nick, extra={'ctx': ctx})
-					resp = await self.req('https://api.scratch.mit.edu/users/' + ctx.author.nick + '/messages/count')
+					resp = await self.req(
+						'https://api.scratch.mit.edu/users/{}/messages/count'
+						.format(ctx.author.nick)
+					)
 					username = ctx.author.nick
 				if resp is None:
 					self.logger.info('Scratch.messagecount: ' + ctx.author.name, extra={'ctx': ctx})
-					resp = await self.req('https://api.scratch.mit.edu/users/' + ctx.author.name + '/messages/count')
+					resp = await self.req(
+						'https://api.scratch.mit.edu/users/{}/messages/count'
+						.format(ctx.author.name)
+					)
 					username = ctx.author.name
 			if resp is None:
-				await ctx.send("Couldn't get message count for " + username)
+				await ctx.send(i18n(
+					ctx, 'scratch/messagecount-failed', username
+				))
 			else:
-				await ctx.send('{} has {} message(s)'.format(
+				await ctx.send(i18n(
+					ctx,
+					'scratch/messagecount',
 					username,
 					json.loads(resp)['count']
 				))

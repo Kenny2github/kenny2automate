@@ -1,5 +1,6 @@
 import re
 from discord.ext.commands import command
+from .i18n import i18n
 
 class Regexes(object):
 	"""Regex commands - Python flavored."""
@@ -20,14 +21,16 @@ class Regexes(object):
 		except Exception:
 			m = False
 		if m:
-			result = '```\nGroups:\n' + m.group(0) + '\n'
-			for group in m.groups():
-				result += (group or '') + '\n'
-			result += '```'
+			result = i18n(
+				ctx,
+				'regexes/search-result',
+				m.group(0),
+				'\n'.join(group or '' for group in m.groups())
+			)
 		elif m is False:
-			result = '```\nError in flags or expression.\n```'
+			result = i18n(ctx, 'regexes/search-error')
 		else:
-			result = '```\nNo match :(\n```'
+			result = i18n(ctx, 'regexes/search-result-nomatch')
 		await ctx.send(result)
 
 	@command()
@@ -39,20 +42,21 @@ class Regexes(object):
 		else:
 			exp = pattern
 		gen = re.finditer(exp, string)
-		result = '```\nResults:\n'
+		result = i18n(ctx, 'regexes/findall-result', '{0}')
+		result2 = ''
 		try:
 			for m in gen:
-				result += m.group(0) + ('\t' if len(m.groups()) > 0 else '') + '\t'.join(m.groups()) + '\n'
+				result2 += m.group(0) + ('\t' if len(m.groups()) > 0 else '') + '\t'.join(m.groups()) + '\n'
 		except Exception:
-			result += 'Error in flags or expression.\n'
-		if result == '```\nResults:\n':
-			result += 'No results :(\n'
-		if '\t' in result:
-			ms = re.finditer('([^\t\n]*\t)+[^\t\n]*\n?', result)
-			ms = [len(m.group(0).strip().split('\t')) for m in ms]
+			result = result.format(i18n(ctx, 'regexes/findall-error'))
+		if not result2:
+			result = result.format(i18n(ctx, 'regexes/findall-result-none'))
+		if result2:
+			ms = result2.split('\n')
+			ms = [len(m.strip().split('\t')) for m in ms]
 			ms = max(ms)
-			result = result[:13] \
-				 + '\t'.join(['Gp{}'.format(i) for i in range(ms-1)]) \
-				 + '\n' + result[13:]
-		result += '```'
+			gpstr = i18n(ctx, 'regexes/findall-gp', '{0}') #manual format
+			result2 = '\t'.join([gpstr.format(i) for i in range(ms)]) \
+				+ '\n' + result2
+			result = result.format(result2)
 		await ctx.send(result)

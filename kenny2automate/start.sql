@@ -18,3 +18,17 @@ CREATE TABLE IF NOT EXISTS user_prefixes (
 	-- prefix
 	prefix char(1) NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS user_langs (
+	-- user ID
+	user_id integer unsigned NOT NULL,
+	-- language
+	lang char(2) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS channel_langs (
+	-- channel ID
+	channel_id integer unsigned NOT NULL,
+	-- language
+	lang char(2) NOT NULL
+);

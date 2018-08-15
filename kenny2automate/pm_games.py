@@ -1,5 +1,6 @@
 import asyncio as a
 import discord as d
+from .i18n import i18n
 
 class PrivateGames(object):
 	def __init__(self, bot, logger, db):
@@ -9,18 +10,23 @@ class PrivateGames(object):
 
 	def __local_check(self, ctx):
 		perms = ctx.channel.permissions_for(self.bot.user)
-		return perms.manage_messages and perms.add_reactions and perms.read_message_history
+		return all(
+			perms.manage_messages,
+			perms.add_reactions,
+			perms.read_message_history
+		)
 
 	async def _gather_game(self, ctx, name, against):
 		SHAKE = '\U0001f91d'
 		msg = await ctx.send(embed=d.Embed(
-			title='Playing {}'.format(name),
-			description='Player 1: {}'.format(ctx.author.display_name) + (
-				'\nReact with {} to join!'.format(SHAKE)
+			title=i18n(ctx, 'pm_games/playing', name),
+			description=i18n(
+				ctx, 'pm_games/ready-player-1', ctx.author.display_name
+			) + (
+				i18n(ctx, 'pm_games/react-to-join', SHAKE)
 				if against is None
-				else (
-					'\nPlayer 2: {}'.format(against.display_name)
-					+ '\nWaiting for Player 2 to join...'
+				else i18n(
+					ctx, 'pm_games/ready-player-2', against.display_name
 				)
 			),
 		))
@@ -37,19 +43,22 @@ class PrivateGames(object):
 					timeout=60.0
 				)
 			except a.TimeoutError:
-				await msg.edit(content='Nobody joined after a minute! The game has been automatically cancelled.', embed=None)
+				await msg.edit(
+					content=i18n(ctx, 'pm_games/game-timeout', 60),
+					embed=None
+				)
 				await msg.clear_reactions()
 				return
 			if user.id == ctx.author.id:
-				await ctx.send('Game cancelled by starter.')
+				await ctx.send(i18n(ctx, 'pm_games/game-cancelled'))
 				return
 			player2 = user
 			del reaction, user
 		elif against.bot:
-			await ctx.send("Wait, you can't play against a bot! Game cancelled.")
+			await ctx.send(i18n(ctx, 'pm_games/no-bots'))
 			return
 		elif str(against.status) == 'offline':
-			await ctx.send('Wait, Player 2 is offline! Game cancelled.')
+			await ctx.send(i18n(ctx, 'pm_games/no-offline'))
 			return
 		else:
 			await msg.add_reaction(SHAKE)
@@ -63,11 +72,14 @@ class PrivateGames(object):
 					timeout=60.0
 				)
 			except a.TimeoutError:
-				await msg.edit(content="Player 2 didn't join after a minute! The game has been automatically cancelled.", embed=None)
+				await msg.edit(
+					content=i18n(ctx, 'pm_games/unready-player-2', 60),
+					embed=None
+				)
 				await msg.clear_reactions()
 				return
 			if user.id == ctx.author.id:
-				await ctx.send('Game cancelled by starter.')
+				await ctx.send(i18n(ctx, 'pm_games/game-cancelled'))
 				return
 			player2 = user
 			del reaction, user
@@ -81,9 +93,17 @@ class PrivateGames(object):
 		SHAKE = '\U0001f91d'
 		CHECK = '\u2705'
 		msg = await ctx.send(embed=d.Embed(
-			title='Playing {}'.format(name),
-			description='Player 1: {}'.format(ctx.author.display_name) + (
-				'\nReact with {} to join!'.format(SHAKE)
+			title=i18n(ctx, 'pm_games/playing', name),
+			description=i18n(
+				ctx, 'pm_games/ready-player-1', ctx.author.display_name
+			) + (
+				i18n(
+					ctx,
+					'pm_games/react-to-join-mult',
+					SHAKE,
+					ctx.author.display_name,
+					CHECK
+				)
 			),
 		))
 		players = [ctx.author]
@@ -98,12 +118,11 @@ class PrivateGames(object):
 				timeout=60.0
 			)
 			if reaction.emoji == SHAKE:
-				await ctx.send('Game cancelled by starter.')
+				await ctx.send(i18n(ctx, 'pm_games/game-cancelled'))
 				return
 		except a.TimeoutError:
 			pass
 		msg = await ctx.get_message(msg.id)
-		print(msg.reactions)
 		for r in msg.reactions:
 			if r.emoji == SHAKE:
 				async for u in r.users():
@@ -117,7 +136,10 @@ class PrivateGames(object):
 	async def _game(self, ctx, name, against, coro1, coro2, **kwargs):
 		player1, player2 = await self._gather_game(ctx, name, against)
 		qyoo = a.Queue()
-		await a.gather(coro1(ctx, player1, qyoo, **kwargs), coro2(ctx, player2, qyoo, **kwargs))
+		await a.gather(
+			coro1(ctx, player1, qyoo, **kwargs),
+			coro2(ctx, player2, qyoo, **kwargs)
+		)
 
 	@staticmethod
 	def unblock_me(qyoo):
@@ -126,7 +148,6 @@ class PrivateGames(object):
 			qyoo.task_done()
 		except a.QueueEmpty:
 			pass
-
 	@staticmethod
 	async def snr(qyoo, data, whoami):
 		if whoami == 1:
@@ -140,23 +161,3 @@ class PrivateGames(object):
 			qyoo.put_nowait(data)
 			await qyoo.join()
 		return data2
-
-#	@command()
-	async def test_game(self, ctx, against: d.Member = None):
-		async def player1_coro(ctx, player1, player2, qyoo):
-			await a.sleep(2)
-			qyoo.put_nowait('player1')
-			dmx = await ctx.bot.get_context(await player1.dm_channel.send('test: player1'))
-			msg = await ctx.bot.wait_for('message', check=lambda m: m.channel == player1.dm_channel and m.author == player1)
-			self.unblock_me(qyoo)
-			await qyoo.join()
-			await dmx.send('player1: {.content}'.format(msg))
-		async def player2_coro(ctx, player1, player2, qyoo):
-			await a.sleep(2)
-			qyoo.put_nowait('player2')
-			dmx = await ctx.bot.get_context(await player2.dm_channel.send('test: player2'))
-			msg = await ctx.bot.wait_for('message', check=lambda m: m.channel == player2.dm_channel and m.author == player2)
-			self.unblock_me(qyoo)
-			await qyoo.join()
-			await dmx.send('player2: {.content}'.format(msg))
-		await self._game(ctx, 'test', against, player1_coro, player2_coro)

@@ -1,0 +1,23 @@
+{
+  "hello": "你好，世界！",
+  "hmmst": "…",
+  "whoami-title": "資料關於 {0}",
+  "whoami-description": "以下是一些資料關於 {0}",
+  "whoami-status": "狀況",
+  "whoami-activity": "活動",
+  "whoami-id": "編號",
+  "whoami-created-at": "建立於",
+  "whoami-joined-at": "加入於",
+  "whoami-roles": "角色",
+  "prefix-reset": "成功地為 {0} 重啟命令字首",
+  "prefix-set": "成功地為 {0} 設置命令字首至 `{1}`",
+  "resetprefix": "成功地重啟了 {0} 的命令字首",
+  "purge": "清除了 {0} 條消息",
+  "votetoban-ping-admin": "{0}，有人要求封禁 {1}！",
+  "votetoban-msg": "**投票封禁 {0}**\n反應 {1} 來投票封禁；反應 {2} 來投票保留。",
+  "votetoban-cancelled": "一位管理員已上線！這輪投票已被取消。請問那位管理員。",
+  "votetoban-few": "不夠人投了票！（總共 {0}，最少需要三名。）那位成員已被保留。",
+  "votetoban-banned": "{0} 票贊成，{1} 票反對。那位成員已被封禁。",
+  "votetoban-ban-reason": "投票結果 {0} 票對 {1} 票，於是被封禁。",
+  "votetoban-innocent": "{0} 票贊成，{1} 票反對。那位成員已被保留。"
+}

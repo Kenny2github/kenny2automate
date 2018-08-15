@@ -1,0 +1,23 @@
+{
+  "hello": "Hello World!",
+  "hmmst": "hmmst",
+  "whoami-title": "User information for {0}",
+  "whoami-description": "Here is some information about {0}",
+  "whoami-status": "Status",
+  "whoami-activity": "Activity",
+  "whoami-id": "ID",
+  "whoami-created-at": "Created at",
+  "whoami-joined-at": "Joined at",
+  "whoami-roles": "Roles",
+  "prefix-reset": "Successfully reset prefix for {0}",
+  "prefix-set": "Successfully set prefix for {0} to `{1}`",
+  "resetprefix": "Successfully reset prefix for {0}",
+  "purge": "Purged {0} messages",
+  "votetoban-ping-admin": "{0}, someone requests for {1} to be banned!",
+  "votetoban-msg": "**Vote to ban {0}**\nReact {1} to vote to ban; react {2} to vote to keep.",
+  "votetoban-cancelled": "An admin has come online! The vote has been cancelled. Please ask them instead.",
+  "votetoban-few": "Not enough people voted! ({0} total, minimum is 3.) The user stays.",
+  "votetoban-banned": "{0} votes for and {1} votes against. The user has been banned.",
+  "votetoban-ban-reason": "Banned after vote {0} against {1} when admins were gone.",
+  "votetoban-innocent": "{0} votes for and {1} votes against. The user stays."
+}

@@ -58,7 +58,7 @@ client = Bot(
 	description="The most awesome bot to walk(?) the earth.",
 	command_prefix=get_command_prefix,
 	pm_help=True,
-	activity=d.Activity(type=d.ActivityType.watching, name='out for ;help')
+	activity=d.Activity(type=d.ActivityType.watching, name=';help')
 )
 
 DGDELETEHANDLERS = {}
@@ -114,6 +114,7 @@ async def on_command_error(ctx, exc):
 	print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
 	traceback.print_exception(type(exc), exc, exc.__traceback__, file=sys.stderr)
 
+from kenny2automate.i18n import i18n, I18n
 from kenny2automate.scratch import Scratch
 from kenny2automate.games import Games
 from kenny2automate.wiki import Wiki
@@ -122,6 +123,7 @@ from kenny2automate.connect4 import Connect4
 from kenny2automate.hangman import Hangman
 from kenny2automate.card_games import CardGames
 
+client.add_cog(I18n(client, logger, db))
 client.add_cog(Scratch(client, logger, client.loop))
 client.add_cog(Games(client, logger, db))
 client.add_cog(Wiki(client, logger, client.loop, DGBANSERVERID))
@@ -157,28 +159,32 @@ async def repeat(ctx, *, arg):
 async def hello(ctx):
 	"""Test whether the bot is running! Simply says "Hello World!"."""
 	logger.info('Hello World!', extra={'ctx': ctx})
-	await ctx.send('Hello World!')
+	await ctx.send(i18n(ctx, 'hello'))
 
 @client.command()
 async def hmmst(ctx):
 	"""hmmst"""
 	logger.info('hmmst', extra={'ctx': ctx})
-	await ctx.send('hmmst')
+	await ctx.send(i18n(ctx, 'hmmst'))
 
 @client.command()
 async def whoami(ctx):
 	"""Get some information about yourself."""
 	embed = d.Embed(
-		title="User information for {}".format(ctx.author.nick or ctx.author.name),
-		description="Here is some information about {}".format(ctx.author.nick or ctx.author.name)
+		title=i18n(ctx, 'whoami-title', ctx.author.display_name),
+		description=i18n(
+			ctx,
+			'whoami-description',
+			ctx.author.display_name
+		)
 	)
 	embed.set_thumbnail(url=ctx.author.avatar_url)
 	things = {
-		'status': 'Status',
-		'game': 'Game',
-		'id': 'ID',
-		'created_at': 'Created at',
-		'joined_at': 'Joined at',
+		'status': i18n(ctx, 'whoami-status'),
+		'activity': i18n(ctx, 'whoami-activity'),
+		'id': i18n(ctx, 'whoami-id'),
+		'created_at': i18n(ctx, 'whoami-created-at'),
+		'joined_at': i18n(ctx, 'whoami-joined-at'),
 	}
 	for key, name in things.items():
 		value = getattr(ctx.author, key)
@@ -186,20 +192,11 @@ async def whoami(ctx):
 	role_list = []
 	for role in ctx.author.roles:
 		role_list.append(role.name.replace('@', '\\@'))
-	embed.add_field(name='Roles', value=', '.join(role_list), inline=False)
+	embed.add_field(
+		name=i18n(ctx, 'whoami-roles'),
+		value=', '.join(role_list), inline=False
+	)
 	await ctx.send(embed=embed)
-
-#@client.command()
-async def timer(ctx, *, seconds=0):
-	"""Mention you after `seconds` seconds."""
-	seconds = int(seconds)
-	logger.info('timer: ' + str(seconds), extra={'ctx': ctx})
-	if seconds > 18000:
-		await ctx.send("Sorry, it's a waste of resources to wait more than 5 hours.")
-		return
-	await ctx.send("I'll mention you in {} seconds...".format(seconds))
-	await a.sleep(seconds)
-	await ctx.send("{}, time's up!".format(ctx.author.mention))
 
 @client.command()
 async def prefix(ctx, *, prefix: str=None):
@@ -209,23 +206,38 @@ async def prefix(ctx, *, prefix: str=None):
 	"""
 	logger.info('prefix: ' + str(prefix), extra={'ctx': ctx})
 	if prefix is None:
-		db.execute('DELETE FROM user_prefixes WHERE user_id=?', (ctx.author.id,))
-		await ctx.send('Successfully reset prefix for {}'.format(ctx.author.mention))
+		db.execute(
+			'DELETE FROM user_prefixes WHERE user_id=?',
+			(ctx.author.id,)
+		)
+		await ctx.send(i18n(ctx, 'prefix-reset', ctx.author.mention))
 		return
-	res = db.execute('SELECT prefix FROM user_prefixes WHERE user_id=?', (ctx.author.id,)).fetchone()
+	res = db.execute(
+		'SELECT prefix FROM user_prefixes WHERE user_id=?',
+		(ctx.author.id,)
+	).fetchone()
 	if res is None:
-		db.execute('INSERT INTO user_prefixes VALUES (?, ?)', (ctx.author.id, prefix))
+		db.execute(
+			'INSERT INTO user_prefixes VALUES (?, ?)',
+			(ctx.author.id, prefix)
+		)
 	else:
-		db.execute('UPDATE user_prefixes SET prefix=? WHERE user_id=?', (prefix, ctx.author.id))
-	await ctx.send('Successfully set prefix for {} to `{}`'.format(ctx.author.mention, prefix))
+		db.execute(
+			'UPDATE user_prefixes SET prefix=? WHERE user_id=?',
+			(prefix, ctx.author.id)
+		)
+	await ctx.send(i18n(ctx, 'prefix-set', ctx.author.mention, prefix))
 
 @client.command()
 @c.is_owner()
 async def resetprefix(ctx, user: d.Member):
 	"""Reset someone's prefix."""
 	logger.info('resetprefix: ' + str(user.mention), extra={'ctx': ctx})
-	db.execute('DELETE FROM user_prefixes WHERE user_id=?', (user.id,))
-	await ctx.send('Successfully reset prefix for {}'.format(user.mention))
+	db.execute(
+		'DELETE FROM user_prefixes WHERE user_id=?',
+		(user.id,)
+	)
+	await ctx.send(i18n(ctx, 'resetprefix', user.mention))
 
 @client.command()
 @has_permissions(manage_messages=True, read_message_history=True)
@@ -245,7 +257,7 @@ async def purge(ctx, limit: int = 100, user: d.Member = None, *, matches: str = 
 				return False
 		return True
 	deleted = await ctx.channel.purge(limit=limit, check=check_msg)
-	msg = await ctx.send('Purged {} messages'.format(len(deleted)))
+	msg = await ctx.send(i18n(ctx, 'purge', len(deleted)))
 	await a.sleep(2)
 	await msg.delete()
 
@@ -253,26 +265,26 @@ async def purge(ctx, limit: int = 100, user: d.Member = None, *, matches: str = 
 async def ball(ctx, *, question: str):
 	choice = sum(question.encode('utf8')) % 20
 	await ctx.send((
-		'It is certain.',
-		'It is decidedly so.',
-		'Without a doubt.',
-		'Yes - definitely.',
-		'You may rely on it.',
-		'As I see it, yes.',
-		'Most likely.',
-		'Outlook good.',
-		'Yes.',
-		'Signs point to yes.',
-		'Reply hazy, try again.',
-		'Ask again later.',
-		'Better not tell you now.',
-		'Cannot predict now.',
-		'Concentrate and ask again.',
-		"Don't count on it.",
-		'My reply is no.',
-		'My sources say no.',
-		'Outlook not so good.',
-		'Very doubtful.'
+		i18n(ctx, '8ball/a1'),
+		i18n(ctx, '8ball/a2'),
+		i18n(ctx, '8ball/a3'),
+		i18n(ctx, '8ball/a4'),
+		i18n(ctx, '8ball/a5'),
+		i18n(ctx, '8ball/a6'),
+		i18n(ctx, '8ball/a7'),
+		i18n(ctx, '8ball/a8'),
+		i18n(ctx, '8ball/a9'),
+		i18n(ctx, '8ball/a10'),
+		i18n(ctx, '8ball/u1'),
+		i18n(ctx, '8ball/u2'),
+		i18n(ctx, '8ball/u3'),
+		i18n(ctx, '8ball/u4'),
+		i18n(ctx, '8ball/u5'),
+		i18n(ctx, '8ball/n1'),
+		i18n(ctx, '8ball/n2'),
+		i18n(ctx, '8ball/n3'),
+		i18n(ctx, '8ball/n4'),
+		i18n(ctx, '8ball/n5')
 	)[choice])
 
 @client.command()
@@ -286,11 +298,11 @@ async def votetoban(ctx, *, user: d.Member):
 		if (str(member.status) == 'online') \
 				and ctx.channel.permissions_for(member).administrator \
 				and not member.bot:
-			await ctx.send(member.mention + ', someone requests for ' + user.mention + ' to be banned!')
+			await ctx.send(i18n(ctx, 'votetoban-ping-admin', member.mention, user.mention))
 			return
 	DOBAN = '\U0001f6ab'
 	NOBAN = '\U0001f607'
-	msg = await ctx.send('**Vote to ban ' + user.mention + '**\nReact ' + DOBAN + ' to vote to ban; react ' + NOBAN + ' to vote to keep.')
+	msg = await ctx.send(i18n(ctx, 'votetoban-msg', user.mention, DOBAN, NOBAN))
 	await msg.add_reaction(DOBAN)
 	await msg.add_reaction(NOBAN)
 	try:
@@ -302,7 +314,7 @@ async def votetoban(ctx, *, user: d.Member):
 			timeout=180.0
 		)
 		await msg.delete()
-		await ctx.send('An admin has come online! The vote has been cancelled. Please ask them instead.')
+		await ctx.send(i18n(ctx, 'votetoban-cancelled'))
 	except a.TimeoutError:
 		msg = await ctx.get_message(msg.id)
 		dos = 0
@@ -314,14 +326,15 @@ async def votetoban(ctx, *, user: d.Member):
 				nos = r.count - 1
 		await msg.delete()
 		if dos + nos < 3:
-			await ctx.send('Not enough people voted! ({} total, minimum is 3.) The user stays.'.format(dos + nos))
+			await ctx.send(i18n(ctx, 'votetoban-few', dos + nos))
 		elif dos > nos:
-			await ctx.send('{} votes for and {} votes against. The user has been banned.'.format(dos, nos))
-			await ctx.guild.ban(user, reason='Banned after vote'
-					+ ' {} against {}'.format(dos, nos)
-					+ ' when admins were gone.')
+			await ctx.send(i18n(ctx, 'votetoban-banned', dos, nos))
+			await ctx.guild.ban(
+				user,
+				reason=i18n(ctx, 'votetoban-ban-reason', dos, nos)
+			)
 		else:
-			await ctx.send('{} votes for and {} votes against. The user stays.'.format(dos, nos))
+			await ctx.send(i18n(ctx, 'votetoban-innocent', dos, nos))
 
 WATCHED_FILES_MTIMES = [
 	(f, os.path.getmtime(f))
