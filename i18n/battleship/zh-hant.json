@@ -1,5 +1,5 @@
 {
-  "place-instructions": "按一個按鈕兩次來移動你的船；按右手旁的勾來表明你完成了。",
+  "place-instructions": "按一個按鈕**兩次**來移動你的船；按右手旁的勾**兩次**來表明你完成了。",
   "fire-instructions": "發一個坐標（比如 A0 或 3）來射擊它。",
   "wait-instructions": "等待你的對手發射…",
   "won-title": "你贏了！",
