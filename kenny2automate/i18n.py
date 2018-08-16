@@ -245,6 +245,7 @@ class I18n(object):
                 ).fetchone()
                 if res is None:
                     res = {'lang': 'en'}
+            lang = res['lang']
         if not text:
             arg = (await ctx.channel.history(limit=2).flatten())[1].content
         else:
@@ -259,4 +260,4 @@ class I18n(object):
 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36"
             }
         ))
-        await ctx.send(req.json()['result'])
+        await ctx.send(list(req.json().values())[0])
