@@ -1,0 +1,19 @@
+{
+  "config-nothing-set": "這組沒有任何設置！請發`;help connect4_config`來知道怎麼設。",
+  "config-all-set": "為了全局｢連四｣的頻道：{0}\n需要通知的身分組：{1}",
+  "config-channel-set": "為了全局｢連四｣的頻道：{0}",
+  "config-reset": "成功的重設了此組別的設置。",
+  "config-no-empty": "不能設置空白的設置…",
+  "config-set-channel": "成功地設置全局｢連四｣頻道至 {0}。",
+  "config-no-channel-but-role": "不能設置通知身分組但不設置全局｢連四｣頻道！",
+  "config-set-role": "成功地設置全局｢連四｣頻道至 {0} 和需要通知的身分組至 {1}",
+  "ready-player-self": "遊戲者二：{0}",
+  "ready-player-global": "等待其他組別的成員加入…",
+  "board-turn": "現在輪到 {0}。",
+  "board-title": "遊戲板",
+  "board-you-are": "\n你是 {0}",
+  "game-timeout": "沒有人在 {0} 秒時間內動手！遊戲已被取消。",
+  "game-over-title": "遊戲完結！",
+  "game-over-tied": "這場是並列的！整個遊戲板已經填滿了，而沒有人成功的連四塊一起。",
+  "game-over-description": "遊戲完結了！\n優勝者：{0}{1}\n失敗者：{2}{3}"
+}

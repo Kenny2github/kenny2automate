@@ -1,0 +1,9 @@
+{
+  "search-result": "```\n組別：\n{0}\n{1}\n```",
+  "search-error": "```\nError in flags or expression.\n```",
+  "search-result-nomatch": "```\n沒有配合 :(\n```",
+  "findall-result": "```\n結果：\n{0}```",
+  "findall-gp": "第 {0} 組",
+  "findall-error": "Error in flags or expression.\n",
+  "findall-result-none": "沒有結果 :(\n"
+}
