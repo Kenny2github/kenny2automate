@@ -1,0 +1,9 @@
+{
+  "place-instructions": "按一個按鈕兩次來移動你的船；按右手旁的勾來表明你完成了。",
+  "fire-instructions": "發一個坐標（比如 A0 或 3）來射擊它。",
+  "wait-instructions": "等待你的對手發射…",
+  "won-title": "你贏了！",
+  "won": "恭喜！你沉沒了你的對手的所有主力艦！",
+  "lost-title": "你輸了！",
+  "lost": "你的對手沉沒了你的所有主力艦！"
+}
