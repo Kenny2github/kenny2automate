@@ -1,0 +1,9 @@
+{
+  "place-instructions": "Click a button *twice* to move the ship; click the check twice when you're done.",
+  "fire-instructions": "Send a coordinate (e.g. A0 or 3b) to fire at it.",
+  "wait-instructions": "Waiting for other player to fire...",
+  "won-title": "You Won!",
+  "won": "Congratulations! You sunk all of your opponent's battleships!",
+  "lost-title": "You Lost!",
+  "lost": "Your opponent sunk all of your battleships!"
+}

@@ -29,7 +29,7 @@ class LoggerWriter(object):
 		self.level = level
 	def write(self, message):
 		if message.strip():
-			self.level(message, extra={'ctx': DummyCtx(author=DummyCtx(name='(logger)'))})
+			self.level(message.encode('utf8').decode('ascii'), extra={'ctx': DummyCtx(author=DummyCtx(name='(logger)'))})
 	def flush(self):
 		pass
 
@@ -122,6 +122,7 @@ from kenny2automate.regexes import Regexes
 from kenny2automate.connect4 import Connect4
 from kenny2automate.hangman import Hangman
 from kenny2automate.card_games import CardGames
+from kenny2automate.battleship import Battleship
 
 client.add_cog(I18n(client, logger, db))
 client.add_cog(Scratch(client, logger, client.loop))
@@ -131,6 +132,7 @@ client.add_cog(Regexes(client, logger))
 client.add_cog(Connect4(client, logger, db))
 client.add_cog(Hangman(client, logger, db))
 client.add_cog(CardGames(client, logger, db))
+client.add_cog(Battleship(client, logger, db))
 
 @client.event
 async def on_ready(*_, **__):
