@@ -29,7 +29,8 @@ class LoggerWriter(object):
 		self.level = level
 	def write(self, message):
 		if message.strip():
-			self.level(message.encode('utf8').decode('ascii'), extra={'ctx': DummyCtx(author=DummyCtx(name='(logger)'))})
+			self.level(message.encode('unicode-escape').decode('ascii'),
+				extra={'ctx': DummyCtx(author=DummyCtx(name='(logger)'))})
 	def flush(self):
 		pass
 
