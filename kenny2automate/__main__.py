@@ -295,8 +295,6 @@ async def ball(ctx, *, question: str):
 async def votetoban(ctx, *, user: d.Member):
 	"""Start a vote to ban someone from the server. Abuse results in a ban."""
 	logger.info('votetoban: ' + user.mention, extra={'ctx': ctx})
-	if ctx.guild.id != DGBANSERVERID:
-		return
 	for member in ctx.guild.members:
 		if (str(member.status) == 'online') \
 				and ctx.channel.permissions_for(member).administrator \
