@@ -1,0 +1,9 @@
+{
+  "search-result": "```\nГруппы:\n{0}\n{1}\n```",
+  "search-error": "```\nОшибка в флагах или выражении.\n```",
+  "search-result-nomatch": "```\nНе совпадает :(\n```",
+  "findall-result": "```\nРезультаты:\n{0}```",
+  "findall-gp": "Gp{0}",
+  "findall-error": "Ошибка в флагах или выражении.\n",
+  "findall-result-none": "Нет результатов :(\n"
+}
