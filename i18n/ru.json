@@ -1,0 +1,23 @@
+{
+  "hello": "Привет Мир!",
+  "hmmst": "Хмм…",
+  "whoami-title": "Пользователская информация для {0}",
+  "whoami-description": "Вот информация о {0}",
+  "whoami-status": "Статус",
+  "whoami-activity": "Активность",
+  "whoami-id": "ID",
+  "whoami-created-at": "Создал аккаунт в",
+  "whoami-joined-at": "Присоединился в",
+  "whoami-roles": "Роли",
+  "prefix-reset": "Успешно сброшен префикс для {0}",
+  "prefix-set": "Успешно установлен префикс `{1}` для {0}",
+  "resetprefix": "Успешно сброшен префикс для {0}",
+  "purge": "Очищено {0} сообщений",
+  "votetoban-ping-admin": "{0}, кто-то просит, чтобы был заблокирован {1}",
+  "votetoban-msg": "**Голосование на блокировку {0}**\nПоставьте реакцию {1}, если вы голосуете за блокировку; поставьте реакцию {2}, если нет.",
+  "votetoban-cancelled": "Администратор онлайн! Голосование было томенено. Please ask them instead.",
+  "votetoban-few": "Проголосовало недостаточно людей! (всего {0}, минимум 3.) Пользователь остаётся.",
+  "votetoban-banned": "{0} голосов за и {1} голосов против. Пользователь заблокирован.",
+  "votetoban-ban-reason": "Banned after vote {0} against {1} when admins were gone. (I can not translate this.)",
+  "votetoban-innocent": "{0} голосов за и {1} голосов против. Пользователь остаётся."
+}
