@@ -82,11 +82,11 @@ class I18n(object):
         @c.cooldown(1, 20.0)
         async def on_raw_reaction_add(event):
             emoji = event.emoji.name
-            if not all((
-                len(emoji) == 2,
-                ord(emoji[0]) in INDICATOR_RANGE,
-                ord(emoji[1]) in INDICATOR_RANGE
-            )):
+            if not (
+                len(emoji) == 2
+                and ord(emoji[0]) in INDICATOR_RANGE
+                and ord(emoji[1]) in INDICATOR_RANGE
+            ):
                 return
             if time.time() - globs[0] < 20.0:
                 return

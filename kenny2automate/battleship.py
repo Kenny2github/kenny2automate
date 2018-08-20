@@ -4,12 +4,8 @@ import asyncio as a
 import discord as d
 from discord.ext.commands import command
 from discord.ext.commands import bot_has_permissions
-from .pm_games import PrivateGames
+from .pm_games import PrivateGames, DummyCtx
 from .i18n import i18n
-
-class DummyCtx(object):
-	def __init__(self, **kwargs):
-		self.__dict__.update(kwargs)
 
 class Battleship(PrivateGames):
 	@command()
@@ -20,11 +16,26 @@ class Battleship(PrivateGames):
 		"""You sunk my battleship!
 		Usage: ;battleship [ascii:yes|no] [@user]"""
 		self.logger.info('battleship', extra={'ctx': ctx})
+		def helpfunc(ctx2):
+			embed = d.Embed(
+				title=i18n(ctx2, 'battleship/help-title'),
+				description=i18n(ctx2, 'battleship/help')
+			)
+			embed.add_field(
+				name=i18n(ctx2, 'battleship/help-1-title'),
+				value=i18n(ctx2, 'battleship/help-1')
+			)
+			embed.add_field(
+				name=i18n(ctx2, 'battleship/help-2-title'),
+				value=i18n(ctx2, 'battleship/help-2')
+			)
+			return embed
 		try:
 			player1, player2 = await self._gather_game(ctx, 'Battleship',
-				against)
+				against, helpfunc)
 		except (TypeError, ValueError):
 			return
+		del helpfunc
 		dmx1, dmx2 = (
 			DummyCtx(
 				send=player.dm_channel.send,
@@ -59,16 +70,25 @@ class Battleship(PrivateGames):
 					let, (' ' if ascii else '').join(board[i])
 				)
 			return descrip
+		def shipsleft(board, ships):
+			shipns = []
+			for sn, coordlist in ships:
+				for x, y in coordlist:
+					if board[y][x] == ORANGE:
+						shipns.append(sn)
+						break
+			return shipns
 		async def set_ships(dmx):
 			board = [[BLUE for _ in range(10)] for _ in range(10)]
 			embed = d.Embed(
 				title=i18n(dmx, 'connect4/board-title'),
-				description=boardmsg(board),
-				footer=i18n(dmx, 'battleship/place-instructions')
+				description=boardmsg(board)
 			)
+			embed.set_footer(text=i18n(dmx, 'battleship/place-instructions'))
 			msg = await dmx.send(embed=embed)
 			for e in CONTROLS:
 				await msg.add_reaction(e)
+			ships = []
 			for i in (2, 3, 3, 4, 5):
 				x, y, dq = 0, 0, True
 				while 1:
@@ -88,6 +108,11 @@ class Battleship(PrivateGames):
 					)
 					if reaction.emoji == CHECK:
 						board = tmpboard
+						if dq:
+							coordlist = [(x + k, y) for k in range(i)]
+						else:
+							coordlist = [(x, y + k) for k in range(i)]
+						ships.append((i, coordlist))
 						break
 					elif reaction.emoji == UP:
 						if y > 0:
@@ -136,8 +161,8 @@ class Battleship(PrivateGames):
 						if y < (10 - i):
 							dq = False
 			await msg.delete()
-			return (board, embed)
-		(board1, embed1), (board2, embed2) = await a.gather(
+			return (board, ships, embed)
+		(board1, ships1, embed1), (board2, ships2, embed2) = await a.gather(
 			set_ships(dmx1), set_ships(dmx2)
 		)
 		embed1.set_footer()
@@ -150,16 +175,33 @@ class Battleship(PrivateGames):
 			[BLUE for _ in range(10)] for _ in range(10)
 		]
 		embed3, embed4 = d.Embed(
-			title='Hitboard',
+			title=i18n(dmx1, 'battleship/hitboard'),
 			description=boardmsg(hit1)
 		), d.Embed(
-			title='Hitboard',
+			title=i18n(dmx1, 'battleship/hitboard'),
 			description=boardmsg(hit2)
 		)
 		embed3.set_footer(text=i18n(dmx1, 'battleship/fire-instructions'))
 		embed4.set_footer(text=i18n(dmx2, 'battleship/wait-instructions'))
 		msg3 = await dmx1.send(embed=embed3)
 		msg4 = await dmx2.send(embed=embed4)
+		msg5 = await dmx1.send(i18n(dmx1, 'battleship/edit-instructions')
+			+ '\nEDITEE')
+		msg6 = await dmx2.send(i18n(dmx2, 'battleship/edit-instructions')
+			+ '\nEDITEE')
+		emsg = [None, None]
+		@self.bot.listen('on_message')
+		async def emsg1(m):
+			if m.channel.id == dmx1.channel.id and m.content == "EDITEE":
+				emsg[0] = m
+				await msg5.delete()
+				self.bot.remove_listener(emsg1)
+		@self.bot.listen('on_message')
+		async def emsg2(m):
+			if m.channel.id == dmx2.channel.id and m.content == "EDITEE":
+				emsg[1] = m
+				await msg6.delete()
+				self.bot.remove_listener(emsg2)
 		def checklost(board):
 			for i in board:
 				for j in i:
@@ -167,36 +209,6 @@ class Battleship(PrivateGames):
 						return False
 			return True
 		exp = re.compile('^(?:[a-j][0-9]|[0-9][a-j])$')
-		def checc1(m):
-			if m.channel.id != dmx1.channel.id:
-				return False
-			match = re.search(exp, m.content.lower())
-			if not match:
-				return False
-			letter, number = (
-				re.search('[a-j]', m.content.lower()).group(0),
-				re.search('[0-9]', m.content.lower()).group(0)
-			)
-			letter, number = (
-				'abcdefghij'.index(letter),
-				'0123456789'.index(number)
-			)
-			return hit1[letter][number] == BLUE
-		def checc2(m):
-			if m.channel.id != dmx2.channel.id:
-				return False
-			match = re.search(exp, m.content.lower())
-			if not match:
-				return False
-			letter, number = (
-				re.search('[a-j]', m.content.lower()).group(0),
-				re.search('[0-9]', m.content.lower()).group(0)
-			)
-			letter, number = (
-				'abcdefghij'.index(letter),
-				'0123456789'.index(number)
-			)
-			return hit2[letter][number] == BLUE
 		def idxes(s):
 			letter, number = (
 				re.search('[a-j]', s.lower()).group(0),
@@ -207,16 +219,44 @@ class Battleship(PrivateGames):
 				'0123456789'.index(number)
 			)
 			return (letter, number)
+		def checc1(mb, ma):
+			if emsg[0] is None:
+				return False
+			if mb.id != emsg[0].id:
+				return False
+			match = re.search(exp, ma.content.lower())
+			if not match:
+				return False
+			letter, number = idxes(ma.content)
+			return hit1[letter][number] == BLUE
+		def checc2(mb, ma):
+			if emsg[0] is None:
+				return False
+			if mb.id != emsg[1].id:
+				return False
+			match = re.search(exp, ma.content.lower())
+			if not match:
+				return False
+			letter, number = idxes(ma.content)
+			return hit2[letter][number] == BLUE
 		lost1, lost2 = checklost(board1), checklost(board2)
 		while not any((lost1, lost2)):
-			msg = await self.bot.wait_for('message', check=checc1)
+			_, msg = await self.bot.wait_for('message_edit', check=checc1)
 			letter, number = idxes(msg.content)
 			if board2[letter][number] == BLUE:
 				hit1[letter][number] = MISS
 				board2[letter][number] = MISS
 			elif board2[letter][number] == ORANGE:
+				prev = shipsleft(board2, ships2)
 				hit1[letter][number] = HIT
 				board2[letter][number] = RED
+				new = shipsleft(board2, ships2)
+				prev.sort()
+				new.sort()
+				if new != prev:
+					m = await dmx1.send(i18n(dmx1, 'battleship/ship-sunk'))
+					await a.sleep(2)
+					await m.delete()
 			embed2.description = boardmsg(board2)
 			await msg2.edit(embed=embed2)
 			embed3.description = boardmsg(hit1)
@@ -227,14 +267,22 @@ class Battleship(PrivateGames):
 			lost1, lost2 = checklost(board1), checklost(board2)
 			if lost1 or lost2:
 				break
-			msg = await self.bot.wait_for('message', check=checc2)
+			_, msg = await self.bot.wait_for('message_edit', check=checc2)
 			letter, number = idxes(msg.content)
 			if board1[letter][number] == BLUE:
 				hit2[letter][number] = MISS
 				board1[letter][number] = MISS
 			elif board1[letter][number] == ORANGE:
+				prev = shipsleft(board1, ships1)
 				hit2[letter][number] = HIT
 				board1[letter][number] = RED
+				new = shipsleft(board1, ships1)
+				prev.sort()
+				new.sort()
+				if new != prev:
+					m = await dmx2.send(i18n(dmx2, 'battleship/ship-sunk'))
+					await a.sleep(2)
+					await m.delete()
 			embed1.description = boardmsg(board1)
 			await msg1.edit(embed=embed1)
 			embed4.description = boardmsg(hit2)

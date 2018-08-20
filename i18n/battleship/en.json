@@ -1,9 +1,18 @@
 {
   "place-instructions": "Click a button **twice** to move the ship; click the check twice when you're done.",
-  "fire-instructions": "Send a coordinate (e.g. A0 or 3b) to fire at it.",
+  "edit-instructions": "Please send a message containing the exact content:",
+  "fire-instructions": "Edit the \"EDITEE\" message to contain a coordinate (e.g. A0 or 3b) to fire at it.",
   "wait-instructions": "Waiting for other player to fire...",
   "won-title": "You Won!",
   "won": "Congratulations! You sunk all of your opponent's battleships!",
   "lost-title": "You Lost!",
-  "lost": "Your opponent sunk all of your battleships!"
+  "lost": "Your opponent sunk all of your battleships!",
+  "hitboard": "Hitboard",
+  "ship-sunk": "You sunk a ship!",
+  "help-title": "Help for Battleship",
+  "help": "Join the game by pressing the handshake button that appears beneath the invitation.",
+  "help-1-title": "Placing ships",
+  "help-1": "Once the game has started, you will be presented with a board to place ships on. You have 5 ships: a 2-long, 3-long, 3-long, 4-long, and 5-long. Move the ships around using the buttons that appear at the bottom of the board; those buttons need to be clicked **twice** or they won't work! The fist or double arrow buttons move the ships in the corresponding directions two tiles. The two-way arrow buttons point the ship in that direction. Once you're done moving a ship, click the check button twice to place it there. After all your ships have been placed, the board will disappear, and you will have to wait for your opponent to finish placing their ships.",
+  "help-2-title": "Firing at ships",
+  "help-2": "Once all the ships have been placed, you will be presented with two boards: the first one is your ship layout, including your opponent's hits and misses; the second one is your view of your opponent's board, showing your hits and misses. You will be asked to send a message containing an exact string; once you have sent that message, the message asking for it will disappear, to confirm that you've sent it. Then, when it's your turn, you can fire at a tile by editing the same message to contain the coordinate you want to fire, e.g. \"A0\" or \"1b\". The game is over when someone has sunk all of their opponent's ships; whoever does so is the winner."
 }

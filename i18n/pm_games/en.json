@@ -8,5 +8,6 @@
   "no-bots": "Wait, you can't play against a bot! Game cancelled.",
   "no-offline": "Wait, Player 2 is offline! Game cancelled.",
   "unready-player-2": "Player 2 didn't join after {0} seconds! The game has been automatically cancelled.",
-  "react-to-join-mult": "React with {0} to join!\n{1}, react with {2} when you're ready."
+  "react-to-join-mult": "React with {0} to join!\n{1}, react with {2} when you're ready.",
+  "help-title": "Help for {0}"
 }

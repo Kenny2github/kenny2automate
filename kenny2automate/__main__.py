@@ -62,9 +62,7 @@ client = Bot(
 	activity=d.Activity(type=d.ActivityType.watching, name=';help')
 )
 
-DGDELETEHANDLERS = {}
-
-@client.event
+@client.listen()
 async def on_message(msg):
 	ctx = await client.get_context(msg)
 	if (ctx.guild
@@ -75,18 +73,11 @@ async def on_message(msg):
 				msg.content, re.I):
 			await msg.delete()
 			return
-	await client.invoke(ctx)
 
 @client.event
 async def on_message_delete(msg):
 	if msg.mentions:
 		logger.info('Message with mentions deleted: {}'.format(msg.content), extra={'ctx': DummyCtx(author=DummyCtx(name=msg.author.name))})
-	if msg.id in DGDELETEHANDLERS:
-		await DGDELETEHANDLERS[msg.id](msg)
-		del DGDELETEHANDLERS[msg.id]
-
-def add_delete_handler(msg, handler):
-	DGDELETEHANDLERS[msg.id] = handler
 
 @client.event
 async def on_command_error(ctx, exc):
@@ -154,9 +145,11 @@ async def repeat(ctx, *, arg):
 	"""Repeat what you say, right back at ya."""
 	logger.info('repeat: ' + arg, extra={'ctx': ctx})
 	msg = await ctx.send(arg)
-	async def handle_delete(m):
-		await msg.delete()
-	add_delete_handler(ctx.message, handle_delete)
+	@client.listen()
+	async def on_message_delete(msg2):
+		if msg2.id == msg.id:
+			await msg.delete()
+			client.remove_listener(on_message_delete)
 
 @client.command()
 async def hello(ctx):
