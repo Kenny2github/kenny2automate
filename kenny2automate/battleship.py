@@ -230,7 +230,7 @@ class Battleship(PrivateGames):
 			letter, number = idxes(ma.content)
 			return hit1[letter][number] == BLUE
 		def checc2(mb, ma):
-			if emsg[0] is None:
+			if emsg[1] is None:
 				return False
 			if mb.id != emsg[1].id:
 				return False
