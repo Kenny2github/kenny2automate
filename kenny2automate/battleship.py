@@ -190,18 +190,34 @@ class Battleship(PrivateGames):
 		msg6 = await dmx2.send(i18n(dmx2, 'battleship/edit-instructions')
 			+ '\nEDITEE')
 		emsg = [None, None]
-		@self.bot.listen('on_message')
 		async def emsg1(m):
 			if m.channel.id == dmx1.channel.id and m.content == "EDITEE":
 				emsg[0] = m
 				await msg5.delete()
-				self.bot.remove_listener(emsg1)
-		@self.bot.listen('on_message')
+				self.bot.remove_listener(emsg1, 'on_message')
+				self.bot.add_listener(demsg1, 'on_message_delete')
+		async def demsg1(m):
+			nonlocal msg5
+			if m.id == emsg[0].id:
+				msg5 = await dmx1.send(i18n(dmx1,
+					'battleship/edit-instructions') + '\nEDITEE')
+				self.bot.add_listener(emsg1, 'on_message')
+				self.bot.remove_listener(demsg1, 'on_message_delete')
 		async def emsg2(m):
 			if m.channel.id == dmx2.channel.id and m.content == "EDITEE":
 				emsg[1] = m
 				await msg6.delete()
-				self.bot.remove_listener(emsg2)
+				self.bot.remove_listener(emsg2, 'on_message')
+				self.bot.add_listener(demsg2, 'on_message_delete')
+		async def demsg2(m):
+			nonlocal msg6
+			if m.id == emsg[1].id:
+				msg6 = await dmx2.send(i18n(dmx2,
+					'battleship/edit-instructions') + '\nEDITEE')
+				self.bot.add_listener(emsg2, 'on_message')
+				self.bot.remove_listener(demsg2, 'on_message_delete')
+		self.bot.add_listener(emsg1, 'on_message')
+		self.bot.add_listener(emsg2, 'on_message')
 		def checklost(board):
 			for i in board:
 				for j in i:
@@ -241,6 +257,7 @@ class Battleship(PrivateGames):
 			return hit2[letter][number] == BLUE
 		lost1, lost2 = checklost(board1), checklost(board2)
 		while not any((lost1, lost2)):
+			await (await dmx1.send('ping')).delete()
 			_, msg = await self.bot.wait_for('message_edit', check=checc1)
 			letter, number = idxes(msg.content)
 			if board2[letter][number] == BLUE:
@@ -267,6 +284,7 @@ class Battleship(PrivateGames):
 			lost1, lost2 = checklost(board1), checklost(board2)
 			if lost1 or lost2:
 				break
+			await (await dmx2.send('ping')).delete()
 			_, msg = await self.bot.wait_for('message_edit', check=checc2)
 			letter, number = idxes(msg.content)
 			if board1[letter][number] == BLUE:
