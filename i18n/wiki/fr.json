@@ -12,7 +12,7 @@
   "iwstats-activeusers": "Utilisateurs actifs",
   "iwstats-admins": "Admins",
   "iwstats-jobs": "Travail",
-  "wikistats-failed": Echec lors de la récupération des statistiques. Vous avez certainement spcéifié un wiki qui n'existe pas.",
+  "wikistats-failed": "Echec lors de la récupération des statistiques. Vous avez certainement spcéifié un wiki qui n'existe pas.",
   "analyzega-views": "{0} vues",
   "analyzega-times": "{0} fois",
   "analyzega-views-title": "Views",
