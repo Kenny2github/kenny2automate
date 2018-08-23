@@ -1,0 +1,11 @@
+{
+  "crudehangman-occupied": "Il y a déjà un jeu en cours dans ce salon",
+  "awaiting-dm": "En attente d'un MP avec le mot à trouver",
+  "main": "{0}\nRaté: {1}\nTrouvé: `{2}`{3}",
+  "comma-sep": ",",
+  "won": "Félicitations ! Vous avez deviné le mot en entier !",
+  "lost": "Vous avez perdu ! Le mot était \"{0}\".",
+  "timeout": "Le mot n'est pas arrivé en une minute ! Le jeu a été automatiquement annulé.",
+  "wait": "ATTENDEZ, NE PROPOSEZ PAS DE LETTRE MAINTENANT",
+  "timeout2": "Personne n'a proposé de lettre depuis dix minutes ! Le jeu a été automatiquement annulé."
+}
