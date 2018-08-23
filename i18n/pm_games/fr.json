@@ -7,7 +7,7 @@
   "game-cancelled": "Jeu annulé par celui qui l'a lancé.",
   "no-bots": "Attendez, vous ne pouvez pas jouer contre un bot ! Jeu annulé.",
   "no-offline": "Attendez, joueur 2 est déconnecté ! Jeu annulé.",
-  "unready-player-2": Le joueur 2 n'a pas rejoint après {0} secondes ! Le jeu a été automatiquement annulé.",
+  "unready-player-2": "Le joueur 2 n'a pas rejoint après {0} secondes ! Le jeu a été automatiquement annulé.",
   "react-to-join-mult": "Réagissez avec {0} pour rejoindre !\n{1}, réagissez avec {2} quand tu es prêt.",
   "help-title": "Aide pour {0}"
 }
