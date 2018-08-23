@@ -15,7 +15,7 @@
   "fish-card-missed-unsafe": "{0} a demandé un {1} - bien que vous ayez un {2}, vous n'êtes pas encore en sécurité.",
   "fish-card-missed": "{0} a demandé un {1} - puisque vous avez un {2}, vous êtes en sécurité.",
   "fish-fish-got": "Allez pêcher ! Vous avez un {0} - c'est ce que vous aviez demandé !",
-  "fish-fish": Allez pêcher ! Vous avez un {0}.",
+  "fish-fish": "Allez pêcher ! Vous avez un {0}.",
   "fish-winners-title": "Gagnants",
   "fish-winners": "Les gagnats sont {0} ! Félicitations !",
   "fish-winners-sep": ", ",
