@@ -55,8 +55,8 @@ class Battleship(PrivateGames):
 			LEFT, DBLLEFT, UP, DBLUP, DOWN, DBLDOWN,
 			RIGHT, DBLRIGHT, LR, UD, CHECK
 		) = CONTROLS = (
-			'\u2b05', '\U0001f91b', '\u2b06', '\u23eb', '\u2b07', '\u23ec',
-			'\u27a1', '\U0001f91c', '\u2194', '\u2195', '\u2705'
+			'\u2b05', '\u23ea', '\u2b06', '\u23eb', '\u2b07', '\u23ec',
+			'\u27a1', '\u23e9', '\u2194', '\u2195', '\u2705'
 		)
 		BLACK = '\u2b1b' if not ascii else '_'
 		HIT, MISS = '\u274c\u2b55' if not ascii else 'XO'
