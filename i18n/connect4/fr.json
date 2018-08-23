@@ -15,5 +15,5 @@
   "game-timeout": "Personne n'a fait dde mouvement depuis {0} secondes ! le jeu a été annulé.",
   "game-over-title": "Fin de la partie !",
   "game-over-tied": "Egalité ! Le tableau est plein et aucune rangée de 4 n'a été faite.",
-  "game-over-description": "Fin de la partie !\Gagnant: {0}{1}\nPerdant: {2}{3}"
+  "game-over-description": "Fin de la partie !\nGagnant: {0}{1}\nPerdant: {2}{3}"
 }
