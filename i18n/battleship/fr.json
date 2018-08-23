@@ -1,0 +1,18 @@
+{
+  "place-instructions": "Cliquez sur un bouton **deux fois** pour déplacer le bateau ; cliquez sur le bouton vert deux fois lorsque c'est bon.",
+  "edit-instructions": "Merci d'envoyer un message contenant le contenu exact :",
+  "fire-instructions": "Modifiez le message \"EDITEE\" message pour obtenir les coordonnées (ex : A0 ou 3b) où tirer.",
+  "wait-instructions": "En attente que l'autre joueur tire",
+  "won-title": "Tu as gagné !",
+  "won": "Félicitations ! Tu as coulé toute la flotte de ton ennemi !",
+  "lost-title": "Tu as perdu!",
+  "lost": "Votre adversaire a coulé toute votre flotte !",
+  "hitboard": "Tableau des tirs",
+  "ship-sunk": "Vous avez coulé un bateau !",
+  "help-title": "Aide pour bataille navale",
+  "help": "Rejoingnez le jeu en cliquant sur le bouton de poignée de mains qui apparaît en-dessous de l'invitation",
+  "help-1-title": "Placez vos bateaux",
+  "help-1": "Quand le jeu aura démarré, vous receverez un tableau sur lequel il faudra placer vos bateaux. Vous avez 5 bateaux : un bateau long de 2, un bateau long de 3, un bateau long de 3, un bateau long de 4 et un bateau long de 5. Déplacez les bateaux grâce aux boutons qui apparaissent en bas du tableau ; ces boutons doivent être cliqués **deux fois** ou cela ne fonctionnera pas ! Les premiers boutons ou boutons à double flèche déplacent le bateau dans la direction correspondante de 2 cases. Les boutons avec une flèche à double sens orientent le bateau dans la direction correspondante. Lorsque le bateau est bien placé, cliquez sur le bouton de validation 2 fois pour le placer définitivement à cet endroit. Après avoir placé tous vos bateaux, le tableau va disparaître et vous devrez attendre que votre adversaire finisse de placer ses bateaux.",
+  "help-2-title": "Tirez sur un bateau",
+  "help-2": "Une fois que tous les bateaux seront placés, deux tableaux vont apparître : le premier présente la disposion de vos bateaux, avec les frappes et les échecs de votre adversaire ; le second votre vue tu tableau de l'adversaire, montrant vos frappes et vos échecs. Il va vous être demandé d'envoyer un message contenant une chaîne de caractère bien précise ; une fois que vous aurez envoyé ce message, le message que l'on vous a nvoyé va disparaître, pour confirmer que le votre a bien été envoyé. Puis, quand c'est votre tour, vous pouvez can tirer sur une case en éditant le même message afin qu'il contienne les coordonnées d'où vous souhaitez tirer, ex : \"A0\" ou \"1b\". Le jeu se termine lorsque quelqu'un a coulé tous les bateaux de son adversaire; ce joueur gagne alors la partie."
+}
