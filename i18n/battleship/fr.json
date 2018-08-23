@@ -3,7 +3,7 @@
   "edit-instructions": "Merci d'envoyer un message contenant le contenu exact :",
   "fire-instructions": "Modifiez le message \"EDITEE\" message pour obtenir les coordonnées (ex : A0 ou 3b) où tirer.",
   "wait-instructions": "En attente que l'autre joueur tire",
-  "won-title": Tu as gagné !",
+  "won-title": "Tu as gagné !",
   "won": "Félicitations ! Tu as coulé toute la flotte de ton ennemi !",
   "lost-title": "Tu as perdu!",
   "lost": "Votre adversaire a coulé toute votre flotte !",
