@@ -8,11 +8,11 @@
   "config-no-channel-but-role": "Impossible de paramétrer une mention pour les parties globales de puissance 4 sans paramétrer un salon !",
   "config-set-role": "Le salon pour les parties globales de puissance 4 a été configuré avec succès sur {0} et le rôle à mentionner a été configuré sur {1}",
   "ready-player-self": "Joueur 2 : {0}",
-  "ready-player-global": En attente que quelqu'un d'un autre serveur rejoigne...",
+  "ready-player-global": "En attente que quelqu'un d'un autre serveur rejoigne...",
   "board-turn": "C'est actuellement le tour de {0}.",
   "board-title": "Tableau",
   "board-you-are": "\nVous êtes {0}",
-  "game-timeout": Personne n'a fait dde mouvement depuis {0} secondes ! le jeu a été annulé.",
+  "game-timeout": "Personne n'a fait dde mouvement depuis {0} secondes ! le jeu a été annulé.",
   "game-over-title": "Fin de la partie !",
   "game-over-tied": "Egalité ! Le tableau est plein et aucune rangée de 4 n'a été faite.",
   "game-over-description": "Fin de la partie !\Gagnant: {0}{1}\nPerdant: {2}{3}"
