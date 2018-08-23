@@ -1,0 +1,23 @@
+{
+  "hello": "Hello World!",
+  "hmmst": "hmmst",
+  "whoami-title": "Informations de l'utilisateur pour {0}",
+  "whoami-description": "Voici quelques informations à propos de {0}",
+  "whoami-status": "Statut",
+  "whoami-activity": "Activité",
+  "whoami-id": "ID",
+  "whoami-created-at": "Créé le",
+  "whoami-joined-at": "Rejoint le",
+  "whoami-roles": "Rôles",
+  "prefix-reset": "Le préfixe a été réinitialisé avec succès pour {0}",
+  "prefix-set": "Le préfixe a été changé avec succès pour {0} vers `{1}`",
+  "resetprefix": "Le préfixe a été réinitialisé avec succès pour {0}",
+  "purge": "{0} messages ont été purgés",
+  "votetoban-ping-admin": "{0}, quelqu'un demande à ce que {1} soit banni !",
+  "votetoban-msg": "**Vote pour bannir {0}**\nRéagissez avec {1} pour voter le bannissement; réagissez avec {2} pour voter le maintien.",
+  "votetoban-cancelled": "Un admin est désormais en ligne. Le vote a été annulé. Veuillez plutôt lui demander.",
+  "votetoban-few": "Pas assez de personnes ont voté ! ({0} au total, le minimum est 3.) L'utilisateur reste.",
+  "votetoban-banned": "{0} votes pour et {1} votes contre. L'utilisateur a été banni.",
+  "votetoban-ban-reason": "Banni avec le vote {0} contre {1} quand les admins n'étaient pas là.",
+  "votetoban-innocent": "{0} votes pour et {1} votes contre. l'utilisateur reste."
+}
