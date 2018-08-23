@@ -1,0 +1,9 @@
+{
+  "search-result": "```\nGroupes :\n{0}\n{1}\n```",
+  "search-error": "```\nErreur dans les drapeaux ou dans l'expression.\n```",
+  "search-result-nomatch": "```\nPas trouvé :(\n```",
+  "findall-result": "```\nRésultats :\n{0}```",
+  "findall-gp": "Gp{0}",
+  "findall-error": "Erreur dans les drapeaux ou dans l'expression.\n",
+  "findall-result-none": "Aucun résultat :(\n"
+}
