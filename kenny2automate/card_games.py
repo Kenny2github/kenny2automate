@@ -262,7 +262,7 @@ class CardGames(PrivateGames):
 					title=i18n(dm, 'card_games/fish-winners-title'),
 					description=i18n(
 						dm,
-						'fish-winners',
+						'card_games/fish-winners',
 						i18n(dm, 'card_games/fish-winners-sep').join(
 							player.display_name for player in winners[:-1]
 						)
