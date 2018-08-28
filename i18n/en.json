@@ -11,7 +11,7 @@
   "whoami-roles": "Roles",
   "prefix-reset": "Successfully reset prefix for {0}",
   "prefix-set": "Successfully set prefix for {0} to `{1}`",
-  "resetprefix": "Successfully reset prefix for {0}",
+  "prefix-unset": "No prefix set",
   "purge": "Purged {0} messages",
   "votetoban-ping-admin": "{0}, someone requests for {1} to be banned!",
   "votetoban-msg": "**Vote to ban {0}**\nReact {1} to vote to ban; react {2} to vote to keep.",

@@ -194,20 +194,26 @@ async def whoami(ctx):
 	)
 	await ctx.send(embed=embed)
 
-@client.command()
-async def prefix(ctx, *, prefix: str=None):
-	"""Change the bot's prefix for yourself.
+@client.group()
+async def prefix(ctx):
+	"""Bot prefix-related commands."""
+	pass
+@prefix.command('reset')
+async def prefix_reset(ctx, user: d.Member = None):
+	"""Reset your own prefix.
 
-	Omit the `prefix` parameter to reset it to default.
+	The owner of the bot can also reset other users' prefixes.
 	"""
-	logger.info('prefix: ' + str(prefix), extra={'ctx': ctx})
-	if prefix is None:
-		db.execute(
-			'DELETE FROM user_prefixes WHERE user_id=?',
-			(ctx.author.id,)
-		)
-		await ctx.send(i18n(ctx, 'prefix-reset', ctx.author.mention))
-		return
+	leuser = (user or ctx.author) if (await client.is_owner(ctx.author)) else ctx.author
+	db.execute(
+		'DELETE FROM user_prefixes WHERE user_id=?',
+		(leuser.id,)
+	)
+	await ctx.send(i18n(ctx, 'prefix-reset', leuser.mention))
+
+@prefix.command('set')
+async def prefix_set(ctx, *, prefix):
+	"""Set your own prefix."""
 	res = db.execute(
 		'SELECT prefix FROM user_prefixes WHERE user_id=?',
 		(ctx.author.id,)
@@ -223,6 +229,18 @@ async def prefix(ctx, *, prefix: str=None):
 			(prefix, ctx.author.id)
 		)
 	await ctx.send(i18n(ctx, 'prefix-set', ctx.author.mention, prefix))
+
+@prefix.command('get')
+async def prefix_get(ctx):
+	"""Get your own prefix."""
+	res = db.execute(
+		'SELECT prefix FROM user_prefixes WHERE user_id=?',
+		(ctx.author.id,)
+	).fetchone()
+	if res is None:
+		await ctx.send(i18n(ctx, 'prefix-unset'))
+	else:
+		await ctx.send(res['prefix'])
 
 @client.command()
 @c.is_owner()
