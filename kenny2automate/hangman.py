@@ -74,7 +74,7 @@ class Hangman(object):
 		except a.TimeoutError:
 			await ctx.send(i18n(ctx, 'hangman/timeout'))
 			return
-		WORD = WORD.content
+		WORD = msg.content
 		letters = ['_'] * len(WORD)
 		lowers = (
 			'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',

@@ -202,7 +202,6 @@ class Wiki(object):
 				return
 		data = list(data['query']['pages'].values())[0]['revisions'][0]
 		content = data['*']
-		revid = data['revid']
 
 		MASTER_VIEWS = [
 			(m.group(1).replace('_', ' '), int(m.group(2)))
@@ -283,7 +282,7 @@ class Wiki(object):
 		print('# ===Stats for median datapoints: ...')
 		if count % 2:
 			# ;Views
-			median_title, median_views = MASTER[count // 2]
+			median_title, median_views = MASTER_VIEWS[count // 2]
 			views_wo_median = views_unnamed[:]
 			views_wo_median.pop(count // 2)
 			avg_wo_median = sum(views_wo_median) / (count - 1)

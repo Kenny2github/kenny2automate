@@ -1,10 +1,8 @@
-import traceback
 import asyncio as a
 import discord as d
 from discord.ext.commands import command
 from discord.ext.commands import bot_has_permissions
 from discord.ext.commands import has_permissions
-from discord.ext import commands as c
 from .i18n import i18n
 
 class Connect4(object):

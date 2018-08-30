@@ -2,7 +2,6 @@ import os
 import time
 import json
 import functools
-import sqlite3 as sql
 import requests
 import discord as d
 from discord.ext import commands as c
@@ -105,7 +104,7 @@ class I18n(object):
                         params={'language': lang, 'text': text})
                     )
                     print(req.text)
-                    ttext = req.json()['result']
+                    text = req.json()['result']
                     erroridx = -1
                 except KeyError:
                     print(lang)
