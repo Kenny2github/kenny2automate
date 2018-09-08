@@ -302,6 +302,14 @@ async def ball(ctx, *, question: str):
 	)[choice])
 
 @client.command()
+async def whois(ctx, *, user: d.User):
+	await ctx.send(embed=d.Embed(description=user.mention))
+
+@client.command()
+async def whereis(ctx, *, channel: d.TextChannel):
+	await ctx.send(channel.mention)
+
+@client.command()
 @bot_has_permissions(ban_members=True, add_reactions=True, read_message_history=True)
 async def votetoban(ctx, *, user: d.Member):
 	"""Start a vote to ban someone from the server. Abuse results in a ban."""
