@@ -50,8 +50,8 @@ with open(os.path.join(os.path.dirname(__file__), 'start.sql')) as f:
 	db.executescript(f.read())
 
 def get_command_prefix(bot, msg):
-	res = db.execute('SELECT prefix FROM user_prefixes WHERE user_id=?', (msg.author.id,)).fetchone()
-	if res is None:
+	res = db.execute('SELECT prefix FROM users WHERE user_id=?', (msg.author.id,)).fetchone()
+	if res is None or res['prefix'] is None:
 		return ';'
 	return (res['prefix'], ';')
 
@@ -206,7 +206,7 @@ async def prefix_reset(ctx, user: d.Member = None):
 	"""
 	leuser = (user or ctx.author) if (await client.is_owner(ctx.author)) else ctx.author
 	db.execute(
-		'DELETE FROM user_prefixes WHERE user_id=?',
+		'UPDATE users SET prefix=NULL WHERE user_id=?',
 		(leuser.id,)
 	)
 	await ctx.send(i18n(ctx, 'prefix-reset', leuser.mention))
@@ -215,17 +215,17 @@ async def prefix_reset(ctx, user: d.Member = None):
 async def prefix_set(ctx, *, prefix):
 	"""Set your own prefix."""
 	res = db.execute(
-		'SELECT prefix FROM user_prefixes WHERE user_id=?',
+		'SELECT prefix FROM users WHERE user_id=?',
 		(ctx.author.id,)
 	).fetchone()
 	if res is None:
 		db.execute(
-			'INSERT INTO user_prefixes VALUES (?, ?)',
+			'INSERT INTO users (user_id, prefix) VALUES (?, ?)',
 			(ctx.author.id, prefix)
 		)
 	else:
 		db.execute(
-			'UPDATE user_prefixes SET prefix=? WHERE user_id=?',
+			'UPDATE users SET prefix=? WHERE user_id=?',
 			(prefix, ctx.author.id)
 		)
 	await ctx.send(i18n(ctx, 'prefix-set', ctx.author.mention, prefix))
@@ -234,10 +234,10 @@ async def prefix_set(ctx, *, prefix):
 async def prefix_get(ctx):
 	"""Get your own prefix."""
 	res = db.execute(
-		'SELECT prefix FROM user_prefixes WHERE user_id=?',
+		'SELECT prefix FROM users WHERE user_id=?',
 		(ctx.author.id,)
 	).fetchone()
-	if res is None:
+	if res is None or res['prefix'] is None:
 		await ctx.send(i18n(ctx, 'prefix-unset'))
 	else:
 		await ctx.send(res['prefix'])
@@ -248,7 +248,7 @@ async def resetprefix(ctx, user: d.Member):
 	"""Reset someone's prefix."""
 	logger.info('resetprefix: ' + str(user.mention), extra={'ctx': ctx})
 	db.execute(
-		'DELETE FROM user_prefixes WHERE user_id=?',
+		'UPDATE users SET prefix=NULL WHERE user_id=?',
 		(user.id,)
 	)
 	await ctx.send(i18n(ctx, 'resetprefix', user.mention))

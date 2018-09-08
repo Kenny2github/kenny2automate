@@ -37,7 +37,7 @@ class Connect4(object):
 				await ctx.send(i18n(ctx, 'connect4/config-nothing-set'))
 				return
 			channel = self.bot.get_channel(res['channel_id'])
-			if res['role_id'] != 0:
+			if res['role_id'] is not None:
 				for r in ctx.guild.roles:
 					if r.id == res['role_id']:
 						role = r
@@ -56,7 +56,7 @@ class Connect4(object):
 			await ctx.send(i18n(ctx, 'connect4/config-no-empty'))
 		else:
 			res = self.db.execute(
-				'SELECT (channel_id) FROM gcf_guilds WHERE guild_id=?',
+				'SELECT channel_id FROM gcf_guilds WHERE guild_id=?',
 				(ctx.guild.id,)
 			).fetchone()
 			if channel is not None and role is None:

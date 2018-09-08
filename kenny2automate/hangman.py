@@ -52,18 +52,25 @@ class Hangman(object):
 		Once that's been done, guess a letter by sending it.
 		"""
 		self.logger.info('Games.crudehangman', extra={'ctx': ctx})
-		if self.db.execute(
-			'SELECT channel_id FROM ch_channels_occupied WHERE channel_id=?',
+		res = self.db.execute(
+			'SELECT ch_occupied FROM channels WHERE channel_id=?',
 			(ctx.channel.id,)
-		).fetchone() is not None:
+		).fetchone()
+		if res is not None and not res['ch_occupied']:
 			await ctx.send(i18n(ctx, 'hangman/crudehangman-occupied'))
 			ownerq = await self.bot.is_owner(ctx.author)
 			if not ownerq:
 				return
-		self.db.execute(
-			'INSERT INTO ch_channels_occupied VALUES (?)',
-			(ctx.channel.id,)
-		)
+		if res is None:
+			self.db.execute(
+				'INSERT INTO channels (channel_id, ch_occupied) VALUES (?, 1)',
+				(ctx.channel.id,)
+			)
+		else:
+			self.db.execute(
+				'UPDATE channels SET ch_occupied=1 WHERE channel_id=',
+				(ctx.channel.id,)
+			)
 		await ctx.send(i18n(ctx, 'hangman/awaiting-dm'))
 		try:
 			msg = await ctx.bot.wait_for('message',
@@ -111,7 +118,7 @@ class Hangman(object):
 		else:
 			await ctx.send(i18n(ctx, 'hangman/lost', WORD))
 		self.db.execute(
-			'DELETE FROM ch_channels_occupied WHERE channel_id=?',
+			'UPDATE channels SET ch_occupied=0 WHERE channel_id=?',
 			(ctx.channel.id,)
 		)
 

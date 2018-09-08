@@ -32,9 +32,6 @@ class Card(object):
 	def __eq__(self, other):
 		return hash(self) == hash(other)
 
-	def copy(self):
-		return Card(self.suit, self.number)
-
 class CardGames(PrivateGames):
 	@command()
 	@bot_has_permissions(add_reactions=True, read_message_history=True)

@@ -19,15 +19,15 @@ with open(os.path.abspath(os.path.join(
 
 def i18n(ctx, key, *params):
     res = db.execute(
-        'SELECT lang FROM user_langs WHERE user_id=?',
+        'SELECT lang FROM users WHERE user_id=?',
         (ctx.author.id,)
     ).fetchone()
-    if res is None:
+    if res is None or res['lang'] is None:
         res = db.execute(
-            'SELECT lang FROM channel_langs WHERE channel_id=?',
+            'SELECT lang FROM channels WHERE channel_id=?',
             (ctx.channel.id,)
         ).fetchone()
-        if res is None:
+        if res is None or res['lang'] is None:
             res = {'lang': 'en'}
     res = res['lang']
     dirq, key = os.path.split(key)
@@ -128,7 +128,7 @@ class I18n(object):
         self.logger.info('I18n.lang: ' + str(lang), extra={'ctx': ctx})
         if lang is None:
             db.execute(
-                'DELETE FROM user_langs WHERE user_id=?',
+                'UPDATE users SET lang=NULL WHERE user_id=?',
                 (ctx.author.id,)
             )
             await ctx.send('Successfully reset language for {}'.format(
@@ -151,17 +151,17 @@ class I18n(object):
             )
             return
         res = db.execute(
-            'SELECT lang FROM user_langs WHERE user_id=?',
+            'SELECT lang FROM users WHERE user_id=?',
             (ctx.author.id,)
         ).fetchone()
         if res is None:
             db.execute(
-                'INSERT INTO user_langs VALUES (?, ?)',
+                'INSERT INTO users (user_id, lang) VALUES (?, ?)',
                 (ctx.author.id, lang)
             )
         else:
             db.execute(
-                'UPDATE user_langs SET lang=? WHERE user_id=?',
+                'UPDATE users SET lang=? WHERE user_id=?',
                 (lang, ctx.author.id)
             )
         await ctx.send('Successfully set language for {} to {}'.format(
@@ -184,7 +184,7 @@ class I18n(object):
             channel = ctx.channel
         if lang is None:
             db.execute(
-                'DELETE FROM channel_langs WHERE channel_id=?',
+                'UPDATE channels SET lang=NULL WHERE channel_id=?',
                 (channel.id,)
             )
             await ctx.send('Successfully reset language for {}'.format(
@@ -207,17 +207,17 @@ class I18n(object):
             )
             return
         res = db.execute(
-            'SELECT lang FROM channel_langs WHERE channel_id=?',
+            'SELECT lang FROM channels WHERE channel_id=?',
             (channel.id,)
         ).fetchone()
         if res is None:
             db.execute(
-                'INSERT INTO channel_langs VALUES (?, ?)',
+                'INSERT INTO channels (channel_id, lang) VALUES (?, ?)',
                 (channel.id, lang)
             )
         else:
             db.execute(
-                'UPDATE channel_langs SET lang=? WHERE channel_id=?',
+                'UPDATE channels SET lang=? WHERE channel_id=?',
                 (lang, channel.id)
             )
         await ctx.send('Successfully set language for {} to {}'.format(
@@ -234,15 +234,15 @@ class I18n(object):
     async def translate(self, ctx, lang = None, *, text = None):
         if not lang:
             res = db.execute(
-                'SELECT lang FROM user_langs WHERE user_id=?',
+                'SELECT lang FROM users WHERE user_id=?',
                 (ctx.author.id,)
             ).fetchone()
-            if res is None:
+            if res is None or res['lang'] is None:
                 res = db.execute(
-                    'SELECT lang FROM channel_langs WHERE channel_id=?',
+                    'SELECT lang FROM channels WHERE channel_id=?',
                     (ctx.channel.id,)
                 ).fetchone()
-                if res is None:
+                if res is None or res['lang'] is None:
                     res = {'lang': 'en'}
             lang = res['lang']
         if not text:
