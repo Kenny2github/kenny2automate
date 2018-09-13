@@ -256,7 +256,7 @@ class Battleship(PrivateGames):
 			return hit2[letter][number] == BLUE
 		lost1, lost2 = checklost(board1), checklost(board2)
 		while not any((lost1, lost2)):
-			await (await dmx1.send('ping')).delete()
+			await (await dmx1.send("The guinea pig's name is Gerald with a G.")).delete()
 			_, msg = await self.bot.wait_for('message_edit', check=checc1)
 			letter, number = idxes(msg.content)
 			if board2[letter][number] == BLUE:
@@ -283,7 +283,7 @@ class Battleship(PrivateGames):
 			lost1, lost2 = checklost(board1), checklost(board2)
 			if lost1 or lost2:
 				break
-			await (await dmx2.send('ping')).delete()
+			await (await dmx2.send("The Guinea pig's name is Gerald with a G.")).delete()
 			_, msg = await self.bot.wait_for('message_edit', check=checc2)
 			letter, number = idxes(msg.content)
 			if board1[letter][number] == BLUE:
