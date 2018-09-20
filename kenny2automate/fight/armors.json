@@ -1,0 +1,22 @@
+{
+  "clothes": {
+    "name": "fight/armor-clothes",
+    "defense": 0,
+    "price": 0
+  },
+  "bandages": {
+    "name": "fight/armor-bandages",
+    "defense": 1,
+    "price": 3
+  },
+  "cloak": {
+    "name": "fight/armor-cloak",
+    "defense": 5,
+    "price": 15
+  },
+  "firesuit": {
+    "name": "fight/armor-firesuit",
+    "defense": "firesuit",
+    "price": 30
+  }
+}

@@ -25,9 +25,8 @@ DGHANGMANSHANPES = [
 ]
 
 class Hangman(object):
-	def __init__(self, bot, logger ,db):
+	def __init__(self, bot, db):
 		self.bot = bot
-		self.logger = logger
 		self.db = db
 
 	@staticmethod
@@ -51,7 +50,6 @@ class Hangman(object):
 		Next, send the word in a DM with the bot, to set it.
 		Once that's been done, guess a letter by sending it.
 		"""
-		self.logger.info('Games.crudehangman', extra={'ctx': ctx})
 		res = self.db.execute(
 			'SELECT ch_occupied FROM channels WHERE channel_id=?',
 			(ctx.channel.id,)
@@ -141,7 +139,6 @@ class Hangman(object):
 .split(' ')
 		REGS1, REGS2 = REGS[:13], REGS[13:]
 		NEIN = '\u274c'
-		self.logger.info('Games.hangman', extra={'ctx': ctx})
 		await ctx.send(i18n(ctx, 'hangman/awaiting-dm'))
 		try:
 			msg = await ctx.bot.wait_for('message',

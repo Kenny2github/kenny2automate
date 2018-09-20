@@ -7,10 +7,8 @@ from .i18n import i18n
 DGSWIKISERVER = 328938947717890058
 
 class Scratch(object):
-	def __init__(self, bot, logger, loop):
+	def __init__(self, bot):
 		self.bot = bot
-		self.logger = logger
-		self.loop = loop
 
 	def __local_check(self, ctx):
 		if ctx.guild is None:
@@ -27,7 +25,6 @@ class Scratch(object):
 	@command()
 	async def randomproject(self, ctx):
 		"""Get a random project link!"""
-		self.logger.info('Scratch.randomproject', extra={'ctx': ctx})
 		async with ctx.channel.typing():
 			count = json.loads(await self.req(
 				'https://api.scratch.mit.edu/projects/count/all'
@@ -46,7 +43,6 @@ class Scratch(object):
 		"""How many messages do you have on Scratch?"""
 		async with ctx.channel.typing():
 			if name is not None:
-				self.logger.info('Scratch.messagecount: ' + name, extra={'ctx': ctx})
 				resp = await self.req(
 					'https://api.scratch.mit.edu/users/{}/messages/count'
 					.format(name)
@@ -55,14 +51,12 @@ class Scratch(object):
 			else:
 				resp = None
 				if ctx.author.nick is not None:
-					self.logger.info('Scratch.messagecount: ' + ctx.author.nick, extra={'ctx': ctx})
 					resp = await self.req(
 						'https://api.scratch.mit.edu/users/{}/messages/count'
 						.format(ctx.author.nick)
 					)
 					username = ctx.author.nick
 				if resp is None:
-					self.logger.info('Scratch.messagecount: ' + ctx.author.name, extra={'ctx': ctx})
 					resp = await self.req(
 						'https://api.scratch.mit.edu/users/{}/messages/count'
 						.format(ctx.author.name)
@@ -83,7 +77,6 @@ class Scratch(object):
 	@command()
 	async def news(self, ctx):
 		"""Get Scratch news."""
-		self.logger.info('Scratch.news', extra={'ctx': ctx})
 		content = await self.req('https://api.scratch.mit.edu/news')
 		content = json.loads(content)
 		for new in content[:5]:

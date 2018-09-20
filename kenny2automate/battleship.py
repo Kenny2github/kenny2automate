@@ -3,10 +3,10 @@ import asyncio as a
 import discord as d
 from discord.ext.commands import command
 from discord.ext.commands import bot_has_permissions
-from .pm_games import PrivateGames, DummyCtx
+from .games import Games, DummyCtx
 from .i18n import i18n
 
-class Battleship(PrivateGames):
+class Battleship(Games):
 	@command()
 	@bot_has_permissions(add_reactions=True, read_message_history=True)
 	async def battleship(
@@ -14,7 +14,6 @@ class Battleship(PrivateGames):
 	):
 		"""You sunk my battleship!
 		Usage: ;battleship [ascii:yes|no] [@user]"""
-		self.logger.info('battleship', extra={'ctx': ctx})
 		def helpfunc(ctx2):
 			embed = d.Embed(
 				title=i18n(ctx2, 'battleship/help-title'),

@@ -1,95 +1,94 @@
 import asyncio as a
 import discord as d
-from discord.ext.commands import command
+from discord.ext.commands import command, group
 from discord.ext.commands import bot_has_permissions
 from discord.ext.commands import has_permissions
 from .i18n import i18n
 
 class Connect4(object):
-	def __init__(self, bot, logger, db):
+	def __init__(self, bot, db):
 		self.bot = bot
-		self.logger = logger
 		self.db = db
 
-	@command()
+	@group()
 	@has_permissions(administrator=True)
-	async def connect4_config(
-		self,
-		ctx,
-		operation='get',
-		channel: d.TextChannel = None,
-		*,
-		role: d.Role = None
-	):
+	async def connect4_config(self, ctx):
 		"""Get or set global connect4 configuration for this server.
 
-		If specified without parameters, gets the current configuration.
-		To set the channel to announce global connect4 games, run ;connect4_config set <channel mention>
-		To set a role to mention when a game is happening as well, run ;connect4_config set <channel mention> <role name or mention>
-		To remove all configuration, run ;connect4_config reset
+		To get current configuration, run `;connect4_config get`.
+		To set the channel to announce global connect4 games, run
+		`;connect4_config set <channel mention>`.
+		To set a role to mention when a game is happening as well, run
+		`;connect4_config set <channel mention> <role name or mention>`.
+		To remove all configuration, run `;connect4_config reset`.
 		"""
-		if operation == 'get':
-			res = self.db.execute(
-				'SELECT channel_id, role_id FROM gcf_guilds WHERE guild_id=?',
-				(ctx.guild.id,)
-			).fetchone()
-			if res is None:
-				await ctx.send(i18n(ctx, 'connect4/config-nothing-set'))
-				return
-			channel = self.bot.get_channel(res['channel_id'])
-			if res['role_id'] is not None:
-				for r in ctx.guild.roles:
-					if r.id == res['role_id']:
-						role = r
-				await ctx.send(i18n(
-					ctx, 'connect4/config-all-set', channel.mention, role.name
-				))
-			else:
-				await ctx.send(i18n(ctx, 'connect4/config-channel-set', channel.mention))
-		elif operation == 'reset':
-			self.db.execute(
-				'DELETE FROM gcf_guilds WHERE guild_id=?',
-				(ctx.guild.id,)
-			)
-			await ctx.send(i18n(ctx, 'connect4/config-reset'))
-		elif channel is None and role is None:
-			await ctx.send(i18n(ctx, 'connect4/config-no-empty'))
+		pass
+
+	@connect4_config.command()
+	async def get(self, ctx):
+		"""Get current configuration."""
+		res = self.db.execute(
+			'SELECT channel_id, role_id FROM gcf_guilds WHERE guild_id=?',
+			(ctx.guild.id,)
+		).fetchone()
+		if res is None:
+			await ctx.send(i18n(ctx, 'connect4/config-nothing-set'))
+			return
+		channel = self.bot.get_channel(res['channel_id'])
+		if res['role_id'] is not None:
+			for r in ctx.guild.roles:
+				if r.id == res['role_id']:
+					role = r
+			await ctx.send(i18n(
+				ctx, 'connect4/config-all-set', channel.mention, role.name
+			))
 		else:
-			res = self.db.execute(
-				'SELECT channel_id FROM gcf_guilds WHERE guild_id=?',
-				(ctx.guild.id,)
-			).fetchone()
-			if channel is not None and role is None:
-				if res is not None:
-					self.db.execute(
-						'UPDATE gcf_guilds SET channel_id=? WHERE guild_id=?',
-						(channel.id, ctx.guild.id)
-					)
-				else:
-					self.db.execute(
-						'INSERT INTO gcf_guilds (guild_id, channel_id) VALUES \
+			await ctx.send(i18n(ctx, 'connect4/config-channel-set', channel.mention))
+
+	@connect4_config.command()
+	async def reset(self, ctx):
+		"""Reset current configuration."""
+		self.db.execute(
+			'DELETE FROM gcf_guilds WHERE guild_id=?',
+			(ctx.guild.id,)
+		)
+		await ctx.send(i18n(ctx, 'connect4/config-reset'))
+
+	@connect4_config.command()
+	async def set(self, ctx, channel: d.TextChannel, role: d.Role = None):
+		"""Set current configuration."""
+		res = self.db.execute(
+			'SELECT channel_id FROM gcf_guilds WHERE guild_id=?',
+			(ctx.guild.id,)
+		).fetchone()
+		if role is None:
+			if res is not None:
+				self.db.execute(
+					'UPDATE gcf_guilds SET channel_id=? WHERE guild_id=?',
+					(channel.id, ctx.guild.id)
+				)
+			else:
+				self.db.execute(
+					'INSERT INTO gcf_guilds (guild_id, channel_id) VALUES \
 (?, ?)',
-						(ctx.guild.id, channel.id)
-					)
-				await ctx.send(i18n(ctx, 'connect4/config-set-channel', channel.mention))
-			if role is not None:
-				if res is not None:
-					self.db.execute(
-						'UPDATE gcf_guilds SET role_id=? WHERE guild_id=?',
-						(role.id, ctx.guild.id)
-					)
-				elif channel is not None:
-					self.db.execute(
-						'INSERT INTO gcf_guilds (guild_id, channel_id, \
+					(ctx.guild.id, channel.id)
+				)
+			await ctx.send(i18n(ctx, 'connect4/config-set-channel', channel.mention))
+		else:
+			if res is not None:
+				self.db.execute(
+					'UPDATE gcf_guilds SET channel_id=?, role_id=? WHERE guild_id=?',
+					(channel.id, role.id, ctx.guild.id)
+				)
+			else:
+				self.db.execute(
+					'INSERT INTO gcf_guilds (guild_id, channel_id, \
 role_id) VALUES (?, ?, ?)',
-						(ctx.guild.id, channel.id, role.id)
-					)
-				else:
-					await ctx.send(i18n(ctx, 'connect4/config-no-channel-but-role'))
-					return
-				await ctx.send(i18n(
-					ctx, 'connect4/config-set-role', channel.mention, role.name
-				))
+					(ctx.guild.id, channel.id, role.id)
+				)
+			await ctx.send(i18n(
+				ctx, 'connect4/config-set-role', channel.mention, role.name
+			))
 
 	@command()
 	@bot_has_permissions(manage_messages=True, add_reactions=True, read_message_history=True)
@@ -101,7 +100,6 @@ role_id) VALUES (?, ?, ?)',
 		If you want to play against a specific person, do ;connect4 and mention them.
 		If you want to play a global game (cross-server), do ;connect4 and mention the bot.
 		"""
-		self.logger.info('Games.connect4', extra={'ctx': ctx})
 		BLUE, RED, BLACK, SHAKE, NEIN, DOWN = \
 			'\U0001f535 \U0001f534 \u2b1b \U0001f91d \u274c \u2b07'.split(' ')
 		REGA, REGB, REGC, REGD, REGE, REGF, REGG = REGS = \

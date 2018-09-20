@@ -1,0 +1,38 @@
+{
+  "fist": {
+    "name": "fight/weapon-fist",
+    "damage": 1,
+    "emoji": "\u270a"
+  },
+  "dagger": {
+    "name": "fight/weapon-dagger",
+    "damage": 2,
+    "price": 3
+  },
+  "pistol": {
+    "name": "fight/weapon-pistol",
+    "damage": 5,
+    "price": 10,
+    "emoji": "\ud83d\udd2b"
+  },
+  "fangs": {
+    "name": "fight/weapon-fangs",
+    "damage": "fangs"
+  },
+  "wand": {
+    "name": "fight/weapon-wand",
+    "damage": 7,
+    "price": 13
+  },
+  "bomb": {
+    "name": "fight/weapon-bomb",
+    "damage": "bomb",
+    "price": 15,
+    "emoji": "\ud83d\udca3"
+  },
+  "fire": {
+    "name": "fight/weapon-fire",
+    "damage": 10,
+    "emoji": "\ud83d\udd25"
+  }
+}

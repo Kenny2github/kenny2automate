@@ -3,12 +3,8 @@ import random
 import discord as d
 from discord.ext.commands import command
 from discord.ext.commands import bot_has_permissions
-from .pm_games import PrivateGames
+from .games import Games, DummyCtx
 from .i18n import i18n
-
-class DummyCtx(object):
-	def __init__(self, **kwargs):
-		self.__dict__.update(kwargs)
 
 class Card(object):
 	SUITS = tuple('\u2660 \u2663 \u2665 \u2666'.split(' '))
@@ -32,7 +28,7 @@ class Card(object):
 	def __eq__(self, other):
 		return hash(self) == hash(other)
 
-class CardGames(PrivateGames):
+class CardGames(Games):
 	@command()
 	@bot_has_permissions(add_reactions=True, read_message_history=True)
 	async def fish(self, ctx):

@@ -1,0 +1,12 @@
+{
+  "bandages": {
+    "name": "fight/item-bandages",
+    "action": "bandages",
+    "price": 3
+  },
+  "luck": {
+    "name": "fight/item-luck",
+    "action": "luck",
+    "price": 5
+  }
+}

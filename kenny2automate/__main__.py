@@ -29,12 +29,12 @@ class LoggerWriter(object):
 		self.level = level
 	def write(self, message):
 		if message.strip():
-			self.level(ascii(message),
+			self.level(message.strip(),
 				extra={'ctx': DummyCtx(author=DummyCtx(name='(logger)'))})
 	def flush(self):
 		pass
 
-handler = logging.FileHandler('runbot.log', 'w')
+handler = logging.FileHandler('runbot.log', 'w', 'utf8')
 handler.setFormatter(logfmt)
 
 logger = logging.getLogger(__name__)
@@ -77,7 +77,8 @@ async def on_message(msg):
 @client.event
 async def on_message_delete(msg):
 	if msg.mentions:
-		logger.info('Message with mentions deleted: {}'.format(msg.content), extra={'ctx': DummyCtx(author=DummyCtx(name=msg.author.name))})
+		logger.info('Message with mentions deleted: {}'.format(msg.content),
+			extra={'ctx': DummyCtx(author=DummyCtx(name=msg.author.name))})
 
 @client.event
 async def on_command_error(ctx, exc):
@@ -106,25 +107,31 @@ async def on_command_error(ctx, exc):
 	print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
 	traceback.print_exception(type(exc), exc, exc.__traceback__, file=sys.stderr)
 
+@client.before_invoke
+async def before_invoke(ctx):
+	logger.info(ctx.command, extra={'ctx': ctx})
+
 from kenny2automate.i18n import i18n, I18n
 from kenny2automate.scratch import Scratch
-from kenny2automate.games import Games
+from kenny2automate.numguess import Numguess
 from kenny2automate.wiki import Wiki
 from kenny2automate.regexes import Regexes
 from kenny2automate.connect4 import Connect4
 from kenny2automate.hangman import Hangman
 from kenny2automate.card_games import CardGames
 from kenny2automate.battleship import Battleship
+from kenny2automate.fight import Fight
 
-client.add_cog(I18n(client, logger, db))
-client.add_cog(Scratch(client, logger, client.loop))
-client.add_cog(Games(client, logger, db))
-client.add_cog(Wiki(client, logger, client.loop, DGBANSERVERID))
-client.add_cog(Regexes(client, logger))
-client.add_cog(Connect4(client, logger, db))
-client.add_cog(Hangman(client, logger, db))
-client.add_cog(CardGames(client, logger, db))
-client.add_cog(Battleship(client, logger, db))
+client.add_cog(I18n(client, db))
+client.add_cog(Scratch(client))
+client.add_cog(Numguess())
+client.add_cog(Wiki(client, logger, DGBANSERVERID))
+client.add_cog(Regexes())
+client.add_cog(Connect4(client, db))
+client.add_cog(Hangman(client, db))
+client.add_cog(CardGames(client, db))
+client.add_cog(Battleship(client, db))
+client.add_cog(Fight(client, db))
 
 @client.event
 async def on_ready(*_, **__):
@@ -134,7 +141,6 @@ async def on_ready(*_, **__):
 @c.is_owner()
 async def eval_(ctx, *, arg):
 	"""Execute Python code. Only available to owner."""
-	logger.info('eval: ' + arg, extra={'ctx': ctx})
 	try:
 		await eval(arg, globals(), locals())
 	except BaseException as e:
@@ -143,7 +149,6 @@ async def eval_(ctx, *, arg):
 @client.command()
 async def repeat(ctx, *, arg):
 	"""Repeat what you say, right back at ya."""
-	logger.info('repeat: ' + arg, extra={'ctx': ctx})
 	msg = await ctx.send(arg)
 	@client.listen()
 	async def on_message_delete(msg2):
@@ -154,13 +159,11 @@ async def repeat(ctx, *, arg):
 @client.command()
 async def hello(ctx):
 	"""Test whether the bot is running! Simply says "Hello World!"."""
-	logger.info('Hello World!', extra={'ctx': ctx})
 	await ctx.send(i18n(ctx, 'hello'))
 
 @client.command()
 async def hmmst(ctx):
 	"""hmmst"""
-	logger.info('hmmst', extra={'ctx': ctx})
 	await ctx.send(i18n(ctx, 'hmmst'))
 
 @client.command()
@@ -246,7 +249,6 @@ async def prefix_get(ctx):
 @c.is_owner()
 async def resetprefix(ctx, user: d.Member):
 	"""Reset someone's prefix."""
-	logger.info('resetprefix: ' + str(user.mention), extra={'ctx': ctx})
 	db.execute(
 		'UPDATE users SET prefix=NULL WHERE user_id=?',
 		(user.id,)
@@ -259,7 +261,6 @@ async def resetprefix(ctx, user: d.Member):
 async def purge(ctx, limit: int = 100, user: d.Member = None, *, matches: str = None):
 	"""Purge all messages, optionally from ``user``
 	or contains ``matches``."""
-	logger.info('purge', extra={'ctx': ctx})
 	def check_msg(msg):
 		if msg.id == ctx.message.id:
 			return True
@@ -313,7 +314,6 @@ async def whereis(ctx, *, channel: d.TextChannel):
 @bot_has_permissions(ban_members=True, add_reactions=True, read_message_history=True)
 async def votetoban(ctx, *, user: d.Member):
 	"""Start a vote to ban someone from the server. Abuse results in a ban."""
-	logger.info('votetoban: ' + user.mention, extra={'ctx': ctx})
 	for member in ctx.guild.members:
 		if (str(member.status) == 'online') \
 				and ctx.channel.permissions_for(member).administrator \
@@ -356,15 +356,21 @@ async def votetoban(ctx, *, user: d.Member):
 		else:
 			await ctx.send(i18n(ctx, 'votetoban-innocent', dos, nos))
 
-WATCHED_FILES_MTIMES = [
-	(f, os.path.getmtime(f))
-	for f in ('login.txt',)
-	+ tuple(
-		os.path.join(os.path.dirname(__file__), i)
-		for i in os.listdir(os.path.dirname(__file__) or '.')
-		if i.endswith('.py')
-	)
-]
+WATCHED_FILES_MTIMES = [('login.txt', os.path.getmtime('login.txt'))]
+def recurse_mtimes(dir, *s):
+	for i in os.listdir(os.path.join(*s, dir)):
+		if os.path.isdir(os.path.join(*s, dir, i)):
+			recurse_mtimes(i, *s, dir)
+		elif i.endswith('.pyc'):
+			pass
+		else:
+			WATCHED_FILES_MTIMES.append((
+				os.path.join(*s, dir, i),
+				os.path.getmtime(
+					os.path.join(*s, dir, i)
+				)
+			))
+recurse_mtimes(os.path.abspath(os.path.dirname(__file__)))
 
 async def update_if_changed():
 	await client.wait_until_ready()
@@ -373,6 +379,12 @@ async def update_if_changed():
 			if os.path.getmtime(f) > mtime:
 				await client.close()
 		await a.sleep(1)
+
+@client.command()
+@c.is_owner()
+async def stop(ctx):
+	"""Stop the bot."""
+	await client.close()
 
 print('Defined stuff')
 

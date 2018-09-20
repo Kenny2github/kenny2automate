@@ -17,7 +17,7 @@ with open(os.path.abspath(os.path.join(
 ))) as f:
     LANGS = json.load(f)
 
-def i18n(ctx, key, *params):
+def lang(ctx):
     res = db.execute(
         'SELECT lang FROM users WHERE user_id=?',
         (ctx.author.id,)
@@ -30,6 +30,10 @@ def i18n(ctx, key, *params):
         if res is None or res['lang'] is None:
             res = {'lang': 'en'}
     res = res['lang']
+    return res
+
+def i18n(ctx, key, *params):
+    res = lang(ctx)
     dirq, key = os.path.split(key)
     if res == 'qqx':
         return (
@@ -68,10 +72,9 @@ def i18n(ctx, key, *params):
 
 class I18n(object):
     """Internationalization control."""
-    def __init__(self, bot, logger, cur):
+    def __init__(self, bot, cur):
         global db
         self.bot = bot
-        self.logger = logger
         db = cur
 
         INDICATOR_RANGE = range(0x1f1e6, 0x1f1ff)
@@ -125,7 +128,6 @@ class I18n(object):
     @command()
     async def lang(self, ctx, *, lang: str = None):
         """Set your language."""
-        self.logger.info('I18n.lang: ' + str(lang), extra={'ctx': ctx})
         if lang is None:
             db.execute(
                 'UPDATE users SET lang=NULL WHERE user_id=?',
@@ -176,10 +178,6 @@ class I18n(object):
         lang: str = None,
         channel: d.TextChannel = None
     ):
-        self.logger.info(
-            'I18n.channel_lang: ' + str(lang),
-            extra={'ctx': ctx}
-        )
         if channel is None:
             channel = ctx.channel
         if lang is None:
@@ -226,7 +224,6 @@ class I18n(object):
 
     @command(name='i18n')
     async def text(self, ctx, key: str, *params):
-        self.logger.info('I18n.text: ' + str(key), extra={'ctx': ctx})
         await ctx.send(i18n(ctx, key, *params))
 
     @command(aliases=['t', 'trans'])

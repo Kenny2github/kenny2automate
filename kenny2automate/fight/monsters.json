@@ -1,0 +1,46 @@
+{
+  "giant": {
+    "name": "fight/monster-giant",
+    "health": 10,
+    "reward": 10,
+    "weapon": "fist"
+  },
+  "undead": {
+    "name": "fight/monster-undead",
+    "health": 5,
+    "reward": 3
+  },
+  "ghost": {
+    "name": "fight/monster-ghost",
+    "health": 1,
+    "reward": 1,
+    "weapon": "fist"
+  },
+  "vampire": {
+    "name": "fight/monster-vampire",
+    "health": 4,
+    "reward": 5,
+    "weapon": "fangs"
+  },
+  "mummy": {
+    "name": "fight/monster-mummy",
+    "health": 3,
+    "reward": 2,
+    "weapon": "fist",
+    "armor": "bandages"
+  },
+  "witch": {
+    "name": "fight/monster-witch",
+    "health": 7,
+    "reward": 10,
+    "weapon": "wand",
+    "armor": "cloak"
+  },
+  "dragon": {
+    "name": "fight/monster-dragon",
+    "health": 30,
+    "reward": 30,
+    "weapon": "fire",
+    "armor": "firesuit"
+  }
+}

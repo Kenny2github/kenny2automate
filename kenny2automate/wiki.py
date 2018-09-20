@@ -16,10 +16,9 @@ class DummyCtx(object):
 DGSWIKISERVER = 328938947717890058
 
 class Wiki(object):
-	def __init__(self, bot, logger, loop, server):
+	def __init__(self, bot, logger, server):
 		self.bot = bot
 		self.logger = logger
-		self.loop = loop
 		self.serverid = server
 
 	def __local_check(self, ctx):
@@ -55,7 +54,6 @@ class Wiki(object):
 	@c.cooldown(1, 3600.0, c.BucketType.guild)
 	async def page(self, ctx, *, title):
 		"""Get the contents of a page."""
-		self.logger.info('Wiki.page: ' + title, extra={'ctx': ctx})
 		async with ctx.channel.typing():
 			try:
 				content = await self.req({
@@ -92,7 +90,6 @@ class Wiki(object):
 	@command()
 	async def randompage(self, ctx):
 		"""Get a link to a random Wiki page!"""
-		self.logger.info('Wiki.randompage', extra={'ctx': ctx})
 		rn = await self.req({
 			'action': 'query',
 			'list': 'random',
@@ -107,7 +104,6 @@ class Wiki(object):
 	@command()
 	async def iwstats(self, ctx):
 		"""Get statistics for the international wikis!"""
-		self.logger.info('Wiki.wikistats', extra={'ctx': ctx})
 		async with ctx.channel.typing():
 			try:
 				content = await self.req({
@@ -186,7 +182,6 @@ class Wiki(object):
 	@c.cooldown(8, 64800.0, type=c.BucketType.guild)
 	async def analyzega(self, ctx, wiki):
 		"""Do some analysis of a wiki's GA stats"""
-		self.logger.info('Wiki.analyzega: ' + wiki, extra={'ctx': ctx})
 		async with ctx.channel.typing():
 			try:
 				data = await self.req({

@@ -4,14 +4,9 @@ from .i18n import i18n
 
 class Regexes(object):
 	"""Regex commands - Python flavored."""
-	def __init__(self, bot, logger):
-		self.bot = bot
-		self.logger = logger
-
 	@command()
 	async def search(self, ctx, pattern, string, flags=None):
 		"""Make a Python-flavored regex search! All groups are shown."""
-		self.logger.info('Regexes.search: \"' + '\" \"'.join(map(str, (pattern, string, flags))) + '\"', extra={'ctx': ctx})
 		if flags is not None:
 			exp = '(?' + flags.lower().replace('l', 'L') + ')(?:' + pattern + ')'
 		else:
@@ -36,7 +31,6 @@ class Regexes(object):
 	@command()
 	async def findall(self, ctx, pattern, string, flags=None):
 		"""Use a Python-flavor regex to find all occurences of a pattern!"""
-		self.logger.info('Regexes.findall: \"' + '\" \"'.join(map(str, (pattern, string, flags))) + '\"', extra={'ctx': ctx})
 		if flags is not None:
 			exp = '(?' + flags.lower().replace('l', 'L') + ')(?:' + pattern + ')'
 		else:
