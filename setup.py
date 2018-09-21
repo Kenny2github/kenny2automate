@@ -24,6 +24,6 @@ setup(
 	],
 	keywords='discord bot fun',
 	packages=find_packages(),
-	install_requires=['discord.py'],
-	python_requires='>=3.5',
+	install_requires=['discord.py', 'requests'],
+	python_requires='>=3.6',
 )
