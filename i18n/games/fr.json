@@ -1,11 +1,13 @@
 {
-  "numguess-intro": "Arr ! Je suis le terrible pirate Roberts, et j'ai un secret !\nC'est un nombre entre {0} et {1}. Tu as {2} essais.\nEnvoie un nombre pour le deviner.",
-  "numguess-guess": "Que proposez-vous, cher ami ?",
-  "numguess-timeout": "Cher terrien, vous n'avez rien proposé depuis {0} secondes ! Vous ne jouerez plus jamais avez moi !",
-  "numguess-oor": "Hors de portée !",
-  "numguess-low": "Trop petit !",
-  "numguess-high": "Trop gros !",
-  "numguess-range": "\nLe nombre est entre {0} et {1}; il te reste {2} essais.",
-  "numguess-correct": "Arrête ! Tu l'as trouvé ! Mon secret, tu as trouvé ! Avec {0} essais restants!",
-  "numguess-oot": "Plus aucun essai restant, cher ami. Ce sera pour une prochaine fois ! Le nombre secret était {0}."
+  "playing": "En train de jouer à {0}",
+  "ready-player-1": "Joueur 1 : {0}\n",
+  "react-to-join": "Réagissez avec {0} pour rejoindre !",
+  "ready-player-2": "Joueur 2 : {0}\nEn attende qu'un second joueur rejoigne...",
+  "game-timeout": "Personne n'a joué depuis {0} secondes ! Le jeu a été automatiquement annulé.",
+  "game-cancelled": "Jeu annulé par celui qui l'a lancé.",
+  "no-bots": "Attendez, vous ne pouvez pas jouer contre un bot ! Jeu annulé.",
+  "no-offline": "Attendez, joueur 2 est déconnecté ! Jeu annulé.",
+  "unready-player-2": "Le joueur 2 n'a pas rejoint après {0} secondes ! Le jeu a été automatiquement annulé.",
+  "react-to-join-mult": "Réagissez avec {0} pour rejoindre !\n{1}, réagissez avec {2} quand vous êtes prêt.",
+  "help-title": "Aide pour {0}"
 }

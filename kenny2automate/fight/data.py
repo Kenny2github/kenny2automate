@@ -212,7 +212,6 @@ class Player(object):
 with open(os.path.join(os.path.dirname(__file__), "monsters.json")) as f:
     monsters = json.load(f)
     for name, value in monsters.items():
-        print(name, value)
         if 'weapon' in value:
             value['weapon'] = weapons[value['weapon']]
         if 'armor' in value:

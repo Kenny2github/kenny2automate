@@ -1,11 +1,16 @@
 {
-  "numguess-intro": "Arr! I'm the Dread Pirate Roberts, and I have a secret!\nIt's a number from {0} to {1}. I'll give you {2} tries.\nSend a number to guess it.",
-  "numguess-guess": "What's yer guess, matey?",
-  "numguess-timeout": "Ye landlubberin' swab didn't guess anything for {0} seconds! Ye don't get to play with me no more!",
-  "numguess-oor": "Out of range, ye swab!",
-  "numguess-low": "Too low, ye scurvy dog!",
-  "numguess-high": "Too high, landlubber!",
-  "numguess-range": "\nYer range is {0} to {1}; ye have {2} tries left.",
-  "numguess-correct": "Avast! Ye got it! Found my secret, ye did! With {0} tries left!",
-  "numguess-oot": "No more tries, matey! Better luck next time! The secret number was {0}."
+  "playing": "Playing {0}",
+  "ready-player-1": "Player 1: {0}\n",
+  "react-to-join": "React with {0} to join!",
+  "ready-player-2": "Player 2: {0}\nWaiting for Player 2 to join...",
+  "game-timeout": "Nobody joined after {0} seconds! The game has been automatically cancelled.",
+  "game-cancelled": "Game cancelled by starter.",
+  "no-bots": "Wait, you can't play against a bot! Game cancelled.",
+  "no-offline": "Wait, Player 2 is offline! Game cancelled.",
+  "unready-player-2": "Player 2 didn't join after {0} seconds! The game has been automatically cancelled.",
+  "react-to-join-mult": "React with {0} to join!\n{1}, react with {2} when you're ready.",
+  "help-title": "Help for {0}",
+  "joined": "Joined {0}",
+  "unjoined": "You have left the game of {0}.",
+  "joined-waiting": "You have joined the game of {0}, now waiting for {1} more players to join..."
 }

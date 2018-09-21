@@ -1,7 +1,7 @@
 import re
 import random
 import discord as d
-from discord.ext.commands import command
+from discord.ext.commands import command, group
 from discord.ext.commands import bot_has_permissions
 from .games import Games, DummyCtx
 from .i18n import i18n
@@ -29,14 +29,8 @@ class Card(object):
 		return hash(self) == hash(other)
 
 class CardGames(Games):
-	@command()
-	@bot_has_permissions(add_reactions=True, read_message_history=True)
-	async def fish(self, ctx):
-		"""Play Go Fish!"""
-		players = await self._gather_multigame(ctx, 'Go Fish',
-			'card_games/fish-help')
-		if players is None or len(players) < 2:
-			return
+	async def do_fish(self, ctxs):
+		players = [ctx.author for ctx in ctxs]
 		deck = [Card(i, j) for i in range(4) for j in range(13)]
 		random.shuffle(deck)
 		dmx = [
@@ -111,17 +105,14 @@ class CardGames(Games):
 		while all(hands) and deck:
 			for pid, player in enumerate(players):
 				matches = True
-				print("{}'s turn".format(player.display_name))
 				for pid2, player2 in enumerate(players):
 					if player2 == player:
 						continue
-					print("sending turn msg to {}".format(player2.display_name))
 					await dmx[pid2].send(i18n(
 						dmx[pid2],
 						'card_games/fish-turn',
 						player.display_name
 					))
-				print('sending stats to {}'.format(player.display_name))
 				await dmx[pid].send(embed=stats(
 					pid, i18n(dmx[pid], 'card_games/fish-m-card')
 				))
@@ -146,9 +137,7 @@ class CardGames(Games):
 							if card.number == num:
 								return True
 						return False
-					print('waiting for {} to send card'.format(player.display_name))
 					msg = await ctx.bot.wait_for('message', check=checc)
-					print('received card from {}: {}'.format(player.display_name, msg.content))
 					num = (
 						'A', '2', '3', '4', '5', '6', '7', '8', '9',
 						'10', 'J', 'Q', 'K'
@@ -157,7 +146,6 @@ class CardGames(Games):
 					for pid2, player2 in enumerate(players):
 						if player2 == player:
 							continue
-						print('getting {} matches'.format(player2.display_name))
 						matches2 = [c for c in hands[pid2] if c.number == num]
 						matches.extend(matches2)
 						count = len(matches2)
@@ -167,7 +155,6 @@ class CardGames(Games):
 							if c.number != num
 						]
 						if matches2:
-							print('sending {} cards taken to {}'.format(count, player2.display_name))
 							await dmx[pid2].send(i18n(
 								dmx[pid2],
 								'card_games/fish-card-taken',
@@ -178,11 +165,9 @@ class CardGames(Games):
 							hands[pid].extend(matches)
 					if matches:
 						hands[pid].sort(key=lambda c: c.number)
-						print('checking books for {}'.format(player.display_name))
 						await checkbooks(pid)
 						if not hands[pid]:
 							break
-						print('sending what got to {}'.format(player.display_name))
 						await dmx[pid].send(
 							content=i18n(
 								dmx[pid],
@@ -240,14 +225,10 @@ class CardGames(Games):
 							)
 				if not (all(hands) and deck):
 					break
-		print('getting books')
 		books = tuple(map(len, books))
-		print('book counts: {}'.format(books))
 		max_books = max(books)
-		print('max: {}'.format(max_books))
 		winners = [i for i, j in enumerate(books) if j == max_books]
 		winners = tuple(players[i] for i in winners)
-		print('winners: {}'.format(winners))
 		if len(winners) > 1:
 			for dm in dmx:
 				await dm.send(embed=d.Embed(
@@ -267,3 +248,22 @@ class CardGames(Games):
 					title=i18n(dm, 'card_games/fish-winner-title'),
 					description=i18n(dm, 'card_games/fish-winner', winners[0].display_name)
 				))
+
+	@group()
+	async def fish(self, ctx):
+		"""Play Go Fish!"""
+		pass
+
+	@fish.command(name='join')
+	async def fish_join(self, ctx):
+		await self._join_global_game(ctx, 'Go Fish', self.do_fish, float('inf'))
+
+	@fish.command(name='leave')
+	async def fish_leave(self, ctx):
+		await self._unjoin_global_game(ctx, 'Go Fish')
+
+	@fish.command(name='start')
+	async def fish_start(self, ctx):
+		if ctx.author.id != self._global_games['Go Fish']['ctxs'][0].author.id:
+			return
+		await self._start_global_game(ctx, 'Go Fish', float('inf'))

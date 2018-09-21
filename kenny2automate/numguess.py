@@ -13,9 +13,9 @@ class Numguess(object):
 		limUp = 100
 		tries = 7
 		secret = random.randint(1, 100)
-		await ctx.send(i18n(ctx, 'games/numguess-intro', limDn, limUp, tries))
+		await ctx.send(i18n(ctx, 'numguess/numguess-intro', limDn, limUp, tries))
 		while guess != secret and tries > 0:
-			await ctx.send(i18n(ctx, 'games/numguess-guess'))
+			await ctx.send(i18n(ctx, 'numguess/numguess-guess'))
 			result = ''
 			try:
 				guess = await ctx.bot.wait_for('message',
@@ -25,23 +25,23 @@ class Numguess(object):
 					),
 					timeout=60.0)
 			except a.TimeoutError:
-				await ctx.send(i18n(ctx, 'games/numguess-timeout', 60))
+				await ctx.send(i18n(ctx, 'numguess/numguess-timeout', 60))
 				return
 			guess = int(guess.content)
 			if guess == secret:
 				break
 			elif guess < limDn or guess > limUp:
-				result += i18n(ctx, 'games/numguess-oor')
+				result += i18n(ctx, 'numguess/numguess-oor')
 			elif guess < secret:
-				result += i18n(ctx, 'games/numguess-low')
+				result += i18n(ctx, 'numguess/numguess-low')
 				limDn = guess
 			elif guess > secret:
-				result += i18n(ctx, 'games/numguess-high')
+				result += i18n(ctx, 'numguess/numguess-high')
 				limUp = guess
 			tries -= 1
-			result += i18n(ctx, 'games/numguess-range', limDn, limUp, tries)
+			result += i18n(ctx, 'numguess/numguess-range', limDn, limUp, tries)
 			await ctx.send(result)
 		if guess == secret:
-			await ctx.send(i18n(ctx, 'games/numguess-correct', tries))
+			await ctx.send(i18n(ctx, 'numguess/numguess-correct', tries))
 		else:
-			await ctx.send(i18n(ctx, 'games/numguess-oot', secret))
+			await ctx.send(i18n(ctx, 'numguess/numguess-oot', secret))
