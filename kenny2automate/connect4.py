@@ -19,6 +19,7 @@ class Connect4(Games):
 	async def connect4_global(self, ctxs):
 		"""Global connect4 coroutine!"""
 		ctx1, ctx2 = ctxs
+		regs = REGS[:]
 		board = self.genboard()
 		redwon, bluewon = False, False
 		checkwin = self.checkwin
@@ -31,11 +32,11 @@ class Connect4(Games):
 		while not (redwon or bluewon):
 			if reaction is None:
 				await boardmsg1.clear_reactions()
-				for reg in REGS:
+				for reg in regs:
 					await boardmsg1.add_reaction(reg)
 				await boardmsg1.add_reaction(DOWN)
 				await boardmsg2.clear_reactions()
-				for reg in REGS:
+				for reg in regs:
 					await boardmsg2.add_reaction(reg)
 				await boardmsg2.add_reaction(DOWN)
 			else:
@@ -66,7 +67,7 @@ class Connect4(Games):
 						'reaction_add',
 						check=lambda r, u: (
 							r.message.id == boardmsg1.id
-							and str(r) in REGS
+							and str(r) in regs
 							and str(r) != NEIN
 							and u.id == ctx1.author.id
 							or r.message.id in (boardmsg1.id, boardmsg2.id)
@@ -93,7 +94,7 @@ class Connect4(Games):
 						),
 						color=0xff0000
 					))
-					for reg in REGS:
+					for reg in regs:
 						await msg.add_reaction(reg)
 					await msg.add_reaction(DOWN)
 					if whose:
@@ -101,7 +102,7 @@ class Connect4(Games):
 					else:
 						boardmsg1 = msg
 					await reaction.message.delete()
-			idx = REGS.index(str(reaction))
+			idx = regs.index(str(reaction))
 			hit = False
 			for rown in range(len(board[idx])):
 				if board[idx][rown] != BLACK:
@@ -111,7 +112,7 @@ class Connect4(Games):
 			if not hit:
 				board[idx][-1] = RED
 			if board[idx].count(BLACK) == 0:
-				REGS[idx] = NEIN
+				regs[idx] = NEIN
 			redwon, bluewon = checkwin(board, RED), checkwin(board, BLUE)
 			if redwon or bluewon:
 				break
@@ -142,7 +143,7 @@ class Connect4(Games):
 						'reaction_add',
 						check=lambda r, u: (
 							r.message.id == boardmsg2.id
-							and str(r) in REGS
+							and str(r) in regs
 							and str(r) != NEIN
 							and u.id == ctx2.author.id
 							or r.message.id in (boardmsg1.id, boardmsg2.id)
@@ -172,7 +173,7 @@ class Connect4(Games):
 						),
 						color=0x55acee
 					))
-					for reg in REGS:
+					for reg in regs:
 						await msg.add_reaction(reg)
 					await msg.add_reaction(DOWN)
 					if whose == 0:
@@ -180,7 +181,7 @@ class Connect4(Games):
 					else:
 						boardmsg2 = msg
 					await reaction.message.delete()
-			idx = REGS.index(str(reaction))
+			idx = regs.index(str(reaction))
 			hit = False
 			for rown in range(len(board[idx])):
 				if board[idx][rown] != BLACK:
@@ -190,7 +191,7 @@ class Connect4(Games):
 			if not hit:
 				board[idx][-1] = BLUE
 			if board[idx].count(BLACK) == 0:
-				REGS[idx] = NEIN
+				regs[idx] = NEIN
 			redwon, bluewon = checkwin(board, RED), checkwin(board, BLUE)
 		boardmsgcont1 = constructboard(ctx1, board, (ctx1.author, ctx2.author), int(bluewon), True)
 		boardmsgcont2 = constructboard(ctx2, board, (ctx1.author, ctx2.author), int(bluewon), True)
@@ -294,10 +295,11 @@ class Connect4(Games):
 		If you want to play against a specific person, do ;connect4 and mention them.
 		If you want to play a global game (cross-server), do ;connect4 and mention the bot.
 		"""
-		if against.id == self.bot.user.id:
+		if against and against.id == self.bot.user.id:
 			return await self._join_global_game(
 				ctx, 'Connect 4', self.connect4_global
 			)
+		regs = REGS[:]
 		player1, player2 = await self._gather_game(ctx, 'Connect 4', against)
 		board = self.genboard()
 		redwon, bluewon = False, False
@@ -310,7 +312,7 @@ class Connect4(Games):
 		while not (redwon or bluewon):
 			if reaction is None:
 				await boardmsg.clear_reactions()
-				for reg in REGS:
+				for reg in regs:
 					await boardmsg.add_reaction(reg)
 				await boardmsg.add_reaction(DOWN)
 			else:
@@ -331,7 +333,7 @@ class Connect4(Games):
 						'reaction_add',
 						check=lambda r, u: \
 							r.message.id == boardmsg.id \
-							and str(r) in REGS \
+							and str(r) in regs \
 							and str(r) != NEIN \
 							and u.id == player1.id \
 							or r.message.id == boardmsg.id \
@@ -351,12 +353,12 @@ class Connect4(Games):
 						description=boardmsgcont,
 						color=0xff0000
 					))
-					for reg in REGS:
+					for reg in regs:
 						await msg.add_reaction(reg)
 					await msg.add_reaction(DOWN)
 					boardmsg = msg
 					await reaction.message.delete()
-			idx = REGS.index(str(reaction))
+			idx = regs.index(str(reaction))
 			hit = False
 			for rown in range(len(board[idx])):
 				if board[idx][rown] != BLACK:
@@ -366,7 +368,7 @@ class Connect4(Games):
 			if not hit:
 				board[idx][-1] = RED
 			if board[idx].count(BLACK) == 0:
-				REGS[idx] = NEIN
+				regs[idx] = NEIN
 			redwon, bluewon = checkwin(board, RED), checkwin(board, BLUE)
 			if redwon or bluewon:
 				break
@@ -387,7 +389,7 @@ class Connect4(Games):
 						'reaction_add',
 						check=lambda r, u: \
 							r.message.id == boardmsg.id \
-							and str(r) in REGS \
+							and str(r) in regs \
 							and str(r) != NEIN \
 							and u.id == player2.id \
 							or r.message.id == boardmsg.id \
@@ -408,12 +410,12 @@ class Connect4(Games):
 						description=boardmsgcont,
 						color=0x55acee
 					))
-					for reg in REGS:
+					for reg in regs:
 						await msg.add_reaction(reg)
 					await msg.add_reaction(DOWN)
 					boardmsg = msg
 					await reaction.message.delete()
-			idx = REGS.index(str(reaction))
+			idx = regs.index(str(reaction))
 			hit = False
 			for rown in range(len(board[idx])):
 				if board[idx][rown] != BLACK:
@@ -423,7 +425,7 @@ class Connect4(Games):
 			if not hit:
 				board[idx][-1] = BLUE
 			if board[idx].count(BLACK) == 0:
-				REGS[idx] = NEIN
+				regs[idx] = NEIN
 			redwon, bluewon = checkwin(board, RED), checkwin(board, BLUE)
 		boardmsgcont = constructboard(ctx, board, (player1, player2), int(bluewon))
 		await boardmsg.edit(embed=d.Embed(

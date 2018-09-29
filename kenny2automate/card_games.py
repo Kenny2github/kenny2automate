@@ -249,21 +249,21 @@ class CardGames(Games):
 					description=i18n(dm, 'card_games/fish-winner', winners[0].display_name)
 				))
 
-	@group()
-	async def fish(self, ctx):
-		"""Play Go Fish!"""
-		pass
-
-	@fish.command(name='join')
-	async def fish_join(self, ctx):
-		await self._join_global_game(ctx, 'Go Fish', self.do_fish, float('inf'))
-
-	@fish.command(name='leave')
-	async def fish_leave(self, ctx):
-		await self._unjoin_global_game(ctx, 'Go Fish')
-
-	@fish.command(name='start')
-	async def fish_start(self, ctx):
-		if ctx.author.id != self._global_games['Go Fish']['ctxs'][0].author.id:
-			return
-		await self._start_global_game(ctx, 'Go Fish', float('inf'))
+#	@group()
+#	async def fish(self, ctx):
+#		"""Play Go Fish!"""
+#		await ctx.send(i18n(ctx, 'fish/fish-join'))
+#
+#	@fish.command(name='join')
+#	async def fish_join(self, ctx):
+#		await self._join_global_game(ctx, 'Go Fish', self.do_fish, float('inf'))
+#
+#	@fish.command(name='leave')
+#	async def fish_leave(self, ctx):
+#		await self._unjoin_global_game(ctx, 'Go Fish')
+#
+#	@fish.command(name='start')
+#	async def fish_start(self, ctx):
+#		if ctx.author.id != self._global_games['Go Fish']['ctxs'][0].author.id:
+#			return
+#		await self._start_global_game(ctx, 'Go Fish', float('inf'))
