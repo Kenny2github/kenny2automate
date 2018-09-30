@@ -11,6 +11,12 @@
   "react-to-join-mult": "React with {0} to join!\n{1}, react with {2} when you're ready.",
   "help-title": "Help for {0}",
   "joined": "Joined {0}",
+  "already-joined": "You have already joined this game!",
+  "player-joined": "A player joined the game! {0} more players are needed to start. {1} more players are needed to automatically start.",
+  "enough-players": "You may now run `{0}` to start the game.",
   "unjoined": "You have left the game of {0}.",
-  "joined-waiting": "You have joined the game of {0}, now waiting for {1} more players to join..."
+  "joined-waiting": "You have joined the game of {0}, now waiting for {1} more players to join...",
+  "joined-waiting-maxmin": "You have joined the game of {0}, now waiting for {1} more players to join or for the game starter to start the game...",
+  "joined-waiting-nomax": "You have joined the game of {0}, now waiting for the game starter to start the game...",
+  "not-enough-players": "There are not enough players to join! At least {0} are required, there are currently {1}."
 }
