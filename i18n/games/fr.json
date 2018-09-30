@@ -1,8 +1,8 @@
 {
   "playing": "Jouer à {0}",
-  "ready-player-1": "Joueur 1: {0}\n",
+  "ready-player-1": "Joueur 1 : {0}\n",
   "react-to-join": "Réagissez avec {0} pour rejoindre !",
-  "ready-player-2": "Joueur 2: {0}\nEn attente que le joueur 2 rejoigne...",
+  "ready-player-2": "Joueur 2 : {0}\nEn attente que le joueur 2 rejoigne...",
   "game-timeout": "Personne n'a rejoint après {0} secondes! La partie a été automatiquement annulée.",
   "game-cancelled": "Partie annulée par celui qui l'a lancée.",
   "no-bots": "Attendez, vous ne pouvez pas jouer contre un bot ! Partie annulée.",
