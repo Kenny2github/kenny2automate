@@ -1,6 +1,5 @@
 import asyncio as a
 import discord as d
-from discord.ext.commands import command #temp
 from .i18n import i18n
 
 class DummyCtx(object):
@@ -22,11 +21,29 @@ class Games(object):
 
 	_global_games = {}
 
-	async def _join_global_game(self, ctx, name, coro, limit=2):
+	async def _join_global_game(
+		self, ctx, name, coro, *, maxim=2, minim=2, scn=None
+	):
 		if name in self._global_games:
+			for c in self._global_games[name]['ctxs']:
+				if c.author.id == ctx.author.id:
+					await ctx.send(i18n(ctx, 'games/already-joined'))
+					return
 			self._global_games[name]['ctxs'].append(ctx)
-			if len(self._global_games[name]['ctxs']) >= limit:
-				await self._start_global_game(ctx, name)
+			startx = self._global_games[name]['ctxs'][0]
+			ctlen = len(self._global_games[name]['ctxs'])
+			await startx.send(i18n(
+				startx, 'games/player-joined',
+				max(0, minim - ctlen), max(0, maxim - ctlen)
+			))
+			if ctlen >= minim and scn is not None:
+				await startx.send(i18n(
+					startx, 'games/enough-players', ctx.prefix + scn
+				))
+			if ctlen >= maxim:
+				await self._start_global_game(
+					startx, name, maxim=maxim, minim=minim
+				)
 		else:
 			self._global_games[name] = {
 				'ctxs': [ctx],
@@ -35,21 +52,35 @@ class Games(object):
 		await ctx.send(embed=d.Embed(
 			title=i18n(ctx, 'games/joined', name),
 			description=i18n(
+				ctx, 'games/joined-waiting-minmax', name,
+				maxim - len(self._global_games[name]['ctxs'])
+			) if isinstance(maxim, int) and minim < maxim else (i18n(
 				ctx, 'games/joined-waiting', name,
-				limit - len(self._global_games[name]['ctxs'])
-			)
+				maxim - len(self._global_games[name]['ctxs'])
+			) if isinstance(maxim, int) else i18n(
+				ctx, 'games/joined-waiting-nomax', name
+			))
 		))
 
-	async def _start_global_game(self, ctx, name, limit=2):
+	async def _start_global_game(self, ctx, name, *, maxim=2, minim=2):
 		if name not in self._global_games:
+			return
+		if ctx.author.id != self._global_games[name]['ctxs'][0].author.id:
+			return
+		if len(self._global_games[name]['ctxs']) < minim:
+			await ctx.send(i18n(
+				ctx, 'games/not-enough-players',
+				minim, len(self._global_games[name]['ctxs'])
+			))
 			return
 		coro = self._global_games[name]['coro']
 		ctxs = []
-		if isinstance(limit, int):
-			for i in range(limit):
+		if isinstance(maxim, int):
+			for i in range(maxim):
 				ctxs.append(self._global_games[name]['ctxs'].pop(0))
 		else:
 			ctxs = self._global_games[name]['ctxs'][:]
+			self._global_games[name]['ctxs'] = []
 		if not len(self._global_games[name]['ctxs']):
 			del self._global_games[name]
 		for c in ctxs:

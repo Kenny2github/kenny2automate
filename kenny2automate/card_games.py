@@ -8,7 +8,9 @@ from .i18n import i18n
 
 class Card(object):
 	SUITS = tuple('\u2660 \u2663 \u2665 \u2666'.split(' '))
-	NUMBERS = tuple('\U0001f1e6 2\u20e3 3\u20e3 4\u20e3 5\u20e3 6\u20e3 7\u20e3 8\u20e3 9\u20e3 \U0001f51f \U0001f1ef \U0001f1f6 \U0001f1f0'.split(' '))
+	NUMBERS = tuple(('\U0001f1e6 2\u20e3 3\u20e3 4\u20e3 5\u20e3 6\u20e3'
+		' 7\u20e3 8\u20e3 9\u20e3 \U0001f51f \U0001f1ef'
+		' \U0001f1f6 \U0001f1f0').split(' '))
 
 	suit = 0
 	number = 0
@@ -137,7 +139,7 @@ class CardGames(Games):
 							if card.number == num:
 								return True
 						return False
-					msg = await ctx.bot.wait_for('message', check=checc)
+					msg = await self.bot.wait_for('message', check=checc)
 					num = (
 						'A', '2', '3', '4', '5', '6', '7', '8', '9',
 						'10', 'J', 'Q', 'K'
@@ -173,7 +175,9 @@ class CardGames(Games):
 								dmx[pid],
 								'card_games/fish-card-got',
 								' '.join(str(c) for c in matches)),
-							embed=stats(pid, i18n(dmx[pid], 'card_games/fish-m-card'))
+							embed=stats(
+								pid, i18n(dmx[pid], 'card_games/fish-m-card')
+							)
 						)
 					else:
 						draw = deck.pop()
@@ -246,24 +250,44 @@ class CardGames(Games):
 			for dm in dmx:
 				await dm.send(embed=d.Embed(
 					title=i18n(dm, 'card_games/fish-winner-title'),
-					description=i18n(dm, 'card_games/fish-winner', winners[0].display_name)
+					description=i18n(
+						dm, 'card_games/fish-winner', winners[0].display_name
+					)
 				))
 
-#	@group()
-#	async def fish(self, ctx):
-#		"""Play Go Fish!"""
-#		await ctx.send(i18n(ctx, 'fish/fish-join'))
-#
-#	@fish.command(name='join')
-#	async def fish_join(self, ctx):
-#		await self._join_global_game(ctx, 'Go Fish', self.do_fish, float('inf'))
-#
-#	@fish.command(name='leave')
-#	async def fish_leave(self, ctx):
-#		await self._unjoin_global_game(ctx, 'Go Fish')
-#
-#	@fish.command(name='start')
-#	async def fish_start(self, ctx):
-#		if ctx.author.id != self._global_games['Go Fish']['ctxs'][0].author.id:
-#			return
-#		await self._start_global_game(ctx, 'Go Fish', float('inf'))
+	@group(invoke_without_command=True)
+	async def fish(self, ctx):
+		"""Play Go Fish! Run `;help fish` to see subcommands."""
+		await ctx.send(i18n(ctx, 'card_games/fish-join'))
+
+	@fish.command(name='join')
+	async def fish_join(self, ctx):
+		"""Join (or start) a game of fish!"""
+		await self._join_global_game(
+			ctx, 'Go Fish', self.do_fish, maxim=float('inf'), scn='fish start'
+		)
+
+	@fish.command(name='leave')
+	async def fish_leave(self, ctx):
+		"""Leave the game of fish you joined."""
+		await self._unjoin_global_game(ctx, 'Go Fish')
+
+	@fish.command(name='start')
+	async def fish_start(self, ctx):
+		"""Start the game of fish.
+		If you did not create the currently queueing game, you cannot run this
+		command.
+		"""
+		if ctx.author.id != self._global_games['Go Fish']['ctxs'][0].author.id:
+			return
+		await self._start_global_game(ctx, 'Go Fish', maxim=float('inf'))
+
+	@fish.command(name='help')
+	async def fish_help(self, ctx):
+		"""Get detailed help about Go Fish!"""
+		if not ctx.author.dm_channel:
+			await ctx.author.create_dm()
+		await ctx.author.dm_channel.send(embed=d.Embed(
+			title=i18n(ctx, 'games/help-title', 'Go Fish'),
+			description=i18n(ctx, 'card_games/fish-help')
+		))
