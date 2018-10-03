@@ -1,11 +1,11 @@
 {
-  "numguess-intro": "Arr ! Je suis le terrible pirate Roberts, et j'ai un secret !\nC'est un nombre entre {0} et {1}. Tu as {2} essais.\nEnvoie un nombre pour le deviner.",
+  "numguess-intro": "Arr ! Je suis le terrible pirate Roberts et j'ai un secret !\nC'est un nombre entre {0} et {1}. Tu as {2} essais.\nEnvoie un nombre pour le deviner.",
   "numguess-guess": "Que proposez-vous, cher ami ?",
   "numguess-timeout": "Cher terrien, vous n'avez rien proposé depuis {0} secondes ! Vous ne jouerez plus jamais avez moi !",
   "numguess-oor": "Hors de portée !",
   "numguess-low": "Trop petit !",
   "numguess-high": "Trop gros !",
-  "numguess-range": "\nLe nombre est entre {0} et {1}; il te reste {2} essais.",
-  "numguess-correct": "Arrête ! Tu l'as trouvé ! Mon secret, tu as trouvé ! Avec {0} essais restants!",
+  "numguess-range": "\nLe nombre est entre {0} et {1}; il vous reste {2} essais.",
+  "numguess-correct": "Arrête ! Vous l'as trouvé terrien ! Vous l´avez trouvé, mon secret ! Avec {0} essais restants!",
   "numguess-oot": "Plus aucun essai restant, cher ami. Ce sera pour une prochaine fois ! Le nombre secret était {0}."
 }
