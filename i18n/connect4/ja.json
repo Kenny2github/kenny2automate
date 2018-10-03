@@ -5,7 +5,7 @@
   "config-reset": "設定はリセットされました。",
   "config-no-empty": "設定エラー: 設定項目が足りません。",
   "config-set-channel": "グローバル対戦チャンネルを {0} に設定しました。",
-  "config-no-channel-but-role": "グローバル対戦用のチャンネルが未設定です。",
+  "config-no-channel-but-role": "グローバル対戦用のチャンネルが未設定なので、メンションする役職が設定できません。",
   "config-set-role": "グローバル対戦チャンネルを {0} に、メンションする役職を {1} にしました。",
   "ready-player-self": "プレイヤー2: {0}",
   "ready-player-global": "ほかのサーバーの対戦者を待っています。",
