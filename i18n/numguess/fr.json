@@ -6,6 +6,6 @@
   "numguess-low": "Trop petit !",
   "numguess-high": "Trop gros !",
   "numguess-range": "\nLe nombre est entre {0} et {1}; il vous reste {2} essais.",
-  "numguess-correct": "Arrête ! Vous l'as trouvé terrien ! Vous l´avez trouvé, mon secret ! Avec {0} essais restants!",
+  "numguess-correct": "Arrête ! Vous l'avez trouvé terrien ! Vous l'avez trouvé, mon secret ! Avec {0} essais restants!",
   "numguess-oot": "Plus aucun essai restant, cher ami. Ce sera pour une prochaine fois ! Le nombre secret était {0}."
 }
