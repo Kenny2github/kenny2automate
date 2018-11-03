@@ -7,6 +7,7 @@ import discord as d
 from discord.ext.commands import command
 from discord.ext import commands as c
 import requests
+import mw_api_client as mwc
 from .i18n import i18n
 
 class DummyCtx(object):
@@ -15,6 +16,19 @@ class DummyCtx(object):
 
 DGSWIKISERVER = 328938947717890058
 
+WIKI_URLS = {
+	'de': 'https://scratch-dach.info/w/api.php',
+	'en': 'https://en.scratch-wiki.info/w/api.php',
+	'id': 'https://scratch-indo.info/w/api.php',
+	'nl': 'https://nl.scratch-wiki.info/w/api.php',
+	'hu': 'https://hu.scratch-wiki.info/w/api.php',
+	'ru': 'https://scratch-ru.info/w/api.php',
+	'fr': 'https://fr.scratch-wiki.info/w/api.php',
+	'ja': 'https://ja.scratch-wiki.info/w/api.php',
+	'test': 'https://test.scratch-wiki.info/w/api.php',
+}
+WIKIS = {k: mwc.Wiki(v) for k, v in WIKI_URLS.items()}
+
 class Wiki(object):
 	def __init__(self, bot, logger, server):
 		self.bot = bot
@@ -22,54 +36,106 @@ class Wiki(object):
 		self.serverid = server
 
 	def __local_check(self, ctx):
-		if ctx.guild is None:
-			return False
-		return ctx.guild.id == DGSWIKISERVER
+		return ctx.guild is None or ctx.guild.id == DGSWIKISERVER
 
-	WIKIS = {
-		'de': 'https://scratch-dach.info',
-		'en': 'https://en.scratch-wiki.info',
-		'id': 'https://scratch-indo.info',
-		'nl': 'https://nl.scratch-wiki.info',
-		'hu': 'https://hu.scratch-wiki.info',
-		'ru': 'https://scratch-ru.info',
-		'fr': 'https://fr.scratch-wiki.info',
-		'ja': 'https://ja.scratch-wiki.info',
-		'test': 'https://test.scratch-wiki.info',
-	}
-
-	async def req(self, params, wiki='en'):
-		params['format'] = 'json'
-		resp = await self.bot.loop.run_in_executor(
+	async def q(self, call, *args, **kwargs):
+		return await self.bot.loop.run_in_executor(
 			None,
-			functools.partial(
-				requests.get,
-				Wiki.WIKIS[wiki] + '/w/api.php',
-				params=params
-			)
+			functools.partial(call, *args, **kwargs)
 		)
-		return resp.json()
+
+	sessions = {}
 
 	@command()
-	@c.cooldown(1, 3600.0, c.BucketType.guild)
+	async def login(self, ctx, wiki, username, *, password):
+		if ctx.guild is not None:
+			try:
+				await ctx.message.delete()
+			except d.Forbidden:
+				await ctx.send(i18n(ctx, 'wiki/login-notdm-nodelete'))
+			else:
+				msg = await ctx.send(i18n(ctx, 'wiki/login-notdm'))
+				await a.sleep(2)
+				await msg.delete()
+			finally:
+				return
+		async with ctx.channel.typing():
+			try:
+				self.sessions[ctx.author.id] = await self.q(
+					mwc.Wiki, WIKI_URLS[wiki]
+				)
+			except KeyError:
+				await ctx.send(i18n(ctx, 'wiki/login-notwiki'))
+				return
+			w = self.sessions[ctx.author.id]
+			try:
+				await ctx.send(i18n(
+					ctx,
+					'wiki/login-status',
+					(await self.q(w.clientlogin, username, password))['status']
+				))
+			except mwc.WikiError as exc:
+				await ctx.send(i18n(ctx, 'wiki/login-failed', str(exc)))
+				del self.sessions[ctx.author.id]
+				return
+
+	async def notloggedin(self, ctx):
+		await ctx.send(i18n(ctx, 'wiki/notloggedin'))
+
+	@command()
+	@c.check(lambda ctx: ctx.guild is None)
+	async def edit(self, ctx, *, title):
+		if ctx.author.id not in self.sessions:
+			return await self.notloggedin(ctx)
+		await ctx.send(i18n(ctx, 'wiki/edit-instructions'))
+		msg = await self.bot.wait_for('message', check=lambda m: (
+			m.channel.id == ctx.channel.id
+			and m.author.id == ctx.author.id
+			and ((
+				m.content.strip().startswith('```')
+				and m.content.strip().endswith('```')
+			) or m.content == 'EOF')
+		))
+		content = ''
+		while msg.content != 'EOF':
+			content += msg.content.strip('`').strip() + '\n'
+			msg = await self.bot.wait_for('message', check=lambda m: (
+				m.channel.id == ctx.channel.id
+				and m.author.id == ctx.author.id
+				and ((
+					m.content.strip().startswith('```')
+					and m.content.strip().endswith('```')
+				) or m.content == 'EOF')
+			))
+		await ctx.send(i18n(ctx, 'wiki/edit-summary'))
+		msg = await self.bot.wait_for('message', check=lambda m: (
+			m.channel.id == ctx.channel.id
+			and m.author.id == ctx.author.id
+		))
+		summary = msg.content.strip()
+		async with ctx.channel.typing():
+			await ctx.send(i18n(ctx, 'wiki/edit-result', (await self.q(
+				self.sessions[ctx.author.id].page(title).edit,
+				content,
+				summary
+			))['edit']['result']))
+
+	@command()
+	@c.check(lambda ctx: ctx.guild is None)
 	async def page(self, ctx, *, title):
 		"""Get the contents of a page."""
 		async with ctx.channel.typing():
 			try:
-				content = await self.req({
-					'action': 'query',
-					'prop': 'revisions',
-					'titles': title,
-					'rvlimit': 1,
-					'rvprop': 'content',
-				})
+				content = await self.q((
+					WIKIS['en']
+					if ctx.author.id not in self.sessions
+					else self.sessions[ctx.author.id]
+				).page(title).read)
 			except Exception as exc:
 				self.logger.error('Fetching page content failed: ' + str(exc),
 					extra={'ctx': DummyCtx(author=DummyCtx(name='Wiki.page'))})
 				await ctx.send(i18n(ctx, 'wiki/page-failed'))
 				return
-		content = list(content['query']['pages']
-			.values())[0]['revisions'][0]['*']
 		content = content.splitlines()
 		contents = ['```html\n']
 		i = 0
@@ -90,29 +156,24 @@ class Wiki(object):
 	@command()
 	async def randompage(self, ctx):
 		"""Get a link to a random Wiki page!"""
-		rn = await self.req({
-			'action': 'query',
-			'list': 'random',
-			'rnlimit': '1',
-			'rnnamespace': '0'
-		})
-		title = rn['query']['random'][0]['title']
-		title = title.replace(' ', '_')
-		title = quote(title, safe='/:')
-		await ctx.send('https://en.scratch-wiki.info/wiki/' + title)
+		rn = list(await self.q((
+			WIKIS['en']
+			if ctx.author.id not in self.sessions
+			else self.sessions[ctx.author.id]
+		).random, 1))[0]
+		title = rn.title
+		await ctx.send(title)
 
 	@command()
 	async def iwstats(self, ctx):
 		"""Get statistics for the international wikis!"""
 		async with ctx.channel.typing():
 			try:
-				content = await self.req({
-					'action': 'query',
-					'prop': 'revisions',
-					'titles': 'User:InterwikiBot/International Stats',
-					'rvlimit': '1',
-					'rvprop': 'content',
-				})
+				content = await self.q(
+					WIKIS['en'].page(
+						'User:InterwikiBot/International Stats'
+					).read
+				)
 			except Exception as exc:
 				self.logger.error('Fetching wiki stats failed: ' + str(exc), extra={'ctx': DummyCtx(author=DummyCtx(name='Wiki.wikistats'))})
 				await ctx.send(i18n(ctx, 'wiki/iwstats-failed'))
@@ -157,16 +218,14 @@ class Wiki(object):
 		"""Get stats for the ``wiki``wiki."""
 		async with ctx.channel.typing():
 			try:
-				data = await self.req({
-					'action': 'query',
-					'meta': 'siteinfo',
-					'siprop': 'statistics'
-				}, wiki)
+				data = await self.q(
+					WIKIS[wiki].meta.siteinfo,
+					prop='statistics'
+				)
 			except Exception as exc:
 				self.logger.error('Fetching wiki stats failed: ' + str(exc), extra={'ctx': DummyCtx(author=DummyCtx(name='Wiki.wikistats'))})
 				await ctx.send(i18n(ctx, 'wiki/wikistats-failed'))
 				return
-		data = data['query']['statistics']
 		embed = d.Embed(
 			title=i18n(ctx, 'wiki/iwstats-title', wiki),
 			description=i18n(ctx, 'wiki/iwstats-description', wiki),
@@ -179,24 +238,62 @@ class Wiki(object):
 		await ctx.send(embed=embed)
 
 	@command()
-	@c.cooldown(8, 64800.0, type=c.BucketType.guild)
+	@c.cooldown(1, 64800.0, type=c.BucketType.guild)
+	async def analyzega_en(self, ctx):
+		"""Analysis of English GA stats."""
+		await self.analyzega(ctx, 'en')
+	@command()
+	@c.cooldown(1, 64800.0, type=c.BucketType.guild)
+	async def analyzega_de(self, ctx):
+		"""Analysis of German GA stats."""
+		await self.analyzega(ctx, 'de')
+	@command()
+	@c.cooldown(1, 64800.0, type=c.BucketType.guild)
+	async def analyzega_id(self, ctx):
+		"""Analysis of Indonesian GA stats."""
+		await self.analyzega(ctx, 'id')
+	@command()
+	@c.cooldown(1, 64800.0, type=c.BucketType.guild)
+	async def analyzega_fr(self, ctx):
+		"""Analysis of French GA stats."""
+		await self.analyzega(ctx, 'fr')
+	@command()
+	@c.cooldown(1, 64800.0, type=c.BucketType.guild)
+	async def analyzega_ru(self, ctx):
+		"""Analysis of Russian GA stats."""
+		await self.analyzega(ctx, 'ru')
+	@command()
+	@c.cooldown(1, 64800.0, type=c.BucketType.guild)
+	async def analyzega_nl(self, ctx):
+		"""Analysis of Dutch GA stats."""
+		await self.analyzega(ctx, 'nl')
+	@command()
+	@c.cooldown(1, 64800.0, type=c.BucketType.guild)
+	async def analyzega_hu(self, ctx):
+		"""Analysis of Hungarian GA stats."""
+		await self.analyzega(ctx, 'hu')
+	@command()
+	@c.cooldown(1, 64800.0, type=c.BucketType.guild)
+	async def analyzega_ja(self, ctx):
+		"""Analysis of Japanese GA stats."""
+		await self.analyzega(ctx, 'ja')
+	@command()
+	@c.cooldown(1, 64800.0, type=c.BucketType.guild)
+	async def analyzega_test(self, ctx):
+		"""Analysis of Test wiki GA stats."""
+		await self.analyzega(ctx, 'test')
+
 	async def analyzega(self, ctx, wiki):
 		"""Do some analysis of a wiki's GA stats"""
 		async with ctx.channel.typing():
 			try:
-				data = await self.req({
-					'action': 'query',
-					'prop': 'revisions',
-					'titles': 'User:InterwikiBot/GA Stats',
-					'rvlimit': '1',
-					'rvprop': 'ids|content'
-				}, wiki)
+				content = await self.q(
+					WIKIS[wiki].page('User:InterwikiBot/GA Stats').read
+				)
 			except Exception as exc:
 				self.logger.error('Fetching wiki stats failed: ' + str(exc), extra={'ctx': DummyCtx(author=DummyCtx(name='Wiki.analyzega'))})
 				await ctx.send(i18n(ctx, 'wiki/wikistats-failed'))
 				return
-		data = list(data['query']['pages'].values())[0]['revisions'][0]
-		content = data['*']
 
 		MASTER_VIEWS = [
 			(m.group(1).replace('_', ' '), int(m.group(2)))
@@ -205,11 +302,10 @@ class Wiki(object):
 				content
 			)
 		]
-		print(MASTER_VIEWS)
 		MASTER_VIEWS.sort(key=lambda i: i[1], reverse=True) #sanity check
 		views_unnamed = [j for i, j in MASTER_VIEWS]
 		count = len(views_unnamed)
-		print('# ===Total stats===')
+		# ===Total stats===
 		# ;Average pageviews per page
 		average_pageviews = sum(views_unnamed) / count
 		# ;Median pageviews per page
@@ -244,7 +340,7 @@ class Wiki(object):
 		# ;Total pageviews
 		total = sum(views_unnamed)
 
-		print('# ===Stats for highest datapoint: ...')
+		# ===Stats for highest datapoint: ...
 		# ;Views
 		highest_title, highest_views = MASTER_VIEWS[0]
 		avg_wo_high = sum(views_unnamed[1:]) / len(views_unnamed[1:])
@@ -259,7 +355,7 @@ class Wiki(object):
 		# ;Multiple if next highest, {next_high_title}
 		mult_next_high = mults[0]
 
-		print('# ===Stats for lowest datapoint: ...')
+		# ===Stats for lowest datapoint: ...
 		# ;Views
 		lowest_title, lowest_views = MASTER_VIEWS[-1]
 		avg_wo_low = sum(views_unnamed[:-1]) / len(views_unnamed[:-1])
@@ -274,7 +370,7 @@ class Wiki(object):
 		# ;Fraction of next lowest, {next_low_title}
 		mult_next_low = mults[-1]
 
-		print('# ===Stats for median datapoints: ...')
+		# ===Stats for median datapoints: ...
 		if count % 2:
 			# ;Views
 			median_title, median_views = MASTER_VIEWS[count // 2]
@@ -315,7 +411,7 @@ class Wiki(object):
 			avg_mult_wo_median = sum(mults_wo_median) / (multcount - 1)
 			# ;Changes average multiple by
 			diff_avg_mult_from_median = average_mult - avg_mult_wo_median
-		print('generate')
+		#generate
 		embed = d.Embed(
 			title=i18n(ctx, 'wiki/analyzega-total-title'),
 			description=i18n(ctx, 'wiki/analyzega-total-description')
@@ -394,6 +490,4 @@ class Wiki(object):
 				diff_avg_diff_from_median))
 		embed.add_field(name=i18n(ctx, 'wiki/analyzega-median-camb'),
 			value=i18n(ctx, 'wiki/analyzega-views', diff_avg_mult_from_median))
-		print('generated')
 		await ctx.send(embed=embed)
-		print('sent?')
