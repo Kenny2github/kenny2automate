@@ -5,6 +5,7 @@ import logging
 import traceback
 import sqlite3 as sql
 import asyncio as a
+import argparse
 import discord as d
 from discord.ext.commands import Bot
 from discord.ext.commands import bot_has_permissions
@@ -34,11 +35,16 @@ class LoggerWriter(object):
 	def flush(self):
 		pass
 
+parser = argparse.ArgumentParser(description='Run the bot.')
+parser.add_argument('prefix', nargs='?', help='the bot prefix', default=';')
+parser.add_argument('-v', action='store_true', help='let print() calls through')
+cmdargs = parser.parse_args()
+
 handler = logging.FileHandler('runbot.log', 'w', 'utf8')
 handler.setFormatter(logfmt)
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO if len(sys.argv) < 2 else logging.DEBUG)
+logger.setLevel(logging.INFO if cmdargs.v else logging.DEBUG)
 logger.addHandler(handler)
 sys.stderr = LoggerWriter(logger.error)
 sys.stdout = LoggerWriter(logger.debug)
@@ -52,14 +58,14 @@ with open(os.path.join(os.path.dirname(__file__), 'start.sql')) as f:
 def get_command_prefix(bot, msg):
 	res = db.execute('SELECT prefix FROM users WHERE user_id=?', (msg.author.id,)).fetchone()
 	if res is None or res['prefix'] is None:
-		return ';'
-	return (res['prefix'], ';')
+		return cmdargs.prefix
+	return (res['prefix'], cmdargs.prefix)
 
 client = Bot(
 	description="The most awesome bot to walk(?) the earth.",
 	command_prefix=get_command_prefix,
 	pm_help=True,
-	activity=d.Activity(type=d.ActivityType.watching, name=';help')
+	activity=d.Activity(type=d.ActivityType.watching, name=cmdargs.prefix + 'help')
 )
 
 @client.listen()
