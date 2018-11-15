@@ -49,5 +49,14 @@
   "analyzega-median-views": "{0} と {1}",
   "analyzega-median-cavb": "平均への影響",
   "analyzega-median-cadb": "ページごと平均への影響",
-  "analyzega-median-camb": "平均倍率への影響"
+  "analyzega-median-camb": "平均倍率への影響",
+  "notloggedin": "ログインしていません。`;login <ウィキ2文字コード> \"<ユーザー名>\" <パスワード>` をDMで送ってください。",
+  "edit-instructions": "コードを ```このようにして``` 送信します。 `EOF` と送ると編集を終了し、送信します。",
+  "edit-summary": "編集要約を送る:",
+  "edit-result": "編集: {0}",
+  "login-notdm": "DMで使いなさい!",
+  "login-notdm-nodelete": "DMで使いなさい! コマンドも消しなさい!",
+  "login-notwiki": "そんなウィキないよ。",
+  "login-failed": "ログイン失敗: {0}",
+  "login-status": "ログイン: {0} コメントを削除してください。"
 }

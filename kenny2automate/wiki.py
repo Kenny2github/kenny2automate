@@ -178,8 +178,6 @@ class Wiki(object):
 				self.logger.error('Fetching wiki stats failed: ' + str(exc), extra={'ctx': DummyCtx(author=DummyCtx(name='Wiki.wikistats'))})
 				await ctx.send(i18n(ctx, 'wiki/iwstats-failed'))
 				return
-			content = list(content['query']['pages']
-				.values())[0]['revisions'][0]['*']
 		exp = re.compile(r"""\|-
 \|(?P<time>[^\|]+)
 \|(?P<pages>[0-9]+)
