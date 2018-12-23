@@ -1,0 +1,23 @@
+{
+  "claiming-soul-title": "Claiming Soul",
+  "claiming-soul": "Claiming a soul for you...",
+  "no-new-souls-title": "No New Souls",
+  "no-new-souls": "There are no souls waiting to be claimed. Sorry! Please check back later.",
+  "birth-title": "Child Born",
+  "birth": "Your child, now named @{0}#{1}, has been born! Their genes are as follows:\n{2}",
+  "claimed-soul": "You are now attached to the soul of an entity whose dominant genes are:\n{0}",
+  "adopted-title": "Child Adopted",
+  "adopted": "You have requested the creation of an artificial child, whom you will adopt when they are born, at which point you will be notified as such.",
+  "proposal-title": "Proposal Received",
+  "proposal": "@{0}#{1} proposes procreation with you. Do you accept? They additionally want to say:\n{2}",
+  "proposed-title": "Sent",
+  "proposed": "Proposal sent. Good luck!",
+  "proposal-rejected-title": "Proposal Rejected",
+  "proposal-rejected": "Your procreation proposal to @{0}#{1} was rejected... try for someone else.",
+  "rejected-proposal-title": "Rejected Proposal",
+  "rejected-proposal": "You have rejected the procreation proposal from @{0}#{1}.",
+  "proposal-accepted-title": "Proposal Accepted",
+  "proposal-accepted": "Your procreation proposal to @{0}#{1} has been accepted! You will be notified when your child is born.",
+  "accepted-proposal-title": "Accepted Proposal",
+  "accepted-proposal-title": "You have accepted the procreation proposal from @{0}#{1}. You will be notified when your child is born."
+}

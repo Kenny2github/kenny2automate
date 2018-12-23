@@ -4,7 +4,7 @@ import functools
 from urllib.parse import quote
 import asyncio as a
 import discord as d
-from discord.ext.commands import command
+from discord.ext.commands import group
 from discord.ext import commands as c
 import requests
 import mw_api_client as mwc
@@ -46,8 +46,14 @@ class Wiki(object):
 
 	sessions = {}
 
-	@command()
+	@group()
+	async def wiki(self, ctx):
+		"""Wiki-related commands. Run `;help wiki`."""
+		pass
+
+	@wiki.command()
 	async def login(self, ctx, wiki, username, *, password):
+		"""Login to a Wiki. MUST BE IN DMS."""
 		if ctx.guild is not None:
 			try:
 				await ctx.message.delete()
@@ -82,9 +88,10 @@ class Wiki(object):
 	async def notloggedin(self, ctx):
 		await ctx.send(i18n(ctx, 'wiki/notloggedin'))
 
-	@command()
+	@wiki.command()
 	@c.check(lambda ctx: ctx.guild is None)
 	async def edit(self, ctx, *, title):
+		"""Edit a Wiki page."""
 		if ctx.author.id not in self.sessions:
 			return await self.notloggedin(ctx)
 		await ctx.send(i18n(ctx, 'wiki/edit-instructions'))
@@ -120,7 +127,7 @@ class Wiki(object):
 				summary
 			))['edit']['result']))
 
-	@command()
+	@wiki.command()
 	@c.check(lambda ctx: ctx.guild is None)
 	async def page(self, ctx, *, title):
 		"""Get the contents of a page."""
@@ -153,7 +160,7 @@ class Wiki(object):
 		for msg in contents:
 			await ctx.send(msg)
 
-	@command()
+	@wiki.command()
 	async def randompage(self, ctx):
 		"""Get a link to a random Wiki page!"""
 		rn = list(await self.q((
@@ -164,7 +171,7 @@ class Wiki(object):
 		title = rn.title
 		await ctx.send(title)
 
-	@command()
+	@wiki.command()
 	async def iwstats(self, ctx):
 		"""Get statistics for the international wikis!"""
 		async with ctx.channel.typing():
@@ -211,8 +218,8 @@ class Wiki(object):
 			await ctx.send(embed=embed)
 			await a.sleep(1)
 
-	@command()
-	async def wikistats(self, ctx, wiki):
+	@wiki.command()
+	async def stats(self, ctx, wiki):
 		"""Get stats for the ``wiki``wiki."""
 		async with ctx.channel.typing():
 			try:
@@ -235,53 +242,58 @@ class Wiki(object):
 			)
 		await ctx.send(embed=embed)
 
-	@command()
+	@wiki.group()
+	async def analyzega(self, ctx):
+		"""Analysis of GA stats."""
+		pass
+
+	@analyzega.command(name='en')
 	@c.cooldown(1, 64800.0, type=c.BucketType.guild)
 	async def analyzega_en(self, ctx):
 		"""Analysis of English GA stats."""
-		await self.analyzega(ctx, 'en')
-	@command()
+		await self._analyzega(ctx, 'en')
+	@analyzega.command(name='de')
 	@c.cooldown(1, 64800.0, type=c.BucketType.guild)
 	async def analyzega_de(self, ctx):
 		"""Analysis of German GA stats."""
-		await self.analyzega(ctx, 'de')
-	@command()
+		await self._analyzega(ctx, 'de')
+	@analyzega.command(name='id')
 	@c.cooldown(1, 64800.0, type=c.BucketType.guild)
 	async def analyzega_id(self, ctx):
 		"""Analysis of Indonesian GA stats."""
-		await self.analyzega(ctx, 'id')
-	@command()
+		await self._analyzega(ctx, 'id')
+	@analyzega.command(name='fr')
 	@c.cooldown(1, 64800.0, type=c.BucketType.guild)
 	async def analyzega_fr(self, ctx):
 		"""Analysis of French GA stats."""
-		await self.analyzega(ctx, 'fr')
-	@command()
+		await self._analyzega(ctx, 'fr')
+	@analyzega.command(name='ru')
 	@c.cooldown(1, 64800.0, type=c.BucketType.guild)
 	async def analyzega_ru(self, ctx):
 		"""Analysis of Russian GA stats."""
-		await self.analyzega(ctx, 'ru')
-	@command()
+		await self._analyzega(ctx, 'ru')
+	@analyzega.command(name='nl')
 	@c.cooldown(1, 64800.0, type=c.BucketType.guild)
 	async def analyzega_nl(self, ctx):
 		"""Analysis of Dutch GA stats."""
-		await self.analyzega(ctx, 'nl')
-	@command()
+		await self._analyzega(ctx, 'nl')
+	@analyzega.command(name='hu')
 	@c.cooldown(1, 64800.0, type=c.BucketType.guild)
 	async def analyzega_hu(self, ctx):
 		"""Analysis of Hungarian GA stats."""
-		await self.analyzega(ctx, 'hu')
-	@command()
+		await self._analyzega(ctx, 'hu')
+	@analyzega.command(name='ja')
 	@c.cooldown(1, 64800.0, type=c.BucketType.guild)
 	async def analyzega_ja(self, ctx):
 		"""Analysis of Japanese GA stats."""
-		await self.analyzega(ctx, 'ja')
-	@command()
+		await self._analyzega(ctx, 'ja')
+	@analyzega.command(name='test')
 	@c.cooldown(1, 64800.0, type=c.BucketType.guild)
 	async def analyzega_test(self, ctx):
 		"""Analysis of Test wiki GA stats."""
-		await self.analyzega(ctx, 'test')
+		await self._analyzega(ctx, 'test')
 
-	async def analyzega(self, ctx, wiki):
+	async def _analyzega(self, ctx, wiki):
 		"""Do some analysis of a wiki's GA stats"""
 		async with ctx.channel.typing():
 			try:

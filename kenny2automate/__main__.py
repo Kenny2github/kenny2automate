@@ -37,6 +37,8 @@ class LoggerWriter(object):
 
 parser = argparse.ArgumentParser(description='Run the bot.')
 parser.add_argument('prefix', nargs='?', help='the bot prefix', default=';')
+parser.add_argument('--disable', nargs='*', metavar='module',
+	help='modules not to run')
 parser.add_argument('-v', action='store_true', help='let print() calls through')
 cmdargs = parser.parse_args()
 
@@ -49,11 +51,37 @@ logger.addHandler(handler)
 sys.stderr = LoggerWriter(logger.error)
 sys.stdout = LoggerWriter(logger.debug)
 
-dbw = sql.connect('kenny2automate.db')
+if not os.path.isfile('kenny2automate.db'):
+	dbv = -1
+else:
+	dbv = None
+dbw = sql.connect('kenny2automate.db', detect_types=sql.PARSE_DECLTYPES)
 dbw.row_factory = sql.Row
 db = dbw.cursor()
-with open(os.path.join(os.path.dirname(__file__), 'start.sql')) as f:
-	db.executescript(f.read())
+LATEST_DBV = 1
+dbv = dbv or db.execute('PRAGMA user_version').fetchone()[0]
+if dbv < LATEST_DBV:
+	logger.info('Current dbv {} is less than latest {}, upgrading...'.format(
+		dbv, LATEST_DBV
+	), extra={'ctx': DummyCtx(author=DummyCtx(name='(startup)'))})
+	for i in range(dbv + 1, LATEST_DBV + 1):
+		if not os.path.isfile(os.path.join(
+				os.path.dirname(__file__), 'sql', 'v{}.sql'.format(i)
+		)):
+			logger.info('No script for v{}, skipping'.format(i),
+				extra={'ctx': DummyCtx(author=DummyCtx(name='(startup)'))})
+			continue
+		with open(os.path.join(
+				os.path.dirname(__file__), 'sql', 'v{}.sql'.format(i)
+		)) as f:
+			logger.info('Running script from v{} to v{}'.format(i - 1, i),
+				extra={'ctx': DummyCtx(author=DummyCtx(name='(startup)'))})
+			try:
+				db.executescript(f.read())
+			except sql.OperationalError as exc:
+				logger.error('Running script failed: {}'.format(exc))
+	db.execute('PRAGMA user_version = {}'.format(LATEST_DBV))
+del dbv
 
 def get_command_prefix(bot, msg):
 	res = db.execute('SELECT prefix FROM users WHERE user_id=?', (msg.author.id,)).fetchone()
@@ -118,30 +146,42 @@ async def before_invoke(ctx):
 	logger.info(ctx.command, extra={'ctx': ctx})
 
 from kenny2automate.i18n import i18n, I18n
-from kenny2automate.scratch import Scratch
-from kenny2automate.numguess import Numguess
-from kenny2automate.wiki import Wiki
-from kenny2automate.regexes import Regexes
-from kenny2automate.connect4 import Connect4
-from kenny2automate.hangman import Hangman
-from kenny2automate.card_games import CardGames
-from kenny2automate.battleship import Battleship
-from kenny2automate.fight import Fight
-
 client.add_cog(I18n(client, db))
-client.add_cog(Scratch(client))
-client.add_cog(Numguess())
-client.add_cog(Wiki(client, logger, DGBANSERVERID))
-client.add_cog(Regexes())
-client.add_cog(Connect4(client, db))
-client.add_cog(Hangman(client, db))
-client.add_cog(CardGames(client, db))
-client.add_cog(Battleship(client, db))
-client.add_cog(Fight(client, db))
+
+if 'scratch' not in cmdargs.disable:
+	from kenny2automate.scratch import Scratch
+	client.add_cog(Scratch(client))
+if 'numguess' not in cmdargs.disable:
+	from kenny2automate.numguess import Numguess
+	client.add_cog(Numguess())
+if 'wiki' not in cmdargs.disable:
+	from kenny2automate.wiki import Wiki
+	client.add_cog(Wiki(client, logger, DGBANSERVERID))
+if 'regexes' not in cmdargs.disable:
+	from kenny2automate.regexes import Regexes
+	client.add_cog(Regexes())
+if 'connect4' not in cmdargs.disable:
+	from kenny2automate.connect4 import Connect4
+	client.add_cog(Connect4(client, db))
+if 'hangman' not in cmdargs.disable:
+	from kenny2automate.hangman import Hangman
+	client.add_cog(Hangman(client, db))
+if 'cardgames' not in cmdargs.disable:
+	from kenny2automate.card_games import CardGames
+	client.add_cog(CardGames(client, db))
+if 'battleship' not in cmdargs.disable:
+	from kenny2automate.battleship import Battleship
+	client.add_cog(Battleship(client, db))
+if 'fight' not in cmdargs.disable:
+	from kenny2automate.fight import Fight
+	client.add_cog(Fight(client, db))
+if 'evolution' not in cmdargs.disable:
+	from kenny2automate.evolution import Evolution
+	client.add_cog(Evolution(client, db))
 
 @client.event
 async def on_ready(*_, **__):
-	logger.info('Ready!', extra={'ctx': DummyCtx(author=DummyCtx(name='(core)'))})
+	logger.info('Ready!', extra={'ctx': DummyCtx(author=DummyCtx(name='(startup)'))})
 
 @client.command('eval')
 @c.is_owner()
@@ -158,7 +198,7 @@ async def repeat(ctx, *, arg):
 	msg = await ctx.send(arg)
 	@client.listen()
 	async def on_message_delete(msg2):
-		if msg2.id == msg.id:
+		if msg2.id == ctx.message.id:
 			await msg.delete()
 			client.remove_listener(on_message_delete)
 
@@ -207,6 +247,7 @@ async def whoami(ctx):
 async def prefix(ctx):
 	"""Bot prefix-related commands."""
 	pass
+
 @prefix.command('reset')
 async def prefix_reset(ctx, user: d.Member = None):
 	"""Reset your own prefix.
@@ -222,11 +263,18 @@ async def prefix_reset(ctx, user: d.Member = None):
 
 @prefix.command('set')
 async def prefix_set(ctx, *, prefix):
-	"""Set your own prefix."""
+	"""Set your own prefix.
+	If you need a space at the start or end of the prefix, quote the prefix by
+	adding the same character at the start and end of the prefix. For example,
+	`;prefix set hello ` will set your prefix to "hello" but
+	`;prefix set %hello %` will set your prefix to "hello " (note the trailing
+	space)."""
 	res = db.execute(
 		'SELECT prefix FROM users WHERE user_id=?',
 		(ctx.author.id,)
 	).fetchone()
+	if prefix[0] == prefix[-1]:
+		prefix = prefix[1:-1]
 	if res is None:
 		db.execute(
 			'INSERT INTO users (user_id, prefix) VALUES (?, ?)',

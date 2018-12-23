@@ -1,10 +1,15 @@
 import re
-from discord.ext.commands import command
+from discord.ext.commands import group
 from .i18n import i18n
 
 class Regexes(object):
 	"""Regex commands - Python flavored."""
-	@command()
+	@group()
+	async def regex(self, ctx):
+		"""Regex functions! Run `;help regex`."""
+		pass
+
+	@regex.command()
 	async def search(self, ctx, pattern, string, flags=None):
 		"""Make a Python-flavored regex search! All groups are shown."""
 		if flags is not None:
@@ -28,7 +33,7 @@ class Regexes(object):
 			result = i18n(ctx, 'regexes/search-result-nomatch')
 		await ctx.send(result)
 
-	@command()
+	@regex.command()
 	async def findall(self, ctx, pattern, string, flags=None):
 		"""Use a Python-flavor regex to find all occurences of a pattern!"""
 		if flags is not None:

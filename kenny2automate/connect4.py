@@ -300,7 +300,10 @@ class Connect4(Games):
 				ctx, 'Connect 4', self.connect4_global
 			)
 		regs = REGS[:]
-		player1, player2 = await self._gather_game(ctx, 'Connect 4', against)
+		if against and against.id == ctx.author.id:
+			player1 = player2 = against
+		else:
+			player1, player2 = await self._gather_game(ctx, 'Connect 4', against)
 		board = self.genboard()
 		redwon, bluewon = False, False
 		checkwin = self.checkwin

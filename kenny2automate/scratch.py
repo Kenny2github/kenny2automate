@@ -1,6 +1,6 @@
 import json
 import random
-from discord.ext.commands import command
+from discord.ext.commands import group
 import requests
 from .i18n import i18n
 
@@ -22,7 +22,12 @@ class Scratch(object):
 			result = resp.text
 		return result
 
-	@command()
+	@group()
+	async def scratch(self, ctx):
+		"""Scratch-related commands. Run `;help scratch`."""
+		pass
+
+	@scratch.command()
 	async def randomproject(self, ctx):
 		"""Get a random project link!"""
 		async with ctx.channel.typing():
@@ -38,7 +43,7 @@ class Scratch(object):
 				)
 			await ctx.send('https://scratch.mit.edu/projects/' + str(pid))
 
-	@command()
+	@scratch.command()
 	async def messagecount(self, ctx, name=None):
 		"""How many messages do you have on Scratch?"""
 		async with ctx.channel.typing():
@@ -74,7 +79,7 @@ class Scratch(object):
 					json.loads(resp)['count']
 				))
 
-	@command()
+	@scratch.command()
 	async def news(self, ctx):
 		"""Get Scratch news."""
 		content = await self.req('https://api.scratch.mit.edu/news')
