@@ -9,10 +9,7 @@ from discord.ext import commands as c
 import requests
 import mw_api_client as mwc
 from .i18n import i18n
-
-class DummyCtx(object):
-	def __init__(self, **kwargs):
-		self.__dict__.update(kwargs)
+from .utils import DummyCtx
 
 DGSWIKISERVER = 328938947717890058
 

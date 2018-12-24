@@ -3,6 +3,7 @@ import os
 import re
 import logging
 import traceback
+import pickle
 import sqlite3 as sql
 import asyncio as a
 import argparse
@@ -11,6 +12,7 @@ from discord.ext.commands import Bot
 from discord.ext.commands import bot_has_permissions
 from discord.ext.commands import has_permissions
 from discord.ext import commands as c
+from kenny2automate.utils import DummyCtx
 
 DGBANSERVERID = 328938947717890058
 #DGBANSERVERID = 337100820371996675
@@ -20,10 +22,6 @@ logfmt = logging.Formatter(
 	datefmt='%Y-%m-%dT%H:%M:%SZ',
 	style='{'
 )
-
-class DummyCtx(object):
-	def __init__(self, **kwargs):
-		self.__dict__.update(kwargs)
 
 class LoggerWriter(object):
 	def __init__(self, level):
@@ -46,11 +44,12 @@ handler = logging.FileHandler('runbot.log', 'w', 'utf8')
 handler.setFormatter(logfmt)
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO if cmdargs.v else logging.DEBUG)
+logger.setLevel(logging.DEBUG if cmdargs.v else logging.INFO)
 logger.addHandler(handler)
 sys.stderr = LoggerWriter(logger.error)
 sys.stdout = LoggerWriter(logger.debug)
 
+sql.register_converter('pickle', pickle.loads)
 if not os.path.isfile('kenny2automate.db'):
 	dbv = -1
 else:

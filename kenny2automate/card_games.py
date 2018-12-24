@@ -3,8 +3,9 @@ import random
 import discord as d
 from discord.ext.commands import command, group
 from discord.ext.commands import bot_has_permissions
-from .games import Games, DummyCtx
+from .games import Games
 from .i18n import i18n
+from .utils import DummyCtx
 
 class Card(object):
 	SUITS = tuple('\u2660 \u2663 \u2665 \u2666'.split(' '))

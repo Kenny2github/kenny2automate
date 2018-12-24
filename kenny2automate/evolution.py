@@ -4,25 +4,28 @@ import sqlite3 as sql
 import discord as d
 from discord.ext.commands import group, CheckFailure
 from .i18n import i18n
-from .utils import dataclass
+from .utils import dataclass, DummyCtx
 
 #Strength, Constitution, Dexterity, Intelligence, Wisdom, Charisma, Sex
 db = None
 
 @dataclass
 class Gene(object):
-    str: int
-    con: int
-    dex: int
-    chr: int
-    wis: int
-    int: int
+    str: (int, float)
+    con: (int, float)
+    dex: (int, float)
+    chr: (int, float)
+    wis: (int, float)
+    int: (int, float)
     sex: str
 
     @staticmethod
     def _combstat(one, two):
         if one < 0 and two < 0:
-            return 1
+            if one == two:
+                return 1
+            else:
+                return min(one, two)
         elif one < 0:
             return abs(one) * two
         elif two < 0:
@@ -33,7 +36,7 @@ class Gene(object):
     def combine(self, other):
         if not isinstance(other, Gene):
             return NotImplemented
-        new = Gene(
+        return Gene(
             self._combstat(self.str, other.str),
             self._combstat(self.con, other.con),
             self._combstat(self.dex, other.dex),
@@ -54,8 +57,8 @@ class Gene(object):
     def __repr__(self):
         def mult(thing):
             if thing < 0:
-                return 'x' + str(abs(thing))
-            return thing
+                return 'x{:.1f}'.format(abs(thing))
+            return '{:.1f}'.format(thing)
         return 'str: {} con: {} dex: {} chr: {} wis: {} int: {} sex: {}'.format(
             mult(self.str), mult(self.con), mult(self.dex),
             mult(self.chr), mult(self.wis), mult(self.int),
@@ -67,7 +70,7 @@ class Entity(object):
     soul: int
     genes: tuple
     children: set = set()
-    parents: tuple = (0, 0)
+    parents: frozenset = frozenset()
 
     @property
     def dominant(self):
@@ -81,22 +84,20 @@ class Entity(object):
             return NotImplemented
         new = Entity(0, ( #claiming is done afterwards
             random.choice(self.genes), random.choice(other.genes)
-        ), parents=(self.soul, other.soul))
+        ), parents=frozenset((self.soul, other.soul)))
         db.execute(
             'INSERT INTO evol_unnamed_children (child) VALUES (?)',
             (new,)
         )
         claim = db.execute('SELECT entry_id FROM evol_unnamed_children ORDER BY \
 entry_id DESC').fetchone()[0]
-        self.children.add(claim | 0x800000)
-        other.children.add(claim | 0x800000)
+        self.children.add(claim | 2**128)
+        other.children.add(claim | 2**128)
         return new
 
     __mul__ = __add__ = __or__ = procreate
 
 sql.register_adapter(Entity, pickle.dumps)
-sql.register_adapter(list, pickle.dumps)
-sql.register_converter('pickle', pickle.loads)
 
 class Evolution(object):
     def __init__(self, bot, db_):
@@ -112,7 +113,7 @@ class Evolution(object):
             'SELECT evol_self FROM users WHERE user_id=?',
             (ctx.author.id,)
         ).fetchone()
-        if res is None:
+        if res is None or res[0] is None:
             await ctx.send(embed=d.Embed(
                 title=i18n(ctx, 'evolution/claiming-soul-title'),
                 description=i18n(ctx, 'evolution/claiming-soul'),
@@ -122,14 +123,53 @@ class Evolution(object):
                 entry_id, husk = db.execute('SELECT entry_id, child FROM \
 evol_unnamed_children ORDER BY entry_id ASC').fetchone()
             except TypeError: #was None
+                gene1 = Gene(
+                    *(random.choice((
+                        random.randint(
+                            3, random.randint(3, 18)
+                        ), random.randint(3, 5) * -0.5
+                    )) for _ in range(6)),
+                    random.choice(('X', 'Y'))
+                )
+                gene2 = Gene(
+                    *(random.choice((
+                        random.randint(
+                            3, random.randint(3, 18)
+                        ), random.randint(3, 5) * -0.5
+                    )) for _ in range(6)),
+                    random.choice(('X', 'Y'))
+                )
+                new = Entity(ctx.author.id, (gene1, gene2), parents=frozenset())
+                if res is None:
+                    db.execute(
+                        'INSERT INTO users (user_id, evol_self) VALUES (?, ?)',
+                        (ctx.author.id, new)
+                    )
+                else:
+                    db.execute(
+                        'UPDATE users SET evol_self=? WHERE user_id=?',
+                        (new, ctx.author.id)
+                    )
                 await ctx.send(embed=d.Embed(
                     title=i18n(ctx, 'evolution/no-new-souls-title'),
-                    description=i18n(ctx, 'evolution/no-new-souls'),
-                    color=0xff0000
+                    description=i18n(
+                        ctx, 'evolution/no-new-souls',
+                        repr(new.dominant)
+                    ),
+                    color=0
                 ))
-                raise CheckFailure
+                return new
             husk.soul = ctx.author.id
-            db.execute('INSERT INTO users (evol_self) VALUES (?)', (husk,))
+            if res is None:
+                db.execute(
+                    'INSERT INTO users (user_id, evol_self) VALUES (?, ?)',
+                    (ctx.author.id, husk)
+                )
+            else:
+                db.execute(
+                    'UPDATE users SET evol_self=? WHERE user_id=?',
+                    (husk, ctx.author.id)
+                )
             db.execute(
                 'DELETE FROM evol_unnamed_children WHERE entry_id=?',
                 (entry_id,)
@@ -141,14 +181,14 @@ evol_unnamed_children ORDER BY entry_id ASC').fetchone()
                 dmx = DummyCtx(
                     author=u, channel=u.dm_channel, send=u.dm_channel.send
                 )
-                p = self.load_player(dmx)
+                p = await self.load_player(dmx)
                 for c in p.children:
-                    if c & 0x7fffff == entry_id:
+                    if c & 2**128-1 == entry_id:
                         p.children.remove(c)
                         p.children.add(ctx.author.id)
                         break
                 self.save_player(p)
-                dmx.send(embed=d.Embed(
+                await dmx.send(embed=d.Embed(
                     title=i18n(dmx, 'evolution/birth-title'),
                     description=i18n(
                         dmx, 'evolution/birth',
@@ -158,7 +198,7 @@ evol_unnamed_children ORDER BY entry_id ASC').fetchone()
                     color=0x55acee
                 ))
             await ctx.send(embed=d.Embed(
-                title=i18n(ctx, 'evolution/soul-claimed-title'),
+                title=i18n(ctx, 'evolution/claimed-soul-title'),
                 description=i18n(
                     ctx, 'evolution/claimed-soul', repr(husk.dominant)
                 ),
@@ -168,7 +208,7 @@ evol_unnamed_children ORDER BY entry_id ASC').fetchone()
         me = res[0]
         return me
 
-    async def save_player(self, player):
+    def save_player(self, player):
         db.execute(
             'UPDATE users SET evol_self=? WHERE user_id=?',
             (player, player.soul)
@@ -184,7 +224,7 @@ evol_unnamed_children ORDER BY entry_id ASC').fetchone()
         """Roll the dice to adopt a new child.
         Note that dice rolls for adoption tend to have slightly worse scores.
         """
-        me = self.load_player(ctx)
+        me = await self.load_player(ctx)
         gene1 = Gene(
             *(random.choice((
                 random.randint(
@@ -201,14 +241,14 @@ evol_unnamed_children ORDER BY entry_id ASC').fetchone()
             )) for _ in range(6)),
             random.choice(('X', 'Y'))
         )
-        new = Entity(0, (gene1, gene2), parents=(me.soul,))
+        new = Entity(0, (gene1, gene2), parents=frozenset((me.soul,)))
         db.execute(
             'INSERT INTO evol_unnamed_children (child) VALUES (?)',
             (new,)
         )
         claim = db.execute('SELECT entry_id FROM evol_unnamed_children ORDER BY \
 entry_id DESC').fetchone()[0]
-        me.children.add(claim | 0x800000)
+        me.children.add(claim | 2**128)
         self.save_player(me)
         await ctx.send(embed=d.Embed(
             title=i18n(ctx, 'evolution/adopted-title'),
@@ -229,6 +269,8 @@ entry_id DESC').fetchone()[0]
             channel=other.dm_channel,
             author=other
         )
+        await self.load_player(ctx) #make sure they exist
+        await self.load_player(dmx)
         msg = await dmx.send(embed=d.Embed(
             title=i18n(dmx, 'evolution/proposal-title'),
             description=i18n(
@@ -238,8 +280,8 @@ entry_id DESC').fetchone()[0]
             ),
             color=0xff0000
         ))
-        await msg.add_reaction('\u2705')
-        await msg.add_reaction('\u2716')
+        await msg.add_reaction('\u2705') #check
+        await msg.add_reaction('\u274c') #cross
         await ctx.send(embed=d.Embed(
             title=i18n(ctx, 'evolution/proposed-title'),
             description=i18n(ctx, 'evolution/proposed'),
@@ -247,10 +289,10 @@ entry_id DESC').fetchone()[0]
         ))
         @self.bot.listen()
         async def on_reaction_add(reaction, user):
-            if reaction.emoji not in '\u2705\u2716' or user.id != dmx.author.id:
+            if reaction.emoji not in '\u2705\u274c' or user.id != dmx.author.id:
                 return
             self.bot.remove_listener(on_reaction_add, 'on_reaction_add')
-            if reaction.emoji == '\u2716':
+            if reaction.emoji == '\u274c':
                 await ctx.send(embed=d.Embed(
                     title=i18n(ctx, 'evolution/proposal-rejected-title'),
                     description=i18n(
@@ -269,8 +311,8 @@ entry_id DESC').fetchone()[0]
                 ))
                 return
             if reaction.emoji == '\u2705':
-                me = self.load_player(ctx)
-                you = self.load_player(dmx)
+                me = await self.load_player(ctx)
+                you = await self.load_player(dmx)
                 me * you
                 await ctx.send(embed=d.Embed(
                     title=i18n(ctx, 'evolution/proposal-accepted-title'),
@@ -290,3 +332,28 @@ entry_id DESC').fetchone()[0]
                 ))
                 self.save_player(me)
                 self.save_player(you)
+
+    @evol.command()
+    async def profile(self, ctx):
+        me = await self.load_player(ctx)
+        await ctx.send(embed=d.Embed(
+            title=i18n(ctx, 'evolution/your-genes-title'),
+            description=i18n(ctx, 'evolution/your-genes')
+                + '\n' + repr(me.dominant),
+            color=0xffffff
+        ).add_field(
+            name=i18n(ctx, 'evolution/your-parents'),
+            value='\n'.join(
+                '@{0.name}#{0.discriminator}'.format(
+                    self.bot.get_user(i)
+                ) for i in me.parents
+            ) or i18n(ctx, 'evolution/no-parents')
+        ).add_field(
+            name=i18n(ctx, 'evolution/your-children'),
+            value='\n'.join(
+                '@{0.name}#{0.discriminator}'.format(
+                    self.bot.get_user(i)
+                ) if not i & 2**128 else i18n(ctx, 'evolution/husk')
+                for i in me.children
+            ) or i18n(ctx, 'evolution/no-children')
+        ))

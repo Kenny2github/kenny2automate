@@ -1,3 +1,7 @@
+class DummyCtx(object):
+	def __init__(self, **kwargs):
+		self.__dict__.update(kwargs)
+
 def dataclass(cls):
     def __init__(self, *args, **kwargs):
         taken_care_of = []
@@ -35,7 +39,7 @@ def dataclass(cls):
             #weird memory stuff
             elif hasattr(cls, name) \
                     and cls.__annotations__[name] in (list, set, dict):
-                setattr(self, cls.__annotations__[name]())
+                setattr(self, name, cls.__annotations__[name]())
     def copy(self):
         return cls(**self.__dict__)
     def __eq__(self, other):

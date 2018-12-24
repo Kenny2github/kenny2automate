@@ -3,8 +3,9 @@ import asyncio as a
 import discord as d
 from discord.ext.commands import command
 from discord.ext.commands import bot_has_permissions
-from .games import Games, DummyCtx
+from .games import Games
 from .i18n import i18n
+from .utils import DummyCtx
 
 class Battleship(Games):
 	@command()

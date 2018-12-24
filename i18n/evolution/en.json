@@ -2,9 +2,10 @@
   "claiming-soul-title": "Claiming Soul",
   "claiming-soul": "Claiming a soul for you...",
   "no-new-souls-title": "No New Souls",
-  "no-new-souls": "There are no souls waiting to be claimed. Sorry! Please check back later.",
+  "no-new-souls": "There were no new souls waiting to be claimed. As such, you have been born from nothingness and have completely random genes as follows:\n{0}",
   "birth-title": "Child Born",
   "birth": "Your child, now named @{0}#{1}, has been born! Their genes are as follows:\n{2}",
+  "claimed-soul-title": "Claimed Soul",
   "claimed-soul": "You are now attached to the soul of an entity whose dominant genes are:\n{0}",
   "adopted-title": "Child Adopted",
   "adopted": "You have requested the creation of an artificial child, whom you will adopt when they are born, at which point you will be notified as such.",
@@ -19,5 +20,12 @@
   "proposal-accepted-title": "Proposal Accepted",
   "proposal-accepted": "Your procreation proposal to @{0}#{1} has been accepted! You will be notified when your child is born.",
   "accepted-proposal-title": "Accepted Proposal",
-  "accepted-proposal-title": "You have accepted the procreation proposal from @{0}#{1}. You will be notified when your child is born."
+  "accepted-proposal": "You have accepted the procreation proposal from @{0}#{1}. You will be notified when your child is born.",
+  "your-genes-title": "Your Profile",
+  "your-genes": "Your genes are as follows:",
+  "no-parents": "The Void",
+  "husk": "(soulless husk)",
+  "no-children": "You have no children.",
+  "your-parents": "Parent(s)",
+  "your-children": "Children"
 }

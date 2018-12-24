@@ -1,10 +1,7 @@
 import asyncio as a
 import discord as d
 from .i18n import i18n
-
-class DummyCtx(object):
-	def __init__(self, **kwargs):
-		self.__dict__.update(kwargs)
+from .utils import DummyCtx
 
 class Games(object):
 	def __init__(self, bot, db):
