@@ -12,6 +12,7 @@
   "iwstats-activeusers": "Active Users",
   "iwstats-admins": "Admins",
   "iwstats-jobs": "Jobs",
+  "iwstats-queued-massmessages": "Queued MassMessages",
   "wikistats-failed": "Fetching stats failed. You likely specified a nonexisitent wiki.",
   "analyzega-views": "{0} views",
   "analyzega-times": "{0} times",

@@ -1,11 +1,13 @@
 {
   "numguess-intro": "{0}から{1}までの数を当ててください。{2}回挑戦できます。",
+  "numguess-guess-title": "何でしょうか?",
   "numguess-guess": "数は何でしょうか?",
   "numguess-timeout": "{0}秒間当てられていないので終了します。",
   "numguess-oor": "条件はずれです。",
   "numguess-low": "数が小さいです。",
   "numguess-high": "数が大きいです。",
   "numguess-range": "\n範囲は{0}から{1}、{2}回できます。",
+  "numguess-end": "ゲーム終了!",
   "numguess-correct": "{0}回残して成功しました!",
   "numguess-oot": "あちゃちゃ、失敗しました。数は{0}です。"
 }
