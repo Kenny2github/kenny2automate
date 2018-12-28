@@ -1,7 +1,7 @@
 {
-　"comma-sep": "、",
-　"and-sep": "、そして",
-　"error": "エラー",
+  "comma-sep": "、",
+  "and-sep": "、そして",
+  "error": "エラー",
   "hello": "世界よ、こんにちは!",
   "hmmst": "ふーん",
   "whoami-title": "{0}についての情報",
