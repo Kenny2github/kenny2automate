@@ -1,8 +1,9 @@
 import re
 import random
 import asyncio as a
+import discord as d
 from discord.ext.commands import command
-from .i18n import i18n
+from .i18n import i18n, embed
 
 class Numguess(object):
 	@command()
@@ -13,9 +14,16 @@ class Numguess(object):
 		limUp = 100
 		tries = 7
 		secret = random.randint(1, 100)
-		await ctx.send(i18n(ctx, 'numguess/numguess-intro', limDn, limUp, tries))
+		await ctx.send(embed=embed(ctx,
+			description=('numguess/numguess-intro', limDn, limUp, tries),
+			color=0
+		))
 		while guess != secret and tries > 0:
-			await ctx.send(i18n(ctx, 'numguess/numguess-guess'))
+			await ctx.send(embed=embed(ctx,
+				title=('numguess/numguess-guess-title',),
+				description=('numguess/numguess-guess',),
+				color=0xffff00
+			))
 			result = ''
 			try:
 				guess = await ctx.bot.wait_for('message',
@@ -25,7 +33,11 @@ class Numguess(object):
 					),
 					timeout=60.0)
 			except a.TimeoutError:
-				await ctx.send(i18n(ctx, 'numguess/numguess-timeout', 60))
+				await ctx.send(embed=embed(ctx,
+					title=('hangman/timeout',),
+					description=('numguess/numguess-timeout', 60),
+					color=0xff0000
+				))
 				return
 			guess = int(guess.content)
 			if guess == secret:
@@ -40,8 +52,13 @@ class Numguess(object):
 				limUp = guess
 			tries -= 1
 			result += i18n(ctx, 'numguess/numguess-range', limDn, limUp, tries)
-			await ctx.send(result)
-		if guess == secret:
-			await ctx.send(i18n(ctx, 'numguess/numguess-correct', tries))
-		else:
-			await ctx.send(i18n(ctx, 'numguess/numguess-oot', secret))
+			await ctx.send(embed=d.Embed(description=result, color=0xffffff))
+		await ctx.send(embed=embed(ctx,
+			title=('numguess/numguess-end',),
+			description=(
+				('numguess/numguess-correct', tries)
+				if guess == secret
+				else ('numguess/numguess-oot', secret)
+			),
+			color=0x55acee if guess == secret else 0xff0000
+		))

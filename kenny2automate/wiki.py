@@ -1,14 +1,12 @@
 import re
 import random
 import functools
-from urllib.parse import quote
 import asyncio as a
 import discord as d
 from discord.ext.commands import group
 from discord.ext import commands as c
-import requests
 import mw_api_client as mwc
-from .i18n import i18n
+from .i18n import i18n, embed as _embed
 from .utils import DummyCtx
 
 DGSWIKISERVER = 328938947717890058
@@ -55,9 +53,17 @@ class Wiki(object):
 			try:
 				await ctx.message.delete()
 			except d.Forbidden:
-				await ctx.send(i18n(ctx, 'wiki/login-notdm-nodelete'))
+				await ctx.send(embed=_embed(ctx,
+					title=('error',),
+					description=('wiki/login-notdm-nodelete',),
+					color=0xff0000
+				))
 			else:
-				msg = await ctx.send(i18n(ctx, 'wiki/login-notdm'))
+				msg = await ctx.send(embed=_embed(ctx,
+					title=('error',),
+					description=('wiki/login-notdm',),
+					color=0xff0000
+				))
 				await a.sleep(2)
 				await msg.delete()
 			finally:
@@ -68,22 +74,39 @@ class Wiki(object):
 					mwc.Wiki, WIKI_URLS[wiki]
 				)
 			except KeyError:
-				await ctx.send(i18n(ctx, 'wiki/login-notwiki'))
+				await ctx.send(embed=_embed(ctx,
+					title=('error',),
+					description=('wiki/login-notwiki',),
+					color=0xff0000
+				))
 				return
 			w = self.sessions[ctx.author.id]
 			try:
-				await ctx.send(i18n(
-					ctx,
-					'wiki/login-status',
-					(await self.q(w.clientlogin, username, password))['status']
+				await ctx.send(embed=_embed(ctx,
+					title=('wiki/login-status-title',),
+					description=(
+						'wiki/login-status',
+						(await self.q(
+							w.clientlogin, username, password
+						))['status']
+					),
+					color=0xffff00
 				))
 			except mwc.WikiError as exc:
-				await ctx.send(i18n(ctx, 'wiki/login-failed', str(exc)))
+				await ctx.send(embed=_embed(ctx,
+					title=('error',),
+					description=('wiki/login-failed', str(exc)),
+					color=0xff0000
+				))
 				del self.sessions[ctx.author.id]
 				return
 
 	async def notloggedin(self, ctx):
-		await ctx.send(i18n(ctx, 'wiki/notloggedin'))
+		await ctx.send(embed=_embed(ctx,
+			title=('error',),
+			description=('wiki/notloggedin',),
+			color=0xff0000
+		))
 
 	@wiki.command()
 	@c.check(lambda ctx: ctx.guild is None)
@@ -91,7 +114,11 @@ class Wiki(object):
 		"""Edit a Wiki page."""
 		if ctx.author.id not in self.sessions:
 			return await self.notloggedin(ctx)
-		await ctx.send(i18n(ctx, 'wiki/edit-instructions'))
+		await ctx.send(embed=_embed(ctx,
+			title=('battleship/instructions-title',),
+			description=('wiki/edit-instructions',),
+			color=0xffff00
+		))
 		msg = await self.bot.wait_for('message', check=lambda m: (
 			m.channel.id == ctx.channel.id
 			and m.author.id == ctx.author.id
@@ -118,11 +145,18 @@ class Wiki(object):
 		))
 		summary = msg.content.strip()
 		async with ctx.channel.typing():
-			await ctx.send(i18n(ctx, 'wiki/edit-result', (await self.q(
-				self.sessions[ctx.author.id].page(title).edit,
-				content,
-				summary
-			))['edit']['result']))
+			await ctx.send(embed=_embed(ctx,
+				title=('wiki/edit-result-title',),
+				description=(
+					'wiki/edit-result',
+					(await self.q(
+						self.sessions[ctx.author.id].page(title).edit,
+						content,
+						summary
+					))['edit']['result']
+				),
+				color=0xffff00
+			))
 
 	@wiki.command()
 	@c.check(lambda ctx: ctx.guild is None)
@@ -138,7 +172,11 @@ class Wiki(object):
 			except Exception as exc:
 				self.logger.error('Fetching page content failed: ' + str(exc),
 					extra={'ctx': DummyCtx(author=DummyCtx(name='Wiki.page'))})
-				await ctx.send(i18n(ctx, 'wiki/page-failed'))
+				await ctx.send(embed=_embed(ctx,
+					title=('error',),
+					description=('wiki/page-failed',),
+					color=0xff0000
+				))
 				return
 		content = content.splitlines()
 		contents = ['```html\n']
@@ -180,7 +218,11 @@ class Wiki(object):
 				)
 			except Exception as exc:
 				self.logger.error('Fetching wiki stats failed: ' + str(exc), extra={'ctx': DummyCtx(author=DummyCtx(name='Wiki.wikistats'))})
-				await ctx.send(i18n(ctx, 'wiki/iwstats-failed'))
+				await ctx.send(embed=_embed(ctx,
+					title=('error',),
+					description=('wiki/iwstats-failed',),
+					color=0xff0000
+				))
 				return
 		exp = re.compile(r"""\|-
 \|(?P<time>[^\|]+)
@@ -197,10 +239,10 @@ class Wiki(object):
 			content,
 			re.I | re.S
 		):
-			embed = d.Embed(
-				title=i18n(ctx, 'wiki/iwstats-title', match.group('code')),
-				description=i18n(
-					ctx, 'wiki/iwstats-description', match.group('code')
+			embed = _embed(ctx,
+				title=('wiki/iwstats-title', match.group('code')),
+				description=(
+					'wiki/iwstats-description', match.group('code')
 				),
 				color=random.randint(0, 0xffffff)
 			)
@@ -226,11 +268,16 @@ class Wiki(object):
 				)
 			except Exception as exc:
 				self.logger.error('Fetching wiki stats failed: ' + str(exc), extra={'ctx': DummyCtx(author=DummyCtx(name='Wiki.wikistats'))})
-				await ctx.send(i18n(ctx, 'wiki/wikistats-failed'))
+				await ctx.send(embed=_embed(ctx,
+					title=('error',),
+					description=('wiki/wikistats-failed',),
+					color=0xff0000
+				))
 				return
-		embed = d.Embed(
-			title=i18n(ctx, 'wiki/iwstats-title', wiki),
-			description=i18n(ctx, 'wiki/iwstats-description', wiki),
+		embed = _embed(ctx,
+			title=('wiki/iwstats-title', wiki),
+			description=('wiki/iwstats-description', wiki),
+			color=0xffffff
 		)
 		for fieldtitle, value in data.items():
 			embed.add_field(
@@ -299,7 +346,11 @@ class Wiki(object):
 				)
 			except Exception as exc:
 				self.logger.error('Fetching wiki stats failed: ' + str(exc), extra={'ctx': DummyCtx(author=DummyCtx(name='Wiki.analyzega'))})
-				await ctx.send(i18n(ctx, 'wiki/wikistats-failed'))
+				await ctx.send(embed=_embed(ctx,
+					title=('error',),
+					description=('wiki/wikistats-failed',),
+					color=0xff0000
+				))
 				return
 
 		MASTER_VIEWS = [
@@ -419,9 +470,10 @@ class Wiki(object):
 			# ;Changes average multiple by
 			diff_avg_mult_from_median = average_mult - avg_mult_wo_median
 		#generate
-		embed = d.Embed(
-			title=i18n(ctx, 'wiki/analyzega-total-title'),
-			description=i18n(ctx, 'wiki/analyzega-total-description')
+		embed = _embed(
+			title=('wiki/analyzega-total-title',),
+			description=('wiki/analyzega-total-description',),
+			color=0x55acee
 		)
 		embed.add_field(name=i18n(ctx, 'wiki/analyzega-total-appp'),
 			value=i18n(ctx, 'wiki/analyzega-views', average_pageviews))
@@ -438,9 +490,10 @@ class Wiki(object):
 		embed.add_field(name=i18n(ctx, 'wiki/analyzega-total-tp'),
 			value=i18n(ctx, 'wiki/analyzega-views', total))
 		await ctx.send(embed=embed)
-		embed = d.Embed(
-			title=i18n(ctx, 'wiki/analyzega-highest-title', highest_title),
-			description=i18n(ctx, 'wiki/analyzega-highest-description')
+		embed = _embed(ctx,
+			title=('wiki/analyzega-highest-title', highest_title),
+			description=('wiki/analyzega-highest-description',),
+			color=0xffffff
 		)
 		embed.add_field(name=i18n(ctx, 'wiki/analyzega-views-title'),
 			value=str(highest_views))
@@ -457,9 +510,10 @@ class Wiki(object):
 			value=i18n(ctx, 'wiki/analyzega-highest-monh-value', highest_title,
 				mult_next_high))
 		await ctx.send(embed=embed)
-		embed = d.Embed(
-			title=i18n(ctx, 'wiki/analyzega-lowest-title', lowest_title),
-			description=i18n(ctx, 'wiki/analyzega-lowest-description')
+		embed = _embed(ctx,
+			title=('wiki/analyzega-lowest-title', lowest_title),
+			description=('wiki/analyzega-lowest-description',),
+			color=0
 		)
 		embed.add_field(name=i18n(ctx, 'wiki/analyzega-views-title'),
 			value=str(lowest_views))
@@ -475,17 +529,19 @@ class Wiki(object):
 				mult_next_low))
 		await ctx.send(embed=embed)
 		if count % 2:
-			embed = d.Embed(
-				title=i18n(ctx, 'wiki/analyzega-median-title1', median_title),
-				description=i18n(ctx, 'wiki/analyzega-median-description1')
+			embed = _embed(ctx,
+				title=('wiki/analyzega-median-title1', median_title),
+				description=('wiki/analyzega-median-description1',),
+				color=0x808080
 			)
 			embed.add_field(name=i18n(ctx, 'wiki/analyzega-views-title'),
 				value=str(median_views))
 		else:
-			embed = d.Embed(
-				title=i18n(ctx, 'wiki/analyzega-median-title2', median_title,
+			embed = _embed(ctx,
+				title=('wiki/analyzega-median-title2', median_title,
 					median2_title),
-				description=i18n(ctx, 'wiki/analyzega-median-description2')
+				description=('wiki/analyzega-median-description2',),
+				color=0x808080
 			)
 			embed.add_field(name=i18n(ctx, 'wiki/analyzega-views-title'),
 				value=i18n(ctx, 'wiki/analyzega-median-views', median_views,

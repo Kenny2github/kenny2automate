@@ -4,7 +4,7 @@ import discord as d
 from discord.ext.commands import command
 from discord.ext.commands import bot_has_permissions
 from .games import Games
-from .i18n import i18n
+from .i18n import i18n, embed
 from .utils import DummyCtx
 
 class Battleship(Games):
@@ -16,19 +16,20 @@ class Battleship(Games):
 		"""You sunk my battleship!
 		Usage: ;battleship [ascii:yes|no] [@user]"""
 		def helpfunc(ctx2):
-			embed = d.Embed(
-				title=i18n(ctx2, 'battleship/help-title'),
-				description=i18n(ctx2, 'battleship/help')
+			emb = embed(ctx2,
+				title=('battleship/help-title',),
+				description=('battleship/help',),
+				color=0x55acee
 			)
-			embed.add_field(
+			emb.add_field(
 				name=i18n(ctx2, 'battleship/help-1-title'),
 				value=i18n(ctx2, 'battleship/help-1')
 			)
-			embed.add_field(
+			emb.add_field(
 				name=i18n(ctx2, 'battleship/help-2-title'),
 				value=i18n(ctx2, 'battleship/help-2')
 			)
-			return embed
+			return emb
 		try:
 			player1, player2 = await self._gather_game(ctx, 'Battleship',
 				against, helpfunc)
@@ -79,12 +80,13 @@ class Battleship(Games):
 			return shipns
 		async def set_ships(dmx):
 			board = [[BLUE for _ in range(10)] for _ in range(10)]
-			embed = d.Embed(
-				title=i18n(dmx, 'connect4/board-title'),
-				description=boardmsg(board)
+			emb = embed(dmx,
+				title=('connect4/board-title',),
+				description=boardmsg(board),
+				color=0x55acee
 			)
-			embed.set_footer(text=i18n(dmx, 'battleship/place-instructions'))
-			msg = await dmx.send(embed=embed)
+			emb.set_footer(text=i18n(dmx, 'battleship/place-instructions'))
+			msg = await dmx.send(embed=emb)
 			for e in CONTROLS:
 				await msg.add_reaction(e)
 			ships = []
@@ -97,8 +99,8 @@ class Battleship(Games):
 							tmpboard[y][x + j] = ORANGE
 						else:
 							tmpboard[y + j][x] = ORANGE
-					embed.description = boardmsg(tmpboard)
-					await msg.edit(embed=embed)
+					emb.description = boardmsg(tmpboard)
+					await msg.edit(embed=emb)
 					reaction, _ = await self.bot.wait_for('reaction_remove',
 						check=lambda r, u: (
 							r.emoji in CONTROLS
@@ -160,7 +162,7 @@ class Battleship(Games):
 						if y < (10 - i):
 							dq = False
 			await msg.delete()
-			return (board, ships, embed)
+			return (board, ships, emb)
 		(board1, ships1, embed1), (board2, ships2, embed2) = await a.gather(
 			set_ships(dmx1), set_ships(dmx2)
 		)
@@ -175,19 +177,27 @@ class Battleship(Games):
 		]
 		embed3, embed4 = d.Embed(
 			title=i18n(dmx1, 'battleship/hitboard'),
-			description=boardmsg(hit1)
+			description=boardmsg(hit1),
+			color=0xffffff
 		), d.Embed(
 			title=i18n(dmx1, 'battleship/hitboard'),
-			description=boardmsg(hit2)
+			description=boardmsg(hit2),
+			color=0xffffff
 		)
 		embed3.set_footer(text=i18n(dmx1, 'battleship/fire-instructions'))
 		embed4.set_footer(text=i18n(dmx2, 'battleship/wait-instructions'))
 		msg3 = await dmx1.send(embed=embed3)
 		msg4 = await dmx2.send(embed=embed4)
-		msg5 = await dmx1.send(i18n(dmx1, 'battleship/edit-instructions')
-			+ '\nEDITEE')
-		msg6 = await dmx2.send(i18n(dmx2, 'battleship/edit-instructions')
-			+ '\nEDITEE')
+		msg5 = await dmx1.send(embed=embed(dmx1,
+			title=('battleship/instructions-title',),
+			description=('battleship/edit-instructions', 'EDITEE'),
+			color=0x55acee
+		))
+		msg6 = await dmx2.send(embed=embed(dmx2,
+			title=('battleship/instructions-title',),
+			description=('battleship/edit-instructions', 'EDITEE'),
+			color=0x55acee
+		))
 		emsg = [None, None]
 		async def emsg1(m):
 			if m.channel.id == dmx1.channel.id and m.content == "EDITEE":
@@ -198,8 +208,11 @@ class Battleship(Games):
 		async def demsg1(m):
 			nonlocal msg5
 			if m.id == emsg[0].id:
-				msg5 = await dmx1.send(i18n(dmx1,
-					'battleship/edit-instructions') + '\nEDITEE')
+				msg5 = await dmx1.send(embed=embed(dmx1,
+					title=('battleship/instructions-title',),
+					description=('battleship/edit-instructions', 'EDITEE'),
+					color=0x55acee
+				))
 				self.bot.add_listener(emsg1, 'on_message')
 				self.bot.remove_listener(demsg1, 'on_message_delete')
 		async def emsg2(m):
@@ -211,8 +224,11 @@ class Battleship(Games):
 		async def demsg2(m):
 			nonlocal msg6
 			if m.id == emsg[1].id:
-				msg6 = await dmx2.send(i18n(dmx2,
-					'battleship/edit-instructions') + '\nEDITEE')
+				msg6 = await dmx2.send(embed=embed(dmx2,
+					title=('battleship/instructions-title',),
+					description=('battleship/edit-instructions','EDITEE'),
+					color=0x55acee
+				))
 				self.bot.add_listener(emsg2, 'on_message')
 				self.bot.remove_listener(demsg2, 'on_message_delete')
 		self.bot.add_listener(emsg1, 'on_message')
@@ -256,7 +272,9 @@ class Battleship(Games):
 			return hit2[letter][number] == BLUE
 		lost1, lost2 = checklost(board1), checklost(board2)
 		while not any((lost1, lost2)):
-			await (await dmx1.send("The guinea pig's name is Gerald with a G.")).delete()
+			await (await dmx1.send(
+				"The guinea pig's name is Gerald with a G."
+			)).delete()
 			_, msg = await self.bot.wait_for('message_edit', check=checc1)
 			letter, number = idxes(msg.content)
 			if board2[letter][number] == BLUE:
@@ -270,7 +288,11 @@ class Battleship(Games):
 				prev.sort()
 				new.sort()
 				if new != prev:
-					m = await dmx1.send(i18n(dmx1, 'battleship/ship-sunk'))
+					m = await dmx1.send(embed=embed(dmx1,
+						title=('battleship/ship-sunk-title',),
+						description=('battleship/ship-sunk',),
+						color=0x00ff00
+					))
 					await a.sleep(2)
 					await m.delete()
 			embed2.description = boardmsg(board2)
@@ -283,7 +305,9 @@ class Battleship(Games):
 			lost1, lost2 = checklost(board1), checklost(board2)
 			if lost1 or lost2:
 				break
-			await (await dmx2.send("The Guinea pig's name is Gerald with a G.")).delete()
+			await (await dmx2.send(
+				"The Guinea pig's name is Gerald with a G."
+			)).delete()
 			_, msg = await self.bot.wait_for('message_edit', check=checc2)
 			letter, number = idxes(msg.content)
 			if board1[letter][number] == BLUE:
@@ -297,7 +321,11 @@ class Battleship(Games):
 				prev.sort()
 				new.sort()
 				if new != prev:
-					m = await dmx2.send(i18n(dmx2, 'battleship/ship-sunk'))
+					m = await dmx2.send(embed=embed(dmx2,
+						title=('battleship/ship-sunk-title',),
+						description=('battleship/ship-sunk',),
+						color=0x00ff00
+					))
 					await a.sleep(2)
 					await m.delete()
 			embed1.description = boardmsg(board1)
@@ -311,11 +339,13 @@ class Battleship(Games):
 		del msg1, msg2, msg3, msg4, embed1, embed2, embed3, embed4
 		won_embed = d.Embed(
 			title=i18n(dmx2 if lost1 else dmx1, 'battleship/won-title'),
-			description=i18n(dmx2 if lost1 else dmx1, 'battleship/won')
+			description=i18n(dmx2 if lost1 else dmx1, 'battleship/won'),
+			color=0x55acee
 		)
 		lost_embed = d.Embed(
 			title=i18n(dmx1 if lost1 else dmx2, 'battleship/lost-title'),
-			description=i18n(dmx1 if lost1 else dmx2, 'battleship/lost')
+			description=i18n(dmx1 if lost1 else dmx2, 'battleship/lost'),
+			color=0xff0000
 		)
 		embed1 = lost_embed if lost1 else won_embed
 		embed2 = lost_embed if lost2 else won_embed

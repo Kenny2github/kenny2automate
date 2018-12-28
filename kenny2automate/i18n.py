@@ -18,6 +18,7 @@ with open(os.path.abspath(os.path.join(
     LANGS = json.load(f)
 
 def lang(ctx):
+    """Get a user's set language."""
     res = db.execute(
         'SELECT lang FROM users WHERE user_id=?',
         (ctx.author.id,)
@@ -33,6 +34,7 @@ def lang(ctx):
     return res
 
 def i18n(ctx, key, *params):
+    """Return an i18n string by key, passing *params as format parameters."""
     res = lang(ctx)
     dirq, key = os.path.split(key)
     if res == 'qqx':
@@ -69,6 +71,48 @@ def i18n(ctx, key, *params):
             )
         return i18njson[key].format(*params)
     return i18njson[key].format(*params)
+
+def embed(ctx, title=None, description=None, fields=None, **kwargs):
+    """Return an Embed with internationalized data.
+
+    ``title`` and ``description``, if specified, must be strings or iterables.
+    If strings, they will be directly passsed through. If iterables, the first
+    element must be the i18n key, and all remaining elements will be passed as
+    parameters. (This string-or-iterable union is known as an "i18n object".)
+    ``fields``, if specified, must be an iterable of (name, value, ?inline)
+    3-tuples, where name and value are i18n objects and inline is a boolean.
+    Any fields will be added in the same order as they come in the iterable.
+    """
+    e = d.Embed(
+        title=(
+            title
+            if isinstance(title, (str, type(None)))
+            else i18n(ctx, *title)
+        ),
+        description=(
+            description
+            if isinstance(description, (str, type(None)))
+            else i18n(ctx, *description)
+        ),
+        **kwargs
+    )
+    if not fields:
+        return e
+    for name, value, inline in fields:
+        e.add_field(
+            name=(
+                name
+                if isinstance(name, str)
+                else i18n(ctx, *name)
+            ),
+            value=(
+                value
+                if isinstance(value, str)
+                else i18n(ctx, *value)
+            ),
+            inline=inline
+        )
+    return e
 
 class I18n(object):
     """Internationalization control."""

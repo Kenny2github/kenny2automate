@@ -1,10 +1,8 @@
 import re
 import random
-import discord as d
-from discord.ext.commands import command, group
-from discord.ext.commands import bot_has_permissions
+from discord.ext.commands import group
 from .games import Games
-from .i18n import i18n
+from .i18n import i18n, embed
 from .utils import DummyCtx
 
 class Card(object):
@@ -48,19 +46,23 @@ class CardGames(Games):
 		for hand in hands:
 			hand.sort(key=lambda c: c.number)
 		books = [[] for _ in players]
-		def stats(pid, footer):
-			embed = d.Embed(
-				title=i18n(dmx[pid], 'card_games/fish-stats-title'),
-				description=i18n(dmx[pid], 'card_games/fish-stats-description'),
+		def stats(pid, footer, desc=None):
+			emb = embed(dmx[pid],
+				title=('card_games/fish-stats-title'),
+				description=(
+					i18n(dmx[pid], *desc)
+					if desc
+					else ('card_games/fish-stats-description',)
+				),
 				color=0x0000FF,
 			)
-			embed.add_field(
+			emb.add_field(
 				name=i18n(dmx[pid], 'card_games/fish-stats-hand-title'),
 				value=' '.join(str(c) for c in hands[pid]) \
 					or i18n(dmx[pid], 'card_games/fish-stats-empty-hand'),
 				inline=False
 			)
-			embed.add_field(
+			emb.add_field(
 				name=i18n(dmx[pid], 'card_games/fish-stats-books-title'),
 				value='\n'.join(
 					' '.join(str(c) for c in b)
@@ -68,12 +70,12 @@ class CardGames(Games):
 				) or i18n(dmx[pid], 'card_games/fish-stats-no-books'),
 				inline=False
 			)
-			embed.add_field(
+			emb.add_field(
 				name=i18n(dmx[pid], 'card_games/fish-stats-status-title'),
-				value=footer,
+				value=i18n(dmx[pid], footer),
 				inline=False
 			)
-			return embed
+			return emb
 		async def checkbooks(pid):
 			counts = {}
 			newbooks = []
@@ -94,30 +96,34 @@ class CardGames(Games):
 						if c.number != num
 					]
 			if newbooks:
-				await dmx[pid].send(embed=d.Embed(
-					title=i18n(dmx[pid], 'card_games/fish-checkbooks-title'),
+				await dmx[pid].send(embed=embed(dmx[pid],
+					title=('card_games/fish-checkbooks-title',),
 					description='\n'.join(
 						' '.join(str(c) for c in b)
 						for b in newbooks
-					)
+					),
+					color=0x55acee
 				))
 		for pid in range(len(players)):
 			await checkbooks(pid)
 		for i, dm in enumerate(dmx[1:]):
-			await dm.send(embed=stats(i+1, i18n(dm, 'card_games/fish-m-wait')))
+			await dm.send(embed=stats(i+1, 'card_games/fish-m-wait'))
 		while all(hands) and deck:
 			for pid, player in enumerate(players):
 				matches = True
 				for pid2, player2 in enumerate(players):
 					if player2 == player:
 						continue
-					await dmx[pid2].send(i18n(
-						dmx[pid2],
-						'card_games/fish-turn',
-						player.display_name
+					await dmx[pid2].send(embed=embed(dmx[pid2],
+						title=('card_games/fish-turn-title',),
+						description=(
+							'card_games/fish-turn',
+							player.display_name
+						),
+						color=0xffffff
 					))
 				await dmx[pid].send(embed=stats(
-					pid, i18n(dmx[pid], 'card_games/fish-m-card')
+					pid, 'card_games/fish-m-card'
 				))
 				while matches and hands[pid]:
 					def checc(m):
@@ -158,12 +164,15 @@ class CardGames(Games):
 							if c.number != num
 						]
 						if matches2:
-							await dmx[pid2].send(i18n(
-								dmx[pid2],
-								'card_games/fish-card-taken',
-								player.display_name,
-								Card.NUMBERS[num],
-								count
+							await dmx[pid2].send(embed=embed(dmx[pid2],
+								title=('card_games/fish-card-taken-title',),
+								description=(
+									'card_games/fish-card-taken',
+									player.display_name,
+									Card.NUMBERS[num],
+									count
+								),
+								color=0xff0000
 							))
 							hands[pid].extend(matches)
 					if matches:
@@ -172,13 +181,10 @@ class CardGames(Games):
 						if not hands[pid]:
 							break
 						await dmx[pid].send(
-							content=i18n(
-								dmx[pid],
+							embed=stats(pid, 'card_games/fish-m-card', (
 								'card_games/fish-card-got',
-								' '.join(str(c) for c in matches)),
-							embed=stats(
-								pid, i18n(dmx[pid], 'card_games/fish-m-card')
-							)
+								' '.join(str(c) for c in matches)
+							))
 						)
 					else:
 						draw = deck.pop()
@@ -192,40 +198,39 @@ class CardGames(Games):
 							for pid2, player2 in enumerate(players):
 								if player2 == player:
 									continue
-								await dmx[pid2].send(i18n(
-									dmx[pid2],
-									'card_games/fish-card-missed-unsafe',
-									player.display_name,
-									Card.NUMBERS[num],
-									count
+								await dmx[pid2].send(embed=embed(dmx[pid2],
+									title=('card_games/fish-card-missed-title',),
+									description=(
+										'card_games/fish-card-missed-unsafe',
+										player.display_name,
+										Card.NUMBERS[num],
+										count
+									),
+									color=0xff8080
 								))
-							await dmx[pid].send(
-								content=i18n(
-									dmx[pid],
+							await dmx[pid].send(embed=stats(pid,
+								'card_games/fish-m-card', (
 									'card_games/fish-fish-got',
 									Card.NUMBERS[num]
-								),
-								embed=stats(pid, i18n(
-									dmx[pid], 'card_games/fish-m-card'
-								))
-							)
+								)
+							))
 						else:
 							for pid2, player2 in enumerate(players):
 								if player2 == player:
 									continue
-								await dmx[pid2].send(i18n(
-									dmx[pid2],
-									'card_games/fish-card-missed',
-									player.display_name,
-									Card.NUMBERS[num],
-									count
+								await dmx[pid2].send(embed=embed(dmx[pid2],
+									title=('card_games/fish-card-missed-title',),
+									description=(
+										'card_games/fish-card-missed',
+										player.display_name,
+										Card.NUMBERS[num],
+										count
+									),
+									color=0x55acee
 								))
 							await dmx[pid].send(
-								content=i18n(
-									dmx[pid], 'card_games/fish-fish', draw
-								),
-								embed=stats(pid, i18n(
-									dmx[pid], 'card_games/fish-m-wait'
+								embed=stats(pid, 'card_games/fish-m-wait', (
+									'card_games/fish-fish', draw
 								))
 							)
 				if not (all(hands) and deck):
@@ -236,30 +241,37 @@ class CardGames(Games):
 		winners = tuple(players[i] for i in winners)
 		if len(winners) > 1:
 			for dm in dmx:
-				await dm.send(embed=d.Embed(
-					title=i18n(dm, 'card_games/fish-winners-title'),
-					description=i18n(
-						dm,
+				await dm.send(embed=embed(dm,
+					title=('card_games/fish-winners-title',),
+					description=(
 						'card_games/fish-winners',
-						i18n(dm, 'card_games/fish-winners-sep').join(
+						i18n(dm, 'comma-sep').join(
 							player.display_name for player in winners[:-1]
 						)
-						+ i18n(dm, 'card_games/fish-winners-lastsep')
-					)
+						+ i18n(dm, 'and-sep')
+						+ winners[-1].display_name
+					),
+					color=0x55acee
 				))
 		else:
 			for dm in dmx:
-				await dm.send(embed=d.Embed(
-					title=i18n(dm, 'card_games/fish-winner-title'),
-					description=i18n(
-						dm, 'card_games/fish-winner', winners[0].display_name
-					)
+				await dm.send(embed=embed(dm,
+					title=('card_games/fish-winner-title',),
+					description=(
+						'card_games/fish-winner',
+						winners[0].display_name
+					),
+					color=0x55acee
 				))
 
 	@group(invoke_without_command=True)
 	async def fish(self, ctx):
 		"""Play Go Fish! Run `;help fish` to see subcommands."""
-		await ctx.send(i18n(ctx, 'card_games/fish-join'))
+		await ctx.send(embed=embed(ctx,
+			title=('error',),
+			description=('card_games/fish-join',),
+			color=0xff0000
+		))
 
 	@fish.command(name='join')
 	async def fish_join(self, ctx):
@@ -279,6 +291,8 @@ class CardGames(Games):
 		If you did not create the currently queueing game, you cannot run this
 		command.
 		"""
+		if 'Go Fish' not in self._global_games:
+			return
 		if ctx.author.id != self._global_games['Go Fish']['ctxs'][0].author.id:
 			return
 		await self._start_global_game(ctx, 'Go Fish', maxim=float('inf'))
@@ -288,7 +302,8 @@ class CardGames(Games):
 		"""Get detailed help about Go Fish!"""
 		if not ctx.author.dm_channel:
 			await ctx.author.create_dm()
-		await ctx.author.dm_channel.send(embed=d.Embed(
-			title=i18n(ctx, 'games/help-title', 'Go Fish'),
-			description=i18n(ctx, 'card_games/fish-help')
+		await ctx.author.dm_channel.send(embed=embed(ctx,
+			title=('games/help-title', 'Go Fish'),
+			description=('card_games/fish-help',),
+			color=0x55acee
 		))

@@ -1,8 +1,9 @@
 import json
 import random
+import discord as d
 from discord.ext.commands import group
 import requests
-from .i18n import i18n
+from .i18n import embed
 
 DGSWIKISERVER = 328938947717890058
 
@@ -41,7 +42,10 @@ class Scratch(object):
 					'https://scratch.mit.edu/site-api/comments/project/'
 					+ str(pid)
 				)
-			await ctx.send('https://scratch.mit.edu/projects/' + str(pid))
+			await ctx.send(embed=embed(ctx, description=(
+				'randomproject-link',
+				'https://scratch.mit.edu/projects/' + str(pid)
+			)))
 
 	@scratch.command()
 	async def messagecount(self, ctx, name=None):
@@ -68,15 +72,20 @@ class Scratch(object):
 					)
 					username = ctx.author.name
 			if resp is None:
-				await ctx.send(i18n(
-					ctx, 'scratch/messagecount-failed', username
+				await ctx.send(embed=embed(ctx,
+					title=('error',),
+					description=('scratch/messagecount-failed', username),
+					color=0xff0000
 				))
 			else:
-				await ctx.send(i18n(
-					ctx,
-					'scratch/messagecount',
-					username,
-					json.loads(resp)['count']
+				await ctx.send(embed=embed(ctx,
+					title=('scratch/messagecount-title',),
+					description=(
+						'scratch/messagecount',
+						username,
+						json.loads(resp)['count']
+					),
+					color=0xffffff
 				))
 
 	@scratch.command()
@@ -85,7 +94,8 @@ class Scratch(object):
 		content = await self.req('https://api.scratch.mit.edu/news')
 		content = json.loads(content)
 		for new in content[:5]:
-			await ctx.send(
-				'**' + new['headline'] + '**'
-				+ '\n' + new['copy'] + '\n' + new['url']
-			)
+			await ctx.send(embed=d.Embed(
+				title=new['headline'],
+				description='[{copy}]({url})'.format(**new),
+				color=0xffff00
+			))

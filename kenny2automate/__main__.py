@@ -116,20 +116,6 @@ async def on_message_delete(msg):
 @client.event
 async def on_command_error(ctx, exc):
 	logger.error('{} failed: {}'.format(ctx.command, exc), extra={'ctx': ctx})
-	if isinstance(exc, (
-		c.BotMissingPermissions,
-		c.MissingPermissions,
-		c.MissingRequiredArgument,
-		c.BadArgument,
-		c.CommandOnCooldown,
-	)):
-		return await ctx.send(exc)
-	if isinstance(exc, (
-		c.CheckFailure,
-		c.CommandNotFound,
-		c.TooManyArguments,
-	)):
-		return
 	if hasattr(ctx.command, 'on_error'):
 		return
 	cog = ctx.cog
@@ -137,6 +123,24 @@ async def on_command_error(ctx, exc):
 		attr = '_{0.__class__.__name__}__error'.format(cog)
 		if hasattr(cog, attr):
 			return
+	if isinstance(exc, (
+		c.BotMissingPermissions,
+		c.MissingPermissions,
+		c.MissingRequiredArgument,
+		c.BadArgument,
+		c.CommandOnCooldown,
+	)):
+		return await ctx.send(embed=embed(ctx,
+			title=('error',),
+			description=str(exc),
+			color=0xff0000
+		))
+	if isinstance(exc, (
+		c.CheckFailure,
+		c.CommandNotFound,
+		c.TooManyArguments,
+	)):
+		return
 	print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
 	traceback.print_exception(type(exc), exc, exc.__traceback__, file=sys.stderr)
 
@@ -144,7 +148,7 @@ async def on_command_error(ctx, exc):
 async def before_invoke(ctx):
 	logger.info(ctx.command, extra={'ctx': ctx})
 
-from kenny2automate.i18n import i18n, I18n
+from kenny2automate.i18n import i18n, I18n, embed
 client.add_cog(I18n(client, db))
 
 if 'scratch' not in cmdargs.disable:
@@ -189,7 +193,11 @@ async def eval_(ctx, *, arg):
 	try:
 		await eval(arg, globals(), locals())
 	except BaseException as e:
-		await ctx.send(e)
+		await ctx.send(embed=embed(ctx,
+			title=('error',),
+			description=str(e),
+			color=0xff0000
+		))
 
 @client.command()
 async def repeat(ctx, *, arg):
@@ -214,10 +222,9 @@ async def hmmst(ctx):
 @client.command()
 async def whoami(ctx):
 	"""Get some information about yourself."""
-	embed = d.Embed(
-		title=i18n(ctx, 'whoami-title', ctx.author.display_name),
-		description=i18n(
-			ctx,
+	emb = embed(ctx,
+		title=('whoami-title', ctx.author.display_name),
+		description=(
 			'whoami-description',
 			ctx.author.display_name
 		)
@@ -232,15 +239,15 @@ async def whoami(ctx):
 	}
 	for key, name in things.items():
 		value = getattr(ctx.author, key)
-		embed.add_field(name=name, value=getattr(value, 'name', value))
+		emb.add_field(name=name, value=getattr(value, 'name', value))
 	role_list = []
 	for role in ctx.author.roles:
 		role_list.append(role.name.replace('@', '\\@'))
-	embed.add_field(
+	emb.add_field(
 		name=i18n(ctx, 'whoami-roles'),
 		value=', '.join(role_list), inline=False
 	)
-	await ctx.send(embed=embed)
+	await ctx.send(embed=emb)
 
 @client.group()
 async def prefix(ctx):
@@ -258,7 +265,11 @@ async def prefix_reset(ctx, user: d.Member = None):
 		'UPDATE users SET prefix=NULL WHERE user_id=?',
 		(leuser.id,)
 	)
-	await ctx.send(i18n(ctx, 'prefix-reset', leuser.mention))
+	await ctx.send(embed=embed(ctx,
+		title=('prefix-reset-title',),
+		description=('prefix-reset', leuser.mention),
+		color=0x0000ff
+	))
 
 @prefix.command('set')
 async def prefix_set(ctx, *, prefix):
@@ -272,7 +283,7 @@ async def prefix_set(ctx, *, prefix):
 		'SELECT prefix FROM users WHERE user_id=?',
 		(ctx.author.id,)
 	).fetchone()
-	if prefix[0] == prefix[-1]:
+	if len(prefix) > 2 and prefix[0] == prefix[-1]:
 		prefix = prefix[1:-1]
 	if res is None:
 		db.execute(
@@ -284,7 +295,11 @@ async def prefix_set(ctx, *, prefix):
 			'UPDATE users SET prefix=? WHERE user_id=?',
 			(prefix, ctx.author.id)
 		)
-	await ctx.send(i18n(ctx, 'prefix-set', ctx.author.mention, prefix))
+	await ctx.send(embed=embed(ctx,
+		title=('prefix-set-title',),
+		description=('prefix-set', ctx.author.mention, prefix),
+		color=0x55acee
+	))
 
 @prefix.command('get')
 async def prefix_get(ctx):
@@ -294,9 +309,14 @@ async def prefix_get(ctx):
 		(ctx.author.id,)
 	).fetchone()
 	if res is None or res['prefix'] is None:
-		await ctx.send(i18n(ctx, 'prefix-unset'))
+		await ctx.send(embed=embed(ctx,
+			description=('prefix-unset',)
+		))
 	else:
-		await ctx.send(res['prefix'])
+		await ctx.send(embed=embed(ctx,
+			title=('prefix',),
+			description=res['prefix']
+		))
 
 @client.command()
 @c.is_owner()
@@ -306,7 +326,11 @@ async def resetprefix(ctx, user: d.Member):
 		'UPDATE users SET prefix=NULL WHERE user_id=?',
 		(user.id,)
 	)
-	await ctx.send(i18n(ctx, 'resetprefix', user.mention))
+	await ctx.send(embed=embed(ctx,
+		title=('prefix-reset-title,'),
+		description=('prefix-reset', user.mention),
+		color=0xff0000
+	))
 
 @client.command()
 @has_permissions(manage_messages=True, read_message_history=True)
@@ -325,35 +349,24 @@ async def purge(ctx, limit: int = 100, user: d.Member = None, *, matches: str = 
 				return False
 		return True
 	deleted = await ctx.channel.purge(limit=limit, check=check_msg)
-	msg = await ctx.send(i18n(ctx, 'purge', len(deleted)))
+	msg = await ctx.send(embed=embed(ctx,
+		title=('purge-title',),
+		description=('purge', len(deleted)),
+		color=0xff0000
+	))
 	await a.sleep(2)
 	await msg.delete()
 
 @client.command(name='8ball')
 async def ball(ctx, *, question: str):
 	choice = sum(question.encode('utf8')) % 20
-	await ctx.send((
-		i18n(ctx, '8ball/a1'),
-		i18n(ctx, '8ball/a2'),
-		i18n(ctx, '8ball/a3'),
-		i18n(ctx, '8ball/a4'),
-		i18n(ctx, '8ball/a5'),
-		i18n(ctx, '8ball/a6'),
-		i18n(ctx, '8ball/a7'),
-		i18n(ctx, '8ball/a8'),
-		i18n(ctx, '8ball/a9'),
-		i18n(ctx, '8ball/a10'),
-		i18n(ctx, '8ball/u1'),
-		i18n(ctx, '8ball/u2'),
-		i18n(ctx, '8ball/u3'),
-		i18n(ctx, '8ball/u4'),
-		i18n(ctx, '8ball/u5'),
-		i18n(ctx, '8ball/n1'),
-		i18n(ctx, '8ball/n2'),
-		i18n(ctx, '8ball/n3'),
-		i18n(ctx, '8ball/n4'),
-		i18n(ctx, '8ball/n5')
-	)[choice])
+	await ctx.send(embed(ctx, description=((
+		'8ball/a1', '8ball/a2', '8ball/a3', '8ball/a4',
+		'8ball/a5', '8ball/a6', '8ball/a7', '8ball/a8',
+		'8ball/a9', '8ball/a10', '8ball/u1', '8ball/u2',
+		'8ball/u3', '8ball/u4', '8ball/u5', '8ball/n1',
+		'8ball/n2', '8ball/n3', '8ball/n4', '8ball/n5'
+	)[choice],)))
 
 @client.command()
 async def whois(ctx, *, user: d.User):
@@ -361,7 +374,7 @@ async def whois(ctx, *, user: d.User):
 
 @client.command()
 async def whereis(ctx, *, channel: d.TextChannel):
-	await ctx.send(channel.mention)
+	await ctx.send(embed=d.Embed(description=channel.mention))
 
 @client.command()
 @bot_has_permissions(ban_members=True, add_reactions=True, read_message_history=True)
@@ -369,25 +382,32 @@ async def votetoban(ctx, *, user: d.Member):
 	"""Start a vote to ban someone from the server. Abuse results in a ban."""
 	for member in ctx.guild.members:
 		if (str(member.status) == 'online') \
-				and ctx.channel.permissions_for(member).administrator \
+				and ctx.channel.permissions_for(member).ban_members \
 				and not member.bot:
 			await ctx.send(i18n(ctx, 'votetoban-ping-admin', member.mention, user.mention))
 			return
 	DOBAN = '\U0001f6ab'
 	NOBAN = '\U0001f607'
-	msg = await ctx.send(i18n(ctx, 'votetoban-msg', user.mention, DOBAN, NOBAN))
+	msg = await ctx.send(embed=embed(ctx,
+		title=('votetoban-title', user.mention),
+		description=('votetoban-msg', DOBAN, NOBAN),
+		color=0
+	))
 	await msg.add_reaction(DOBAN)
 	await msg.add_reaction(NOBAN)
 	try:
-		await ctx.bot.wait_for('member_update',
+		o, m = await ctx.bot.wait_for('member_update',
 			check=lambda o, m: \
-				ctx.channel.permissions_for(m).administrator \
+				ctx.channel.permissions_for(m).ban_members \
 				and not m.bot \
 				and str(m.status) == 'online',
 			timeout=180.0
 		)
 		await msg.delete()
-		await ctx.send(i18n(ctx, 'votetoban-cancelled'))
+		await ctx.send(embed=embed(ctx,
+			title=('votetoban-cancelled-title',),
+			description=('votetoban-cancelled', m.mention),
+		))
 	except a.TimeoutError:
 		msg = await ctx.get_message(msg.id)
 		dos = 0
@@ -399,15 +419,28 @@ async def votetoban(ctx, *, user: d.Member):
 				nos = r.count - 1
 		await msg.delete()
 		if dos + nos < 3:
-			await ctx.send(i18n(ctx, 'votetoban-few', dos + nos))
+			await ctx.send(embed=embed(ctx,
+				title=('votetoban-ended',),
+				description=('votetoban-few', dos + nos),
+				color=0xff0000
+			))
 		elif dos > nos:
-			await ctx.send(i18n(ctx, 'votetoban-banned', dos, nos))
 			await ctx.guild.ban(
 				user,
-				reason=i18n(ctx, 'votetoban-ban-reason', dos, nos)
+				reason='Banned after vote {0} against {1} \
+when admins were gone.'.format(dos, nos)
 			)
+			await ctx.send(embed=embed(ctx,
+				title=('votetoban-ended',),
+				description=('votetoban-banned', dos, nos),
+				color=0
+			))
 		else:
-			await ctx.send(i18n(ctx, 'votetoban-innocent', dos, nos))
+			await ctx.send(embed=embed(ctx,
+				title=('votetoban-ended',),
+				description=('votetoban-innocent', dos, nos),
+				color=0x55acee
+			))
 
 WATCHED_FILES_MTIMES = [('login.txt', os.path.getmtime('login.txt'))]
 def recurse_mtimes(dir, *s):

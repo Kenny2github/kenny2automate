@@ -3,7 +3,7 @@ import discord as d
 from discord.ext.commands import command
 from discord.ext.commands import bot_has_permissions
 from discord.ext import commands as c
-from .i18n import i18n
+from .i18n import i18n, embed
 
 DGHANGMANSHANPES = [
 	'```\n_\n\n\n\n_```',
@@ -55,7 +55,11 @@ class Hangman(object):
 			(ctx.channel.id,)
 		).fetchone()
 		if res is not None and not res['ch_occupied']:
-			await ctx.send(i18n(ctx, 'hangman/crudehangman-occupied'))
+			await ctx.send(embed=embed(ctx,
+				title=('error',),
+				description=('hangman/crudehangman-occupied',),
+				color=0xff0000
+			))
 			ownerq = await self.bot.is_owner(ctx.author)
 			if not ownerq:
 				return
@@ -69,7 +73,11 @@ class Hangman(object):
 				'UPDATE channels SET ch_occupied=1 WHERE channel_id=',
 				(ctx.channel.id,)
 			)
-		await ctx.send(i18n(ctx, 'hangman/awaiting-dm'))
+		await ctx.send(embed=embed(ctx,
+			title=('hangman/awaiting-dm-title',),
+			description=('hangman/awaiting-dm',),
+			color=0xffff00
+		))
 		try:
 			msg = await ctx.bot.wait_for('message',
 				check=lambda m: \
@@ -77,7 +85,11 @@ class Hangman(object):
 					and m.author == ctx.author,
 				timeout=60.0)
 		except a.TimeoutError:
-			await ctx.send(i18n(ctx, 'hangman/timeout'))
+			await ctx.send(embed=embed(ctx,
+				title=('hangman/timeout-title',),
+				description=('hangman/timeout',),
+				color=0xff0000
+			))
 			return
 		WORD = msg.content
 		letters = ['_'] * len(WORD)
@@ -91,15 +103,33 @@ class Hangman(object):
 				letters[i] = WORD[i]
 		missed = []
 		shanpe = 0
-		await ctx.send(i18n(
-			ctx, 'hangman/main', DGHANGMANSHANPES[shanpe], "", "".join(letters)
+		await ctx.send(embed=embed(ctx,
+			title=('hangman/main-title',),
+			description=(
+				'hangman/main',
+				DGHANGMANSHANPES[shanpe]
+			),
+			fields=(
+				(('hangman/missed',), ''),
+				(('hangman/gotten',), '`{0}`'.format(''.join(letters)))
+			),
+			color=0xffffff
 		))
 		while "".join(letters) != WORD and shanpe < len(DGHANGMANSHANPES) - 1:
-			letter = (await ctx.bot.wait_for('message',
-				check=lambda m: \
-					m.channel == ctx.channel \
-					and m.content in lowers)
-			).content
+			try:
+				letter = (await ctx.bot.wait_for('message',
+					check=lambda m: \
+						m.channel == ctx.channel \
+						and m.content in lowers,
+					timeout=600.0
+				)).content
+			except a.TimeoutError:
+				await ctx.send(embed=embed(ctx,
+					title=('hangman/timeout-title',),
+					description=('hangman/timeout2',),
+					color=0xff0000
+				))
+				return
 			if WORD.lower().find(letter) != -1:
 				for i in self.substrs(letter, WORD):
 					letters[i] = WORD[i]
@@ -107,14 +137,26 @@ class Hangman(object):
 				if letter not in missed:
 					missed.append(letter)
 					shanpe += 1
-			await ctx.send(i18n(
-				ctx, 'hangman/main', DGHANGMANSHANPES[shanpe],
-				i18n(ctx, 'hangman/comma-sep').join(missed), "".join(letters)
+			await ctx.send(embed=embed(ctx,
+				title=('hangman/main-title',),
+				description=(
+					'hangman/main', DGHANGMANSHANPES[shanpe]
+				),
+				fields=(
+					(('hangman/missed',), i18n(ctx, 'comma-sep').join(missed)),
+					(('hangman/gotten',), '`{0}`'.format(''.join(letters)))
+				),
+				color=0xffffff
 			))
-		if "".join(letters) == WORD:
-			await ctx.send(i18n(ctx, 'hangman/won'))
-		else:
-			await ctx.send(i18n(ctx, 'hangman/lost', WORD))
+		await ctx.send(embed=embed(ctx,
+			title=('hangman/end',),
+			description=(
+				('hangman/won',)
+				if ''.join(letters) == WORD
+				else ('hangman/lost', WORD)
+			),
+			color=0x55acee if ''.join(letters) == WORD else 0xff0000
+		))
 		self.db.execute(
 			'UPDATE channels SET ch_occupied=0 WHERE channel_id=?',
 			(ctx.channel.id,)
@@ -139,7 +181,11 @@ class Hangman(object):
 .split(' ')
 		REGS1, REGS2 = REGS[:13], REGS[13:]
 		NEIN = '\u274c'
-		await ctx.send(i18n(ctx, 'hangman/awaiting-dm'))
+		await ctx.send(embed=embed(ctx,
+			title=('hangman/awaiting-dm-title',),
+			description=('hangman/awaiting-dm',),
+			color=0xffff00
+		))
 		try:
 			msg = await ctx.bot.wait_for('message',
 				check=lambda m: \
@@ -147,7 +193,11 @@ class Hangman(object):
 					and m.author == ctx.author,
 				timeout=60.0)
 		except a.TimeoutError:
-			await ctx.send(i18n(ctx, 'hangman/timeout'))
+			await ctx.send(embed=embed(ctx,
+				title=('hangman/timeout-title',),
+				description=('hangman/timeout',),
+				color=0xff0000
+			))
 			return
 		WORD = msg.content
 		letters = ['_'] * len(WORD)
@@ -164,13 +214,18 @@ class Hangman(object):
 				letters[i] = WORD[i]
 		missed = []
 		shanpe = 0
-		status = await ctx.send(i18n(
-			ctx, 'hangman/main', DGHANGMANSHANPES[shanpe],
-			i18n(ctx, 'hangman/comma-sep').join(missed),
-			"".join(letters),
-			'\n**{}**'.format(
-				i18n(ctx, 'hangman/wait')
-			)
+		status = await ctx.send(embed=embed(ctx,
+			title=('hangman/main-title',),
+			description=(
+				'hangman/main',
+				DGHANGMANSHANPES[shanpe],
+				'**{0}**\n'.format(i18n(ctx, 'hangman/wait'))
+			),
+			fields=(
+				(('hangman/missed',), ''),
+				(('hangman/gotten',), '`{0}`'.format(''.join(letters)))
+			),
+			color=0xffffff
 		))
 		reactionmsg1 = await ctx.send('_ _')
 		reactionmsg2 = await ctx.send('_ _')
@@ -179,7 +234,18 @@ class Hangman(object):
 			await reactionmsg1.add_reaction(reg)
 		for reg in REGS2:
 			await reactionmsg2.add_reaction(reg)
-		await status.edit(content=status.content[:-25])
+		await status.edit(embed=embed(ctx,
+			title=('hangman/main-title',),
+			description=(
+				'hangman/main',
+				DGHANGMANSHANPES[shanpe]
+			),
+			fields=(
+				(('hangman/missed',), ''),
+				(('hangman/gotten',), '`{0}`'.format(''.join(letters)))
+			),
+			color=0xffffff
+		))
 		while "".join(letters) != WORD and shanpe < len(DGHANGMANSHANPES) - 1:
 			try:
 				reaction, user = await ctx.bot.wait_for(
@@ -191,16 +257,22 @@ class Hangman(object):
 					timeout=600.0
 				)
 			except a.TimeoutError:
-				await status.edit(content=i18n(ctx, 'hangman/timeout2'))
+				await status.edit(embed=embed(ctx,
+					title=('hangman/timeout-title',),
+					description=('hangman/timeout2',),
+					color=0xff0000
+				))
 				await status.clear_reactions()
 				await reactionmsg1.delete()
 				await reactionmsg2.delete()
 				return
 			if str(reaction) == NEIN:
 				if user.id == ctx.author.id:
-					await status.edit(
-						content=i18n(ctx, 'pm_games/game-cancelled')
-					)
+					await status.edit(embed=embed(
+						title=('games/game-cancelled-title',),
+						description=('games/game-cancelled',),
+						color=0xff0000
+					))
 					await status.clear_reactions()
 					await reactionmsg1.delete()
 					await reactionmsg2.delete()
@@ -217,13 +289,23 @@ class Hangman(object):
 				if letter not in missed:
 					missed.append(letter)
 					shanpe += 1
-			await status.edit(content=i18n(
-				ctx, 'hangman/main', DGHANGMANSHANPES[shanpe],
-				i18n(ctx, 'hangman/comma-sep').join(missed),
-				"".join(letters),
-				""
+			await status.edit(embed=embed(ctx,
+				title=('hangman/main-title',),
+				description=(
+					'hangman/main', DGHANGMANSHANPES[shanpe]
+				),
+				fields=(
+					(('hangman/missed',), i18n(ctx, 'comma-sep').join(missed)),
+					(('hangman/gotten',), '`{0}`'.format(''.join(letters)))
+				),
+				color=0xffffff
 			))
-		if "".join(letters) == WORD:
-			await ctx.send(i18n(ctx, 'hangman/won'))
-		else:
-			await ctx.send(i18n(ctx, 'hangman/lost', WORD))
+		await ctx.send(embed=embed(ctx,
+			title=('hangman/end',),
+			description=(
+				('hangman/won',)
+				if ''.join(letters) == WORD
+				else ('hangman/lost', WORD)
+			),
+			color=0x55acee if ''.join(letters) == WORD else 0xff0000
+		))

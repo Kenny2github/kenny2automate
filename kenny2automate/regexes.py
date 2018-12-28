@@ -1,4 +1,5 @@
 import re
+import discord as d
 from discord.ext.commands import group
 from .i18n import i18n
 
@@ -31,7 +32,7 @@ class Regexes(object):
 			result = i18n(ctx, 'regexes/search-error')
 		else:
 			result = i18n(ctx, 'regexes/search-result-nomatch')
-		await ctx.send(result)
+		await ctx.send(embed=d.Embed(description=result))
 
 	@regex.command()
 	async def findall(self, ctx, pattern, string, flags=None):
@@ -58,4 +59,4 @@ class Regexes(object):
 			result2 = '\t'.join([gpstr.format(i) for i in range(ms)]) \
 				+ '\n' + result2
 			result = result.format(result2)
-		await ctx.send(result)
+		await ctx.send(embed=d.Embed(description=result))

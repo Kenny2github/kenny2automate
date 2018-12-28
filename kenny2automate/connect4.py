@@ -1,10 +1,9 @@
 import asyncio as a
 import discord as d
-from discord.ext.commands import command, group
+from discord.ext.commands import command
 from discord.ext.commands import bot_has_permissions
-from discord.ext.commands import has_permissions
 from .games import Games
-from .i18n import i18n
+from .i18n import i18n, embed
 
 BLUE, RED, BLACK, SHAKE, NEIN, DOWN = \
 	'\U0001f535 \U0001f534 \u2b1b \U0001f91d \u274c \u2b07'.split(' ')
@@ -46,15 +45,15 @@ class Connect4(Games):
 					pass
 			boardmsgcont1 = constructboard(ctx1, board, (ctx1.author, ctx2.author), 0, True)
 			boardmsgcont2 = constructboard(ctx2, board, (ctx1.author, ctx2.author), 0, True)
-			await boardmsg1.edit(embed=d.Embed(
-				title=i18n(ctx1, 'connect4/board-title'),
+			await boardmsg1.edit(embed=embed(ctx1,
+				title=('connect4/board-title',),
 				description=boardmsgcont1 + i18n(
 					ctx1, 'connect4/board-you-are', RED
 				),
 				color=0xff0000
 			))
-			await boardmsg2.edit(embed=d.Embed(
-				title=i18n(ctx2, 'connect4/board-title'),
+			await boardmsg2.edit(embed=embed(ctx2,
+				title=('connect4/board-title',),
 				description=boardmsgcont2 + i18n(
 					ctx2, 'connect4/board-you-are', BLUE
 				),
@@ -77,18 +76,23 @@ class Connect4(Games):
 						timeout=600.0
 					)
 				except a.TimeoutError:
-					await boardmsg1.edit(
-						content=i18n(ctx1, 'connect4/game-timeout', 600), embed=None
-					)
+					await boardmsg1.edit(embed=embed(ctx1,
+						title=('hangman/timeout-title',),
+						description=('connect4/game-timeout', 600),
+						color=0xff0000
+					))
 					await boardmsg1.clear_reactions()
-					await boardmsg2.edit(
-						content=i18n(ctx2, 'connect4/game-timeout', 600), embed=None
-					)
+					await boardmsg2.edit(embed=embed(ctx2,
+						title=('hangman/timeout-title',),
+						description=('connect4/game-timeout', 600),
+						color=0xff0000
+					))
+					await boardmsg2.clear_reactions()
 					return
 				if str(reaction) == DOWN:
 					whose = int(ctx2.channel.id == reaction.message.channel.id)
-					msg = await reaction.message.channel.send(embed=d.Embed(
-						title=i18n(ctxs[whose], 'connect4/board-title'),
+					msg = await reaction.message.channel.send(embed=embed(ctxs[whose],
+						title=('connect4/board-title',),
 						description=(boardmsgcont1, boardmsgcont2)[whose] + i18n(
 							ctxs[whose], 'connect4/board-you-are', (RED, BLUE)[whose]
 						),
@@ -118,15 +122,15 @@ class Connect4(Games):
 				break
 			boardmsgcont1 = constructboard(ctx1, board, (ctx1.author, ctx2.author), 1, True)
 			boardmsgcont2 = constructboard(ctx2, board, (ctx1.author, ctx2.author), 1, True)
-			await boardmsg1.edit(embed=d.Embed(
-				title=i18n(ctx1, 'connect4/board-title'),
+			await boardmsg1.edit(embed=embed(ctx1,
+				title=('connect4/board-title',),
 				description=boardmsgcont1 + i18n(
 					ctx1, 'connect4/board-you-are', RED
 				),
 				color=0x55acee
 			))
-			await boardmsg2.edit(embed=d.Embed(
-				title=i18n(ctx2, 'connect4/board-title'),
+			await boardmsg2.edit(embed=embed(ctx2,
+				title=('connect4/board-title',),
 				description=boardmsgcont2 + i18n(
 					ctx2, 'connect4/board-you-are', BLUE
 				),
@@ -153,21 +157,23 @@ class Connect4(Games):
 						timeout=600.0
 					)
 				except a.TimeoutError:
-					await boardmsg1.edit(
-						content=i18n(ctx1, 'connect4/game-timeout', 600),
-						embed=None
-					)
+					await boardmsg1.edit(embed=embed(ctx1,
+						title=('hangman/timeout-title',),
+						description=('connect4/game-timeout', 600),
+						color=0xff0000
+					))
 					await boardmsg1.clear_reactions()
-					await boardmsg2.edit(
-						content=i18n(ctx2, 'connect4/game-timeout', 600),
-						embed=None
-					)
+					await boardmsg2.edit(embed=embed(ctx2,
+						title=('hangman/timeout-title',),
+						description=('connect4/game-timeout', 600),
+						color=0xff0000
+					))
 					await boardmsg2.clear_reactions()
 					return
 				if str(reaction) == DOWN:
 					whose = int(ctx2.channel.id == reaction.message.channel.id)
-					msg = await reaction.message.channel.send(embed=d.Embed(
-						title=i18n(ctxs[whose], 'connect4/board-title'),
+					msg = await reaction.message.channel.send(embed=embed(ctxs[whose],
+						title=('connect4/board-title',),
 						description=(boardmsgcont1, boardmsgcont2)[whose] + i18n(
 							ctxs[whose], 'connect4/board-you-are', (RED, BLUE)[whose]
 						),
@@ -195,33 +201,33 @@ class Connect4(Games):
 			redwon, bluewon = checkwin(board, RED), checkwin(board, BLUE)
 		boardmsgcont1 = constructboard(ctx1, board, (ctx1.author, ctx2.author), int(bluewon), True)
 		boardmsgcont2 = constructboard(ctx2, board, (ctx1.author, ctx2.author), int(bluewon), True)
-		await boardmsg1.edit(embed=d.Embed(
-			title=i18n(ctx1, 'connect4/board-title'),
+		await boardmsg1.edit(embed=embed(ctx1,
+			title=('connect4/board-title',),
 			description=boardmsgcont1
 		))
-		await boardmsg2.edit(embed=d.Embed(
-			title=i18n(ctx2, 'connect4/board-title'),
+		await boardmsg2.edit(embed=embed(ctx2,
+			title=('connect4/board-title',),
 			description=boardmsgcont2
 		))
 		if redwon and bluewon:
-			embed1 = d.Embed(
-				title=i18n(ctx1, 'connect4/game-over-title'),
-				description=i18n(ctx1, 'connect4/game-over-tied')
+			embed1 = embed(ctx1,
+				title=('connect4/game-over-title',),
+				description=('connect4/game-over-tied',)
 			)
-			embed2 = d.Embed(
-				title=i18n(ctx2, 'connect4/game-over-title'),
-				description=i18n(ctx2, 'connect4/game-over-tied')
+			embed2 = embed(ctx2,
+				title=('connect4/game-over-title',),
+				description=('connect4/game-over-tied',)
 			)
 		else:
-			embed1 = d.Embed(
-				title=i18n(ctx1, 'connect4/game-over-title'),
-				description=i18n(ctx1, 'connect4/game-over-description',
+			embed1 = embed(ctx1,
+				title=('connect4/game-over-title',),
+				description=('connect4/game-over-description',
 					RED if redwon else BLUE, '', RED if bluewon else BLUE, ''),
 				color=0xff0000 if redwon else 0x55acee
 			)
-			embed2 = d.Embed(
-				title=i18n(ctx2, 'connect4/game-over-title'),
-				description=i18n(ctx2, 'connect4/game-over-description',
+			embed2 = embed(ctx2,
+				title=('connect4/game-over-title',),
+				description=('connect4/game-over-description',
 					RED if redwon else BLUE, '', RED if bluewon else BLUE, ''),
 				color=0xff0000 if redwon else 0x55acee
 			)
@@ -324,8 +330,8 @@ class Connect4(Games):
 				except d.NotFound:
 					pass
 			boardmsgcont = constructboard(ctx, board, (player1, player2), 0)
-			await boardmsg.edit(embed=d.Embed(
-				title=i18n(ctx, 'connect4/board-title'),
+			await boardmsg.edit(embed=embed(ctx,
+				title=('connect4/board-title',),
 				description=boardmsgcont,
 				color=0xff0000
 			))
@@ -345,14 +351,16 @@ class Connect4(Games):
 						timeout=600.0
 					)
 				except a.TimeoutError:
-					await boardmsg.edit(
-						content=i18n(ctx, 'connect4/game-timeout', 600), embed=None
-					)
+					await boardmsg.edit(embed=embed(ctx,
+						title=('hangman/timeout-title',),
+						description=('connect4/game-timeout', 600),
+						color=0xff0000
+					))
 					await boardmsg.clear_reactions()
 					return
 				if str(reaction) == DOWN:
-					msg = await reaction.message.channel.send(embed=d.Embed(
-						title=i18n(ctx, 'connect4/board-title'),
+					msg = await reaction.message.channel.send(embed=embed(ctx,
+						title=('connect4/board-title',),
 						description=boardmsgcont,
 						color=0xff0000
 					))
@@ -376,8 +384,8 @@ class Connect4(Games):
 			if redwon or bluewon:
 				break
 			boardmsgcont = constructboard(ctx, board, (player1, player2), 1)
-			await boardmsg.edit(embed=d.Embed(
-				title=i18n(ctx, 'connect4/board-title'),
+			await boardmsg.edit(embed=embed(ctx,
+				title=('connect4/board-title',),
 				description=boardmsgcont,
 				color=0x55acee
 			))
@@ -401,15 +409,16 @@ class Connect4(Games):
 						timeout=600.0
 					)
 				except a.TimeoutError:
-					await boardmsg.edit(
-						content=i18n(ctx, 'connect4/game-timeout', 600),
-						embed=None
-					)
+					await boardmsg.edit(embed=embed(ctx,
+						title=('hangman/timeout-title',),
+						description=('connect4/game-timeout', 600),
+						color=0xff0000
+					))
 					await boardmsg.clear_reactions()
 					return
 				if str(reaction) == DOWN:
-					msg = await reaction.message.channel.send(embed=d.Embed(
-						title=i18n(ctx, 'connect4/board-title'),
+					msg = await reaction.message.channel.send(embed=embed(ctx,
+						title=('connect4/board-title',),
 						description=boardmsgcont,
 						color=0x55acee
 					))
@@ -431,19 +440,19 @@ class Connect4(Games):
 				regs[idx] = NEIN
 			redwon, bluewon = checkwin(board, RED), checkwin(board, BLUE)
 		boardmsgcont = constructboard(ctx, board, (player1, player2), int(bluewon))
-		await boardmsg.edit(embed=d.Embed(
-			title=i18n(ctx, 'connect4/board-title'),
+		await boardmsg.edit(embed=embed(ctx,
+			title=('connect4/board-title',),
 			description=boardmsgcont,
 		))
 		if redwon and bluewon:
-			embed = d.Embed(
-				title=i18n(ctx, 'connect4/game-over-title'),
-				description=i18n(ctx, 'connect4/game-over-tied')
+			emb = embed(ctx,
+				title=('connect4/game-over-title',),
+				description=('connect4/game-over-tied',)
 			)
 		else:
-			embed = d.Embed(
-				title=i18n(ctx, 'connect4/game-over-title'),
-				description=i18n(ctx, 'connect4/game-over-description',
+			emb = embed(ctx,
+				title=('connect4/game-over-title',),
+				description=('connect4/game-over-description',
 					RED if redwon else BLUE,
 					' (' + (
 						(player1.display_name)
@@ -459,4 +468,4 @@ class Connect4(Games):
 				),
 				color=0xff0000 if redwon else 0x55acee
 			)
-		await ctx.send(embed=embed)
+		await ctx.send(embed=emb)

@@ -1,6 +1,6 @@
 import asyncio as a
 import discord as d
-from .i18n import i18n
+from .i18n import embed
 from .utils import DummyCtx
 
 class Games(object):
@@ -24,18 +24,29 @@ class Games(object):
 		if name in self._global_games:
 			for c in self._global_games[name]['ctxs']:
 				if c.author.id == ctx.author.id:
-					await ctx.send(i18n(ctx, 'games/already-joined'))
+					await ctx.send(embed=embed(ctx,
+						title=('error',),
+						description=('games/already-joined',),
+						color=0xff0000
+					))
 					return
 			self._global_games[name]['ctxs'].append(ctx)
 			startx = self._global_games[name]['ctxs'][0]
 			ctlen = len(self._global_games[name]['ctxs'])
-			await startx.send(i18n(
-				startx, 'games/player-joined',
-				max(0, minim - ctlen), max(0, maxim - ctlen)
+			await startx.send(embed=embed(startx,
+				title=('games/player-joined-title,'),
+				description=(
+					'games/player-joined',
+					max(0, minim - ctlen),
+					max(0, maxim - ctlen)
+				),
+				color=0x55acee
 			))
 			if ctlen >= minim and scn is not None:
-				await startx.send(i18n(
-					startx, 'games/enough-players', ctx.prefix + scn
+				await startx.send(embed=embed(startx,
+					title=('games/enough-players-title',),
+					description=('games/enough-players', ctx.prefix + scn),
+					color=0x55acee
 				))
 			if ctlen >= maxim:
 				await self._start_global_game(
@@ -46,17 +57,18 @@ class Games(object):
 				'ctxs': [ctx],
 				'coro': coro
 			}
-		await ctx.send(embed=d.Embed(
-			title=i18n(ctx, 'games/joined', name),
-			description=i18n(
-				ctx, 'games/joined-waiting-minmax', name,
+		await ctx.send(embed=embed(ctx,
+			title=('games/joined', name),
+			description=(
+				'games/joined-waiting-minmax', name,
 				maxim - len(self._global_games[name]['ctxs'])
-			) if isinstance(maxim, int) and minim < maxim else (i18n(
-				ctx, 'games/joined-waiting', name,
+			) if isinstance(maxim, int) and minim < maxim else ((
+				'games/joined-waiting', name,
 				maxim - len(self._global_games[name]['ctxs'])
-			) if isinstance(maxim, int) else i18n(
-				ctx, 'games/joined-waiting-nomax', name
-			))
+			) if isinstance(maxim, int) else (
+				'games/joined-waiting-nomax', name
+			)),
+			color=0x338acc
 		))
 
 	async def _start_global_game(self, ctx, name, *, maxim=2, minim=2):
@@ -65,9 +77,13 @@ class Games(object):
 		if ctx.author.id != self._global_games[name]['ctxs'][0].author.id:
 			return
 		if len(self._global_games[name]['ctxs']) < minim:
-			await ctx.send(i18n(
-				ctx, 'games/not-enough-players',
-				minim, len(self._global_games[name]['ctxs'])
+			await ctx.send(embed=embed(ctx,
+				title=('error',),
+				description=(
+					'games/not-enough-players',
+					minim, len(self._global_games[name]['ctxs'])
+				),
+				color=0xff0000
 			))
 			return
 		coro = self._global_games[name]['coro']
@@ -94,29 +110,38 @@ class Games(object):
 				break
 		if not len(self._global_games[name]['ctxs']):
 			del self._global_games[name]
-		await ctx.send(i18n(ctx, 'games/unjoined', name))
+		await ctx.send(embed=embed(ctx,
+			title=('games/unjoined-title',),
+			description=('games/unjoined', name),
+			color=0
+		))
 
 	async def _gather_game(self, ctx, name, against, help=None):
 		SHAKE, QUESTION = '\U0001f91d\u2753'
-		msg = await ctx.send(embed=d.Embed(
-			title=i18n(ctx, 'games/playing', name),
-			description=i18n(
-				ctx, 'games/ready-player-1', ctx.author.mention
-			) + (
-				i18n(ctx, 'games/react-to-join', SHAKE)
-				if against is None
-				else i18n(
-					ctx, 'games/ready-player-2', against.mention
-				)
+		msg = await ctx.send(embed=embed(
+			title=('games/playing', name),
+			description=(
+				'games/ready-player-1', ctx.author.mention, SHAKE
+			) if against is None else (
+				'games/ready-player-2', ctx.author.mention, against.mention
 			),
+			color=0x55acee
 		))
 		player1 = ctx.author
 		if against is not None:
 			if against.bot:
-				await ctx.send(i18n(ctx, 'games/no-bots'))
+				await ctx.send(embed=embed(ctx,
+					title=('error',),
+					description=('games/no-bots',),
+					color=0xff0000
+				))
 				return
 			elif against.status == d.Status.offline:
-				await ctx.send(i18n(ctx, 'games/no-offline'))
+				await ctx.send(embed=embed(ctx,
+					title=('error',),
+					description=('games/no-offline',),
+					color=0xff0000
+				))
 				return
 		await msg.add_reaction(SHAKE)
 		if help is not None:
@@ -133,9 +158,10 @@ class Games(object):
 					dmx = DummyCtx(author=user, channel=user.dm_channel)
 					await user.dm_channel.send(embed=help(dmx)
 						if callable(help)
-						else d.Embed(
-							title=i18n(dmx, 'games/help-title', name),
-							description=i18n(dmx, help)
+						else embed(
+							title=('games/help-title', name),
+							description=(help,),
+							color=0x55acee
 						)
 					)
 		def clear_listener():
@@ -153,14 +179,21 @@ class Games(object):
 				)
 			except a.TimeoutError:
 				await msg.edit(
-					content=i18n(ctx, 'games/game-timeout', 60),
-					embed=None
+					embed=embed(ctx,
+						title=('games/game-timeout-title',),
+						description=('games/game-timeout', 60),
+						color=0xff0000
+					)
 				)
 				await msg.clear_reactions()
 				clear_listener()
 				return
 			if user.id == ctx.author.id:
-				await ctx.send(i18n(ctx, 'games/game-cancelled'))
+				await ctx.send(embed=embed(ctx,
+					title=('games/game-cancelled-title',),
+					description=('games/game-cancelled',),
+					color=0xff0000
+				))
 				clear_listener()
 				return
 			player2 = user
@@ -177,14 +210,21 @@ class Games(object):
 				)
 			except a.TimeoutError:
 				await msg.edit(
-					content=i18n(ctx, 'games/unready-player-2', 60),
-					embed=None
+					embed=embed(ctx,
+						title=('games/game-timeout-title',),
+						description=('games/unready-player-2', 60),
+						color=0xff0000
+					)
 				)
 				await msg.clear_reactions()
 				clear_listener()
 				return
 			if user.id == ctx.author.id:
-				await ctx.send(i18n(ctx, 'games/game-cancelled'))
+				await ctx.send(embed=embed(ctx,
+					title=('games/game-cancelled-title',),
+					description=('games/game-cancelled',),
+					color=0xff0000
+				))
 				clear_listener()
 				return
 			player2 = user
@@ -198,19 +238,13 @@ class Games(object):
 
 	async def _gather_multigame(self, ctx, name, help=None):
 		SHAKE, CHECK, QUESTION = '\U0001f91d\u2705\u2753'
-		msg = await ctx.send(embed=d.Embed(
-			title=i18n(ctx, 'games/playing', name),
-			description=i18n(
-				ctx, 'games/ready-player-1', ctx.author.display_name
-			) + (
-				i18n(
-					ctx,
-					'games/react-to-join-mult',
-					SHAKE,
-					ctx.author.display_name,
-					CHECK
-				)
+		msg = await ctx.send(embed=embed(ctx,
+			title=('games/playing', name),
+			description=(
+				'games/ready-player-3', ctx.author.display_name,
+				SHAKE, CHECK
 			),
+			color=0x55acee
 		))
 		players = [ctx.author]
 		await msg.add_reaction(SHAKE)
@@ -229,9 +263,10 @@ class Games(object):
 					dmx = DummyCtx(author=user, channel=user.dm_channel)
 					await user.dm_channel.send(embed=help(dmx)
 						if callable(help)
-						else d.Embed(
-							title=i18n(dmx, 'games/help-title', name),
-							description=i18n(dmx, help)
+						else embed(dmx,
+							title=('games/help-title', name),
+							description=(help,),
+							color=0x55acee
 						)
 					)
 		def clear_listener():
@@ -246,7 +281,11 @@ class Games(object):
 				timeout=60.0
 			)
 			if reaction.emoji == SHAKE:
-				await ctx.send(i18n(ctx, 'games/game-cancelled'))
+				await ctx.send(embed=embed(ctx,
+					title=('games/game-cancelled-title',),
+					description=('games/game-cancelled',),
+					color=0xff0000
+				))
 				clear_listener()
 				return
 		except a.TimeoutError:

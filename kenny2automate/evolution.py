@@ -2,8 +2,8 @@ import random
 import pickle
 import sqlite3 as sql
 import discord as d
-from discord.ext.commands import group, CheckFailure
-from .i18n import i18n
+from discord.ext.commands import group
+from .i18n import i18n, embed
 from .utils import dataclass, DummyCtx
 
 #Strength, Constitution, Dexterity, Intelligence, Wisdom, Charisma, Sex
@@ -114,9 +114,9 @@ class Evolution(object):
             (ctx.author.id,)
         ).fetchone()
         if res is None or res[0] is None:
-            await ctx.send(embed=d.Embed(
-                title=i18n(ctx, 'evolution/claiming-soul-title'),
-                description=i18n(ctx, 'evolution/claiming-soul'),
+            await ctx.send(embed=embed(ctx,
+                title=('evolution/claiming-soul-title',),
+                description=('evolution/claiming-soul',),
                 color=0x808080
             ))
             try:
@@ -150,10 +150,10 @@ evol_unnamed_children ORDER BY entry_id ASC').fetchone()
                         'UPDATE users SET evol_self=? WHERE user_id=?',
                         (new, ctx.author.id)
                     )
-                await ctx.send(embed=d.Embed(
-                    title=i18n(ctx, 'evolution/no-new-souls-title'),
-                    description=i18n(
-                        ctx, 'evolution/no-new-souls',
+                await ctx.send(embed=embed(ctx,
+                    title=('evolution/no-new-souls-title',),
+                    description=(
+                        'evolution/no-new-souls',
                         repr(new.dominant)
                     ),
                     color=0
@@ -188,19 +188,19 @@ evol_unnamed_children ORDER BY entry_id ASC').fetchone()
                         p.children.add(ctx.author.id)
                         break
                 self.save_player(p)
-                await dmx.send(embed=d.Embed(
-                    title=i18n(dmx, 'evolution/birth-title'),
-                    description=i18n(
-                        dmx, 'evolution/birth',
+                await dmx.send(embed=embed(dmx,
+                    title=('evolution/birth-title',),
+                    description=(
+                        'evolution/birth',
                         ctx.author.name, ctx.author.discriminator,
                         repr(husk.dominant)
                     ),
                     color=0x55acee
                 ))
-            await ctx.send(embed=d.Embed(
-                title=i18n(ctx, 'evolution/claimed-soul-title'),
-                description=i18n(
-                    ctx, 'evolution/claimed-soul', repr(husk.dominant)
+            await ctx.send(embed=embed(ctx,
+                title=('evolution/claimed-soul-title',),
+                description=(
+                    'evolution/claimed-soul', repr(husk.dominant)
                 ),
                 color=0x55acee
             ))
@@ -250,9 +250,9 @@ evol_unnamed_children ORDER BY entry_id ASC').fetchone()
 entry_id DESC').fetchone()[0]
         me.children.add(claim | 2**128)
         self.save_player(me)
-        await ctx.send(embed=d.Embed(
-            title=i18n(ctx, 'evolution/adopted-title'),
-            description=i18n(ctx, 'evolution/adopted'),
+        await ctx.send(embed=embed(ctx,
+            title=('evolution/adopted-title',),
+            description=('evolution/adopted',),
             color=0x55acee
         ))
 
@@ -271,10 +271,10 @@ entry_id DESC').fetchone()[0]
         )
         await self.load_player(ctx) #make sure they exist
         await self.load_player(dmx)
-        msg = await dmx.send(embed=d.Embed(
-            title=i18n(dmx, 'evolution/proposal-title'),
-            description=i18n(
-                dmx, 'evolution/proposal',
+        msg = await dmx.send(embed=embed(dmx,
+            title=('evolution/proposal-title',),
+            description=(
+                'evolution/proposal',
                 ctx.author.name, ctx.author.discriminator,
                 message
             ),
@@ -282,9 +282,9 @@ entry_id DESC').fetchone()[0]
         ))
         await msg.add_reaction('\u2705') #check
         await msg.add_reaction('\u274c') #cross
-        await ctx.send(embed=d.Embed(
-            title=i18n(ctx, 'evolution/proposed-title'),
-            description=i18n(ctx, 'evolution/proposed'),
+        await ctx.send(embed=embed(ctx,
+            title=('evolution/proposed-title',),
+            description=('evolution/proposed',),
             color=0xff0000
         ))
         @self.bot.listen()
@@ -293,18 +293,18 @@ entry_id DESC').fetchone()[0]
                 return
             self.bot.remove_listener(on_reaction_add, 'on_reaction_add')
             if reaction.emoji == '\u274c':
-                await ctx.send(embed=d.Embed(
-                    title=i18n(ctx, 'evolution/proposal-rejected-title'),
-                    description=i18n(
-                        ctx, 'evolution/proposal-rejected',
+                await ctx.send(embed=embed(ctx,
+                    title=('evolution/proposal-rejected-title',),
+                    description=(
+                        'evolution/proposal-rejected',
                         dmx.author.name, dmx.author.discriminator
                     ),
                     color=0xff0000
                 ))
-                await dmx.send(embed=d.Embed(
-                    title=i18n(dmx, 'evolution/rejected-proposal-title'),
-                    description=i18n(
-                        dmx, 'evolution/rejected-proposal',
+                await dmx.send(embed=embed(dmx,
+                    title=('evolution/rejected-proposal-title',),
+                    description=(
+                        'evolution/rejected-proposal',
                         ctx.author.name, ctx.author.discriminator
                     ),
                     color=0
@@ -314,18 +314,18 @@ entry_id DESC').fetchone()[0]
                 me = await self.load_player(ctx)
                 you = await self.load_player(dmx)
                 me * you
-                await ctx.send(embed=d.Embed(
-                    title=i18n(ctx, 'evolution/proposal-accepted-title'),
-                    description=i18n(
-                        ctx, 'evolution/proposal-accepted',
+                await ctx.send(embed=embed(ctx,
+                    title=('evolution/proposal-accepted-title',),
+                    description=(
+                        'evolution/proposal-accepted',
                         dmx.author.name, dmx.author.discriminator
                     ),
                     color=0x55acee
                 ))
-                await dmx.send(embed=d.Embed(
-                    title=i18n(dmx, 'evolution/accepted-proposal-title'),
-                    description=i18n(
-                        dmx, 'evolution/accepted-proposal',
+                await dmx.send(embed=embed(dmx,
+                    title=('evolution/accepted-proposal-title'),
+                    description=(
+                        'evolution/accepted-proposal',
                         ctx.author.name, ctx.author.discriminator
                     ),
                     color=0x55acee
@@ -336,24 +336,32 @@ entry_id DESC').fetchone()[0]
     @evol.command()
     async def profile(self, ctx):
         me = await self.load_player(ctx)
-        await ctx.send(embed=d.Embed(
-            title=i18n(ctx, 'evolution/your-genes-title'),
-            description=i18n(ctx, 'evolution/your-genes')
-                + '\n' + repr(me.dominant),
-            color=0xffffff
-        ).add_field(
-            name=i18n(ctx, 'evolution/your-parents'),
-            value='\n'.join(
-                '@{0.name}#{0.discriminator}'.format(
-                    self.bot.get_user(i)
-                ) for i in me.parents
-            ) or i18n(ctx, 'evolution/no-parents')
-        ).add_field(
-            name=i18n(ctx, 'evolution/your-children'),
-            value='\n'.join(
-                '@{0.name}#{0.discriminator}'.format(
-                    self.bot.get_user(i)
-                ) if not i & 2**128 else i18n(ctx, 'evolution/husk')
-                for i in me.children
-            ) or i18n(ctx, 'evolution/no-children')
+        await ctx.send(embed=embed(ctx,
+            color=0xffffff,
+            fields=(
+                (
+                    ('evolution/your-genes',),
+                    repr(me.dominant),
+                    False
+                ), (
+                    ('evolution/your-parents',),
+                    '\n'.join(
+                        '@{0.name}#{0.discriminator}'.format(
+                            self.bot.get_user(i)
+                        ) for i in me.parents
+                    ) or ('evolution/no-parents',),
+                    True
+                ), (
+                    ('evolution/your-children',),
+                    '\n'.join(
+                        '@{0.name}#{0.discriminator}'.format(
+                            self.bot.get_user(i)
+                        ) if not i & 2**128 else i18n(
+                            ctx, 'evolution/husk'
+                        )
+                        for i in me.children
+                    ) or ('evolution/no-children',),
+                    True
+                )
+            )
         ))

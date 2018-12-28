@@ -52,10 +52,12 @@
   "notloggedin": "This command can only be run when you are logged in. Run `;login <wiki> \"<username>\" <password>` in a DM to login.",
   "edit-instructions": "Send content snippets ```encapsulated in triple backquotes``` to add them to your edit. Send the exact text `EOF` to finish and submit the edit.",
   "edit-summary": "Send your edit summary:",
+  "edit-result-title": "Edit Result",
   "edit-result": "Edit: {0}",
   "login-notdm": "This command is DM-only!",
   "login-notdm-nodelete": "This command is DM-only! Delete the command message now!",
   "login-notwiki": "Logging in failed: You specified a nonexistent wiki.",
   "login-failed": "Logging in failed: {0}",
+  "login-status-title": "Login Status",
   "login-status": "Login: {0}\nYou should probably delete the command message now, just to be extra safe."
 }
