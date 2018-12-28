@@ -107,11 +107,11 @@ class Hangman(object):
 			title=('hangman/main-title',),
 			description=(
 				'hangman/main',
-				DGHANGMANSHANPES[shanpe]
+				DGHANGMANSHANPES[shanpe], ''
 			),
 			fields=(
-				(('hangman/missed',), ''),
-				(('hangman/gotten',), '`{0}`'.format(''.join(letters)))
+				(('hangman/missed',), 'None', True),
+				(('hangman/gotten',), '`{0}`'.format(''.join(letters)), True)
 			),
 			color=0xffffff
 		))
@@ -140,11 +140,11 @@ class Hangman(object):
 			await ctx.send(embed=embed(ctx,
 				title=('hangman/main-title',),
 				description=(
-					'hangman/main', DGHANGMANSHANPES[shanpe]
+					'hangman/main', DGHANGMANSHANPES[shanpe], ''
 				),
 				fields=(
-					(('hangman/missed',), i18n(ctx, 'comma-sep').join(missed)),
-					(('hangman/gotten',), '`{0}`'.format(''.join(letters)))
+					(('hangman/missed',), i18n(ctx, 'comma-sep').join(missed), True),
+					(('hangman/gotten',), '`{0}`'.format(''.join(letters)), True)
 				),
 				color=0xffffff
 			))
@@ -222,8 +222,8 @@ class Hangman(object):
 				'**{0}**\n'.format(i18n(ctx, 'hangman/wait'))
 			),
 			fields=(
-				(('hangman/missed',), ''),
-				(('hangman/gotten',), '`{0}`'.format(''.join(letters)))
+				(('hangman/missed',), 'None', True),
+				(('hangman/gotten',), '`{0}`'.format(''.join(letters)), True)
 			),
 			color=0xffffff
 		))
@@ -238,11 +238,11 @@ class Hangman(object):
 			title=('hangman/main-title',),
 			description=(
 				'hangman/main',
-				DGHANGMANSHANPES[shanpe]
+				DGHANGMANSHANPES[shanpe], ''
 			),
 			fields=(
-				(('hangman/missed',), ''),
-				(('hangman/gotten',), '`{0}`'.format(''.join(letters)))
+				(('hangman/missed',), 'None', True),
+				(('hangman/gotten',), '`{0}`'.format(''.join(letters)), True)
 			),
 			color=0xffffff
 		))
@@ -292,11 +292,11 @@ class Hangman(object):
 			await status.edit(embed=embed(ctx,
 				title=('hangman/main-title',),
 				description=(
-					'hangman/main', DGHANGMANSHANPES[shanpe]
+					'hangman/main', DGHANGMANSHANPES[shanpe], ''
 				),
 				fields=(
-					(('hangman/missed',), i18n(ctx, 'comma-sep').join(missed)),
-					(('hangman/gotten',), '`{0}`'.format(''.join(letters)))
+					(('hangman/missed',), i18n(ctx, 'comma-sep').join(missed), True),
+					(('hangman/gotten',), '`{0}`'.format(''.join(letters)), True)
 				),
 				color=0xffffff
 			))

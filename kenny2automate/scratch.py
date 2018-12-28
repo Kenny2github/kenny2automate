@@ -43,7 +43,7 @@ class Scratch(object):
 					+ str(pid)
 				)
 			await ctx.send(embed=embed(ctx, description=(
-				'randomproject-link',
+				'scratch/randomproject-link',
 				'https://scratch.mit.edu/projects/' + str(pid)
 			)))
 
