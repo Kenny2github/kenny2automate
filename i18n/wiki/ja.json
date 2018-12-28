@@ -13,6 +13,7 @@
   "iwstats-activeusers": "活動者数",
   "iwstats-admins": "管理者数",
   "iwstats-jobs": "ジョブ数",
+  "iwstats-queued-massmessages": "MassMessage キュー",
   "wikistats-failed": "エラーが発生しました。たぶんウィキを間違えています。",
   "analyzega-views": "{0} 閲覧",
   "analyzega-times": "{0} 回",
@@ -53,10 +54,12 @@
   "notloggedin": "ログインしていません。`;login <ウィキ2文字コード> \"<ユーザー名>\" <パスワード>` をDMで送ってください。",
   "edit-instructions": "コードを ```このようにして``` 送信します。 `EOF` と送ると編集を終了し、送信します。",
   "edit-summary": "編集要約を送る:",
+  "edit-result-title": "編集結果",
   "edit-result": "編集: {0}",
   "login-notdm": "DMで使いなさい!",
   "login-notdm-nodelete": "DMで使いなさい! コマンドも消しなさい!",
   "login-notwiki": "そんなウィキないよ。",
   "login-failed": "ログイン失敗: {0}",
+  "login-status-title": "ログイン状態",
   "login-status": "ログイン: {0} コメントを削除してください。"
 }

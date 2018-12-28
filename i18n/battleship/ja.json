@@ -1,6 +1,7 @@
 {
+  "instructions-title": "操作方法",
   "place-instructions": "ボタンを**二回**クリックして船を動かします。 終わったらチェックマークを**二回**押します。",
-  "edit-instructions": "以下を正確にタイプしてください:",
+  "edit-instructions": "以下を正確にタイプしてください:\n{0}",
   "fire-instructions": "\"EDITEE\"というメッセージを、放火する座標に変えてください。",
   "wait-instructions": "他のプレイヤーが火を放とうとしています...",
   "won-title": "勝利!",
@@ -8,6 +9,7 @@
   "lost-title": "敗北...",
   "lost": "敵があなたの戦艦を沈没させました...",
   "hitboard": "ヒットボード",
+  "ship-sunk-title": "沈没!",
   "ship-sunk": "船を沈没させました!",
   "help-title": "海戦 ヘルプ",
   "help": "ボタンを押して参加できます。",

@@ -1,4 +1,6 @@
 {
   "messagecount-failed": "{0}のメッセージが取得できません。",
-  "messagecount": "{0} のメッセージ数は {1} です。"
+  "messagecount-title": "メッセージ数",
+  "messagecount": "{0} のメッセージ数は {1} です。",
+  "randomproject-link": "[リンク]({0})"
 }
