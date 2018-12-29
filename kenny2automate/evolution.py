@@ -323,7 +323,7 @@ entry_id DESC').fetchone()[0]
                     color=0x55acee
                 ))
                 await dmx.send(embed=embed(dmx,
-                    title=('evolution/accepted-proposal-title'),
+                    title=('evolution/accepted-proposal-title',),
                     description=(
                         'evolution/accepted-proposal',
                         ctx.author.name, ctx.author.discriminator

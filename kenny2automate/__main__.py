@@ -151,37 +151,38 @@ async def before_invoke(ctx):
 from kenny2automate.i18n import i18n, I18n, embed
 client.add_cog(I18n(client, db))
 
-if cmdargs.disable is not None:
-	if 'scratch' not in cmdargs.disable:
-		from kenny2automate.scratch import Scratch
-		client.add_cog(Scratch(client))
-	if 'numguess' not in cmdargs.disable:
-		from kenny2automate.numguess import Numguess
-		client.add_cog(Numguess())
-	if 'wiki' not in cmdargs.disable:
-		from kenny2automate.wiki import Wiki
-		client.add_cog(Wiki(client, logger, DGBANSERVERID))
-	if 'regexes' not in cmdargs.disable:
-		from kenny2automate.regexes import Regexes
-		client.add_cog(Regexes())
-	if 'connect4' not in cmdargs.disable:
-		from kenny2automate.connect4 import Connect4
-		client.add_cog(Connect4(client, db))
-	if 'hangman' not in cmdargs.disable:
-		from kenny2automate.hangman import Hangman
-		client.add_cog(Hangman(client, db))
-	if 'cardgames' not in cmdargs.disable:
-		from kenny2automate.card_games import CardGames
-		client.add_cog(CardGames(client, db))
-	if 'battleship' not in cmdargs.disable:
-		from kenny2automate.battleship import Battleship
-		client.add_cog(Battleship(client, db))
-	if 'fight' not in cmdargs.disable:
-		from kenny2automate.fight import Fight
-		client.add_cog(Fight(client, db))
-	if 'evolution' not in cmdargs.disable:
-		from kenny2automate.evolution import Evolution
-		client.add_cog(Evolution(client, db))
+if cmdargs.disable is None:
+	cmdargs.disable = ()
+if 'scratch' not in cmdargs.disable:
+	from kenny2automate.scratch import Scratch
+	client.add_cog(Scratch(client))
+if 'numguess' not in cmdargs.disable:
+	from kenny2automate.numguess import Numguess
+	client.add_cog(Numguess())
+if 'wiki' not in cmdargs.disable:
+	from kenny2automate.wiki import Wiki
+	client.add_cog(Wiki(client, logger, DGBANSERVERID))
+if 'regexes' not in cmdargs.disable:
+	from kenny2automate.regexes import Regexes
+	client.add_cog(Regexes())
+if 'connect4' not in cmdargs.disable:
+	from kenny2automate.connect4 import Connect4
+	client.add_cog(Connect4(client, db))
+if 'hangman' not in cmdargs.disable:
+	from kenny2automate.hangman import Hangman
+	client.add_cog(Hangman(client, db))
+if 'cardgames' not in cmdargs.disable:
+	from kenny2automate.card_games import CardGames
+	client.add_cog(CardGames(client, db))
+if 'battleship' not in cmdargs.disable:
+	from kenny2automate.battleship import Battleship
+	client.add_cog(Battleship(client, db))
+if 'fight' not in cmdargs.disable:
+	from kenny2automate.fight import Fight
+	client.add_cog(Fight(client, db))
+if 'evolution' not in cmdargs.disable:
+	from kenny2automate.evolution import Evolution
+	client.add_cog(Evolution(client, db))
 
 @client.event
 async def on_ready(*_, **__):
