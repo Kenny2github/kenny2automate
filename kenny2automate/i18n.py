@@ -1,4 +1,5 @@
 import os
+import re
 import time
 import json
 import functools
@@ -168,6 +169,42 @@ class I18n(object):
                             return
             print('sending text')
             await channel.send(text)
+
+    @command()
+    async def ogham(self, ctx, *, text: str):
+        """A fun little interpreter from English to Ogham."""
+        OGHAM = {
+            32: 5760,
+            97: 5776,
+            98: 5761,
+            99: 5769,
+            100: 5767,
+            101: 5779,
+            102: 5763,
+            103: 5772,
+            104: 5766,
+            105: 5780,
+            107: 5781,
+            108: 5762,
+            109: 5771,
+            110: 5765,
+            111: 5777,
+            112: 5786,
+            113: 5770,
+            114: 5775,
+            115: 5764,
+            116: 5768,
+            117: 5778,
+            118: 5763,
+            120: 5781,
+            122: 5774,
+        }
+        await ctx.send(
+            '\u169b'
+            + re.sub('[^a-z ]', '', text.lower())
+            .translate(OGHAM)
+            + '\u169c'
+        )
 
     @command()
     async def lang(self, ctx, *, lang: str = None):
