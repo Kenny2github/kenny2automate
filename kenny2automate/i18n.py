@@ -201,7 +201,7 @@ class I18n(object):
         }
         await ctx.send(
             '\u169b'
-            + re.sub('[^a-z ]', '', text.lower())
+            + re.sub('[^a-ik-vxz ]', '', text.lower())
             .translate(OGHAM)
             + '\u169c'
         )
