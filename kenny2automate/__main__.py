@@ -362,7 +362,7 @@ async def purge(ctx, limit: int = 100, user: d.Member = None, *, matches: str = 
 @client.command(name='8ball')
 async def ball(ctx, *, question: str):
 	choice = sum(question.encode('utf8')) % 20
-	await ctx.send(embed(ctx, description=((
+	await ctx.send(embed=embed(ctx, description=((
 		'8ball/a1', '8ball/a2', '8ball/a3', '8ball/a4',
 		'8ball/a5', '8ball/a6', '8ball/a7', '8ball/a8',
 		'8ball/a9', '8ball/a10', '8ball/u1', '8ball/u2',

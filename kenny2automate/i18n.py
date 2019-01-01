@@ -167,7 +167,13 @@ class I18n(object):
                             lang = LANGS[code][erroridx]
                         except IndexError:
                             return
-            print('sending text')
+            print('sending text:', text)
+            if not text:
+                await channel.send(embed=d.Embed(
+                    title='Error',
+                    description='Translate API returned a blank string',
+                    color=0xff0000
+                ))
             await channel.send(text)
 
     @command()
