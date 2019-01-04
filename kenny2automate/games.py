@@ -118,7 +118,7 @@ class Games(object):
 
 	async def _gather_game(self, ctx, name, against, help=None):
 		SHAKE, QUESTION = '\U0001f91d\u2753'
-		msg = await ctx.send(embed=embed(
+		msg = await ctx.send(embed=embed(ctx,
 			title=('games/playing', name),
 			description=(
 				'games/ready-player-1', ctx.author.mention, SHAKE
@@ -158,7 +158,7 @@ class Games(object):
 					dmx = DummyCtx(author=user, channel=user.dm_channel)
 					await user.dm_channel.send(embed=help(dmx)
 						if callable(help)
-						else embed(
+						else embed(dmx,
 							title=('games/help-title', name),
 							description=(help,),
 							color=0x55acee
