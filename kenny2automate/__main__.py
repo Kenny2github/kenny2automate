@@ -153,34 +153,45 @@ client.add_cog(I18n(client, db))
 
 if cmdargs.disable is None:
 	cmdargs.disable = ()
+dmx = DummyCtx(author=DummyCtx(name='(loader)'))
 if 'scratch' not in cmdargs.disable:
+	logger.info('Loading Scratch', extra={'ctx': dmx})
 	from kenny2automate.scratch import Scratch
 	client.add_cog(Scratch(client))
 if 'numguess' not in cmdargs.disable:
+	logger.info('Loading Numguess', extra={'ctx': dmx})
 	from kenny2automate.numguess import Numguess
 	client.add_cog(Numguess())
 if 'wiki' not in cmdargs.disable:
+	logger.info('Loading Wiki', extra={'ctx': dmx})
 	from kenny2automate.wiki import Wiki
 	client.add_cog(Wiki(client, logger, DGBANSERVERID))
 if 'regexes' not in cmdargs.disable:
+	logger.info('Loading Regexes', extra={'ctx': dmx})
 	from kenny2automate.regexes import Regexes
 	client.add_cog(Regexes())
 if 'connect4' not in cmdargs.disable:
+	logger.info('Loading Connect4', extra={'ctx': dmx})
 	from kenny2automate.connect4 import Connect4
 	client.add_cog(Connect4(client, db))
 if 'hangman' not in cmdargs.disable:
+	logger.info('Loading Hangman', extra={'ctx': dmx})
 	from kenny2automate.hangman import Hangman
 	client.add_cog(Hangman(client, db))
 if 'cardgames' not in cmdargs.disable:
+	logger.info('Loading Card Games', extra={'ctx': dmx})
 	from kenny2automate.card_games import CardGames
 	client.add_cog(CardGames(client, db))
 if 'battleship' not in cmdargs.disable:
+	logger.info('Loading Battleship', extra={'ctx': dmx})
 	from kenny2automate.battleship import Battleship
 	client.add_cog(Battleship(client, db))
 if 'fight' not in cmdargs.disable:
+	logger.info('Loading Fight', extra={'ctx': dmx})
 	from kenny2automate.fight import Fight
 	client.add_cog(Fight(client, db))
 if 'evolution' not in cmdargs.disable:
+	logger.info('Loading Evolution', extra={'ctx': dmx})
 	from kenny2automate.evolution import Evolution
 	client.add_cog(Evolution(client, db))
 

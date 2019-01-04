@@ -48,7 +48,7 @@ class CardGames(Games):
 		books = [[] for _ in players]
 		def stats(pid, footer, desc=None):
 			emb = embed(dmx[pid],
-				title=('card_games/fish-stats-title'),
+				title=('card_games/fish-stats-title',),
 				description=(
 					i18n(dmx[pid], *desc)
 					if desc

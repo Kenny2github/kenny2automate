@@ -34,7 +34,7 @@ class Games(object):
 			startx = self._global_games[name]['ctxs'][0]
 			ctlen = len(self._global_games[name]['ctxs'])
 			await startx.send(embed=embed(startx,
-				title=('games/player-joined-title,'),
+				title=('games/player-joined-title',),
 				description=(
 					'games/player-joined',
 					max(0, minim - ctlen),
