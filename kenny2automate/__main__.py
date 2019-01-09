@@ -1,12 +1,17 @@
+#low-level
 import sys
 import os
+import subprocess
 import re
+#mid-level
 import logging
 import traceback
 import pickle
 import sqlite3 as sql
+#high-level
 import asyncio as a
 import argparse
+#3rd-party
 import discord as d
 from discord.ext.commands import Bot
 from discord.ext.commands import bot_has_permissions
@@ -37,6 +42,8 @@ parser = argparse.ArgumentParser(description='Run the bot.')
 parser.add_argument('prefix', nargs='?', help='the bot prefix', default=';')
 parser.add_argument('--disable', nargs='*', metavar='module',
 	help='modules not to run')
+parser.add_argument('--loop', action='store_true', default=False,
+	help='re-run on file change')
 parser.add_argument('-v', action='store_true', help='let print() calls through')
 cmdargs = parser.parse_args()
 
@@ -476,7 +483,11 @@ async def update_if_changed():
 	while 1:
 		for f, mtime in WATCHED_FILES_MTIMES:
 			if os.path.getmtime(f) > mtime:
-				await client.close()
+				if cmdargs.loop:
+					os.system('./discordapp start')
+					return
+				else:
+					await client.close()
 		await a.sleep(1)
 
 @client.command()
@@ -485,14 +496,18 @@ async def stop(ctx):
 	"""Stop the bot."""
 	await client.close()
 
-print('Defined stuff')
-
 with open('login.txt') as f:
 	token = f.read().strip()
 
 try:
 	client.loop.create_task(update_if_changed())
-	client.run(token)
+	if cmdargs.loop:
+		others = subprocess.check_output("ps aux | grep -v grep | grep 'kenny2automate' | awk '{print $2}'", shell=True).splitlines()
+		for i in others:
+			if int(i) == os.getpid():
+				continue
+			os.system('kill -2 {}'.format(i.decode('ascii')))
+		client.run(token)
 finally:
 	dbw.commit()
 	dbw.close()

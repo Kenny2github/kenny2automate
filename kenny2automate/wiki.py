@@ -470,7 +470,7 @@ class Wiki(object):
 			# ;Changes average multiple by
 			diff_avg_mult_from_median = average_mult - avg_mult_wo_median
 		#generate
-		embed = _embed(
+		embed = _embed(ctx,
 			title=('wiki/analyzega-total-title',),
 			description=('wiki/analyzega-total-description',),
 			color=0x55acee
