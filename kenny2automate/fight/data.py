@@ -28,33 +28,31 @@ class RandomWeapon(object):
         instance.weapon = random.choice(list(weapons.values()))
         return instance.weapon
 
-def fangs(user, opponent):
-    """fight/weapon-fangs-damage"""
-    user.health += 1
-    if isinstance(opponent.armor.defense, int):
-        damage = max(0, 2 - opponent.armor.defense)
-    else:
-        damage = 2
-    opponent.health -= damage
-    return damage
+class DamageFuncs(object):
+    @staticmethod
+    def fangs(user, opponent):
+        """fight/weapon-fangs-damage"""
+        user.health += 1
+        if isinstance(opponent.armor.defense, int):
+            damage = max(0, 2 - opponent.armor.defense)
+        else:
+            damage = 2
+        opponent.health -= damage
+        return damage
 
-def bomb(user, opponent):
-    """fight/weapon-bomb-damage"""
-    if random.randint(1, 6) + random.randint(1, 6) >= 6:
-        opponent.health -= 10
-        return 10
-    return 0
-
-fns = {
-    'fangs': fangs,
-    'bomb': bomb
-}
+    @staticmethod
+    def bomb(user, opponent):
+        """fight/weapon-bomb-damage"""
+        if random.randint(1, 6) + random.randint(1, 6) >= 6:
+            opponent.health -= 10
+            return 10
+        return 0
 
 with open(os.path.join(os.path.dirname(__file__), 'weapons.json')) as f:
     weapons = json.load(f)
     for name, value in weapons.items():
         if isinstance(value['damage'], str):
-            value['damage'] = fns[value['damage']]
+            value['damage'] = getattr(DamageFuncs, value['damage'])
         weapons[name] = Weapon(**value)
 
 @_dataclass
@@ -72,22 +70,20 @@ class Armor(object):
             raise c.BadArgument('{!r} is not a valid armor'.format(argument))
         return armors[argument]
 
-def firesuit(user, opponent, damage):
-    """fight/armor-firesuit-defense"""
-    if opponent.weapon.name[13:] == 'fire':
-        user.health += damage
-        return 0
-    return damage
-
-fns = {
-    'firesuit': firesuit
-}
+class DefenseFuncs(object):
+    @staticmethod
+    def defensefunc_firesuit(user, opponent, damage):
+        """fight/armor-firesuit-defense"""
+        if opponent.weapon.name[13:] == 'fire':
+            user.health += damage
+            return 0
+        return damage
 
 with open(os.path.join(os.path.dirname(__file__), 'armors.json')) as f:
     armors = json.load(f)
     for name, value in armors.items():
         if isinstance(value['defense'], str):
-            value['defense'] = fns[value['defense']]
+            value['defense'] = getattr(DefenseFuncs, value['defense'])
         armors[name] = Armor(**value)
 
 @_dataclass
@@ -105,26 +101,24 @@ class Item(object):
             raise c.BadArgument('{!r} is not a valid item'.format(argument))
         return items[argument]
 
-def bandages(user, enemy):
-    """fight/item-bandages-action"""
-    user.health += 5
+class ActionFuncs(object):
+    @staticmethod
+    def bandages(user, enemy):
+        """fight/item-bandages-action"""
+        user.health += 5
 
-def luck(user, opponent):
-    """fight/item-luck-action"""
-    if (random.randint(1, 6) + random.randint(1, 6)) <= 6:
-        opponent.health -= 1
-    else:
-        opponent.health += 1
-
-fns = {
-    'bandages': bandages,
-    'luck': luck
-}
+    @staticmethod
+    def luck(user, opponent):
+        """fight/item-luck-action"""
+        if (random.randint(1, 6) + random.randint(1, 6)) <= 6:
+            opponent.health -= 1
+        else:
+            opponent.health += 1
 
 with open(os.path.join(os.path.dirname(__file__), 'items.json')) as f:
     items = json.load(f)
     for name, value in items.items():
-        value['action'] = fns[value['action']]
+        value['action'] = getattr(ActionFuncs, value['action'])
         items[name] = Item(**value)
 
 @_dataclass
