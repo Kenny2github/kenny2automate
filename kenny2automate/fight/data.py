@@ -72,7 +72,7 @@ class Armor(object):
 
 class DefenseFuncs(object):
     @staticmethod
-    def defensefunc_firesuit(user, opponent, damage):
+    def firesuit(user, opponent, damage):
         """fight/armor-firesuit-defense"""
         if opponent.weapon.name[13:] == 'fire':
             user.health += damage
