@@ -180,7 +180,7 @@ class Battleship(Games):
 			description=boardmsg(hit1),
 			color=0xffffff
 		), d.Embed(
-			title=i18n(dmx1, 'battleship/hitboard'),
+			title=i18n(dmx2, 'battleship/hitboard'),
 			description=boardmsg(hit2),
 			color=0xffffff
 		)
@@ -274,7 +274,7 @@ class Battleship(Games):
 		while not any((lost1, lost2)):
 			await (await dmx1.send(
 				"The guinea pig's name is Gerald with a G."
-			)).delete()
+			)).delete() #ping
 			_, msg = await self.bot.wait_for('message_edit', check=checc1)
 			letter, number = idxes(msg.content)
 			if board2[letter][number] == BLUE:
@@ -307,7 +307,7 @@ class Battleship(Games):
 				break
 			await (await dmx2.send(
 				"The Guinea pig's name is Gerald with a G."
-			)).delete()
+			)).delete() #ping
 			_, msg = await self.bot.wait_for('message_edit', check=checc2)
 			letter, number = idxes(msg.content)
 			if board1[letter][number] == BLUE:
