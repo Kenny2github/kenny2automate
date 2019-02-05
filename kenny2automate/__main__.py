@@ -159,10 +159,6 @@ if 'numguess' not in cmdargs.disable:
 	logger.info('Loading Numguess', extra={'ctx': dmx})
 	from kenny2automate.numguess import Numguess
 	client.add_cog(Numguess())
-if 'wiki' not in cmdargs.disable:
-	logger.info('Loading Wiki', extra={'ctx': dmx})
-	from kenny2automate.wiki import Wiki
-	client.add_cog(Wiki(client, logger, DGBANSERVERID))
 if 'regexes' not in cmdargs.disable:
 	logger.info('Loading Regexes', extra={'ctx': dmx})
 	from kenny2automate.regexes import Regexes
