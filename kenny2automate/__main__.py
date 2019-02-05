@@ -2,7 +2,6 @@
 import sys
 import os
 import subprocess
-import re
 #mid-level
 import logging
 import traceback
@@ -240,7 +239,7 @@ async def whoami(ctx):
 			ctx.author.display_name
 		)
 	)
-	embed.set_thumbnail(url=ctx.author.avatar_url)
+	emb.set_thumbnail(url=ctx.author.avatar_url)
 	things = {
 		'status': i18n(ctx, 'whoami-status'),
 		'activity': i18n(ctx, 'whoami-activity'),
