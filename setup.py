@@ -11,14 +11,13 @@ setup(
 		'Development Status :: 4 - Beta',
 		'Intended Audience :: Developers',
 		'Topic :: Communications :: Chat',
-		'Topic :: Games/Entertainment :: Turn Based Strategy'
+		'Topic :: Games/Entertainment :: Turn Based Strategy',
 		'License :: OSI Approved :: MIT License',
 		'Natural Language :: English',
 		'Natural Language :: Chinese (Traditional)',
 		'Natural Language :: Japanese',
 		'Operating System :: Microsoft :: Windows :: Windows 10',
 		'Operating System :: POSIX :: Linux'
-		'Programming Language :: Python :: 3.5',
 		'Programming Language :: Python :: 3.6',
 		'Programming Language :: SQL'
 	],

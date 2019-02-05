@@ -102,18 +102,6 @@ client = Bot(
 	activity=d.Activity(type=d.ActivityType.watching, name=cmdargs.prefix + 'help')
 )
 
-@client.listen()
-async def on_message(msg):
-	ctx = await client.get_context(msg)
-	if (ctx.guild
-		and ctx.channel.permissions_for(ctx.guild.me).manage_messages
-		and ctx.guild.id == DGBANSERVERID
-	):
-		if re.search(r'https?://discord(\.gg|app\.com/invite)',
-				msg.content, re.I):
-			await msg.delete()
-			return
-
 @client.event
 async def on_message_delete(msg):
 	if msg.mentions:
@@ -122,7 +110,6 @@ async def on_message_delete(msg):
 
 @client.event
 async def on_command_error(ctx, exc):
-	logger.error('{} failed: {}'.format(ctx.command, exc), extra={'ctx': ctx})
 	if hasattr(ctx.command, 'on_error'):
 		return
 	cog = ctx.cog
@@ -148,8 +135,12 @@ async def on_command_error(ctx, exc):
 		c.TooManyArguments,
 	)):
 		return
-	print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
-	traceback.print_exception(type(exc), exc, exc.__traceback__, file=sys.stderr)
+	logger.error('Ignoring exception in command {}:\n'.format(ctx.command)
+		+ ''.join(traceback.format_exception(
+			type(exc), exc, exc.__traceback__
+		)),
+		extra={'ctx': ctx}
+	)
 
 @client.before_invoke
 async def before_invoke(ctx):
@@ -507,7 +498,7 @@ try:
 			if int(i) == os.getpid():
 				continue
 			os.system('kill -2 {}'.format(i.decode('ascii')))
-		client.run(token)
+	client.run(token)
 finally:
 	dbw.commit()
 	dbw.close()

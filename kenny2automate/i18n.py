@@ -216,10 +216,11 @@ class I18n(object):
     async def lang(self, ctx, *, lang: str = None):
         """Set your language."""
         if lang is None:
-            db.execute(
-                'UPDATE users SET lang=NULL WHERE user_id=?',
-                (ctx.author.id,)
-            )
+            with db.connection:
+                db.execute(
+                    'UPDATE users SET lang=NULL WHERE user_id=?',
+                    (ctx.author.id,)
+                )
             await ctx.send('Successfully reset language for {}'.format(
                 ctx.author.mention
             ))
@@ -243,16 +244,17 @@ class I18n(object):
             'SELECT lang FROM users WHERE user_id=?',
             (ctx.author.id,)
         ).fetchone()
-        if res is None:
-            db.execute(
-                'INSERT INTO users (user_id, lang) VALUES (?, ?)',
-                (ctx.author.id, lang)
-            )
-        else:
-            db.execute(
-                'UPDATE users SET lang=? WHERE user_id=?',
-                (lang, ctx.author.id)
-            )
+        with db.connection:
+            if res is None:
+                db.execute(
+                    'INSERT INTO users (user_id, lang) VALUES (?, ?)',
+                    (ctx.author.id, lang)
+                )
+            else:
+                db.execute(
+                    'UPDATE users SET lang=? WHERE user_id=?',
+                    (lang, ctx.author.id)
+                )
         await ctx.send('Successfully set language for {} to {}'.format(
             ctx.author.mention, lang
         ))
@@ -268,10 +270,11 @@ class I18n(object):
         if channel is None:
             channel = ctx.channel
         if lang is None:
-            db.execute(
-                'UPDATE channels SET lang=NULL WHERE channel_id=?',
-                (channel.id,)
-            )
+            with db.connection:
+                db.execute(
+                    'UPDATE channels SET lang=NULL WHERE channel_id=?',
+                    (channel.id,)
+                )
             await ctx.send('Successfully reset language for {}'.format(
                 channel.mention
             ))
@@ -295,16 +298,17 @@ class I18n(object):
             'SELECT lang FROM channels WHERE channel_id=?',
             (channel.id,)
         ).fetchone()
-        if res is None:
-            db.execute(
-                'INSERT INTO channels (channel_id, lang) VALUES (?, ?)',
-                (channel.id, lang)
-            )
-        else:
-            db.execute(
-                'UPDATE channels SET lang=? WHERE channel_id=?',
-                (lang, channel.id)
-            )
+        with db.connection:
+            if res is None:
+                db.execute(
+                    'INSERT INTO channels (channel_id, lang) VALUES (?, ?)',
+                    (channel.id, lang)
+                )
+            else:
+                db.execute(
+                    'UPDATE channels SET lang=? WHERE channel_id=?',
+                    (lang, channel.id)
+                )
         await ctx.send('Successfully set language for {} to {}'.format(
             channel.mention, lang
         ))
