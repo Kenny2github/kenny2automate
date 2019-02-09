@@ -77,7 +77,7 @@ class Handler:
         sess = self.getsesh(sesh)
         if (
                 not sess
-                or time.time() - sess['last_use'] > 31_557_600 # 1 year
+                or time.time() - sess['last_use'] > 31557600 # 1 year
         ):
             sess = {
                 'logged_in': None,

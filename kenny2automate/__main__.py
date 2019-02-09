@@ -47,14 +47,14 @@ parser.add_argument('--loop', action='store_true', default=False,
 parser.add_argument('-v', action='store_true', help='let print() calls through')
 cmdargs = parser.parse_args()
 
-handler = logging.StreamHandler()#logging.FileHandler('runbot.log', 'w', 'utf8')
+handler = logging.FileHandler('runbot.log', 'w', 'utf8')
 handler.setFormatter(logfmt)
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG if cmdargs.v else logging.INFO)
 logger.addHandler(handler)
-#sys.stderr = LoggerWriter(logger.error)
-#sys.stdout = LoggerWriter(logger.debug)
+sys.stderr = LoggerWriter(logger.error)
+sys.stdout = LoggerWriter(logger.debug)
 
 sql.register_converter('pickle', pickle.loads)
 sql.register_adapter(dict, pickle.dumps)
@@ -472,7 +472,7 @@ async def update_if_changed():
 		for f, mtime in WATCHED_FILES_MTIMES:
 			if os.path.getmtime(f) > mtime:
 				if cmdargs.loop:
-					os.system('./discordapp start')
+					os.system('./discordapp restart')
 					return
 				else:
 					await client.close()
