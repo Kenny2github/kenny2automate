@@ -1,0 +1,153 @@
+body {
+  background-color: #34383c;/*#202225;*/
+  font-family: "open sans", Helvetica, Arial, sans-serif;
+  color: #dcddde;
+  line-height: 1.5;
+  text-rendering: optimizeLegibility;
+  margin: 0;
+}
+.button {
+  background: #62d3f5;
+  outline: none;
+  padding: 10px 30px;
+  color: #000;
+  font-size: 14px;
+  border-radius: 3px;
+  border-width: initial;
+  border-style: none;
+  border-color: initial;
+  transition: border 180ms ease-out 0s, background 180ms ease-out 0s;
+  user-select: none;
+  min-height: 32px;
+  margin-bottom: 20px;
+}
+.button:hover {
+  background: #32c5f2;
+  cursor: pointer;
+}
+.button.big {
+  height: 60px;
+}
+.middle {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.middle h1 {
+  font-size: 3em;
+}
+.center {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.center h1 {
+  font-size: 3em;
+}
+/* box around slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+/* hide default */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+/* the slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 34px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: #2196f3;
+}
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+input[type=text], .channel div {
+    font-size: 14px;
+    color: #fff;
+    border: 1px solid #1a1a1a;
+    background: #2b2f33;
+    border-radius: 3px;
+    padding: 8px;
+    font-weight: 500;
+    outline: none;
+    transition: border 250ms ease-out;
+}
+input[type=text] {
+  width: 100%;
+}
+input[type=text]:hover, select:hover, .channel div:hover {
+  border-color: #000;
+}
+input[type=text]:focus, select:focus, .channel div:focus {
+  border-color: #000;
+}
+.channel div, .flex-left-right {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+select {
+  color: #fff;
+  border: 1px solid #1a1a1a;
+  background: #2b2f33;
+  border-radius: 3px;
+  padding: 8px;
+  font-weight: 500;
+  outline: none;
+  transition: border 250ms ease-out;
+}
+table {
+}
+td, th {
+  border: 10px solid rgba(0, 0, 0, 0);
+  text-align: center;
+}
+.right {
+  text-align: right;
+}
+.left {
+  text-align: left;
+}
+td.channel {
+  border: none;
+}
+.guild > img {
+  border-radius: 50%;
+  box-shadow: 0 0 32px #fff;
+}
+.spacer {
+  display: inline-block;
+  width: 30px;
+}

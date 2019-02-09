@@ -1,5 +1,5 @@
 __pycache__/
-*.db
+*.db*
 login.txt
 runbot.log
 *.egg-info

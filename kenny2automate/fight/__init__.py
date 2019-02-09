@@ -6,6 +6,8 @@ from ..games import Games, DummyCtx
 from ..i18n import i18n
 from .data import Weapon, weapons, Armor, armors, Item, items, monsters, Player
 
+GAME_NAME = 'Fight'
+
 locked = set()
 @contextmanager
 def lock(leid):
@@ -418,7 +420,7 @@ user_id=?', (ctx.author.id,))
 
         `gold_at_stake` is the amount of gold for the loser to give the winner.
         """
-        player1, player2 = await self._gather_game(ctx, 'Fight', against)
+        player1, player2 = await self._gather_game(ctx, GAME_NAME, against)
         with lock(player1.dm_channel.id) as stopq:
             if stopq:
                 await ctx.send(i18n(ctx, 'fight/battle-cancelled', 1))

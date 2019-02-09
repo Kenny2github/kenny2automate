@@ -23,6 +23,10 @@ setup(
 	],
 	keywords='discord bot fun',
 	packages=find_packages(),
-	install_requires=['discord.py', 'requests', 'mw-api-client'],
+	install_requires=[
+		'discord.py',
+		'requests',
+		'aiohttp',
+	],
 	python_requires='>=3.6',
 )

@@ -10,10 +10,12 @@ BLUE, RED, BLACK, SHAKE, NEIN, DOWN = \
 REGA, REGB, REGC, REGD, REGE, REGF, REGG = REGS = \
 	'1\u20e3 2\u20e3 3\u20e3 4\u20e3 5\u20e3 6\u20e3 7\u20e3'.split(' ')
 
+GAME_NAME = 'Connect 4'
+
 class Connect4(Games):
 	@command()
 	async def connect4_leave(self, ctx):
-		await self._unjoin_global_game(ctx, 'Connect 4')
+		await self._unjoin_global_game(ctx, GAME_NAME)
 
 	async def connect4_global(self, ctxs):
 		"""Global connect4 coroutine!"""
@@ -303,13 +305,14 @@ class Connect4(Games):
 		"""
 		if against and against.id == self.bot.user.id:
 			return await self._join_global_game(
-				ctx, 'Connect 4', self.connect4_global
+				ctx, GAME_NAME, self.connect4_global,
+				jcn='connect4 ' + self.bot.user.mention
 			)
 		regs = REGS[:]
 		if against and against.id == ctx.author.id:
 			player1 = player2 = against
 		else:
-			player1, player2 = await self._gather_game(ctx, 'Connect 4', against)
+			player1, player2 = await self._gather_game(ctx, GAME_NAME, against)
 		board = self.genboard()
 		redwon, bluewon = False, False
 		checkwin = self.checkwin

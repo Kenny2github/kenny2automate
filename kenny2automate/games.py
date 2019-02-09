@@ -19,8 +19,10 @@ class Games(object):
 	_global_games = {}
 
 	async def _join_global_game(
-		self, ctx, name, coro, *, maxim=2, minim=2, scn=None
+		self, ctx, name, coro, *,
+		maxim=2, minim=2, scn=None, jcn=None
 	):
+		assert maxim >= minim
 		if name in self._global_games:
 			for c in self._global_games[name]['ctxs']:
 				if c.author.id == ctx.author.id:
@@ -48,7 +50,7 @@ class Games(object):
 					description=('games/enough-players', ctx.prefix + scn),
 					color=0x55acee
 				))
-			if ctlen >= maxim:
+			elif ctlen >= maxim:
 				await self._start_global_game(
 					startx, name, maxim=maxim, minim=minim
 				)
@@ -57,6 +59,53 @@ class Games(object):
 				'ctxs': [ctx],
 				'coro': coro
 			}
+			coros = []
+			for row in self.db.execute(
+				'SELECT channel_id FROM channels WHERE games_ping LIKE ?',
+				('%{}%'.format(name),)
+			).fetchall():
+				channel = self.bot.get_channel(row[0])
+				if channel is None:
+					continue
+				if channel.id == ctx.channel.id:
+					continue
+				coros.append(channel.send(embed=embed(
+					DummyCtx(
+						author=DummyCtx(id=0),
+						channel=channel
+					),
+					title=('games/game-waiting-title',),
+					description=('games/game-waiting', name, ctx.prefix + jcn),
+					color=0x55acee
+				)))
+			for row in self.db.execute(
+				'SELECT user_id FROM users WHERE games_ping LIKE ?',
+				('%{}%'.format(name),)
+			).fetchall():
+				user = self.bot.get_user(row[0])
+				if user is None:
+					continue
+				if user.id == ctx.author.id:
+					continue
+				for i in self.bot.guilds:
+					member = i.get_member(user.id)
+					if member is not None:
+						break
+				if str(member.status) != 'online':
+					continue
+				if user.dm_channel is None:
+					await user.create_dm()
+				coros.append(user.dm_channel.send(embed=embed(
+					DummyCtx(
+						author=user,
+						channel=user.dm_channel
+					),
+					title=('games/game-waiting-title',),
+					description=('games/game-waiting', name, ctx.prefix + jcn),
+					footer=('games/game-waiting-footer', name),
+					color=0x55acee
+				)))
+			await a.gather(*coros, return_exceptions=True)
 		await ctx.send(embed=embed(ctx,
 			title=('games/joined', name),
 			description=(

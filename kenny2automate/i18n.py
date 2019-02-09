@@ -18,8 +18,14 @@ with open(os.path.abspath(os.path.join(
 ))) as f:
     LANGS = json.load(f)
 
+LANG = tuple(
+    i[:-5]
+    for i in os.listdir(i18ndir)
+    if os.path.isfile(os.path.join(i18ndir, i))
+)
+
 def lang(ctx):
-    """Get a user's set language."""
+    """Get a language for a context."""
     res = db.execute(
         'SELECT lang FROM users WHERE user_id=?',
         (ctx.author.id,)
@@ -34,9 +40,12 @@ def lang(ctx):
     res = res['lang']
     return res
 
-def i18n(ctx, key, *params):
+def i18n(ctx_or_lang, key, *params):
     """Return an i18n string by key, passing *params as format parameters."""
-    res = lang(ctx)
+    if not isinstance(ctx_or_lang, str):
+        res = lang(ctx_or_lang)
+    else:
+        res = ctx_or_lang
     dirq, key = os.path.split(key)
     if res == 'qqx':
         return (
@@ -73,7 +82,7 @@ def i18n(ctx, key, *params):
         return i18njson[key].format(*params)
     return i18njson[key].format(*params)
 
-def embed(ctx, title=None, description=None, fields=None, **kwargs):
+def embed(ctx, title=None, description=None, fields=None, footer=None, **kwargs):
     """Return an Embed with internationalized data.
 
     ``title`` and ``description``, if specified, must be strings or iterables.
@@ -97,6 +106,12 @@ def embed(ctx, title=None, description=None, fields=None, **kwargs):
         ),
         **kwargs
     )
+    if footer is not None:
+        e.set_footer(text=(
+            footer
+            if isinstance(footer, (str, type(None)))
+            else i18n(ctx, *footer)
+        ))
     if not fields:
         return e
     for name, value, inline in fields:

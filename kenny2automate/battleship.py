@@ -7,6 +7,8 @@ from .games import Games
 from .i18n import i18n, embed
 from .utils import DummyCtx
 
+GAME_NAME = 'Battleship'
+
 class Battleship(Games):
 	@command()
 	@bot_has_permissions(add_reactions=True, read_message_history=True)
@@ -31,7 +33,7 @@ class Battleship(Games):
 			)
 			return emb
 		try:
-			player1, player2 = await self._gather_game(ctx, 'Battleship',
+			player1, player2 = await self._gather_game(ctx, GAME_NAME,
 				against, helpfunc)
 		except (TypeError, ValueError):
 			return

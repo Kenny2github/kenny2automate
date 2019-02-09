@@ -5,6 +5,8 @@ from .games import Games
 from .i18n import i18n, embed
 from .utils import DummyCtx
 
+GO_FISH_NAME = 'Go Fish'
+
 class Card(object):
 	SUITS = tuple('\u2660 \u2663 \u2665 \u2666'.split(' '))
 	NUMBERS = tuple(('\U0001f1e6 2\u20e3 3\u20e3 4\u20e3 5\u20e3 6\u20e3'
@@ -277,13 +279,14 @@ class CardGames(Games):
 	async def fish_join(self, ctx):
 		"""Join (or start) a game of fish!"""
 		await self._join_global_game(
-			ctx, 'Go Fish', self.do_fish, maxim=float('inf'), scn='fish start'
+			ctx, GO_FISH_NAME, self.do_fish,
+			maxim=float('inf'), scn='fish start', jcn='fish join'
 		)
 
 	@fish.command(name='leave')
 	async def fish_leave(self, ctx):
 		"""Leave the game of fish you joined."""
-		await self._unjoin_global_game(ctx, 'Go Fish')
+		await self._unjoin_global_game(ctx, GO_FISH_NAME)
 
 	@fish.command(name='start')
 	async def fish_start(self, ctx):
@@ -291,11 +294,11 @@ class CardGames(Games):
 		If you did not create the currently queueing game, you cannot run this
 		command.
 		"""
-		if 'Go Fish' not in self._global_games:
+		if GO_FISH_NAME not in self._global_games:
 			return
-		if ctx.author.id != self._global_games['Go Fish']['ctxs'][0].author.id:
+		if ctx.author.id != self._global_games[GO_FISH_NAME]['ctxs'][0].author.id:
 			return
-		await self._start_global_game(ctx, 'Go Fish', maxim=float('inf'))
+		await self._start_global_game(ctx, GO_FISH_NAME, maxim=float('inf'))
 
 	@fish.command(name='help')
 	async def fish_help(self, ctx):
@@ -303,7 +306,7 @@ class CardGames(Games):
 		if not ctx.author.dm_channel:
 			await ctx.author.create_dm()
 		await ctx.author.dm_channel.send(embed=embed(ctx,
-			title=('games/help-title', 'Go Fish'),
+			title=('games/help-title', GO_FISH_NAME),
 			description=('card_games/fish-help',),
 			color=0x55acee
 		))

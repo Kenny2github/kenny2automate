@@ -17,6 +17,7 @@ from discord.ext.commands import bot_has_permissions
 from discord.ext.commands import has_permissions
 from discord.ext import commands as c
 from kenny2automate.utils import DummyCtx
+from kenny2automate.server import Handler
 
 DGBANSERVERID = 328938947717890058
 #DGBANSERVERID = 337100820371996675
@@ -46,16 +47,17 @@ parser.add_argument('--loop', action='store_true', default=False,
 parser.add_argument('-v', action='store_true', help='let print() calls through')
 cmdargs = parser.parse_args()
 
-handler = logging.FileHandler('runbot.log', 'w', 'utf8')
+handler = logging.StreamHandler()#logging.FileHandler('runbot.log', 'w', 'utf8')
 handler.setFormatter(logfmt)
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG if cmdargs.v else logging.INFO)
 logger.addHandler(handler)
-sys.stderr = LoggerWriter(logger.error)
-sys.stdout = LoggerWriter(logger.debug)
+#sys.stderr = LoggerWriter(logger.error)
+#sys.stdout = LoggerWriter(logger.debug)
 
 sql.register_converter('pickle', pickle.loads)
+sql.register_adapter(dict, pickle.dumps)
 if not os.path.isfile('kenny2automate.db'):
 	dbv = -1
 else:
@@ -63,7 +65,7 @@ else:
 dbw = sql.connect('kenny2automate.db', detect_types=sql.PARSE_DECLTYPES)
 dbw.row_factory = sql.Row
 db = dbw.cursor()
-LATEST_DBV = 1
+LATEST_DBV = 2
 dbv = dbv or db.execute('PRAGMA user_version').fetchone()[0]
 if dbv < LATEST_DBV:
 	logger.info('Current dbv {} is less than latest {}, upgrading...'.format(
@@ -453,7 +455,7 @@ def recurse_mtimes(dir, *s):
 	for i in os.listdir(os.path.join(*s, dir)):
 		if os.path.isdir(os.path.join(*s, dir, i)):
 			recurse_mtimes(i, *s, dir)
-		elif i.endswith('.pyc'):
+		elif not i.endswith(('.py', '.sql', '.json')):
 			pass
 		else:
 			WATCHED_FILES_MTIMES.append((
@@ -474,7 +476,10 @@ async def update_if_changed():
 					return
 				else:
 					await client.close()
-		await a.sleep(1)
+		try:
+			await a.sleep(1)
+		except (KeyboardInterrupt, a.CancelledError):
+			return
 
 @client.command()
 @c.is_owner()
@@ -483,17 +488,34 @@ async def stop(ctx):
 	await client.close()
 
 with open('login.txt') as f:
-	token = f.read().strip()
+	token = f.readline().strip()
+	client_id = f.readline().strip()
+	client_secret = f.readline().strip()
+	web_root = f.readline().strip()
 
 try:
-	client.loop.create_task(update_if_changed())
+	wakeup = client.loop.create_task(update_if_changed())
 	if cmdargs.loop:
 		others = subprocess.check_output("ps aux | grep -v grep | grep 'kenny2automate' | awk '{print $2}'", shell=True).splitlines()
 		for i in others:
 			if int(i) == os.getpid():
 				continue
 			os.system('kill -2 {}'.format(i.decode('ascii')))
-	client.run(token)
+	server = Handler(
+		client, db, logger, cmdargs.prefix,
+		client_id, client_secret, web_root
+	)
+	client.loop.run_until_complete(server.run())
+	client.loop.run_until_complete(client.start(token))
+except KeyboardInterrupt:
+	pass
 finally:
+	sys.stdout = sys.__stdout__
+	sys.stderr = sys.__stderr__
+	wakeup.cancel()
+	client.loop.run_until_complete(client.close())
+	client.loop.run_until_complete(server.stop())
+	client.loop.stop()
+	client.loop.close()
 	dbw.commit()
 	dbw.close()
