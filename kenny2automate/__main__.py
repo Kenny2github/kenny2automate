@@ -40,14 +40,26 @@ class LoggerWriter(object):
 
 parser = argparse.ArgumentParser(description='Run the bot.')
 parser.add_argument('prefix', nargs='?', help='the bot prefix', default=';')
-parser.add_argument('--disable', nargs='*', metavar='module',
-	help='modules not to run')
-parser.add_argument('--loop', action='store_true', default=False,
-	help='re-run on file change')
+parser.add_argument(
+	'--disable', nargs='*', metavar='module',
+	help='modules not to run'
+)
+parser.add_argument(
+	'--loop', action='store_true', default=False,
+	help='re-run on file change'
+)
+parser.add_argument(
+	'--stdout', action='store_true', default=False,
+	help='log to stdout instead of a file'
+)
 parser.add_argument('-v', action='store_true', help='let print() calls through')
 cmdargs = parser.parse_args()
 
-handler = logging.FileHandler('runbot.log', 'w', 'utf8')
+handler = (
+	logging.StreamHandler()
+	if cmdargs.stdout
+	else logging.FileHandler('runbot.log', 'w', 'utf8')
+)
 handler.setFormatter(logfmt)
 
 logger = logging.getLogger(__name__)

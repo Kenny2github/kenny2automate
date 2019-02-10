@@ -287,8 +287,8 @@ class I18n(object):
         if lang is None:
             with db.connection:
                 db.execute(
-                    'UPDATE channels SET lang=NULL WHERE channel_id=?',
-                    (channel.id,)
+                    'UPDATE channels SET lang=? WHERE channel_id=?',
+                    (None, channel.id,)
                 )
             await ctx.send('Successfully reset language for {}'.format(
                 channel.mention

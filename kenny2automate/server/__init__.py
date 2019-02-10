@@ -1,4 +1,5 @@
 import os
+import re
 import time
 from urllib.parse import quote_plus as urlquote
 import sqlite3 as sql
@@ -170,6 +171,32 @@ class Handler:
         if not self.logged_in(request):
             self.notfound()
 
+    def lang(self, request):
+        if not self.logged_in(request):
+            available = set(LANG.keys())
+            preferred = (j[0] for j in sorted((
+                (i.group(1), float(i.group(2) or '1'))
+                for i in re.finditer(
+                    r'(?<![a-z])([a-z][a-z](?:-[a-z]+|[a-z])?)(?:\s*;\s*q=('
+                    r'[01](?:\.[0-9])?))?(?:,\s*|$)',
+                    request.headers.get('Accept-Language'),
+                    re.I
+                )
+            ), key=lambda i: i[1], reverse=True))
+            for i in preferred:
+                if i in available:
+                    return i
+            return 'en'
+        sesh = self.getsesh(request)
+        self.checkuser(sesh['client']['id'])
+        res = self.db.execute(
+            'SELECT lang FROM users WHERE user_id=?',
+            (sesh['client']['id'],)
+        ).fetchone()
+        if res is None or res['lang'] is None:
+            return 'en'
+        return res['lang']
+
     def letext(self, filename, title='kenny2automate'):
         with open(self.fil('template.html')) as f1, open(self.fil(filename)) as f2:
             return f1.read().format(title, f2.read())
@@ -177,15 +204,31 @@ class Handler:
     async def index(self, request):
         resp = web.Response(content_type='text/html')
         sesh = await self.checksesh(request, resp)
+        lan = self.lang(request)
         if not self.logged_in(request):
-            resp.text = self.letext('notloggedin.html', 'Not Logged In').format(
+            resp.text = self.letext(
+                'notloggedin.html',
+                i18n(lan, 'server/notloggedin;h1')
+            ).format(
                 self.getsesh(sesh or request)['state'],
                 self.client_id,
-                urlquote(self.web_root + '/login')
+                urlquote(self.web_root + '/login'),
+                h1=i18n(lan, 'server/notloggedin;h1'),
+                p=i18n(lan, 'server/notloggedin;p'),
+                login=i18n(lan, 'server/notloggedin;login')
             )
             return resp
-        resp.text = self.letext('index.html', 'Welcome, {0}').format(
+        h1 = i18n(
+            lan, 'server/index;h1',
             self.getsesh(request)['client']['username']
+        )
+        resp.text = self.letext(
+            'index.html',
+            h1
+        ).format(
+            h1=h1,
+            settings=i18n(lan, 'server/index;settings'),
+            servers=i18n(lan, 'server/index;servers')
         )
         return resp
 
@@ -254,11 +297,13 @@ class Handler:
         options = ''.join('<option value="{}"{}>{}</option>'.format(
             i, ' selected' if i == lang else '', j
         ) for i, j in LANG.items())
-        options = '<option value=""{}>Auto</option>'.format(
-            ' selected' if lang is None else ''
+        options = '<option value=""{}>{}</option>'.format(
+            ' selected' if lang is None else '',
+            i18n(lang or 'en', 'server/lang-auto')
         ) + options
         ping_th = ''.join(
-            '<th>Message for {}</th>'.format(i) for i in GLOBAL_GAMES
+            '<th>{}</th>'.format(i18n(lang or 'en', 'server/ping-message', i))
+            for i in GLOBAL_GAMES
         )
         ping_options = '\n'.join(
             """        <td><label class="switch">
@@ -268,11 +313,19 @@ class Handler:
             for g in GLOBAL_GAMES
         )
         return web.Response(
-            text=self.letext('settings.html', 'Settings').format(
+            text=self.letext(
+                'settings.html',
+                i18n(lang or 'en', 'server/settings;h1')
+            ).format(
                 prefix,
                 options,
                 ping_th,
                 ping_options,
+                h1=i18n(lang or 'en', 'server/settings;h1'),
+                prefix=i18n(lang or 'en', 'server/settings;prefix'),
+                lang=i18n(lang or 'en', 'server/settings;lang'),
+                save=i18n(lang or 'en', 'server/server;save'),
+                back=i18n(lang or 'en', 'server/server;back'),
             ),
             content_type='text/html'
         )
@@ -300,6 +353,7 @@ class Handler:
     async def servers(self, request):
         await self.elg(request)
         sess = self.getsesh(request)
+        lan = self.lang(request)
         guilds = tuple(filter(
             lambda i: (
                 i and i.get_member(
@@ -318,7 +372,15 @@ class Handler:
             str(request.path), i.id, i.name, i.icon_url_as(format='png', size=64)
         ) for i in guilds)
         return web.Response(
-            text=self.letext('servers.html', 'Servers').format(options),
+            text=self.letext(
+                'servers.html',
+                i18n(lan, 'server/servers;h1')
+            ).format(
+                options,
+                h1=i18n(lan, 'server/servers;h1'),
+                div=i18n(lan, 'server/servers;div'),
+                back=i18n(lan, 'server/server;back'),
+            ),
             content_type='text/html'
         )
 
@@ -331,14 +393,21 @@ class Handler:
             int(self.getsesh(request)['client']['id'])
         ).guild_permissions.administrator:
             self.notfound()
+        lan = self.lang(request)
         options = """
         <tr>
-            <th>Channel</th>
-            <th>Language</th>
+            <th>{}</th>
+            <th>{}</th>
             {}
-        </tr>""".format('\n'.join(
-                '<th>Message for {}</th>'.format(i) for i in GLOBAL_GAMES
-              ))
+        </tr>""".format(
+            i18n(lan, 'server/server;channel'),
+            i18n(lan, 'server/server;language'),
+            '\n'.join(
+                '<th>{}</th>'.format(i18n(lan, 'server/ping-message', i))
+                for i in GLOBAL_GAMES
+            )
+        )
+        non = i18n(lan, 'server/lang-none')
         for i in guild.text_channels:
             lang = self.db.execute(
                 'SELECT lang, games_ping FROM channels WHERE channel_id=?',
@@ -356,8 +425,8 @@ class Handler:
             lang_options = '\n'.join('<option value="lang={}"{}>{}</option>'.format(
                 a, ' selected' if a == lang else '', b
             ) for a, b in LANG.items())
-            lang_options = '<option value="lang="{}>None</option>\n'.format(
-                ' selected' if lang is None else ''
+            lang_options = '<option value="lang="{}>{}</option>\n'.format(
+                ' selected' if lang is None else '', non
             ) + lang_options
             ping_options = '\n'.join(
                 """        <td><label class="switch">
@@ -376,10 +445,16 @@ class Handler:
     </div></td></tr>""".format(
                 i.name, i.id, lang_options, ping_options
             )
+        h1 = i18n(lan, 'server/server;h1', guild.name)
         return web.Response(
-            text=self.letext('server.html', 'Settings for ' + guild.name).format(
-                server=guild.name,
-                channels=options
+            text=self.letext(
+                'server.html',
+                h1
+            ).format(
+                options,
+                h1=h1,
+                save=i18n(lan, 'server/server;save'),
+                back=i18n(lan, 'server/server;back'),
             ),
             content_type='text/html'
         )

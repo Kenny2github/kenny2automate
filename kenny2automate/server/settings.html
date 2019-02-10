@@ -1,23 +1,29 @@
 <div class="middle">
-  <h1>Settings</h1>
-  <form method="POST" autocomplete="off"><table>
-    <tr>
-      <th class="left"><label for="prefix">Your command prefix</label></th>
-      <td class="right"><input id="prefix" name="prefix" type="text" value="{0}"/></td>
-    </tr>
-    <tr>
-      <th class="left"><label for="lang">Your language</label></th>
-      <td class="right"><select id="lang" name="lang">
-        {1}
-      </select></td>
-    </tr>
-    <tr>{2}</tr>
-    <tr>{3}</tr>
-    <tr>
-      <td><input class="button" type="submit" value="Save" /></td>
-      <td><a href="/">
-        <button class="button" type="button">Back</button>
-      </a></td>
-    </tr>
-  </table></form>
+  <h1>{h1}</h1>
+  <form method="POST" autocomplete="off">
+    <table>
+      <tr>
+        <th class="left"><label for="prefix">{prefix}</label></th>
+        <td class="right"><input id="prefix" name="prefix" type="text" value="{0}"/></td>
+      </tr>
+      <tr>
+        <th class="left"><label for="lang">{lang}</label></th>
+        <td class="right"><select id="lang" name="lang">
+          {1}
+        </select></td>
+      </tr>
+    </table>
+    <table>
+      <tr>{2}</tr>
+      <tr>{3}</tr>
+    </table>
+    <table>
+      <tr>
+        <td><input class="button" type="submit" value="{save}" /></td>
+        <td><a href="/">
+          <button class="button" type="button">{back}</button>
+        </a></td>
+      </tr>
+    </table>
+  </form>
 </div>
