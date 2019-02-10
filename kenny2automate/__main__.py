@@ -21,6 +21,10 @@ from kenny2automate.server import Handler
 
 DGBANSERVERID = 328938947717890058
 #DGBANSERVERID = 337100820371996675
+VERSION = subprocess.check_output(
+	"cd kenny2automate && git rev-parse --short HEAD",
+	shell=True
+).decode('ascii').strip()
 
 logfmt = logging.Formatter(
 	fmt='{asctime} {ctx.author.name}: {message}',
@@ -379,6 +383,7 @@ async def purge(ctx, limit: int = 100, user: d.Member = None, *, matches: str = 
 
 @client.command(name='8ball')
 async def ball(ctx, *, question: str):
+	"""Ask the Magic 8 Ball a question."""
 	choice = sum(question.encode('utf8')) % 20
 	await ctx.send(embed=embed(ctx, description=((
 		'8ball/a1', '8ball/a2', '8ball/a3', '8ball/a4',
@@ -390,11 +395,18 @@ async def ball(ctx, *, question: str):
 
 @client.command()
 async def whois(ctx, *, user: d.User):
+	"""Get the mention of a user."""
 	await ctx.send(embed=d.Embed(description=user.mention))
 
 @client.command()
 async def whereis(ctx, *, channel: d.TextChannel):
+	"""Get the mention of a channel."""
 	await ctx.send(embed=d.Embed(description=channel.mention))
+
+@client.command()
+async def version(ctx):
+	"""Get the bot's current Git version."""
+	await ctx.send(embed=d.Embed(description='`{}`'.format(VERSION)))
 
 @client.command()
 @bot_has_permissions(ban_members=True, add_reactions=True, read_message_history=True)
