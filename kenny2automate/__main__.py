@@ -2,6 +2,7 @@
 import sys
 import os
 import subprocess
+import time
 #mid-level
 import logging
 import traceback
@@ -19,8 +20,6 @@ from discord.ext import commands as c
 from kenny2automate.utils import DummyCtx
 from kenny2automate.server import Handler
 
-DGBANSERVERID = 328938947717890058
-#DGBANSERVERID = 337100820371996675
 VERSION = subprocess.check_output(
 	"cd kenny2automate && git rev-parse --short HEAD",
 	shell=True
@@ -59,10 +58,15 @@ parser.add_argument(
 parser.add_argument('-v', action='store_true', help='let print() calls through')
 cmdargs = parser.parse_args()
 
+if not os.path.isdir('kenny2automate.log'):
+	os.mkdir('kenny2automate.log')
+
 handler = (
 	logging.StreamHandler()
 	if cmdargs.stdout
-	else logging.FileHandler('runbot.log', 'w', 'utf8')
+	else logging.FileHandler('kenny2automate.log/{}.log'.format(
+		time.strftime('%Y-%m-%dT%H-%M-%SZ')
+	), 'w', 'utf8')
 )
 handler.setFormatter(logfmt)
 
@@ -474,7 +478,7 @@ when admins were gone.'.format(dos, nos)
 				color=0x55acee
 			))
 
-WATCHED_FILES_MTIMES = [('login.txt', os.path.getmtime('login.txt'))]
+WATCHED_FILES_MTIMES = [('kenny2automate.txt', os.path.getmtime('kenny2automate.txt'))]
 def recurse_mtimes(dir, *s):
 	for i in os.listdir(os.path.join(*s, dir)):
 		if os.path.isdir(os.path.join(*s, dir, i)):
@@ -511,7 +515,7 @@ async def stop(ctx):
 	"""Stop the bot."""
 	await client.close()
 
-with open('login.txt') as f:
+with open('kenny2automate.txt') as f:
 	token = f.readline().strip()
 	client_id = f.readline().strip()
 	client_secret = f.readline().strip()

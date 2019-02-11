@@ -1,5 +1,5 @@
 __pycache__/
 *.db*
-login.txt
-runbot.log
+kenny2automate.txt
+*.log
 *.egg-info
