@@ -179,7 +179,7 @@ class Handler:
                 for i in re.finditer(
                     r'(?<![a-z])([a-z][a-z](?:-[a-z]+|[a-z])?)(?:\s*;\s*q=('
                     r'[01](?:\.[0-9])?))?(?:,\s*|$)',
-                    request.headers.get('Accept-Language'),
+                    request.headers.get('Accept-Language') or '',
                     re.I
                 )
             ), key=lambda i: i[1], reverse=True))

@@ -362,4 +362,4 @@ class I18n(object):
 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36"
             }
         ))
-        await ctx.send(list(req.json().values())[0])
+        await ctx.send(list(req.json().values())[0] or '\1')

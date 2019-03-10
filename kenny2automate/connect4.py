@@ -312,7 +312,10 @@ class Connect4(Games):
 		if against and against.id == ctx.author.id:
 			player1 = player2 = against
 		else:
-			player1, player2 = await self._gather_game(ctx, GAME_NAME, against)
+			try:
+				player1, player2 = await self._gather_game(ctx, GAME_NAME, against)
+			except TypeError: #returned None
+				return
 		board = self.genboard()
 		redwon, bluewon = False, False
 		checkwin = self.checkwin

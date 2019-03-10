@@ -230,10 +230,13 @@ class Hangman(object):
 		reactionmsg1 = await ctx.send('_ _')
 		reactionmsg2 = await ctx.send('_ _')
 		await status.add_reaction(NEIN)
-		for reg in REGS1:
-			await reactionmsg1.add_reaction(reg)
-		for reg in REGS2:
-			await reactionmsg2.add_reaction(reg)
+		async def regs1():
+			for reg in REGS1:
+				await reactionmsg1.add_reaction(reg)
+		async def regs2():
+			for reg in REGS2:
+				await reactionmsg2.add_reaction(reg)
+		await a.gather(regs1(), regs2())
 		await status.edit(embed=embed(ctx,
 			title=('hangman/main-title',),
 			description=(
@@ -268,7 +271,7 @@ class Hangman(object):
 				return
 			if str(reaction) == NEIN:
 				if user.id == ctx.author.id:
-					await status.edit(embed=embed(
+					await status.edit(embed=embed(ctx,
 						title=('games/game-cancelled-title',),
 						description=('games/game-cancelled',),
 						color=0xff0000
@@ -295,7 +298,7 @@ class Hangman(object):
 					'hangman/main', DGHANGMANSHANPES[shanpe], ''
 				),
 				fields=(
-					(('hangman/missed',), i18n(ctx, 'comma-sep').join(missed), True),
+					(('hangman/missed',), i18n(ctx, 'comma-sep').join(missed) or '\1', True),
 					(('hangman/gotten',), '`{0}`'.format(''.join(letters)), True)
 				),
 				color=0xffffff
