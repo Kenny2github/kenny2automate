@@ -1,17 +1,17 @@
 import json
 import random
 import discord as d
-from discord.ext.commands import group
+from discord.ext.commands import group, Cog
 import requests
 from .i18n import embed
 
 DGSWIKISERVER = 328938947717890058
 
-class Scratch(object):
+class Scratch(Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	def __local_check(self, ctx):
+	def cog_check(self, ctx):
 		if ctx.guild is None:
 			return False
 		return ctx.guild.id == DGSWIKISERVER

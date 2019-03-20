@@ -119,15 +119,9 @@ def get_command_prefix(bot, msg):
 client = Bot(
 	description="The most awesome bot to walk(?) the earth.",
 	command_prefix=get_command_prefix,
-	pm_help=True,
+	help_command=c.DefaultHelpCommand(dm_help=True),
 	activity=d.Activity(type=d.ActivityType.watching, name=cmdargs.prefix + 'help')
 )
-
-@client.event
-async def on_message_delete(msg):
-	if msg.mentions:
-		logger.info('Message with mentions deleted: {}'.format(msg.content),
-			extra={'ctx': DummyCtx(author=DummyCtx(name=msg.author.name))})
 
 @client.event
 async def on_command_error(ctx, exc):
@@ -167,8 +161,20 @@ async def on_command_error(ctx, exc):
 async def before_invoke(ctx):
 	logger.info(ctx.command, extra={'ctx': ctx})
 
+deleters = {}
+@client.event
+async def on_raw_message_delete(payload):
+msgid = payload.message_id
+if msgid in deleters:
+	try:
+		msg = await client.get_channel(payload.channel_id).fetch_message(deleters[msgid])
+		await msg.delete()
+	except Exception: #silence errors, might not be able to do stuff
+		pass
+	del deleters[msgid]
+
 from kenny2automate.i18n import i18n, I18n, embed
-client.add_cog(I18n(client, db))
+client.add_cog(I18n(client, db, deleters))
 
 if cmdargs.disable is None:
 	cmdargs.disable = ()
@@ -231,11 +237,7 @@ async def eval_(ctx, *, arg):
 async def repeat(ctx, *, arg):
 	"""Repeat what you say, right back at ya."""
 	msg = await ctx.send(arg)
-	@client.listen()
-	async def on_message_delete(msg2):
-		if msg2.id == ctx.message.id:
-			await msg.delete()
-			client.remove_listener(on_message_delete)
+	deleters[ctx.message.id] = msg.id
 
 @client.command()
 async def hello(ctx):

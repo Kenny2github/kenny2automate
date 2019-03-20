@@ -6,7 +6,7 @@ import functools
 import requests
 import discord as d
 from discord.ext import commands as c
-from discord.ext.commands import command, has_permissions
+from discord.ext.commands import command, has_permissions, Cog
 
 db = None
 i18ndir = os.path.join(
@@ -130,11 +130,12 @@ def embed(ctx, title=None, description=None, fields=None, footer=None, **kwargs)
         )
     return e
 
-class I18n(object):
+class I18n(Cog):
     """Internationalization control."""
-    def __init__(self, bot, cur):
+    def __init__(self, bot, cur, deleters):
         global db
         self.bot = bot
+        self.deleters = deleters
         db = cur
 
         INDICATOR_RANGE = range(0x1f1e6, 0x1f1ff)
@@ -362,4 +363,5 @@ class I18n(object):
 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36"
             }
         ))
-        await ctx.send(list(req.json().values())[0] or '\1')
+        msg = await ctx.send(list(req.json().values())[0] or '\1')
+        deleters[ctx.message.id] = msg.id

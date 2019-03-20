@@ -1,14 +1,15 @@
 import asyncio as a
 import discord as d
+from discord.ext.commands import Cog
 from .i18n import embed
 from .utils import DummyCtx
 
-class Games(object):
+class Games(Cog):
 	def __init__(self, bot, db):
 		self.bot = bot
 		self.db = db
 
-	def __local_check(self, ctx):
+	def cog_check(self, ctx):
 		perms = ctx.channel.permissions_for(self.bot.user)
 		return all(
 			perms.manage_messages,

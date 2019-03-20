@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
 	name='kenny2automate',
-	version='3.0',
+	version='3.1',
 	description='A Python Discord bot',
 	url='https://github.com/Kenny2github/kenny2automate',
 	author='Kenny2github',
@@ -24,7 +24,7 @@ setup(
 	keywords='discord bot fun',
 	packages=find_packages(),
 	install_requires=[
-		'discord.py',
+		'discord.py<=1.0.0a1773+gc30a366',
 		'requests',
 		'aiohttp',
 	],

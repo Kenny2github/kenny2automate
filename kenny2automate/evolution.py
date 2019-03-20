@@ -2,7 +2,7 @@ import random
 import pickle
 import sqlite3 as sql
 import discord as d
-from discord.ext.commands import group
+from discord.ext.commands import group, Cog
 from .i18n import i18n, embed
 from .utils import dataclass, DummyCtx
 
@@ -99,13 +99,13 @@ entry_id DESC').fetchone()[0]
 
 sql.register_adapter(Entity, pickle.dumps)
 
-class Evolution(object):
+class Evolution(Cog):
     def __init__(self, bot, db_):
         self.bot = bot
         global db
         db = db_
 
-    def __local_check(self, ctx):
+    def cog_check(self, ctx):
         return ctx.guild is None
 
     async def load_player(self, ctx):

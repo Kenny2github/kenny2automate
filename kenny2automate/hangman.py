@@ -1,6 +1,6 @@
 import asyncio as a
 import discord as d
-from discord.ext.commands import command
+from discord.ext.commands import command, Cog
 from discord.ext.commands import bot_has_permissions
 from discord.ext import commands as c
 from .i18n import i18n, embed
@@ -24,7 +24,7 @@ DGHANGMANSHANPES = [
 \\\n\u2514\u2500\u2500\u2500\u2500\n```'
 ]
 
-class Hangman(object):
+class Hangman(Cog):
 	def __init__(self, bot, db):
 		self.bot = bot
 		self.db = db

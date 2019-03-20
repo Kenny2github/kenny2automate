@@ -2,10 +2,10 @@ import re
 import random
 import asyncio as a
 import discord as d
-from discord.ext.commands import command
+from discord.ext.commands import command, Cog
 from .i18n import i18n, embed
 
-class Numguess(object):
+class Numguess(Cog):
 	@command()
 	async def numguess(self, ctx):
 		"""Play a fun number-guessing game!"""

@@ -1,8 +1,8 @@
 import re
-from discord.ext.commands import group
+from discord.ext.commands import group, Cog
 from .i18n import i18n
 
-class Regexes(object):
+class Regexes(Cog):
 	"""Regex commands - Python flavored."""
 	@group()
 	async def regex(self, ctx):
