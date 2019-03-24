@@ -1,4 +1,6 @@
 {
+  "cog-desc": "Play Battleship!",
+  "cmd-desc": "You sunk my battleship!\nUsage: {0}battleship [ascii:yes|no] [@user]",
   "instructions-title": "Instructions",
   "place-instructions": "Click a button **twice** to move the ship; click the check twice when you're done.",
   "edit-instructions": "Please send a message containing the exact content:\n{0}",

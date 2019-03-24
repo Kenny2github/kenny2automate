@@ -6,9 +6,9 @@ from discord.ext.commands import command, Cog
 from .i18n import i18n, embed
 
 class Numguess(Cog):
-	@command()
+	"""numguess/cog-desc"""
+	@command(description='numguess/numguess-desc')
 	async def numguess(self, ctx):
-		"""Play a fun number-guessing game!"""
 		guess = None
 		limDn = 0
 		limUp = 100

@@ -1,4 +1,6 @@
 {
+  "cog-desc": "Play a fun number-guessing game!",
+  "numguess-desc": "Play a fun number-guessing game!",
   "numguess-intro": "Arr! I'm the Dread Pirate Roberts, and I have a secret!\nIt's a number from {0} to {1}. I'll give you {2} tries.\nSend a number to guess it.",
   "numguess-guess-title": "Guess?",
   "numguess-guess": "What's yer guess, matey?",

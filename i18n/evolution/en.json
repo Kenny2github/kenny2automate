@@ -1,4 +1,11 @@
 {
+  "cog-desc": "An experiment in genetics.",
+  "evol-desc": "Play Evolution, a random genetics game! Run `{0}help evol`.",
+  "adopt-desc": "Roll the dice to adopt a new child.",
+  "adopt-help": "Note that dice rolls for adoption tend to have slightly worse scores.",
+  "propose-desc": "Propose a night of fun with another user.",
+  "propose-help": "If the other user accepts, the child you create will have one of the four combinations of your and the other user's combined four genes.",
+  "profile-desc": "Get your profile.",
   "claiming-soul-title": "Claiming Soul",
   "claiming-soul": "Claiming a soul for you...",
   "no-new-souls-title": "No New Souls",

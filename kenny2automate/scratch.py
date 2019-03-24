@@ -8,6 +8,7 @@ from .i18n import embed
 DGSWIKISERVER = 328938947717890058
 
 class Scratch(Cog):
+	"""scratch/cog-desc"""
 	def __init__(self, bot):
 		self.bot = bot
 
@@ -23,14 +24,12 @@ class Scratch(Cog):
 			result = resp.text
 		return result
 
-	@group()
+	@group(description='scratch/scratch-desc')
 	async def scratch(self, ctx):
-		"""Scratch-related commands. Run `;help scratch`."""
 		pass
 
-	@scratch.command()
+	@scratch.command(description='scratch/randomproject-desc')
 	async def randomproject(self, ctx):
-		"""Get a random project link!"""
 		async with ctx.channel.typing():
 			count = json.loads(await self.req(
 				'https://api.scratch.mit.edu/projects/count/all'
@@ -42,14 +41,13 @@ class Scratch(Cog):
 					'https://scratch.mit.edu/site-api/comments/project/'
 					+ str(pid)
 				)
-			await ctx.send(embed=embed(ctx, description=(
-				'scratch/randomproject-link',
+			await ctx.send(embed=embed(ctx, description='[{}]({})'.format(
+				i18n(ctx, 'scratch/randomproject-link'),
 				'https://scratch.mit.edu/projects/' + str(pid)
 			)))
 
-	@scratch.command()
+	@scratch.command(description='scratch/messagecount-desc')
 	async def messagecount(self, ctx, name=None):
-		"""How many messages do you have on Scratch?"""
 		async with ctx.channel.typing():
 			if name is not None:
 				resp = await self.req(
@@ -88,9 +86,8 @@ class Scratch(Cog):
 					color=0xffffff
 				))
 
-	@scratch.command()
+	@scratch.command(description='scratch/news-desc')
 	async def news(self, ctx):
-		"""Get Scratch news."""
 		content = await self.req('https://api.scratch.mit.edu/news')
 		content = json.loads(content)
 		for new in content[:5]:

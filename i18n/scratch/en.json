@@ -1,6 +1,11 @@
 {
+  "cog-desc": "Scratch-related commands.",
+  "scratch-desc": "Scratch-related commands. Run `{0}help scratch`.",
+  "randomproject-desc": "Get a random project link!",
+  "messagecount-desc": "How many messages do you have on Scratch?",
+  "news-desc": "Get Scratch news.",
   "messagecount-failed": "Couldn't get message count for {0}",
   "messagecount-title": "Message Count",
   "messagecount": "{0} has {1} message(s)",
-  "randomproject-link": "[Link]({0})"
+  "randomproject-link": "Link"
 }

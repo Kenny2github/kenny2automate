@@ -1,4 +1,12 @@
 {
+  "cog-desc": "Play card games!",
+  "fish-cmd-desc": "Play Go Fish! Run `{0}help fish` to see subcommands.",
+  "fish-cmd-help": "Running `{0}fish` will not start a game!",
+  "fish-join-desc": "Join (or start) a game of fish!",
+  "fish-leave-desc": "Leave the game of fish you joined.",
+  "fish-start-desc": "Start the game of fish.",
+  "fish-start-help": "Not available if you didn't start the currently queueing game.",
+  "fish-help-desc": "Get a detailed explanation of Go Fish.",
   "fish-stats-title": "Situation",
   "fish-stats-description": "Your hand and books.",
   "fish-stats-hand-title": "Hand",
@@ -23,6 +31,6 @@
   "fish-winners": "The winners are {0}! Congratulations!",
   "fish-winner-title": "Winner",
   "fish-winner": "The winner is {0}! Congratulations!",
-  "fish-join": "Run `;fish join` to join or start a game of fish!",
-  "fish-help": "Join or create a game by running `;fish join`. If you created the game, once there are enough players you may run `;fish start` to start the game with everyone who has joined. If you decide not to play after all, run `;fish leave`. When it is your turn, you will be presented with a list of cards you have in your hand, as well as a list of books you currently have. Send a card number (e.g. Q or 10) to ask for it. You can only ask for cards that you already have. When you ask for a card, everyone else that has any cards of the same number must give them to you, and if anyone had cards of the same number, you will receive a message saying what cards you received. If nobody has that number of card, you will \"Go Fish\", and draw a card from the deck. If you get what you ask for, or the card you drew was what you asked for, you may ask again; otherwise, it is the next player's turn. When it is not your turn, you may periodically receive messages stating what cards have been taken from you, or what cards were asked for but not given. You may choose to ignore these if you wish. When you have 4 of the same number card, that is called a \"book\" and is removed from your hand and placed into your books list. The game ends when anyone empties their hand, or when the deck runs out, whichever comes first. Once the game has ended, the person(s) with the most books win(s)."
+  "fish-join": "Run `{0}fish join` to join or start a game of fish!",
+  "fish-help": "**Starting a Game**\nJoin or create a game by running `{0}fish join`. If you created the game, once there are enough players you may run `{0}fish start` to start the game with everyone who has joined. If you decide not to play after all, run `{0}fish leave`.\n\n**Gameplay**\nWhen it is your turn, you will be presented with a list of cards you have in your hand, as well as a list of books you currently have. Send a card number (e.g. Q or 10) to ask for it. You can only ask for cards that you already have.\n\nWhen you ask for a card, everyone else that has any cards of the same number must give them to you, and if anyone had cards of the same number, you will receive a message saying what cards you received. If nobody has that number of card, you will \"Go Fish\", and draw a card from the deck. If you get what you ask for, or the card you drew was what you asked for, you may ask again; otherwise, it is the next player's turn.\n\n**While Waiting**\nWhen it is not your turn, you may periodically receive messages stating what cards have been taken from you, or what cards were asked for but not given. These can be ignored, though they may be of strategic importance.\n\n**Books**\nWhen you have 4 of the same number card, that is called a \"book\" and is removed from your hand and placed into your books list.\n\n**Ending**\nThe game ends when anyone empties their hand, or when the deck runs out, whichever comes first. Once the game has ended, the person(s) with the most books win(s)."
 }

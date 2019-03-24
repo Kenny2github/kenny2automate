@@ -21,6 +21,7 @@ def lock(leid):
         locked.remove(leid)
 
 class Fight(Games):
+    """fight/cog-desc"""
     async def load_player(self, ctx):
         res = self.db.execute(
             'SELECT fight_health, fight_weapons, fight_armors, \
@@ -111,15 +112,9 @@ fight_gold=?, fight_items=? WHERE user_id=?', (
             'loser': enemy if player.health > enemy.health else player
         }
 
-    @group()
+    @group(description='fight/fight-desc')
     async def fight(self, ctx):
-        """A turn-based combat game. Run `;help fight` for more information.
-
-        fight is a turn-based combat with monsters, multiplayer, special
-        weapons, and more.
-        Subcommands are listed below. Run `;help fight <subcommand>` for more
-        information about each subcommand.
-        """
+        """fight/fight-help"""
         pass
 
     async def use_item(self, ctx, checc, player, enemy):
@@ -414,12 +409,9 @@ user_id=?', (ctx.author.id,))
         ))
 
     @check(lambda ctx: ctx.guild is not None)
-    @fight.command()
+    @fight.command(description='fight/player-desc')
     async def player(self, ctx, gold_at_stake: int, against: d.Member = None):
-        """Fight with another person!
-
-        `gold_at_stake` is the amount of gold for the loser to give the winner.
-        """
+        """fight/player-help"""
         player1, player2 = await self._gather_game(ctx, GAME_NAME, against)
         with lock(player1.dm_channel.id) as stopq:
             if stopq:
@@ -432,35 +424,20 @@ user_id=?', (ctx.author.id,))
                 await self.fight_player(player1, player2, gold_at_stake)
 
     @check(lambda ctx: ctx.guild is None)
-    @fight.group()
+    @fight.group(description='fight/npc-desc')
     async def npc(self, ctx):
-        """Fight with an NPC. Run `;help fight npc` for more information.
-
-        Running `;fight npc random` pitches you into a fight with a random
-        non-player monster. This monster could be anything, so make sure you can
-        deal with all available monsters! Run `;fight npc list` for a list of
-        monsters. Run `;fight npc info <monster name>` for details about a
-        specific monster.
-
-        If you want to fight a certain monster, run `;fight npc named <monster>`
-        This will send you against that monster. If you're just starting out,
-        try fighting the ghost.
-
-        Good luck fighting!
-        """
+        """fight/npc-help"""
         pass
 
-    @npc.command()
+    @npc.command(description='fight/random-desc')
     async def random(self, ctx):
-        """Fight a random NPC. Make sure you can deal with everything!"""
         with lock(ctx.channel.id) as stopq:
             if stopq:
                 return
             await self.fight_npc(ctx, random.choice(list(monsters.values())).copy())
 
-    @npc.command()
+    @npc.command(description='fight/named-desc')
     async def named(self, ctx, *, enemy):
-        """Fight a specific NPC."""
         with lock(ctx.channel.id) as stopq:
             if stopq:
                 return
@@ -470,20 +447,16 @@ user_id=?', (ctx.author.id,))
             enemy = monsters[enemy].copy()
             await self.fight_npc(ctx, enemy)
 
-    @npc.command()
+    @npc.command(description='fight/list-desc')
     async def list(self, ctx):
-        """List all available monsters.
-        Run `;fight npc info <monster>` for information about a specific
-        monster.
-        """
+        """fight/list-help"""
         with lock(ctx.channel.id) as stopq:
             if stopq:
                 return
             await ctx.send('\n'.join(monsters.keys()))
 
-    @npc.command()
+    @npc.command(description='fight/info-desc')
     async def info(self, ctx, enemy):
-        """Get information about one monster."""
         with lock(ctx.channel.id) as stopq:
             if stopq:
                 return
@@ -550,23 +523,20 @@ user_id=?', (ctx.author.id,))
         )
 
     @check(lambda ctx: ctx.guild is None)
-    @fight.command()
+    @fight.command(description='fight/profile-desc')
     async def profile(self, ctx):
-        """Get information about yourself."""
         with lock(ctx.channel.id) as stopq:
             if stopq:
                 return
             await ctx.send(embed=await self.profile_embed(ctx))
 
     @check(lambda ctx: ctx.guild is None)
-    @fight.group()
+    @fight.group(description='fight/equip-desc')
     async def equip(self, ctx):
-        """Equip something. Run `;help fight equip`."""
         pass
 
-    @equip.command()
+    @equip.command(description='fight/weapon-desc')
     async def weapon(self, ctx, *, weapon: Weapon):
-        """Equip a weapon."""
         with lock(ctx.channel.id) as stopq:
             if stopq:
                 return
@@ -578,9 +548,8 @@ user_id=?', (ctx.author.id,))
             self.dump_player(ctx, player)
             await ctx.send(i18n(ctx, 'fight/equip-success'))
 
-    @equip.command()
+    @equip.command(description='fight/armor-desc')
     async def armor(self, ctx, *, armor: Armor):
-        """Equip some armor."""
         with lock(ctx.channel.id) as stopq:
             if stopq:
                 return
@@ -593,11 +562,9 @@ user_id=?', (ctx.author.id,))
             await ctx.send(i18n(ctx, 'fight/equip-success'))
 
     @check(lambda ctx: ctx.guild is None)
-    @fight.command()
+    @fight.command(description='fight/shop-desc')
     async def shop(self, ctx, things):
-        """Shop for new things. Run `;help fight shop`.
-        `things` must be one of "items", "weapons", or "armors".
-        """
+        """fight/shop-help"""
         with lock(ctx.channel.id) as stopq:
             if stopq:
                 return

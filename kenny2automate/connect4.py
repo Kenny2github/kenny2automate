@@ -13,7 +13,8 @@ REGA, REGB, REGC, REGD, REGE, REGF, REGG = REGS = \
 GAME_NAME = 'Connect 4'
 
 class Connect4(Games):
-	@command()
+	"""connect4/cog-desc"""
+	@command(description='connect4/leave-desc')
 	async def connect4_leave(self, ctx):
 		await self._unjoin_global_game(ctx, GAME_NAME)
 
@@ -293,16 +294,10 @@ class Connect4(Games):
 		)
 		return boardmsgcont
 
-	@command()
+	@command(description='connect4/connect4-desc')
 	@bot_has_permissions(manage_messages=True, add_reactions=True, read_message_history=True)
 	async def connect4(self, ctx, against: d.Member = None):
-		"""Play some connect4!
-
-		If you want to play against yourself or you have someone next to you,
-		do ;connect4 and mention yourself.
-		If you want to play against a specific person, do ;connect4 and mention them.
-		If you want to play a global game (cross-server), do ;connect4 and mention the bot.
-		"""
+		"""connect4/connect4-help"""
 		if against and against.id == self.bot.user.id:
 			return await self._join_global_game(
 				ctx, GAME_NAME, self.connect4_global,

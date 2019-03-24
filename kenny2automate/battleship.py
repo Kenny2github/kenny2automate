@@ -10,13 +10,12 @@ from .utils import DummyCtx
 GAME_NAME = 'Battleship'
 
 class Battleship(Games):
-	@command()
+	"""battleship/cog-desc"""
+	@command(description='battleship/cmd-desc')
 	@bot_has_permissions(add_reactions=True, read_message_history=True)
 	async def battleship(
 		self, ctx, ascii: lambda x: x == 'yes' = 'no', against: d.Member = None
 	):
-		"""You sunk my battleship!
-		Usage: ;battleship [ascii:yes|no] [@user]"""
 		def helpfunc(ctx2):
 			emb = embed(ctx2,
 				title=('battleship/help-title',),

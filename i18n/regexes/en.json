@@ -1,4 +1,8 @@
 {
+  "cog-desc": "Regex commands - Python flavored.",
+  "regex-desc": "Regex functions! Run `{0}help regex`.",
+  "search-desc": "Make a Python-flavored regex search! All groups are shown.",
+  "findall-desc": "Use a Python-flavor regex to find all occurences of a pattern!",
   "search-result": "```\nGroups:\n{0}\n{1}\n```",
   "search-error": "```\nError in flags or expression.\n```",
   "search-result-nomatch": "```\nNo match :(\n```",

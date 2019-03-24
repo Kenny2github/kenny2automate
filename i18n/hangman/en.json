@@ -1,4 +1,9 @@
 {
+  "cog-desc": "Play Hangman!",
+  "crudehangman-desc": "Hangman for less permissions",
+  "crudehangman-help": "Use this first in the server, to start the game in that channel; next, send the word in a DM with the bot, to set it. Once that's been done, guess a letter by sending it.",
+  "hangman-desc": "Hangman!",
+  "hangman-help": "Use this in the channel to start the game there, DM the bot the word to set it then react with letters to guess them.\nRequires the \"Manage Messages\" permission.",
   "crudehangman-occupied": "There is already a game going on in this channel!",
   "awaiting-dm-title": "Waiting...",
   "awaiting-dm": "Awaiting DM with word...",

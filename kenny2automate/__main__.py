@@ -9,14 +9,14 @@ import traceback
 import pickle
 import sqlite3 as sql
 #high-level
-import asyncio as a
+import asyncio
 import argparse
 #3rd-party
-import discord as d
+import discord
 from discord.ext.commands import Bot
 from discord.ext.commands import bot_has_permissions
 from discord.ext.commands import has_permissions
-from discord.ext import commands as c
+from discord.ext import commands
 from kenny2automate.utils import DummyCtx
 from kenny2automate.server import Handler
 
@@ -117,10 +117,10 @@ def get_command_prefix(bot, msg):
 	return (res['prefix'], cmdargs.prefix)
 
 client = Bot(
-	description="The most awesome bot to walk(?) the earth.",
+	description="description",
 	command_prefix=get_command_prefix,
-	help_command=c.DefaultHelpCommand(dm_help=True),
-	activity=d.Activity(type=d.ActivityType.watching, name=cmdargs.prefix + 'help')
+	help_command=commands.DefaultHelpCommand(dm_help=True),
+	activity=discord.Activity(type=discord.ActivityType.watching, name=cmdargs.prefix + 'help')
 )
 
 @client.event
@@ -133,11 +133,11 @@ async def on_command_error(ctx, exc):
 		if hasattr(cog, attr):
 			return
 	if isinstance(exc, (
-		c.BotMissingPermissions,
-		c.MissingPermissions,
-		c.MissingRequiredArgument,
-		c.BadArgument,
-		c.CommandOnCooldown,
+		commands.BotMissingPermissions,
+		commands.MissingPermissions,
+		commands.MissingRequiredArgument,
+		commands.BadArgument,
+		commands.CommandOnCooldown,
 	)):
 		return await ctx.send(embed=embed(ctx,
 			title=('error',),
@@ -145,9 +145,9 @@ async def on_command_error(ctx, exc):
 			color=0xff0000
 		))
 	if isinstance(exc, (
-		c.CheckFailure,
-		c.CommandNotFound,
-		c.TooManyArguments,
+		commands.CheckFailure,
+		commands.CommandNotFound,
+		commands.TooManyArguments,
 	)):
 		return
 	logger.error('Ignoring exception in command {}:\n'.format(ctx.command)
@@ -164,14 +164,14 @@ async def before_invoke(ctx):
 deleters = {}
 @client.event
 async def on_raw_message_delete(payload):
-msgid = payload.message_id
-if msgid in deleters:
-	try:
-		msg = await client.get_channel(payload.channel_id).fetch_message(deleters[msgid])
-		await msg.delete()
-	except Exception: #silence errors, might not be able to do stuff
-		pass
-	del deleters[msgid]
+	msgid = payload.message_id
+	if msgid in deleters:
+		try:
+			msg = await client.get_channel(payload.channel_id).fetch_message(deleters[msgid])
+			await msg.delete()
+		except Exception: #silence errors, might not be able to do stuff
+			pass
+		del deleters[msgid]
 
 from kenny2automate.i18n import i18n, I18n, embed
 client.add_cog(I18n(client, db, deleters))
@@ -215,15 +215,91 @@ if 'evolution' not in cmdargs.disable:
 	logger.info('Loading Evolution', extra={'ctx': dmx})
 	from kenny2automate.evolution import Evolution
 	client.add_cog(Evolution(client, db))
+if 'units' not in cmdargs.disable:
+	logger.info('Loading Units', extra={'ctx': dmx})
+	from kenny2automate.units import Units
+	client.add_cog(Units())
+
+class Kenny2help(commands.HelpCommand):
+	def get_destination(self):
+		return self.context.author
+
+	async def send_bot_help(self, mapping):
+		ctx = self.context
+		filtered = await self.filter_commands(ctx.bot.commands)
+		categories = []
+		for cmd in filtered:
+			if cmd.cog not in categories:
+				categories.append(cmd.cog)
+		em = embed(ctx,
+			description=(ctx.bot.description,),
+			color=0x55acee,
+			fields=tuple(
+				(i.qualified_name, (i.description, ctx.prefix) if i.description else '\1', False)
+				for i in categories
+				if i is not None
+			) + (
+				('\1', ('help-cmds',), False),
+			) + tuple(
+				(i.name, (i.description, ctx.prefix) if i.description else '\1', False)
+				for i in filtered
+				if i.cog is None
+			),
+			footer=('help-footer', ctx.prefix)
+		)
+		await self.get_destination().send(embed=em)
+
+	async def send_cog_help(self, cog):
+		ctx = self.context
+		filtered = await self.filter_commands(cog.get_commands())
+		em = embed(ctx,
+			description=(cog.description, ctx.prefix) if cog.description else None,
+			color=0x55acee,
+			fields=(
+				(i.qualified_name, (i.description, ctx.prefix), False)
+				for i in filtered
+			)
+		)
+		await self.get_destination().send(embed=em)
+
+	async def send_group_help(self, group):
+		ctx = self.context
+		filtered = await self.filter_commands(group.commands)
+		desc = i18n(ctx, group.description, ctx.prefix)
+		if group.help:
+			desc += '\n\n'
+			desc += i18n(ctx, group.help, ctx.prefix)
+		em = embed(ctx,
+			description=desc,
+			color=0x55acee,
+			fields=(
+				(i.name, (i.description, ctx.prefix), False)
+				for i in filtered
+			)
+		)
+		await self.get_destination().send(embed=em)
+
+	async def send_command_help(self, command):
+		ctx = self.context
+		desc = i18n(ctx, command.description, ctx.prefix)
+		if command.help:
+			desc += '\n\n'
+			desc += i18n(ctx, command.help, ctx.prefix)
+		em = embed(ctx,
+			description=desc,
+			color=0x55acee
+		)
+		await self.get_destination().send(embed=em)
+
+client.help_command = Kenny2help(command_attrs={'description': 'help-desc'})
 
 @client.event
 async def on_ready(*_, **__):
 	logger.info('Ready!', extra={'ctx': DummyCtx(author=DummyCtx(name='(startup)'))})
 
-@client.command('eval')
-@c.is_owner()
+@client.command('eval', description='eval-desc')
+@commands.is_owner()
 async def eval_(ctx, *, arg):
-	"""Execute Python code. Only available to owner."""
 	try:
 		await eval(arg, globals(), locals())
 	except BaseException as e:
@@ -233,25 +309,21 @@ async def eval_(ctx, *, arg):
 			color=0xff0000
 		))
 
-@client.command()
+@client.command(description='repeat-desc')
 async def repeat(ctx, *, arg):
-	"""Repeat what you say, right back at ya."""
 	msg = await ctx.send(arg)
 	deleters[ctx.message.id] = msg.id
 
-@client.command()
+@client.command(description='hello-desc')
 async def hello(ctx):
-	"""Test whether the bot is running! Simply says "Hello World!"."""
 	await ctx.send(i18n(ctx, 'hello'))
 
-@client.command()
+@client.command(description='hmmst-desc')
 async def hmmst(ctx):
-	"""hmmst"""
 	await ctx.send(i18n(ctx, 'hmmst'))
 
-@client.command()
+@client.command(description='whoami-desc')
 async def whoami(ctx):
-	"""Get some information about yourself."""
 	emb = embed(ctx,
 		title=('whoami-title', ctx.author.display_name),
 		description=(
@@ -279,17 +351,13 @@ async def whoami(ctx):
 	)
 	await ctx.send(embed=emb)
 
-@client.group()
+@client.group(description='prefix-desc')
 async def prefix(ctx):
-	"""Bot prefix-related commands."""
 	pass
 
-@prefix.command('reset')
-async def prefix_reset(ctx, user: d.Member = None):
-	"""Reset your own prefix.
-
-	The owner of the bot can also reset other users' prefixes.
-	"""
+@prefix.command('reset', description='reset-desc')
+async def prefix_reset(ctx, user: discord.Member = None):
+	"""reset-help"""
 	leuser = (user or ctx.author) if (await client.is_owner(ctx.author)) else ctx.author
 	db.execute(
 		'UPDATE users SET prefix=NULL WHERE user_id=?',
@@ -301,14 +369,9 @@ async def prefix_reset(ctx, user: d.Member = None):
 		color=0x0000ff
 	))
 
-@prefix.command('set')
+@prefix.command('set', description='set-desc')
 async def prefix_set(ctx, *, prefix):
-	"""Set your own prefix.
-	If you need a space at the start or end of the prefix, quote the prefix by
-	adding the same character at the start and end of the prefix. For example,
-	`;prefix set hello ` will set your prefix to "hello" but
-	`;prefix set %hello %` will set your prefix to "hello " (note the trailing
-	space)."""
+	"""set-help"""
 	res = db.execute(
 		'SELECT prefix FROM users WHERE user_id=?',
 		(ctx.author.id,)
@@ -331,9 +394,8 @@ async def prefix_set(ctx, *, prefix):
 		color=0x55acee
 	))
 
-@prefix.command('get')
+@prefix.command('get', description='get-desc')
 async def prefix_get(ctx):
-	"""Get your own prefix."""
 	res = db.execute(
 		'SELECT prefix FROM users WHERE user_id=?',
 		(ctx.author.id,)
@@ -348,26 +410,10 @@ async def prefix_get(ctx):
 			description=res['prefix']
 		))
 
-@client.command()
-@c.is_owner()
-async def resetprefix(ctx, user: d.Member):
-	"""Reset someone's prefix."""
-	db.execute(
-		'UPDATE users SET prefix=NULL WHERE user_id=?',
-		(user.id,)
-	)
-	await ctx.send(embed=embed(ctx,
-		title=('prefix-reset-title,'),
-		description=('prefix-reset', user.mention),
-		color=0xff0000
-	))
-
-@client.command()
+@client.command(description='purge-desc')
 @has_permissions(manage_messages=True, read_message_history=True)
 @bot_has_permissions(manage_messages=True, read_message_history=True)
-async def purge(ctx, limit: int = 100, user: d.Member = None, *, matches: str = None):
-	"""Purge all messages, optionally from ``user``
-	or contains ``matches``."""
+async def purge(ctx, limit: int = 100, user: discord.Member = None, *, matches: str = None):
 	def check_msg(msg):
 		if msg.id == ctx.message.id:
 			return True
@@ -384,12 +430,11 @@ async def purge(ctx, limit: int = 100, user: d.Member = None, *, matches: str = 
 		description=('purge', len(deleted)),
 		color=0xff0000
 	))
-	await a.sleep(2)
+	await asyncio.sleep(2)
 	await msg.delete()
 
-@client.command(name='8ball')
+@client.command(name='8ball', description='8ball-desc')
 async def ball(ctx, *, question: str):
-	"""Ask the Magic 8 Ball a question."""
 	choice = sum(question.encode('utf8')) % 20
 	await ctx.send(embed=embed(ctx, description=((
 		'8ball/a1', '8ball/a2', '8ball/a3', '8ball/a4',
@@ -399,25 +444,21 @@ async def ball(ctx, *, question: str):
 		'8ball/n2', '8ball/n3', '8ball/n4', '8ball/n5'
 	)[choice],)))
 
-@client.command()
-async def whois(ctx, *, user: d.User):
-	"""Get the mention of a user."""
-	await ctx.send(embed=d.Embed(description=user.mention))
+@client.command(description='whois-desc')
+async def whois(ctx, *, user: discord.User):
+	await ctx.send(embed=discord.Embed(description=user.mention))
 
-@client.command()
-async def whereis(ctx, *, channel: d.TextChannel):
-	"""Get the mention of a channel."""
-	await ctx.send(embed=d.Embed(description=channel.mention))
+@client.command(description='whereis-desc')
+async def whereis(ctx, *, channel: discord.TextChannel):
+	await ctx.send(embed=discord.Embed(description=channel.mention))
 
-@client.command()
+@client.command(description='version-desc')
 async def version(ctx):
-	"""Get the bot's current Git version."""
-	await ctx.send(embed=d.Embed(description='`{}`'.format(VERSION)))
+	await ctx.send(embed=discord.Embed(description='`{}`'.format(VERSION)))
 
-@client.command()
+@client.command(description='votetoban-desc')
 @bot_has_permissions(ban_members=True, add_reactions=True, read_message_history=True)
-async def votetoban(ctx, *, user: d.Member):
-	"""Start a vote to ban someone from the server. Abuse results in a ban."""
+async def votetoban(ctx, *, user: discord.Member):
 	for member in ctx.guild.members:
 		if (str(member.status) == 'online') \
 				and ctx.channel.permissions_for(member).ban_members \
@@ -446,7 +487,7 @@ async def votetoban(ctx, *, user: d.Member):
 			title=('votetoban-cancelled-title',),
 			description=('votetoban-cancelled', m.mention),
 		))
-	except a.TimeoutError:
+	except asyncio.TimeoutError:
 		msg = await ctx.get_message(msg.id)
 		dos = 0
 		nos = 0
@@ -503,18 +544,15 @@ async def update_if_changed():
 			if os.path.getmtime(f) > mtime:
 				if cmdargs.loop:
 					os.system('./discordapp restart')
-					return
-				else:
-					await client.close()
+				raise KeyboardInterrupt
 		try:
-			await a.sleep(1)
-		except (KeyboardInterrupt, a.CancelledError):
+			await asyncio.sleep(1)
+		except (KeyboardInterrupt, asyncio.CancelledError):
 			return
 
-@client.command()
-@c.is_owner()
+@client.command(description='stop-desc')
+@commands.is_owner()
 async def stop(ctx):
-	"""Stop the bot."""
 	await client.close()
 
 with open('kenny2automate.txt') as f:
@@ -542,7 +580,10 @@ except KeyboardInterrupt:
 finally:
 	sys.stdout = sys.__stdout__
 	sys.stderr = sys.__stderr__
-	wakeup.cancel()
+	try:
+		wakeup.cancel()
+	except RuntimeError as exc:
+		print(exc) #probably already closed?
 	client.loop.run_until_complete(client.close())
 	client.loop.run_until_complete(server.stop())
 	client.loop.stop()

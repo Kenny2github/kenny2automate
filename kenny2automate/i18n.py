@@ -131,7 +131,7 @@ def embed(ctx, title=None, description=None, fields=None, footer=None, **kwargs)
     return e
 
 class I18n(Cog):
-    """Internationalization control."""
+    """i18n/cog-desc"""
     def __init__(self, bot, cur, deleters):
         global db
         self.bot = bot
@@ -186,15 +186,14 @@ class I18n(Cog):
             print('sending text:', text)
             if not text:
                 await channel.send(embed=d.Embed(
-                    title='Error',
-                    description='Translate API returned a blank string',
+                    title=('error',),
+                    description=('i18n/blank',),
                     color=0xff0000
                 ))
             await channel.send(text)
 
-    @command()
+    @command(description='i18n/ogham-desc')
     async def ogham(self, ctx, *, text: str):
-        """A fun little interpreter from English to Ogham."""
         OGHAM = {
             32: 5760,
             97: 5776,
@@ -228,33 +227,33 @@ class I18n(Cog):
             + '\u169c'
         )
 
-    @command()
+    @command(description='i18n/lang-desc')
     async def lang(self, ctx, *, lang: str = None):
-        """Set your language."""
         if lang is None:
             with db.connection:
                 db.execute(
                     'UPDATE users SET lang=NULL WHERE user_id=?',
                     (ctx.author.id,)
                 )
-            await ctx.send('Successfully reset language for {}'.format(
-                ctx.author.mention
+            await ctx.send(embed=embed(ctx,
+                title=('success',),
+                description=('i18n/lang-success-reset', ctx.author.mention),
+                color=0x55acee
             ))
             return
         if (
             not os.path.isfile(os.path.join(i18ndir, lang + '.json'))
             and not lang == 'qqx'
         ):
-            await ctx.send(
-                'Unrecognized language: {}. Valid languages are:\n{}'.format(
-                    lang, ', '.join(
-                        i[:-5]
-                        for i in os.listdir(i18ndir)
-                        if i.endswith('.json')
-                    )
-                )
-#this is special, the language command itself is not translated
-            )
+            await ctx.send(embed=embed(ctx,
+                title=('error',),
+                description=('i18n/unknown-lang', lang, ', '.join(
+                    i[:-5]
+                    for i in os.listdir(i18ndir)
+                    if i.endswith('.json')
+                )),
+                color=0xff0000
+            ))
             return
         res = db.execute(
             'SELECT lang FROM users WHERE user_id=?',
@@ -271,11 +270,13 @@ class I18n(Cog):
                     'UPDATE users SET lang=? WHERE user_id=?',
                     (lang, ctx.author.id)
                 )
-        await ctx.send('Successfully set language for {} to {}'.format(
-            ctx.author.mention, lang
+        await ctx.send(embed=embed(ctx,
+            title=('success',),
+            description=('i18n/lang-success', ctx.author.mention, lang),
+            color=0x55acee
         ))
 
-    @command()
+    @command(description='i18n/channel_lang-desc')
     @has_permissions(administrator=True)
     async def channel_lang(
         self,
@@ -291,24 +292,25 @@ class I18n(Cog):
                     'UPDATE channels SET lang=? WHERE channel_id=?',
                     (None, channel.id,)
                 )
-            await ctx.send('Successfully reset language for {}'.format(
-                channel.mention
+            await ctx.send(embed=embed(ctx,
+                title=('success',),
+                description=('i18n/lang-success-reset', channel.mention),
+                color=0x55acee
             ))
             return
         if (
             not os.path.isfile(os.path.join(i18ndir, lang + '.json'))
             and not lang == 'qqx'
         ):
-            await ctx.send(
-                'Unrecognized language: {}. Valid languages are:\n{}'.format(
-                    lang, ', '.join(
-                        i[:2]
-                        for i in os.listdir(i18ndir)
-                        if i.endswith('.json')
-                    )
-                )
-#this is special, the language command itself is not translated
-            )
+            await ctx.send(embed=embed(ctx,
+                title=('error',),
+                description=('i18n/unknown-lang', lang, ', '.join(
+                    i[:2]
+                    for i in os.listdir(i18ndir)
+                    if i.endswith('.json')
+                )),
+                color=0xff0000
+            ))
             return
         res = db.execute(
             'SELECT lang FROM channels WHERE channel_id=?',
@@ -325,15 +327,17 @@ class I18n(Cog):
                     'UPDATE channels SET lang=? WHERE channel_id=?',
                     (lang, channel.id)
                 )
-        await ctx.send('Successfully set language for {} to {}'.format(
-            channel.mention, lang
+        await ctx.send(embed=embed(ctx,
+            title=('success',),
+            description=('lang-success', channel.mention, lang),
+            color=0x55acee
         ))
 
-    @command(name='i18n')
+    @command(name='i18n', description='i18n/i18n-desc')
     async def text(self, ctx, key: str, *params):
         await ctx.send(i18n(ctx, key, *params))
 
-    @command(aliases=['t', 'trans'])
+    @command(aliases=['t', 'trans'], description='i18n/translate-desc')
     @c.cooldown(1, 20.0)
     async def translate(self, ctx, lang = None, *, text = None):
         if not lang:

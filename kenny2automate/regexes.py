@@ -3,15 +3,13 @@ from discord.ext.commands import group, Cog
 from .i18n import i18n
 
 class Regexes(Cog):
-	"""Regex commands - Python flavored."""
-	@group()
+	"""regexes/cog-desc"""
+	@group(description='regexes/regex-desc')
 	async def regex(self, ctx):
-		"""Regex functions! Run `;help regex`."""
 		pass
 
-	@regex.command()
+	@regex.command(description='regexes/search-desc')
 	async def search(self, ctx, pattern, string, flags=None):
-		"""Make a Python-flavored regex search! All groups are shown."""
 		if flags is not None:
 			exp = '(?' + flags.lower().replace('l', 'L') + ')(?:' + pattern + ')'
 		else:
@@ -33,9 +31,8 @@ class Regexes(Cog):
 			result = i18n(ctx, 'regexes/search-result-nomatch')
 		await ctx.send(result)
 
-	@regex.command()
+	@regex.command(description='regexes/findall-desc')
 	async def findall(self, ctx, pattern, string, flags=None):
-		"""Use a Python-flavor regex to find all occurences of a pattern!"""
 		if flags is not None:
 			exp = '(?' + flags.lower().replace('l', 'L') + ')(?:' + pattern + ')'
 		else:

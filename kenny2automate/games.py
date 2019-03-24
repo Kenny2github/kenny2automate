@@ -10,12 +10,15 @@ class Games(Cog):
 		self.db = db
 
 	def cog_check(self, ctx):
-		perms = ctx.channel.permissions_for(self.bot.user)
-		return all(
-			perms.manage_messages,
+		try:
+			me = ctx.guild.me
+		except AttributeError: #not in guild
+			me = ctx.channel.me
+		perms = ctx.channel.permissions_for(me)
+		return all((
 			perms.add_reactions,
 			perms.read_message_history
-		)
+		))
 
 	_global_games = {}
 

@@ -50,7 +50,7 @@
   "analyzega-median-cavb": "Changes average viewcount by",
   "analyzega-median-cadb": "Changes average difference by",
   "analyzega-median-camb": "Changes average multiple by",
-  "notloggedin": "This command can only be run when you are logged in. Run `;login <wiki> \"<username>\" <password>` in a DM to login.",
+  "notloggedin": "This command can only be run when you are logged in. Run `;wiki login <wiki> \"<username>\" <password>` in a DM to login.",
   "edit-instructions": "Send content snippets ```encapsulated in triple backquotes``` to add them to your edit. Send the exact text `EOF` to finish and submit the edit.",
   "edit-summary": "Send your edit summary:",
   "edit-result-title": "Edit Result",

@@ -1,0 +1,12 @@
+{
+  "cog-desc": "Internationalization commands and control.",
+  "ogham-desc": "A fun little interpreter from English to Ogham.",
+  "lang-desc": "(Re)Set your language.",
+  "channel_lang-desc": "(Re)Set the channel's language",
+  "i18n-desc": "Get the text of an i18n key.",
+  "translate-desc": "Translate text into a language.",
+  "blank": "Translate API returned a blank string",
+  "unknown-lang": "Unrecognized langage: {0}. Valid languages are:\n{1}",
+  "lang-success": "Successfully set langage for {0} to {1}.",
+  "lang-success-reset": "Successfully reset language for {0}."
+}

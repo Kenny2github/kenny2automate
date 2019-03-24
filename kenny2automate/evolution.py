@@ -100,6 +100,7 @@ entry_id DESC').fetchone()[0]
 sql.register_adapter(Entity, pickle.dumps)
 
 class Evolution(Cog):
+    """evolution/cog-desc"""
     def __init__(self, bot, db_):
         self.bot = bot
         global db
@@ -214,16 +215,13 @@ evol_unnamed_children ORDER BY entry_id ASC').fetchone()
             (player, player.soul)
         )
 
-    @group()
+    @group(description='evolution/evol-desc')
     async def evol(self, ctx):
-        """Play Evolution, a random genetics game! Run `;help evol`."""
         pass
 
-    @evol.command()
+    @evol.command(description='evolution/adopt-desc')
     async def adopt(self, ctx):
-        """Roll the dice to adopt a new child.
-        Note that dice rolls for adoption tend to have slightly worse scores.
-        """
+        """evolution/adopt-help"""
         me = await self.load_player(ctx)
         gene1 = Gene(
             *(random.choice((
@@ -256,12 +254,9 @@ entry_id DESC').fetchone()[0]
             color=0x55acee
         ))
 
-    @evol.command()
+    @evol.command(description='evolution/propose-desc')
     async def propose(self, ctx, other: d.User, *, message: str):
-        """Propose a night of fun with another user.
-        If the other user accepts, the child you create will have one of the
-        four combinations of your and the other user's combined four genes.
-        """
+        """evolution/propose-help"""
         if other.dm_channel is None:
             await other.create_dm()
         dmx = DummyCtx(
@@ -333,7 +328,7 @@ entry_id DESC').fetchone()[0]
                 self.save_player(me)
                 self.save_player(you)
 
-    @evol.command()
+    @evol.command(description='evolution/profile-desc')
     async def profile(self, ctx):
         me = await self.load_player(ctx)
         await ctx.send(embed=embed(ctx,

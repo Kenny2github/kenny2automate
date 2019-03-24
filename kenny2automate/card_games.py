@@ -32,6 +32,7 @@ class Card(object):
 		return hash(self) == hash(other)
 
 class CardGames(Games):
+	"""card_games/cog-desc"""
 	async def do_fish(self, ctxs):
 		players = [ctx.author for ctx in ctxs]
 		deck = [Card(i, j) for i in range(4) for j in range(13)]
@@ -266,47 +267,41 @@ class CardGames(Games):
 					color=0x55acee
 				))
 
-	@group(invoke_without_command=True)
+	@group(invoke_without_command=True, description='card_games/fish-cmd-desc')
 	async def fish(self, ctx):
-		"""Play Go Fish! Run `;help fish` to see subcommands."""
+		"""card_games/fish-cmd-help"""
 		await ctx.send(embed=embed(ctx,
 			title=('error',),
-			description=('card_games/fish-join',),
+			description=('card_games/fish-join', ctx.prefix),
 			color=0xff0000
 		))
 
-	@fish.command(name='join')
+	@fish.command(name='join', description='card_games/fish-join-desc')
 	async def fish_join(self, ctx):
-		"""Join (or start) a game of fish!"""
 		await self._join_global_game(
 			ctx, GO_FISH_NAME, self.do_fish,
 			maxim=float('inf'), scn='fish start', jcn='fish join'
 		)
 
-	@fish.command(name='leave')
+	@fish.command(name='leave', description='card_games/fish-leave-desc')
 	async def fish_leave(self, ctx):
-		"""Leave the game of fish you joined."""
 		await self._unjoin_global_game(ctx, GO_FISH_NAME)
 
-	@fish.command(name='start')
+	@fish.command(name='start', description='card_games/fish-start-desc')
 	async def fish_start(self, ctx):
-		"""Start the game of fish.
-		If you did not create the currently queueing game, you cannot run this
-		command.
-		"""
+		"""card_games/fish-start-help"""
 		if GO_FISH_NAME not in self._global_games:
 			return
 		if ctx.author.id != self._global_games[GO_FISH_NAME]['ctxs'][0].author.id:
 			return
 		await self._start_global_game(ctx, GO_FISH_NAME, maxim=float('inf'))
 
-	@fish.command(name='help')
+	@fish.command(name='help', description='card_games/fish-help-desc')
 	async def fish_help(self, ctx):
-		"""Get detailed help about Go Fish!"""
 		if not ctx.author.dm_channel:
 			await ctx.author.create_dm()
 		await ctx.author.dm_channel.send(embed=embed(ctx,
 			title=('games/help-title', GO_FISH_NAME),
-			description=('card_games/fish-help',),
+			description=('card_games/fish-help', ctx.prefix),
 			color=0x55acee
 		))

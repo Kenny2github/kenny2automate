@@ -25,6 +25,7 @@ DGHANGMANSHANPES = [
 ]
 
 class Hangman(Cog):
+	"""hangman/cog-desc"""
 	def __init__(self, bot, db):
 		self.bot = bot
 		self.db = db
@@ -38,18 +39,13 @@ class Hangman(Cog):
 				break
 			yield last_found
 
-	@command()
+	@command(description='hangman/crudehangman-desc')
 	@c.check(lambda ctx: \
 		ctx.guild \
 		and (not ctx.channel.permissions_for(ctx.guild.me).manage_messages)
 	)
 	async def crudehangman(self, ctx):
-		"""Hangman for less permissions
-
-		Use this first in the server, to start the game in that channel;
-		Next, send the word in a DM with the bot, to set it.
-		Once that's been done, guess a letter by sending it.
-		"""
+		"""hangman/crudehangman-help"""
 		res = self.db.execute(
 			'SELECT ch_occupied FROM channels WHERE channel_id=?',
 			(ctx.channel.id,)
@@ -162,18 +158,12 @@ class Hangman(Cog):
 			(ctx.channel.id,)
 		)
 
-	@command()
+	@command(description='hangman/hangman-desc')
 	@bot_has_permissions(
 		manage_messages=True, add_reactions=True, read_message_history=True
 	)
 	async def hangman(self, ctx):
-		"""Hangman!
-
-		Use this in the channel to start the game there,
-		DM the bot the word to set it
-		then send letters to guess them.
-		Requires the "Manage Messages" permission.
-		"""
+		"""hangman/hangman-help"""
 		REGS = '\U0001f1e6 \U0001f1e7 \U0001f1e8 \U0001f1e9 \U0001f1ea \
 \U0001f1eb \U0001f1ec \U0001f1ed \U0001f1ee \U0001f1ef \U0001f1f0 \U0001f1f1 \
 \U0001f1f2 \U0001f1f3 \U0001f1f4 \U0001f1f5 \U0001f1f6 \U0001f1f7 \U0001f1f8 \
