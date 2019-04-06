@@ -1,4 +1,15 @@
 {
+  "cog-description": "Wiki-related commands.",
+  "login-description": "Login to a Wiki. **MUST BE IN DMS**.",
+  "edit-description": "Edit a Wiki page.",
+  "page-description": "Get the contents of a page.",
+  "randompage-description": "Get a link to a random Wiki page.",
+  "iwstats-description": "Get statistics for the international wikis.",
+  "stats-description": "Get stats for the ``wiki``wiki.",
+  "analyzega-description": "Analysis of GA stats.",
+  "patrol-description": "Patrol recent changes through Discord.",
+  "patrol-help": "Run without parameters to get recent unpatrolled changes.\nRun with one parameter to specify ranges of **recent change** IDs to patrol, e.g. `282698-282700,282702,282706-` to patrol IDs 282698-282700, 282702, and 282706-latest.",
+  "description": "A bot with Scratch Wiki-related commands.",
   "page-failed": "Fetching page content failed. Sorry!",
   "iwstats-failed": "Fetching stats failed. Oops!",
   "iwstats-title": "{0}wiki Stats",
@@ -60,5 +71,8 @@
   "login-notwiki": "Logging in failed: You specified a nonexistent wiki.",
   "login-failed": "Logging in failed: {0}",
   "login-status-title": "Login Status",
-  "login-status": "Login: {0}\nYou should probably delete the command message now, just to be extra safe."
+  "login-status": "Login: {0}\nYou should probably delete the command message now, just to be extra safe.",
+  "patrol-missingperm": "You are not allowed to patrol edits.",
+  "patrol-error": "An error occurred while patrolling. Some of the requested changes may have been patrolled, however.",
+  "patrol-success": "Patrolled all requested changes."
 }

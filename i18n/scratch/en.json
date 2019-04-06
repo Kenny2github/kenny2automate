@@ -7,5 +7,6 @@
   "messagecount-failed": "Couldn't get message count for {0}",
   "messagecount-title": "Message Count",
   "messagecount": "{0} has {1} message(s)",
-  "randomproject-link": "Link"
+  "randomproject-link": "Link",
+  "http-error": "API returned HTTP error"
 }

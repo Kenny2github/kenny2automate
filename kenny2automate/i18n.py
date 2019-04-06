@@ -368,4 +368,4 @@ AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36"
             }
         ))
         msg = await ctx.send(list(req.json().values())[0] or '\1')
-        deleters[ctx.message.id] = msg.id
+        self.deleters[ctx.message.id] = msg.id
