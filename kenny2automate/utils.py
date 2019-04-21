@@ -1,3 +1,5 @@
+from functools import wraps
+
 class DummyCtx(object):
 	def __init__(self, **kwargs):
 		self.__dict__.update(kwargs)
@@ -57,3 +59,10 @@ def dataclass(cls):
     cls.copy = copy
     cls.__eq__ = __eq__
     return cls
+
+def lone_group(func):
+	@wraps(func)
+	async def newfunc(self, ctx):
+		ctx.bot.help_command.context = ctx
+		await ctx.bot.help_command.send_group_help(ctx.command)
+	return newfunc

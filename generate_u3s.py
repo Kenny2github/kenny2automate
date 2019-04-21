@@ -162,7 +162,8 @@ units = (
 )
 
 print('{')
-print('  "cog-desc": "Convert units between each other.\nRun `{0}help Units` to see unit types.\nRun `{0}help <type>` to see units available.\nRun `{0}<type> <unit1> <unit2> <amount>` to convert from `unit1` to `unit2`.",')
+print(r'  "cog-desc": "Convert units between each other.\nRun `{0}help convert` to see unit types.\nRun `{0}help convert <type>` to see units available.\nRun `{0}convert <type> <unit1> <unit2> <amount>` to convert <amount> from `unit1` to `unit2`.",')
+print('  "convert-desc": "Convert units between each other",')
 for kind, k2n, pairs in units:
     print(f'  "{kind}-desc": "Convert {k2n}",')
     for unit1, u2n1 in iter(pairs):

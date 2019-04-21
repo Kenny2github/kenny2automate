@@ -30,6 +30,7 @@ setup(
 		'discord.py<=1.0.0a1786+g77dd4e3',
 		'requests',
 		'aiohttp',
+		'python-datamuse'
 	],
 	python_requires='>=3.7',
 )

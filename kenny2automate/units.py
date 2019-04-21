@@ -4,7 +4,12 @@ from .i18n import i18n
 class Units(Cog):
     """units/cog-desc"""
 
-    @group(aliases=[], invoke_without_command=True, description='units/area-desc')
+	@group(invoke_without_command=True, description='units/convert-desc')
+	async def convert(self, ctx):
+		pass
+
+
+    @convert.group(aliases=[], invoke_without_command=True, description='units/area-desc')
     async def area(self, ctx):
         pass
 
@@ -274,7 +279,7 @@ class Units(Cog):
         await ctx.send(amount * 4046.856 / 10000)
 
 
-    @group(aliases=[], invoke_without_command=True, description='units/data-desc')
+    @convert.group(aliases=[], invoke_without_command=True, description='units/data-desc')
     async def data(self, ctx):
         pass
 
@@ -969,7 +974,7 @@ class Units(Cog):
         await ctx.send(amount * (1024**4) / 8e12)
 
 
-    @group(aliases=[], invoke_without_command=True, description='units/storage-desc')
+    @convert.group(aliases=[], invoke_without_command=True, description='units/storage-desc')
     async def storage(self, ctx):
         pass
 
@@ -2933,7 +2938,7 @@ class Units(Cog):
         await ctx.send(amount * (8 * 1024 ** 5) / 8e15)
 
 
-    @group(aliases=[], invoke_without_command=True, description='units/energy-desc')
+    @convert.group(aliases=[], invoke_without_command=True, description='units/energy-desc')
     async def energy(self, ctx):
         pass
 
@@ -3349,7 +3354,7 @@ class Units(Cog):
         await ctx.send(amount * 1.35582 / 1.05506e8)
 
 
-    @group(aliases=['freq'], invoke_without_command=True, description='units/frequency-desc')
+    @convert.group(aliases=['freq'], invoke_without_command=True, description='units/frequency-desc')
     async def frequency(self, ctx):
         pass
 
@@ -3423,7 +3428,7 @@ class Units(Cog):
         await ctx.send(amount * 1e9 / 1e6)
 
 
-    @group(aliases=[], invoke_without_command=True, description='units/fuel-desc')
+    @convert.group(aliases=[], invoke_without_command=True, description='units/fuel-desc')
     async def fuel(self, ctx):
         pass
 
@@ -3497,7 +3502,7 @@ class Units(Cog):
         await ctx.send(amount * 100 / 1)
 
 
-    @group(aliases=[], invoke_without_command=True, description='units/length-desc')
+    @convert.group(aliases=[], invoke_without_command=True, description='units/length-desc')
     async def length(self, ctx):
         pass
 
@@ -3998,7 +4003,7 @@ class Units(Cog):
         await ctx.send(amount * 1852 / 2.54e-2)
 
 
-    @group(aliases=[], invoke_without_command=True, description='units/mass-desc')
+    @convert.group(aliases=[], invoke_without_command=True, description='units/mass-desc')
     async def mass(self, ctx):
         pass
 
@@ -4414,7 +4419,7 @@ class Units(Cog):
         await ctx.send(amount * 28.3495 / 453.592)
 
 
-    @group(aliases=[], invoke_without_command=True, description='units/angle-desc')
+    @convert.group(aliases=[], invoke_without_command=True, description='units/angle-desc')
     async def angle(self, ctx):
         pass
 
@@ -4570,7 +4575,7 @@ class Units(Cog):
         await ctx.send(amount * (1/3600) / (180/math.pi))
 
 
-    @group(aliases=[], invoke_without_command=True, description='units/pressure-desc')
+    @convert.group(aliases=[], invoke_without_command=True, description='units/pressure-desc')
     async def pressure(self, ctx):
         pass
 
@@ -4681,7 +4686,7 @@ class Units(Cog):
         await ctx.send(amount * 133.322 / 6894.757)
 
 
-    @group(aliases=[], invoke_without_command=True, description='units/speed-desc')
+    @convert.group(aliases=[], invoke_without_command=True, description='units/speed-desc')
     async def speed(self, ctx):
         pass
 
@@ -4792,7 +4797,7 @@ class Units(Cog):
         await ctx.send(amount * (1/1.944) / (1/3.6))
 
 
-    @group(aliases=['temp'], invoke_without_command=True, description='units/temperature-desc')
+    @convert.group(aliases=['temp'], invoke_without_command=True, description='units/temperature-desc')
     async def temperature(self, ctx):
         pass
 
@@ -4843,7 +4848,7 @@ class Units(Cog):
 
 
 
-    @group(aliases=[], invoke_without_command=True, description='units/time-desc')
+    @convert.group(aliases=[], invoke_without_command=True, description='units/time-desc')
     async def time(self, ctx):
         pass
 
@@ -5437,7 +5442,7 @@ class Units(Cog):
         await ctx.send(amount * 3.154e9 / 3.154e8)
 
 
-    @group(aliases=[], invoke_without_command=True, description='units/volume-desc')
+    @convert.group(aliases=[], invoke_without_command=True, description='units/volume-desc')
     async def volume(self, ctx):
         pass
 

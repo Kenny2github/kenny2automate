@@ -61,7 +61,8 @@ class Games(Cog):
 		else:
 			self._global_games[name] = {
 				'ctxs': [ctx],
-				'coro': coro
+				'coro': coro,
+				'vote': 0
 			}
 			coros = []
 			for row in self.db.execute(
@@ -127,8 +128,6 @@ class Games(Cog):
 	async def _start_global_game(self, ctx, name, *, maxim=2, minim=2):
 		if name not in self._global_games:
 			return
-		if ctx.author.id != self._global_games[name]['ctxs'][0].author.id:
-			return
 		if len(self._global_games[name]['ctxs']) < minim:
 			await ctx.send(embed=embed(ctx,
 				title=('error',),
@@ -139,16 +138,32 @@ class Games(Cog):
 				color=0xff0000
 			))
 			return
-		coro = self._global_games[name]['coro']
+		gam = self._global_games[name]
+		if ctx.author.id != gam['ctxs'][0].author.id:
+			gam['vote'] += 1
+			if gam['vote'] < len(gam['ctxs']) // 2:
+				return await ctx.send(embed=embed(ctx,
+					title=('games/voted-title',),
+					description=(
+						'games/voted',
+						name,
+						len(gam['ctxs']) // 2 - gam['vote']
+					),
+					color=0x55acee
+				))
+		coro = gam['coro']
 		ctxs = []
 		if isinstance(maxim, int):
 			for i in range(maxim):
-				ctxs.append(self._global_games[name]['ctxs'].pop(0))
+				try:
+					ctxs.append(gam['ctxs'].pop(0))
+				except IndexError:
+					break
 		else:
-			ctxs = self._global_games[name]['ctxs'][:]
-			self._global_games[name]['ctxs'] = []
-		if not len(self._global_games[name]['ctxs']):
-			del self._global_games[name]
+			ctxs = gam['ctxs'][:]
+			gam['ctxs'] = []
+		if not len(gam['ctxs']):
+			del self._global_games[name], gam
 		for c in ctxs:
 			if not c.author.dm_channel:
 				await c.author.create_dm()

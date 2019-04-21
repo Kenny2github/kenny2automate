@@ -167,10 +167,13 @@ from .i18n import i18n
 class Units(Cog):
     \"\"\"units/cog-desc\"\"\"
 
+	@group(invoke_without_command=True, description='units/convert-desc')
+	async def convert(self, ctx):
+		pass
 """)
 for kind, pairs in units:
     print(f"""
-    @group(aliases={kind[1:]}, invoke_without_command=True, description='units/{kind[0]}-desc')
+    @convert.group(aliases={kind[1:]}, invoke_without_command=True, description='units/{kind[0]}-desc')
     async def {kind[0]}(self, ctx):
         pass
 

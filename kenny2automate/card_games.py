@@ -1,5 +1,6 @@
 import re
 import random
+import asyncio
 from discord.ext.commands import group
 from .games import Games
 from .i18n import i18n, embed
@@ -111,133 +112,161 @@ class CardGames(Games):
 			await checkbooks(pid)
 		for i, dm in enumerate(dmx[1:]):
 			await dm.send(embed=stats(i+1, 'card_games/fish-m-wait'))
-		while all(hands) and deck:
-			for pid, player in enumerate(players):
-				matches = True
+		pid = 0
+		while all(hands) and deck and len(players) > 1:
+			pid %= len(players)
+			player = players[pid]
+			matches = True
+			for pid2, player2 in enumerate(players):
+				if player2 == player:
+					continue
+				await player2.send(embed=embed(dmx[pid2],
+					title=('card_games/fish-turn-title',),
+					description=(
+						'card_games/fish-turn',
+						player.display_name
+					),
+					color=0xffffff
+				))
+			await dmx[pid].send(embed=stats(
+				pid, 'card_games/fish-m-card'
+			))
+			timedout = False
+			while matches and hands[pid]:
+				num = (
+					'A', '2', '3', '4', '5', '6', '7', '8', '9',
+					'10', 'J', 'Q', 'K'
+				)
+				def checc(m):
+					if (
+						m.channel.id != dmx[pid].channel.id
+						or m.author.id != player.id
+					):
+						return False
+					if not re.fullmatch(
+						'(?:[JQKA2-9]|10)',
+						m.content,
+						re.I
+					):
+						return False
+					n = num.index(m.content.upper().strip())
+					for card in hands[pid]:
+						if card.number == n:
+							return True
+					return False
+				try:
+					msg = await self.bot.wait_for(
+						'message',
+						check=checc,
+						timeout=600.0
+					)
+				except asyncio.TimeoutError:
+					await player.send(embed=embed(dmx[pid],
+						title=('card_games/fish-timed-out-title',),
+						description=('card_games/fish-timed-out', 600),
+						color=0xff0000
+					))
+					del players[pid]
+					del dmx[pid]
+					deck.extend(hands[pid])
+					random.shuffle(deck)
+					del hands[pid]
+					del books[pid]
+					timedout = True
+					break
+				num = num.index(msg.content.upper().strip())
+				matches = []
 				for pid2, player2 in enumerate(players):
 					if player2 == player:
 						continue
-					await dmx[pid2].send(embed=embed(dmx[pid2],
-						title=('card_games/fish-turn-title',),
-						description=(
-							'card_games/fish-turn',
-							player.display_name
-						),
-						color=0xffffff
-					))
-				await dmx[pid].send(embed=stats(
-					pid, 'card_games/fish-m-card'
-				))
-				while matches and hands[pid]:
-					def checc(m):
-						if (
-							m.channel.id != dmx[pid].channel.id
-							or m.author.id != player.id
-						):
-							return False
-						if not re.fullmatch(
-							'(?:[JQKA2-9]|10)',
-							m.content,
-							re.I
-						):
-							return False
-						num = (
-							'A', '2', '3', '4', '5', '6', '7', '8', '9',
-							'10', 'J', 'Q', 'K'
-						).index(m.content.upper())
-						for card in hands[pid]:
-							if card.number == num:
-								return True
-						return False
-					msg = await self.bot.wait_for('message', check=checc)
-					num = (
-						'A', '2', '3', '4', '5', '6', '7', '8', '9',
-						'10', 'J', 'Q', 'K'
-					).index(msg.content.upper().strip())
-					matches = []
-					for pid2, player2 in enumerate(players):
-						if player2 == player:
-							continue
-						matches2 = [c for c in hands[pid2] if c.number == num]
-						matches.extend(matches2)
-						count = len(matches2)
-						hands[pid2] = [
-							c
-							for c in hands[pid2]
-							if c.number != num
-						]
-						if matches2:
+					matches2 = [c for c in hands[pid2] if c.number == num]
+					matches.extend(matches2)
+					count = len(matches2)
+					hands[pid2] = [
+						c
+						for c in hands[pid2]
+						if c.number != num
+					]
+					if matches2:
+						await dmx[pid2].send(embed=embed(dmx[pid2],
+							title=('card_games/fish-card-taken-title',),
+							description=(
+								'card_games/fish-card-taken',
+								player.display_name,
+								Card.NUMBERS[num],
+								count
+							),
+							color=0xff0000
+						))
+						hands[pid].extend(matches)
+				if matches:
+					hands[pid].sort(key=lambda c: c.number)
+					await checkbooks(pid)
+					if not hands[pid]:
+						break
+					await dmx[pid].send(
+						embed=stats(pid, 'card_games/fish-m-card', (
+							'card_games/fish-card-got',
+							' '.join(str(c) for c in matches)
+						))
+					)
+				else:
+					draw = deck.pop()
+					hands[pid].append(draw)
+					hands[pid].sort(key=lambda c: c.number)
+					await checkbooks(pid)
+					if not hands[pid]:
+						break
+					if draw.number == num:
+						matches = True
+						for pid2, player2 in enumerate(players):
+							if player2 == player:
+								continue
 							await dmx[pid2].send(embed=embed(dmx[pid2],
-								title=('card_games/fish-card-taken-title',),
+								title=('card_games/fish-card-missed-title',),
 								description=(
-									'card_games/fish-card-taken',
+									'card_games/fish-card-missed-unsafe',
 									player.display_name,
 									Card.NUMBERS[num],
 									count
 								),
-								color=0xff0000
+								color=0xff8080
 							))
-							hands[pid].extend(matches)
-					if matches:
-						hands[pid].sort(key=lambda c: c.number)
-						await checkbooks(pid)
-						if not hands[pid]:
-							break
+						await dmx[pid].send(embed=stats(pid,
+							'card_games/fish-m-card', (
+								'card_games/fish-fish-got',
+								Card.NUMBERS[num]
+							)
+						))
+					else:
+						for pid2, player2 in enumerate(players):
+							if player2 == player:
+								continue
+							await dmx[pid2].send(embed=embed(dmx[pid2],
+								title=('card_games/fish-card-missed-title',),
+								description=(
+									'card_games/fish-card-missed',
+									player.display_name,
+									Card.NUMBERS[num],
+									count
+								),
+								color=0x55acee
+							))
 						await dmx[pid].send(
-							embed=stats(pid, 'card_games/fish-m-card', (
-								'card_games/fish-card-got',
-								' '.join(str(c) for c in matches)
+							embed=stats(pid, 'card_games/fish-m-wait', (
+								'card_games/fish-fish', draw
 							))
 						)
-					else:
-						draw = deck.pop()
-						hands[pid].append(draw)
-						hands[pid].sort(key=lambda c: c.number)
-						await checkbooks(pid)
-						if not hands[pid]:
-							break
-						if draw.number == num:
-							matches = True
-							for pid2, player2 in enumerate(players):
-								if player2 == player:
-									continue
-								await dmx[pid2].send(embed=embed(dmx[pid2],
-									title=('card_games/fish-card-missed-title',),
-									description=(
-										'card_games/fish-card-missed-unsafe',
-										player.display_name,
-										Card.NUMBERS[num],
-										count
-									),
-									color=0xff8080
-								))
-							await dmx[pid].send(embed=stats(pid,
-								'card_games/fish-m-card', (
-									'card_games/fish-fish-got',
-									Card.NUMBERS[num]
-								)
-							))
-						else:
-							for pid2, player2 in enumerate(players):
-								if player2 == player:
-									continue
-								await dmx[pid2].send(embed=embed(dmx[pid2],
-									title=('card_games/fish-card-missed-title',),
-									description=(
-										'card_games/fish-card-missed',
-										player.display_name,
-										Card.NUMBERS[num],
-										count
-									),
-									color=0x55acee
-								))
-							await dmx[pid].send(
-								embed=stats(pid, 'card_games/fish-m-wait', (
-									'card_games/fish-fish', draw
-								))
-							)
-				if not (all(hands) and deck):
-					break
+			if not timedout:
+				pid += 1
+		if not (len(players) > 1):
+			for dm in dmx:
+				await dm.send(embed=embed(dm,
+					title=('card_games/fish-all-timed-out-title',),
+					description=('card_games/fish-all-timed-out',),
+					color=0xff0000
+				))
+			return
 		books = tuple(map(len, books))
 		max_books = max(books)
 		winners = [i for i, j in enumerate(books) if j == max_books]
@@ -290,10 +319,6 @@ class CardGames(Games):
 	@fish.command(name='start', description='card_games/fish-start-desc')
 	async def fish_start(self, ctx):
 		"""card_games/fish-start-help"""
-		if GO_FISH_NAME not in self._global_games:
-			return
-		if ctx.author.id != self._global_games[GO_FISH_NAME]['ctxs'][0].author.id:
-			return
 		await self._start_global_game(ctx, GO_FISH_NAME, maxim=float('inf'))
 
 	@fish.command(name='help', description='card_games/fish-help-desc')

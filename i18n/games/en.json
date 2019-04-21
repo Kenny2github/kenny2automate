@@ -25,5 +25,7 @@
   "not-enough-players": "There are not enough players to join! At least {0} are required, there are currently {1}.",
   "game-waiting-title": "Game Waiting",
   "game-waiting": "There is a game of {0} looking for players! Run `{1}` to join.",
-  "game-waiting-footer": "You have received this message because you have opted into global game notifications for {0}."
+  "game-waiting-footer": "You have received this message because you have opted into global game notifications for {0}.",
+  "voted-title": "Voted to Start",
+  "voted": "You have voted to start the game of {0}. {1} more votes are needed to start."
 }
