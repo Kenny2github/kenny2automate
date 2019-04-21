@@ -14,7 +14,14 @@ async def eval_(ctx, *, arg):
         'discord': discord,
     }
     out = StringIO()
-    arg = ''.join('    ' + i + '\n' for i in arg.strip('`').strip().splitlines())
+    arg = arg.strip('`').rstrip().lstrip('\n').splitlines()
+    indent = ''
+    for line in arg:
+        strp = line.lstrip()
+        if strp != line:
+            indent = line[:len(line) - len(strp)]
+            break
+    arg = ''.join(indent + line + '\n' for line in arg)
     exec(f"async def func():\n{arg}", env)
     try:
         with redirect_stdout(out):

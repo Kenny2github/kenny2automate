@@ -17,7 +17,7 @@ from discord.ext.commands import Bot
 from discord.ext.commands import bot_has_permissions
 from discord.ext.commands import has_permissions
 from discord.ext import commands
-from kenny2automate.utils import DummyCtx
+from kenny2automate.utils import DummyCtx, lone_group
 from kenny2automate.server import Handler
 from kenny2automate.help import Kenny2help
 
@@ -272,6 +272,7 @@ async def whoami(ctx):
     await ctx.send(embed=emb)
 
 @client.group(description='prefix-desc')
+@lone_group
 async def prefix(ctx):
     pass
 

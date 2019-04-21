@@ -27,7 +27,10 @@ class Words(Cog):
         async def unknown(*_, **__):
             ctx.bot.help_command.context = ctx
             await ctx.bot.help_command.send_command_help(ctx.command)
-        cmd, _, arg = cmd.partition(':')
+        if ':' not in cmd:
+            cmd, _, arg = cmd.rpartition(' ') #assume argument is one word
+        else:
+            cmd, _, arg = cmd.partition(':')
         cmd, arg = cmd.strip().replace(' ', '_'), arg.strip()
         await getattr(self, 'words_' + cmd, unknown)(ctx, word=arg)
 
