@@ -4,9 +4,9 @@ from .i18n import i18n
 class Units(Cog):
     """units/cog-desc"""
 
-	@group(invoke_without_command=True, description='units/convert-desc')
-	async def convert(self, ctx):
-		pass
+    @group(invoke_without_command=True, description='units/convert-desc')
+    async def convert(self, ctx):
+        pass
 
 
     @convert.group(aliases=[], invoke_without_command=True, description='units/area-desc')

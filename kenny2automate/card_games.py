@@ -4,7 +4,7 @@ import asyncio
 from discord.ext.commands import group
 from .games import Games
 from .i18n import i18n, embed
-from .utils import DummyCtx
+from .utils import DummyCtx, lone_group
 
 GO_FISH_NAME = 'Go Fish'
 
@@ -297,13 +297,10 @@ class CardGames(Games):
 				))
 
 	@group(invoke_without_command=True, description='card_games/fish-cmd-desc')
+	@lone_group(True)
 	async def fish(self, ctx):
 		"""card_games/fish-cmd-help"""
-		await ctx.send(embed=embed(ctx,
-			title=('error',),
-			description=('card_games/fish-join', ctx.prefix),
-			color=0xff0000
-		))
+		pass
 
 	@fish.command(name='join', description='card_games/fish-join-desc')
 	async def fish_join(self, ctx):

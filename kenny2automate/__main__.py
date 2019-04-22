@@ -272,7 +272,7 @@ async def whoami(ctx):
     await ctx.send(embed=emb)
 
 @client.group(description='prefix-desc')
-@lone_group
+@lone_group(False)
 async def prefix(ctx):
     pass
 

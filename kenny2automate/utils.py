@@ -60,9 +60,17 @@ def dataclass(cls):
     cls.__eq__ = __eq__
     return cls
 
-def lone_group(func):
-	@wraps(func)
-	async def newfunc(self, ctx):
-		ctx.bot.help_command.context = ctx
-		await ctx.bot.help_command.send_group_help(ctx.command)
-	return newfunc
+def lone_group(in_cls=True):
+	def wrapper(func):
+		if in_cls:
+			@wraps(func)
+			async def newfunc(self, ctx):
+				ctx.bot.help_command.context = ctx
+				await ctx.bot.help_command.send_group_help(ctx.command)
+		else:
+			@wraps(func)
+			async def newfunc(ctx):
+				ctx.bot.help_command.context = ctx
+				await ctx.bot.help_command.send_group_help(ctx.command)
+		return newfunc
+	return wrapper

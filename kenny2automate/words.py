@@ -51,6 +51,7 @@ class Words(Cog):
             ))
         await ctx.send(embed=embed(ctx,
             title=('words/perfect-rhymes',),
+            description=None if fields else ('none-paren',),
             fields=fields,
             color=0x55acee
         ))
@@ -63,6 +64,7 @@ class Words(Cog):
             ))
         await ctx.send(embed=embed(ctx,
             title=('words/near-rhymes',),
+            description=None if fields else ('none-paren',),
             fields=fields,
             color=0xe67e22
         ))
@@ -75,7 +77,7 @@ class Words(Cog):
             title=(title, word),
             description=i18n(ctx, 'comma-sep').join(
                 '{score}: {word}'.format(**i) for i in lewords
-            ),
+            ) or ('none-paren',),
             color=0x55acee
         )
 
