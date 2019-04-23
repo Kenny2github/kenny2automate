@@ -20,7 +20,7 @@
   "unjoined-title": "Left",
   "unjoined": "You have left the game of {0}.",
   "joined-waiting": "You have joined the game of {0}, now waiting for {1} more players to join...",
-  "joined-waiting-maxmin": "You have joined the game of {0}, now waiting for {1} more players to join or for the game starter to start the game...",
+  "joined-waiting-minmax": "You have joined the game of {0}, now waiting for {1} more players to join or for the game starter to start the game...",
   "joined-waiting-nomax": "You have joined the game of {0}, now waiting for the game starter to start the game...",
   "not-enough-players": "There are not enough players to join! At least {0} are required, there are currently {1}.",
   "game-waiting-title": "Game Waiting",
