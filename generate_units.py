@@ -163,28 +163,27 @@ units = (
 
 print("""from discord.ext.commands import group, Cog
 from .i18n import i18n
+from .utils import lone_group
 
 class Units(Cog):
     \"\"\"units/cog-desc\"\"\"
 
     @group(invoke_without_command=True, description='units/convert-desc')
+    @lone_group(True)
     async def convert(self, ctx):
         pass
 """)
 for kind, pairs in units:
     print(f"""
     @convert.group(aliases={kind[1:]}, invoke_without_command=True, description='units/{kind[0]}-desc')
+    @lone_group(True)
     async def {kind[0]}(self, ctx):
         pass
 
 """)
     if kind[0] == 'temperature':
-        print("""    @group(aliases=['temp'], invoke_without_command=True, description='units/temperature-desc')
-    async def temperature(self, ctx):
-        pass
-
-
-    @temperature.group(invoke_without_command=True, description='units/temperature-C-desc')
+        print("""    @temperature.group(invoke_without_command=True, description='units/temperature-C-desc')
+    @lone_group(True)
     async def C(ctx):
         pass
 
@@ -198,6 +197,7 @@ for kind, pairs in units:
         await ctx.send(amount + 273.15)
 
     @temperature.group(invoke_without_command=True, description='units/temperature-F-desc')
+    @lone_group(True)
     async def F(ctx):
         pass
 
@@ -211,6 +211,7 @@ for kind, pairs in units:
         await ctx.send((amount - 32) * 5 / 9 + 273.15)
 
     @temperature.group(invoke_without_command=True, description='units/temperature-K-desc')
+    @lone_group(True)
     async def K(ctx):
         pass
 
@@ -227,6 +228,7 @@ for kind, pairs in units:
         continue
     for unit1, factor1 in iter(pairs):
         print(f"""    @{kind[0]}.group(invoke_without_command=True, description='units/{kind[0]}-{unit1}-desc')
+    @lone_group(True)
     async def {unit1}(ctx):
         pass
 

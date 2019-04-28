@@ -15,7 +15,7 @@ async def eval_(ctx, *, arg):
     }
     out = StringIO()
     arg = arg.strip('`').rstrip().lstrip('\n').splitlines()
-    indent = ''
+    indent = '    '
     for line in arg:
         strp = line.lstrip()
         if strp != line:

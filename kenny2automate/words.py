@@ -15,6 +15,9 @@ class Words(Cog):
         self.bot = bot
         self.api = datamuse.Datamuse()
 
+    def cog_check(self, ctx):
+        return ctx.guild is None
+
     async def q(self, call, *args, **kwargs):
         return await self.bot.loop.run_in_executor(
             None,

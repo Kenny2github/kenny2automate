@@ -1,20 +1,24 @@
 from discord.ext.commands import group, Cog
 from .i18n import i18n
+from .utils import lone_group
 
 class Units(Cog):
     """units/cog-desc"""
 
     @group(invoke_without_command=True, description='units/convert-desc')
+    @lone_group(True)
     async def convert(self, ctx):
         pass
 
 
     @convert.group(aliases=[], invoke_without_command=True, description='units/area-desc')
+    @lone_group(True)
     async def area(self, ctx):
         pass
 
 
     @area.group(invoke_without_command=True, description='units/area-sqkm-desc')
+    @lone_group(True)
     async def sqkm(ctx):
         pass
 
@@ -48,6 +52,7 @@ class Units(Cog):
         await ctx.send(amount * 1e6 / 4046.856)
 
     @area.group(invoke_without_command=True, description='units/area-sqm-desc')
+    @lone_group(True)
     async def sqm(ctx):
         pass
 
@@ -81,6 +86,7 @@ class Units(Cog):
         await ctx.send(amount * 1 / 4046.856)
 
     @area.group(invoke_without_command=True, description='units/area-sqmil-desc')
+    @lone_group(True)
     async def sqmil(ctx):
         pass
 
@@ -114,6 +120,7 @@ class Units(Cog):
         await ctx.send(amount * 2.59e6 / 4046.856)
 
     @area.group(invoke_without_command=True, description='units/area-sqyard-desc')
+    @lone_group(True)
     async def sqyard(ctx):
         pass
 
@@ -147,6 +154,7 @@ class Units(Cog):
         await ctx.send(amount * (1/1.196) / 4046.856)
 
     @area.group(invoke_without_command=True, description='units/area-sqft-desc')
+    @lone_group(True)
     async def sqft(ctx):
         pass
 
@@ -180,6 +188,7 @@ class Units(Cog):
         await ctx.send(amount * (1/10.764) / 4046.856)
 
     @area.group(invoke_without_command=True, description='units/area-sqin-desc')
+    @lone_group(True)
     async def sqin(ctx):
         pass
 
@@ -213,6 +222,7 @@ class Units(Cog):
         await ctx.send(amount * (1/1550.003) / 4046.856)
 
     @area.group(invoke_without_command=True, description='units/area-hectare-desc')
+    @lone_group(True)
     async def hectare(ctx):
         pass
 
@@ -246,6 +256,7 @@ class Units(Cog):
         await ctx.send(amount * 10000 / 4046.856)
 
     @area.group(invoke_without_command=True, description='units/area-acre-desc')
+    @lone_group(True)
     async def acre(ctx):
         pass
 
@@ -280,11 +291,13 @@ class Units(Cog):
 
 
     @convert.group(aliases=[], invoke_without_command=True, description='units/data-desc')
+    @lone_group(True)
     async def data(self, ctx):
         pass
 
 
     @data.group(invoke_without_command=True, description='units/data-bps-desc')
+    @lone_group(True)
     async def bps(ctx):
         pass
 
@@ -338,6 +351,7 @@ class Units(Cog):
         await ctx.send(amount * 1 / (1024**4))
 
     @data.group(invoke_without_command=True, description='units/data-kbps-desc')
+    @lone_group(True)
     async def kbps(ctx):
         pass
 
@@ -391,6 +405,7 @@ class Units(Cog):
         await ctx.send(amount * 1e3 / (1024**4))
 
     @data.group(invoke_without_command=True, description='units/data-KBps-desc')
+    @lone_group(True)
     async def KBps(ctx):
         pass
 
@@ -444,6 +459,7 @@ class Units(Cog):
         await ctx.send(amount * 8e3 / (1024**4))
 
     @data.group(invoke_without_command=True, description='units/data-kibps-desc')
+    @lone_group(True)
     async def kibps(ctx):
         pass
 
@@ -497,6 +513,7 @@ class Units(Cog):
         await ctx.send(amount * 1024 / (1024**4))
 
     @data.group(invoke_without_command=True, description='units/data-mbps-desc')
+    @lone_group(True)
     async def mbps(ctx):
         pass
 
@@ -550,6 +567,7 @@ class Units(Cog):
         await ctx.send(amount * 1e6 / (1024**4))
 
     @data.group(invoke_without_command=True, description='units/data-MBps-desc')
+    @lone_group(True)
     async def MBps(ctx):
         pass
 
@@ -603,6 +621,7 @@ class Units(Cog):
         await ctx.send(amount * 8e6 / (1024**4))
 
     @data.group(invoke_without_command=True, description='units/data-mibps-desc')
+    @lone_group(True)
     async def mibps(ctx):
         pass
 
@@ -656,6 +675,7 @@ class Units(Cog):
         await ctx.send(amount * (1024**2) / (1024**4))
 
     @data.group(invoke_without_command=True, description='units/data-gbps-desc')
+    @lone_group(True)
     async def gbps(ctx):
         pass
 
@@ -709,6 +729,7 @@ class Units(Cog):
         await ctx.send(amount * 1e9 / (1024**4))
 
     @data.group(invoke_without_command=True, description='units/data-GBps-desc')
+    @lone_group(True)
     async def GBps(ctx):
         pass
 
@@ -762,6 +783,7 @@ class Units(Cog):
         await ctx.send(amount * 8e9 / (1024**4))
 
     @data.group(invoke_without_command=True, description='units/data-gibps-desc')
+    @lone_group(True)
     async def gibps(ctx):
         pass
 
@@ -815,6 +837,7 @@ class Units(Cog):
         await ctx.send(amount * (1024**3) / (1024**4))
 
     @data.group(invoke_without_command=True, description='units/data-tbps-desc')
+    @lone_group(True)
     async def tbps(ctx):
         pass
 
@@ -868,6 +891,7 @@ class Units(Cog):
         await ctx.send(amount * 1e12 / (1024**4))
 
     @data.group(invoke_without_command=True, description='units/data-TBps-desc')
+    @lone_group(True)
     async def TBps(ctx):
         pass
 
@@ -921,6 +945,7 @@ class Units(Cog):
         await ctx.send(amount * 8e12 / (1024**4))
 
     @data.group(invoke_without_command=True, description='units/data-tibps-desc')
+    @lone_group(True)
     async def tibps(ctx):
         pass
 
@@ -975,11 +1000,13 @@ class Units(Cog):
 
 
     @convert.group(aliases=[], invoke_without_command=True, description='units/storage-desc')
+    @lone_group(True)
     async def storage(self, ctx):
         pass
 
 
     @storage.group(invoke_without_command=True, description='units/storage-b-desc')
+    @lone_group(True)
     async def b(ctx):
         pass
 
@@ -1069,6 +1096,7 @@ class Units(Cog):
         await ctx.send(amount * 1 / (8 * 1024 ** 5))
 
     @storage.group(invoke_without_command=True, description='units/storage-kb-desc')
+    @lone_group(True)
     async def kb(ctx):
         pass
 
@@ -1158,6 +1186,7 @@ class Units(Cog):
         await ctx.send(amount * 1e3 / (8 * 1024 ** 5))
 
     @storage.group(invoke_without_command=True, description='units/storage-kib-desc')
+    @lone_group(True)
     async def kib(ctx):
         pass
 
@@ -1247,6 +1276,7 @@ class Units(Cog):
         await ctx.send(amount * 1024 / (8 * 1024 ** 5))
 
     @storage.group(invoke_without_command=True, description='units/storage-mb-desc')
+    @lone_group(True)
     async def mb(ctx):
         pass
 
@@ -1336,6 +1366,7 @@ class Units(Cog):
         await ctx.send(amount * 1e6 / (8 * 1024 ** 5))
 
     @storage.group(invoke_without_command=True, description='units/storage-mib-desc')
+    @lone_group(True)
     async def mib(ctx):
         pass
 
@@ -1425,6 +1456,7 @@ class Units(Cog):
         await ctx.send(amount * (1024**2) / (8 * 1024 ** 5))
 
     @storage.group(invoke_without_command=True, description='units/storage-gb-desc')
+    @lone_group(True)
     async def gb(ctx):
         pass
 
@@ -1514,6 +1546,7 @@ class Units(Cog):
         await ctx.send(amount * 1e9 / (8 * 1024 ** 5))
 
     @storage.group(invoke_without_command=True, description='units/storage-gib-desc')
+    @lone_group(True)
     async def gib(ctx):
         pass
 
@@ -1603,6 +1636,7 @@ class Units(Cog):
         await ctx.send(amount * (1024**3) / (8 * 1024 ** 5))
 
     @storage.group(invoke_without_command=True, description='units/storage-tb-desc')
+    @lone_group(True)
     async def tb(ctx):
         pass
 
@@ -1692,6 +1726,7 @@ class Units(Cog):
         await ctx.send(amount * 1e12 / (8 * 1024 ** 5))
 
     @storage.group(invoke_without_command=True, description='units/storage-tib-desc')
+    @lone_group(True)
     async def tib(ctx):
         pass
 
@@ -1781,6 +1816,7 @@ class Units(Cog):
         await ctx.send(amount * (1024**4) / (8 * 1024 ** 5))
 
     @storage.group(invoke_without_command=True, description='units/storage-pb-desc')
+    @lone_group(True)
     async def pb(ctx):
         pass
 
@@ -1870,6 +1906,7 @@ class Units(Cog):
         await ctx.send(amount * 1e15 / (8 * 1024 ** 5))
 
     @storage.group(invoke_without_command=True, description='units/storage-pib-desc')
+    @lone_group(True)
     async def pib(ctx):
         pass
 
@@ -1959,6 +1996,7 @@ class Units(Cog):
         await ctx.send(amount * (1024**5) / (8 * 1024 ** 5))
 
     @storage.group(invoke_without_command=True, description='units/storage-B-desc')
+    @lone_group(True)
     async def B(ctx):
         pass
 
@@ -2048,6 +2086,7 @@ class Units(Cog):
         await ctx.send(amount * 8 / (8 * 1024 ** 5))
 
     @storage.group(invoke_without_command=True, description='units/storage-KB-desc')
+    @lone_group(True)
     async def KB(ctx):
         pass
 
@@ -2137,6 +2176,7 @@ class Units(Cog):
         await ctx.send(amount * 8e3 / (8 * 1024 ** 5))
 
     @storage.group(invoke_without_command=True, description='units/storage-KiB-desc')
+    @lone_group(True)
     async def KiB(ctx):
         pass
 
@@ -2226,6 +2266,7 @@ class Units(Cog):
         await ctx.send(amount * (8 * 1024) / (8 * 1024 ** 5))
 
     @storage.group(invoke_without_command=True, description='units/storage-MB-desc')
+    @lone_group(True)
     async def MB(ctx):
         pass
 
@@ -2315,6 +2356,7 @@ class Units(Cog):
         await ctx.send(amount * 8e6 / (8 * 1024 ** 5))
 
     @storage.group(invoke_without_command=True, description='units/storage-MiB-desc')
+    @lone_group(True)
     async def MiB(ctx):
         pass
 
@@ -2404,6 +2446,7 @@ class Units(Cog):
         await ctx.send(amount * (8 * 1024 ** 2) / (8 * 1024 ** 5))
 
     @storage.group(invoke_without_command=True, description='units/storage-GB-desc')
+    @lone_group(True)
     async def GB(ctx):
         pass
 
@@ -2493,6 +2536,7 @@ class Units(Cog):
         await ctx.send(amount * 8e9 / (8 * 1024 ** 5))
 
     @storage.group(invoke_without_command=True, description='units/storage-GiB-desc')
+    @lone_group(True)
     async def GiB(ctx):
         pass
 
@@ -2582,6 +2626,7 @@ class Units(Cog):
         await ctx.send(amount * (8 * 1024 ** 3) / (8 * 1024 ** 5))
 
     @storage.group(invoke_without_command=True, description='units/storage-TB-desc')
+    @lone_group(True)
     async def TB(ctx):
         pass
 
@@ -2671,6 +2716,7 @@ class Units(Cog):
         await ctx.send(amount * 8e12 / (8 * 1024 ** 5))
 
     @storage.group(invoke_without_command=True, description='units/storage-TiB-desc')
+    @lone_group(True)
     async def TiB(ctx):
         pass
 
@@ -2760,6 +2806,7 @@ class Units(Cog):
         await ctx.send(amount * (8 * 1024 ** 4) / (8 * 1024 ** 5))
 
     @storage.group(invoke_without_command=True, description='units/storage-PB-desc')
+    @lone_group(True)
     async def PB(ctx):
         pass
 
@@ -2849,6 +2896,7 @@ class Units(Cog):
         await ctx.send(amount * 8e15 / (8 * 1024 ** 5))
 
     @storage.group(invoke_without_command=True, description='units/storage-PiB-desc')
+    @lone_group(True)
     async def PiB(ctx):
         pass
 
@@ -2939,11 +2987,13 @@ class Units(Cog):
 
 
     @convert.group(aliases=[], invoke_without_command=True, description='units/energy-desc')
+    @lone_group(True)
     async def energy(self, ctx):
         pass
 
 
     @energy.group(invoke_without_command=True, description='units/energy-joule-desc')
+    @lone_group(True)
     async def joule(ctx):
         pass
 
@@ -2985,6 +3035,7 @@ class Units(Cog):
         await ctx.send(amount * 1 / 1.35582)
 
     @energy.group(invoke_without_command=True, description='units/energy-kilojoule-desc')
+    @lone_group(True)
     async def kilojoule(ctx):
         pass
 
@@ -3026,6 +3077,7 @@ class Units(Cog):
         await ctx.send(amount * 1000 / 1.35582)
 
     @energy.group(invoke_without_command=True, description='units/energy-calorie-desc')
+    @lone_group(True)
     async def calorie(ctx):
         pass
 
@@ -3067,6 +3119,7 @@ class Units(Cog):
         await ctx.send(amount * 4.184 / 1.35582)
 
     @energy.group(invoke_without_command=True, description='units/energy-kcal-desc')
+    @lone_group(True)
     async def kcal(ctx):
         pass
 
@@ -3108,6 +3161,7 @@ class Units(Cog):
         await ctx.send(amount * 4184 / 1.35582)
 
     @energy.group(invoke_without_command=True, description='units/energy-watthour-desc')
+    @lone_group(True)
     async def watthour(ctx):
         pass
 
@@ -3149,6 +3203,7 @@ class Units(Cog):
         await ctx.send(amount * 3600 / 1.35582)
 
     @energy.group(invoke_without_command=True, description='units/energy-kwh-desc')
+    @lone_group(True)
     async def kwh(ctx):
         pass
 
@@ -3190,6 +3245,7 @@ class Units(Cog):
         await ctx.send(amount * 3.6e6 / 1.35582)
 
     @energy.group(invoke_without_command=True, description='units/energy-ev-desc')
+    @lone_group(True)
     async def ev(ctx):
         pass
 
@@ -3231,6 +3287,7 @@ class Units(Cog):
         await ctx.send(amount * (1/6.242e18) / 1.35582)
 
     @energy.group(invoke_without_command=True, description='units/energy-btu-desc')
+    @lone_group(True)
     async def btu(ctx):
         pass
 
@@ -3272,6 +3329,7 @@ class Units(Cog):
         await ctx.send(amount * 1055.06 / 1.35582)
 
     @energy.group(invoke_without_command=True, description='units/energy-ust-desc')
+    @lone_group(True)
     async def ust(ctx):
         pass
 
@@ -3313,6 +3371,7 @@ class Units(Cog):
         await ctx.send(amount * 1.05506e8 / 1.35582)
 
     @energy.group(invoke_without_command=True, description='units/energy-ftlb-desc')
+    @lone_group(True)
     async def ftlb(ctx):
         pass
 
@@ -3355,11 +3414,13 @@ class Units(Cog):
 
 
     @convert.group(aliases=['freq'], invoke_without_command=True, description='units/frequency-desc')
+    @lone_group(True)
     async def frequency(self, ctx):
         pass
 
 
     @frequency.group(invoke_without_command=True, description='units/frequency-hz-desc')
+    @lone_group(True)
     async def hz(ctx):
         pass
 
@@ -3377,6 +3438,7 @@ class Units(Cog):
         await ctx.send(amount * 1 / 1e9)
 
     @frequency.group(invoke_without_command=True, description='units/frequency-khz-desc')
+    @lone_group(True)
     async def khz(ctx):
         pass
 
@@ -3394,6 +3456,7 @@ class Units(Cog):
         await ctx.send(amount * 1e3 / 1e9)
 
     @frequency.group(invoke_without_command=True, description='units/frequency-mhz-desc')
+    @lone_group(True)
     async def mhz(ctx):
         pass
 
@@ -3411,6 +3474,7 @@ class Units(Cog):
         await ctx.send(amount * 1e6 / 1e9)
 
     @frequency.group(invoke_without_command=True, description='units/frequency-ghz-desc')
+    @lone_group(True)
     async def ghz(ctx):
         pass
 
@@ -3429,11 +3493,13 @@ class Units(Cog):
 
 
     @convert.group(aliases=[], invoke_without_command=True, description='units/fuel-desc')
+    @lone_group(True)
     async def fuel(self, ctx):
         pass
 
 
     @fuel.group(invoke_without_command=True, description='units/fuel-umpg-desc')
+    @lone_group(True)
     async def umpg(ctx):
         pass
 
@@ -3451,6 +3517,7 @@ class Units(Cog):
         await ctx.send(amount * (1/2.352) / 100)
 
     @fuel.group(invoke_without_command=True, description='units/fuel-impg-desc')
+    @lone_group(True)
     async def impg(ctx):
         pass
 
@@ -3468,6 +3535,7 @@ class Units(Cog):
         await ctx.send(amount * (1/2.825) / 100)
 
     @fuel.group(invoke_without_command=True, description='units/fuel-kmpl-desc')
+    @lone_group(True)
     async def kmpl(ctx):
         pass
 
@@ -3485,6 +3553,7 @@ class Units(Cog):
         await ctx.send(amount * 1 / 100)
 
     @fuel.group(invoke_without_command=True, description='units/fuel-lphkm-desc')
+    @lone_group(True)
     async def lphkm(ctx):
         pass
 
@@ -3503,11 +3572,13 @@ class Units(Cog):
 
 
     @convert.group(aliases=[], invoke_without_command=True, description='units/length-desc')
+    @lone_group(True)
     async def length(self, ctx):
         pass
 
 
     @length.group(invoke_without_command=True, description='units/length-km-desc')
+    @lone_group(True)
     async def km(ctx):
         pass
 
@@ -3553,6 +3624,7 @@ class Units(Cog):
         await ctx.send(amount * 1000 / 1852)
 
     @length.group(invoke_without_command=True, description='units/length-m-desc')
+    @lone_group(True)
     async def m(ctx):
         pass
 
@@ -3598,6 +3670,7 @@ class Units(Cog):
         await ctx.send(amount * 1 / 1852)
 
     @length.group(invoke_without_command=True, description='units/length-cm-desc')
+    @lone_group(True)
     async def cm(ctx):
         pass
 
@@ -3643,6 +3716,7 @@ class Units(Cog):
         await ctx.send(amount * 1e-2 / 1852)
 
     @length.group(invoke_without_command=True, description='units/length-mm-desc')
+    @lone_group(True)
     async def mm(ctx):
         pass
 
@@ -3688,6 +3762,7 @@ class Units(Cog):
         await ctx.send(amount * 1e-3 / 1852)
 
     @length.group(invoke_without_command=True, description='units/length-micron-desc')
+    @lone_group(True)
     async def micron(ctx):
         pass
 
@@ -3733,6 +3808,7 @@ class Units(Cog):
         await ctx.send(amount * 1e-6 / 1852)
 
     @length.group(invoke_without_command=True, description='units/length-nm-desc')
+    @lone_group(True)
     async def nm(ctx):
         pass
 
@@ -3778,6 +3854,7 @@ class Units(Cog):
         await ctx.send(amount * 1e-9 / 1852)
 
     @length.group(invoke_without_command=True, description='units/length-mile-desc')
+    @lone_group(True)
     async def mile(ctx):
         pass
 
@@ -3823,6 +3900,7 @@ class Units(Cog):
         await ctx.send(amount * 1609.344 / 1852)
 
     @length.group(invoke_without_command=True, description='units/length-yard-desc')
+    @lone_group(True)
     async def yard(ctx):
         pass
 
@@ -3868,6 +3946,7 @@ class Units(Cog):
         await ctx.send(amount * (1/1.094) / 1852)
 
     @length.group(invoke_without_command=True, description='units/length-foot-desc')
+    @lone_group(True)
     async def foot(ctx):
         pass
 
@@ -3913,6 +3992,7 @@ class Units(Cog):
         await ctx.send(amount * (1/3.281) / 1852)
 
     @length.group(invoke_without_command=True, description='units/length-inch-desc')
+    @lone_group(True)
     async def inch(ctx):
         pass
 
@@ -3958,6 +4038,7 @@ class Units(Cog):
         await ctx.send(amount * 2.54e-2 / 1852)
 
     @length.group(invoke_without_command=True, description='units/length-nautmil-desc')
+    @lone_group(True)
     async def nautmil(ctx):
         pass
 
@@ -4004,11 +4085,13 @@ class Units(Cog):
 
 
     @convert.group(aliases=[], invoke_without_command=True, description='units/mass-desc')
+    @lone_group(True)
     async def mass(self, ctx):
         pass
 
 
     @mass.group(invoke_without_command=True, description='units/mass-tonne-desc')
+    @lone_group(True)
     async def tonne(ctx):
         pass
 
@@ -4050,6 +4133,7 @@ class Units(Cog):
         await ctx.send(amount * 1e6 / 28.3495)
 
     @mass.group(invoke_without_command=True, description='units/mass-kg-desc')
+    @lone_group(True)
     async def kg(ctx):
         pass
 
@@ -4091,6 +4175,7 @@ class Units(Cog):
         await ctx.send(amount * 1e3 / 28.3495)
 
     @mass.group(invoke_without_command=True, description='units/mass-g-desc')
+    @lone_group(True)
     async def g(ctx):
         pass
 
@@ -4132,6 +4217,7 @@ class Units(Cog):
         await ctx.send(amount * 1 / 28.3495)
 
     @mass.group(invoke_without_command=True, description='units/mass-mg-desc')
+    @lone_group(True)
     async def mg(ctx):
         pass
 
@@ -4173,6 +4259,7 @@ class Units(Cog):
         await ctx.send(amount * 1e-3 / 28.3495)
 
     @mass.group(invoke_without_command=True, description='units/mass-microg-desc')
+    @lone_group(True)
     async def microg(ctx):
         pass
 
@@ -4214,6 +4301,7 @@ class Units(Cog):
         await ctx.send(amount * 1e-6 / 28.3495)
 
     @mass.group(invoke_without_command=True, description='units/mass-ton-desc')
+    @lone_group(True)
     async def ton(ctx):
         pass
 
@@ -4255,6 +4343,7 @@ class Units(Cog):
         await ctx.send(amount * 1.016e6 / 28.3495)
 
     @mass.group(invoke_without_command=True, description='units/mass-uston-desc')
+    @lone_group(True)
     async def uston(ctx):
         pass
 
@@ -4296,6 +4385,7 @@ class Units(Cog):
         await ctx.send(amount * 907184.74 / 28.3495)
 
     @mass.group(invoke_without_command=True, description='units/mass-stone-desc')
+    @lone_group(True)
     async def stone(ctx):
         pass
 
@@ -4337,6 +4427,7 @@ class Units(Cog):
         await ctx.send(amount * 6350.293 / 28.3495)
 
     @mass.group(invoke_without_command=True, description='units/mass-lb-desc')
+    @lone_group(True)
     async def lb(ctx):
         pass
 
@@ -4378,6 +4469,7 @@ class Units(Cog):
         await ctx.send(amount * 453.592 / 28.3495)
 
     @mass.group(invoke_without_command=True, description='units/mass-oz-desc')
+    @lone_group(True)
     async def oz(ctx):
         pass
 
@@ -4420,11 +4512,13 @@ class Units(Cog):
 
 
     @convert.group(aliases=[], invoke_without_command=True, description='units/angle-desc')
+    @lone_group(True)
     async def angle(self, ctx):
         pass
 
 
     @angle.group(invoke_without_command=True, description='units/angle-deg-desc')
+    @lone_group(True)
     async def deg(ctx):
         pass
 
@@ -4450,6 +4544,7 @@ class Units(Cog):
         await ctx.send(amount * 1 / (1/3600))
 
     @angle.group(invoke_without_command=True, description='units/angle-grad-desc')
+    @lone_group(True)
     async def grad(ctx):
         pass
 
@@ -4475,6 +4570,7 @@ class Units(Cog):
         await ctx.send(amount * 0.9 / (1/3600))
 
     @angle.group(invoke_without_command=True, description='units/angle-mrad-desc')
+    @lone_group(True)
     async def mrad(ctx):
         pass
 
@@ -4500,6 +4596,7 @@ class Units(Cog):
         await ctx.send(amount * (180/(1000 * math.pi)) / (1/3600))
 
     @angle.group(invoke_without_command=True, description='units/angle-arcmin-desc')
+    @lone_group(True)
     async def arcmin(ctx):
         pass
 
@@ -4525,6 +4622,7 @@ class Units(Cog):
         await ctx.send(amount * (1/60) / (1/3600))
 
     @angle.group(invoke_without_command=True, description='units/angle-rad-desc')
+    @lone_group(True)
     async def rad(ctx):
         pass
 
@@ -4550,6 +4648,7 @@ class Units(Cog):
         await ctx.send(amount * (180/math.pi) / (1/3600))
 
     @angle.group(invoke_without_command=True, description='units/angle-arcsec-desc')
+    @lone_group(True)
     async def arcsec(ctx):
         pass
 
@@ -4576,11 +4675,13 @@ class Units(Cog):
 
 
     @convert.group(aliases=[], invoke_without_command=True, description='units/pressure-desc')
+    @lone_group(True)
     async def pressure(self, ctx):
         pass
 
 
     @pressure.group(invoke_without_command=True, description='units/pressure-atm-desc')
+    @lone_group(True)
     async def atm(ctx):
         pass
 
@@ -4602,6 +4703,7 @@ class Units(Cog):
         await ctx.send(amount * 101325 / 133.322)
 
     @pressure.group(invoke_without_command=True, description='units/pressure-bar-desc')
+    @lone_group(True)
     async def bar(ctx):
         pass
 
@@ -4623,6 +4725,7 @@ class Units(Cog):
         await ctx.send(amount * 1e5 / 133.322)
 
     @pressure.group(invoke_without_command=True, description='units/pressure-pa-desc')
+    @lone_group(True)
     async def pa(ctx):
         pass
 
@@ -4644,6 +4747,7 @@ class Units(Cog):
         await ctx.send(amount * 1 / 133.322)
 
     @pressure.group(invoke_without_command=True, description='units/pressure-psi-desc')
+    @lone_group(True)
     async def psi(ctx):
         pass
 
@@ -4665,6 +4769,7 @@ class Units(Cog):
         await ctx.send(amount * 6894.757 / 133.322)
 
     @pressure.group(invoke_without_command=True, description='units/pressure-torr-desc')
+    @lone_group(True)
     async def torr(ctx):
         pass
 
@@ -4687,11 +4792,13 @@ class Units(Cog):
 
 
     @convert.group(aliases=[], invoke_without_command=True, description='units/speed-desc')
+    @lone_group(True)
     async def speed(self, ctx):
         pass
 
 
     @speed.group(invoke_without_command=True, description='units/speed-mph-desc')
+    @lone_group(True)
     async def mph(ctx):
         pass
 
@@ -4713,6 +4820,7 @@ class Units(Cog):
         await ctx.send(amount * (1/2.237) / (1/1.944))
 
     @speed.group(invoke_without_command=True, description='units/speed-fps-desc')
+    @lone_group(True)
     async def fps(ctx):
         pass
 
@@ -4734,6 +4842,7 @@ class Units(Cog):
         await ctx.send(amount * (1/3.281) / (1/1.944))
 
     @speed.group(invoke_without_command=True, description='units/speed-mps-desc')
+    @lone_group(True)
     async def mps(ctx):
         pass
 
@@ -4755,6 +4864,7 @@ class Units(Cog):
         await ctx.send(amount * 1 / (1/1.944))
 
     @speed.group(invoke_without_command=True, description='units/speed-kmph-desc')
+    @lone_group(True)
     async def kmph(ctx):
         pass
 
@@ -4776,6 +4886,7 @@ class Units(Cog):
         await ctx.send(amount * (1/3.6) / (1/1.944))
 
     @speed.group(invoke_without_command=True, description='units/speed-knot-desc')
+    @lone_group(True)
     async def knot(ctx):
         pass
 
@@ -4798,16 +4909,13 @@ class Units(Cog):
 
 
     @convert.group(aliases=['temp'], invoke_without_command=True, description='units/temperature-desc')
-    async def temperature(self, ctx):
-        pass
-
-
-    @group(aliases=['temp'], invoke_without_command=True, description='units/temperature-desc')
+    @lone_group(True)
     async def temperature(self, ctx):
         pass
 
 
     @temperature.group(invoke_without_command=True, description='units/temperature-C-desc')
+    @lone_group(True)
     async def C(ctx):
         pass
 
@@ -4821,6 +4929,7 @@ class Units(Cog):
         await ctx.send(amount + 273.15)
 
     @temperature.group(invoke_without_command=True, description='units/temperature-F-desc')
+    @lone_group(True)
     async def F(ctx):
         pass
 
@@ -4834,6 +4943,7 @@ class Units(Cog):
         await ctx.send((amount - 32) * 5 / 9 + 273.15)
 
     @temperature.group(invoke_without_command=True, description='units/temperature-K-desc')
+    @lone_group(True)
     async def K(ctx):
         pass
 
@@ -4849,11 +4959,13 @@ class Units(Cog):
 
 
     @convert.group(aliases=[], invoke_without_command=True, description='units/time-desc')
+    @lone_group(True)
     async def time(self, ctx):
         pass
 
 
     @time.group(invoke_without_command=True, description='units/time-ns-desc')
+    @lone_group(True)
     async def ns(ctx):
         pass
 
@@ -4903,6 +5015,7 @@ class Units(Cog):
         await ctx.send(amount * 1e-9 / 3.154e9)
 
     @time.group(invoke_without_command=True, description='units/time-micros-desc')
+    @lone_group(True)
     async def micros(ctx):
         pass
 
@@ -4952,6 +5065,7 @@ class Units(Cog):
         await ctx.send(amount * 1e-6 / 3.154e9)
 
     @time.group(invoke_without_command=True, description='units/time-ms-desc')
+    @lone_group(True)
     async def ms(ctx):
         pass
 
@@ -5001,6 +5115,7 @@ class Units(Cog):
         await ctx.send(amount * 1e-3 / 3.154e9)
 
     @time.group(invoke_without_command=True, description='units/time-s-desc')
+    @lone_group(True)
     async def s(ctx):
         pass
 
@@ -5050,6 +5165,7 @@ class Units(Cog):
         await ctx.send(amount * 1 / 3.154e9)
 
     @time.group(invoke_without_command=True, description='units/time-min-desc')
+    @lone_group(True)
     async def min(ctx):
         pass
 
@@ -5099,6 +5215,7 @@ class Units(Cog):
         await ctx.send(amount * 60 / 3.154e9)
 
     @time.group(invoke_without_command=True, description='units/time-h-desc')
+    @lone_group(True)
     async def h(ctx):
         pass
 
@@ -5148,6 +5265,7 @@ class Units(Cog):
         await ctx.send(amount * 3600 / 3.154e9)
 
     @time.group(invoke_without_command=True, description='units/time-day-desc')
+    @lone_group(True)
     async def day(ctx):
         pass
 
@@ -5197,6 +5315,7 @@ class Units(Cog):
         await ctx.send(amount * 86400 / 3.154e9)
 
     @time.group(invoke_without_command=True, description='units/time-week-desc')
+    @lone_group(True)
     async def week(ctx):
         pass
 
@@ -5246,6 +5365,7 @@ class Units(Cog):
         await ctx.send(amount * 604800 / 3.154e9)
 
     @time.group(invoke_without_command=True, description='units/time-month-desc')
+    @lone_group(True)
     async def month(ctx):
         pass
 
@@ -5295,6 +5415,7 @@ class Units(Cog):
         await ctx.send(amount * 2.628e6 / 3.154e9)
 
     @time.group(invoke_without_command=True, description='units/time-year-desc')
+    @lone_group(True)
     async def year(ctx):
         pass
 
@@ -5344,6 +5465,7 @@ class Units(Cog):
         await ctx.send(amount * 3.154e7 / 3.154e9)
 
     @time.group(invoke_without_command=True, description='units/time-decade-desc')
+    @lone_group(True)
     async def decade(ctx):
         pass
 
@@ -5393,6 +5515,7 @@ class Units(Cog):
         await ctx.send(amount * 3.154e8 / 3.154e9)
 
     @time.group(invoke_without_command=True, description='units/time-century-desc')
+    @lone_group(True)
     async def century(ctx):
         pass
 
@@ -5443,11 +5566,13 @@ class Units(Cog):
 
 
     @convert.group(aliases=[], invoke_without_command=True, description='units/volume-desc')
+    @lone_group(True)
     async def volume(self, ctx):
         pass
 
 
     @volume.group(invoke_without_command=True, description='units/volume-lgallon-desc')
+    @lone_group(True)
     async def lgallon(ctx):
         pass
 
@@ -5525,6 +5650,7 @@ class Units(Cog):
         await ctx.send(amount * 3.78541 / (1/61.024))
 
     @volume.group(invoke_without_command=True, description='units/volume-lquart-desc')
+    @lone_group(True)
     async def lquart(ctx):
         pass
 
@@ -5602,6 +5728,7 @@ class Units(Cog):
         await ctx.send(amount * (1/1.057) / (1/61.024))
 
     @volume.group(invoke_without_command=True, description='units/volume-lpint-desc')
+    @lone_group(True)
     async def lpint(ctx):
         pass
 
@@ -5679,6 +5806,7 @@ class Units(Cog):
         await ctx.send(amount * (1/4.167) / (1/61.024))
 
     @volume.group(invoke_without_command=True, description='units/volume-uscup-desc')
+    @lone_group(True)
     async def uscup(ctx):
         pass
 
@@ -5756,6 +5884,7 @@ class Units(Cog):
         await ctx.send(amount * (1/4.167) / (1/61.024))
 
     @volume.group(invoke_without_command=True, description='units/volume-usfloz-desc')
+    @lone_group(True)
     async def usfloz(ctx):
         pass
 
@@ -5833,6 +5962,7 @@ class Units(Cog):
         await ctx.send(amount * (1/33.814) / (1/61.024))
 
     @volume.group(invoke_without_command=True, description='units/volume-ustbsp-desc')
+    @lone_group(True)
     async def ustbsp(ctx):
         pass
 
@@ -5910,6 +6040,7 @@ class Units(Cog):
         await ctx.send(amount * (1/67.628) / (1/61.024))
 
     @volume.group(invoke_without_command=True, description='units/volume-ustsp-desc')
+    @lone_group(True)
     async def ustsp(ctx):
         pass
 
@@ -5987,6 +6118,7 @@ class Units(Cog):
         await ctx.send(amount * (1/202.884) / (1/61.024))
 
     @volume.group(invoke_without_command=True, description='units/volume-m3-desc')
+    @lone_group(True)
     async def m3(ctx):
         pass
 
@@ -6064,6 +6196,7 @@ class Units(Cog):
         await ctx.send(amount * 1e3 / (1/61.024))
 
     @volume.group(invoke_without_command=True, description='units/volume-l-desc')
+    @lone_group(True)
     async def l(ctx):
         pass
 
@@ -6141,6 +6274,7 @@ class Units(Cog):
         await ctx.send(amount * 1 / (1/61.024))
 
     @volume.group(invoke_without_command=True, description='units/volume-ml-desc')
+    @lone_group(True)
     async def ml(ctx):
         pass
 
@@ -6218,6 +6352,7 @@ class Units(Cog):
         await ctx.send(amount * 1e-3 / (1/61.024))
 
     @volume.group(invoke_without_command=True, description='units/volume-gallon-desc')
+    @lone_group(True)
     async def gallon(ctx):
         pass
 
@@ -6295,6 +6430,7 @@ class Units(Cog):
         await ctx.send(amount * 4.546 / (1/61.024))
 
     @volume.group(invoke_without_command=True, description='units/volume-quart-desc')
+    @lone_group(True)
     async def quart(ctx):
         pass
 
@@ -6372,6 +6508,7 @@ class Units(Cog):
         await ctx.send(amount * 1.3652 / (1/61.024))
 
     @volume.group(invoke_without_command=True, description='units/volume-pint-desc')
+    @lone_group(True)
     async def pint(ctx):
         pass
 
@@ -6449,6 +6586,7 @@ class Units(Cog):
         await ctx.send(amount * (1/1.76) / (1/61.024))
 
     @volume.group(invoke_without_command=True, description='units/volume-cup-desc')
+    @lone_group(True)
     async def cup(ctx):
         pass
 
@@ -6526,6 +6664,7 @@ class Units(Cog):
         await ctx.send(amount * (1/3.52) / (1/61.024))
 
     @volume.group(invoke_without_command=True, description='units/volume-floz-desc')
+    @lone_group(True)
     async def floz(ctx):
         pass
 
@@ -6603,6 +6742,7 @@ class Units(Cog):
         await ctx.send(amount * (1/35.195) / (1/61.024))
 
     @volume.group(invoke_without_command=True, description='units/volume-tbsp-desc')
+    @lone_group(True)
     async def tbsp(ctx):
         pass
 
@@ -6680,6 +6820,7 @@ class Units(Cog):
         await ctx.send(amount * (1/56.312) / (1/61.024))
 
     @volume.group(invoke_without_command=True, description='units/volume-tsp-desc')
+    @lone_group(True)
     async def tsp(ctx):
         pass
 
@@ -6757,6 +6898,7 @@ class Units(Cog):
         await ctx.send(amount * (1/168.936) / (1/61.024))
 
     @volume.group(invoke_without_command=True, description='units/volume-ft3-desc')
+    @lone_group(True)
     async def ft3(ctx):
         pass
 
@@ -6834,6 +6976,7 @@ class Units(Cog):
         await ctx.send(amount * (1/28.317) / (1/61.024))
 
     @volume.group(invoke_without_command=True, description='units/volume-in3-desc')
+    @lone_group(True)
     async def in3(ctx):
         pass
 
