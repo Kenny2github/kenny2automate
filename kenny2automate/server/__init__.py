@@ -498,7 +498,7 @@ FROM guilds WHERE guild_id=?',
                             )
                             else ''
                         ),
-                        prefix=self.bot.get_command_prefix(self.bot, None)
+                        prefix=self.bot.command_prefix(self.bot, None)
                     )
                     recurse_commands(cmd)
         recurse_commands(self.bot)
