@@ -13,7 +13,8 @@ from kenny2automate.i18n import LANG, i18n
 DISCORD_API = 'https://discordapp.com/api/v6'
 LANG = {i: i18n(i, 'qqq') for i in LANG}
 GLOBAL_GAMES = [
-    'Go Fish', 'Connect 4'
+    'Go Fish', 'Connect 4',
+    'Fight'
 ]
 
 class Handler:
@@ -126,7 +127,7 @@ class Handler:
         return (self.db.execute(
             'SELECT session FROM server_sessions WHERE session_id=?',
             (request,)
-        ).fetchone() or ({},))[0]
+        ).fetchone() or ([{}],))[0][0]
 
     def setsesh(self, request, sesh):
         if not isinstance(request, str):
@@ -136,13 +137,13 @@ class Handler:
         if not self.getsesh(request):
             self.db.execute(
                 'INSERT INTO server_sessions VALUES (?, ?)',
-                (request, sesh)
+                (request, [sesh])
             )
             self.sessions[request] = ClientSession()
         else:
             self.db.execute(
                 'UPDATE server_sessions SET session=? WHERE session_id=?',
-                (sesh, request)
+                ([sesh], request)
             )
 
     def checkuser(self, user_id):
@@ -302,9 +303,13 @@ class Handler:
             i18n(lang or 'en', 'server/lang-auto')
         ) + options
         ping_th = ''.join(
-            '<th>{}</th>'.format(i18n(lang or 'en', 'server/ping-message', i))
+            '<th>{}</th>'.format(i)
             for i in GLOBAL_GAMES
         )
+        ping_th = '<tr><th colspan="{}">{}</th></tr>\n<tr>'.format(
+            len(GLOBAL_GAMES),
+            i18n(lang or 'en', 'server/ping-message')
+        ) + ping_th + '</tr>'
         ping_options = '\n'.join(
             """        <td><label class="switch">
         <input name="ping" type="checkbox" value="{}" {}/>
@@ -396,16 +401,17 @@ class Handler:
         lan = self.lang(request)
         options = """
         <tr>
-            <th>{}</th>
-            <th>{}</th>
+            <th rowspan="2">{}</th>
+            <th rowspan="2">{}</th>
+            <th colspan="{}">{}</th>
+        </tr><tr>
             {}
         </tr>""".format(
             i18n(lan, 'server/server;channel'),
             i18n(lan, 'server/server;language'),
-            '\n'.join(
-                '<th>{}</th>'.format(i18n(lan, 'server/ping-message', i))
-                for i in GLOBAL_GAMES
-            )
+            len(GLOBAL_GAMES),
+            i18n(lan, 'server/ping-message'),
+            '\n'.join('<td>{}</td>'.format(i) for i in GLOBAL_GAMES),
         )
         non = i18n(lan, 'server/lang-none')
         for i in guild.text_channels:
@@ -430,7 +436,7 @@ class Handler:
             ) + lang_options
             ping_options = '\n'.join(
                 """        <td><label class="switch">
-            <input name="{0}" type="checkbox" value="ping={1}" {2}/>
+            <input name="channel-{0}" type="checkbox" value="ping={1}" {2}/>
             <span class="slider"></span>
         </label></td>""".format(i.id, g, 'checked ' if g in games else '')
                 for g in GLOBAL_GAMES
@@ -438,20 +444,97 @@ class Handler:
             options += """
     <tr>
         <td class="channel"><div># {0}</div></td>
-        <td><select name="{1}">
+        <td><select name="channel-{1}">
             {2}
         </select></td>
         {3}
     </div></td></tr>""".format(
                 i.name, i.id, lang_options, ping_options
             )
+        res = self.db.execute(
+            'SELECT guild_disabled_commands, guild_disabled_cogs, words_censor \
+FROM guilds WHERE guild_id=?',
+            (guild.id,)
+        ).fetchone()
+        if res is None:
+            cmds, cogs, censor = [], [], ''
+            self.db.execute(
+                'INSERT INTO guilds (guild_id) VALUES (?)',
+                (guild.id,)
+            )
+        else:
+            cmds, cogs, censor = res
+            cmds = (cmds or '').split(',')
+            cogs = (cogs or '').split(',')
+            censor = censor or ''
+        dcmds = ''
+        def recurse_commands(thing):
+            nonlocal dcmds
+            if hasattr(thing, 'commands'):
+                for cmd in thing.commands:
+                    hide = False
+                    parent = cmd.parent
+                    while parent:
+                        if parent.qualified_name in cmds:
+                            hide = True
+                            break
+                        parent = parent.parent
+                    dcmds += """
+            <option
+                data-parent="{parent}"
+                data-cog="{cog}"
+                value="{option}"
+                style="{display}"
+            >
+                {prefix}{option}
+            </option>""".format(
+                        option=cmd.qualified_name,
+                        parent=cmd.parent.qualified_name if cmd.parent else '',
+                        cog=cmd.cog_name or 'None',
+                        display=(
+                            'display: none'
+                            if (
+                                hide or cmd.cog_name in cogs
+                            )
+                            else ''
+                        ),
+                        prefix=self.bot.get_command_prefix(self.bot, None)
+                    )
+                    recurse_commands(cmd)
+        recurse_commands(self.bot)
+        dcogs = """
+    <option value="None">
+        {}
+    </option>""".format(non)
+        for cog in self.bot.cogs.keys():
+            dcogs += """
+    <option value={option}>
+        {option}
+    </option>""".format(option=cog)
         h1 = i18n(lan, 'server/server;h1', guild.name)
         return web.Response(
             text=self.letext(
                 'server.html',
                 h1
             ).format(
-                options,
+                channels=options,
+                cmds=dcmds,
+                cogs=dcogs,
+                dcmds=cmds,
+                dcogs=cogs,
+                jcmds=','.join(cmds),
+                jcogs=','.join(cogs),
+                words_censor=i18n(
+                    lan, 'words/server-censor-title',
+                    '<code>{}{}</code>'.format(
+                        self.bot.command_prefix(self.bot, None),
+                        'words'
+                    ),
+                ),
+                censor=censor,
+                cmd=i18n(lan, 'server/server;command'),
+                cog=i18n(lan, 'server/server;cog'),
+                disabled=i18n(lan, 'server/server;disabled'),
                 h1=h1,
                 save=i18n(lan, 'server/server;save'),
                 back=i18n(lan, 'server/server;back'),
@@ -470,8 +553,12 @@ class Handler:
             self.notfound()
         data = await request.post()
         params = []
+        otherparams = {}
         for k in data.keys():
-            param = {'channel_id': int(k)}
+            if not k.startswith('channel-'):
+                otherparams[k] = ','.join(data.getall(k))
+                continue
+            param = {'channel_id': int(k[len('channel-'):])}
             for v in data.getall(k):
                 v = v.partition('=')
                 if v[0] == 'ping':
@@ -482,11 +569,18 @@ class Handler:
                     param[v[0]] = v[-1] or None
             param['ping'] = '|'.join(param.get('ping', ())) or None
             params.append(param)
+        otherparams['guild_id'] = guild.id
         try:
             with self.db.connection:
                 self.db.executemany(
-                    'UPDATE channels SET lang=:lang, games_ping=:ping WHERE channel_id=:channel_id',
+                    'UPDATE channels SET lang=:lang, games_ping=:ping \
+WHERE channel_id=:channel_id',
                     params
+                )
+                self.db.execute(
+                    'UPDATE guilds SET guild_disabled_commands=:disable_cmd, \
+guild_disabled_cogs=:disable_cog, words_censor=:words_censor WHERE guild_id=:guild_id',
+                    otherparams
                 )
         except sql.ProgrammingError as exc:
             raise web.HTTPBadRequest(reason=str(exc))

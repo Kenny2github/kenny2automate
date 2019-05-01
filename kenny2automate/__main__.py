@@ -7,6 +7,7 @@ import time
 import logging
 import traceback
 import pickle
+import json
 import sqlite3 as sql
 #high-level
 import asyncio
@@ -78,7 +79,9 @@ sys.stderr = LoggerWriter(logger.error)
 sys.stdout = LoggerWriter(logger.debug)
 
 sql.register_converter('pickle', pickle.loads)
-sql.register_adapter(dict, pickle.dumps)
+sql.register_converter('json', json.loads)
+sql.register_adapter(dict, json.dumps)
+sql.register_adapter(list, pickle.dumps)
 if not os.path.isfile('kenny2automate.db'):
     dbv = -1
 else:
@@ -86,7 +89,7 @@ else:
 dbw = sql.connect('kenny2automate.db', detect_types=sql.PARSE_DECLTYPES)
 dbw.row_factory = sql.Row
 db = dbw.cursor()
-LATEST_DBV = 2
+LATEST_DBV = 3
 dbv = dbv or db.execute('PRAGMA user_version').fetchone()[0]
 if dbv < LATEST_DBV:
     logger.info('Current dbv {} is less than latest {}, upgrading...'.format(
@@ -112,6 +115,8 @@ if dbv < LATEST_DBV:
 del dbv
 
 def get_command_prefix(bot, msg):
+    if msg is None:
+        return cmdargs.prefix
     res = db.execute('SELECT prefix FROM users WHERE user_id=?', (msg.author.id,)).fetchone()
     if res is None or res['prefix'] is None:
         return cmdargs.prefix
@@ -161,6 +166,34 @@ async def on_command_error(ctx, exc):
 @client.before_invoke
 async def before_invoke(ctx):
     logger.info(ctx.command, extra={'ctx': ctx})
+
+@client.check
+async def check_disabled_things(ctx):
+    if ctx.guild is None:
+        return True #no disabled commands in DMs
+    res = db.execute(
+        'SELECT guild_disabled_commands, guild_disabled_cogs FROM guilds \
+WHERE guild_id=?',
+        (ctx.guild.id,)
+    ).fetchone()
+    if res is None:
+        return True #not even a guild row for that guild
+    commands, cogs = res
+    commands = (commands or '').split(',')
+    cogs = (cogs or '').split(',')
+    if res['guild_disabled_cogs'] is not None:
+        if (ctx.command.cog_name or 'None') in cogs:
+            return False #disabled by cog
+    if res['guild_disabled_commands'] is not None:
+        if ctx.command.qualified_name in commands:
+            return False #specific
+        parent = ctx.command.parent
+        while parent:
+            if parent.qualified_name in commands:
+                return False #parent group was disabled, all subcommands ded
+            parent = parent.parent
+        return True #not disabled by cog or command
+    return True #neither was specified
 
 deleters = {}
 @client.event
@@ -219,7 +252,7 @@ if 'units' not in cmdargs.disable:
 if 'words' not in cmdargs.disable:
     logger.info('Loading Words', extra={'ctx': dmx})
     from kenny2automate.words import Words
-    client.add_cog(Words(client))
+    client.add_cog(Words(client, db))
 
 logger.info('Loading Eval', extra={'ctx': dmx})
 from kenny2automate.eval_ import eval_

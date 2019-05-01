@@ -1,7 +1,7 @@
 {
   "cog-description": "Words that rhyme with, mean, or sound like something (and more!)",
   "words-description": "Words that rhyme with, mean, or sound like something (and more!). Run `{0}help words`",
-  "words-help": "Usage: `{0}words <command>: <string>` (or `{0}words <command> <string>` where `<string>` has no spaces)\n`<command>` can be one of:`\n\n**`that rhyme with`**\n**`rhyme`**\n**`rhy`**\n**`nry`**\nWords that rhyme with a word.\n\n**`that mean`**\n**`means`**\n**`ml`**\nWords that mean something.\n\n**`that sound like`**\n**`sounds`**\n**`sl`**\nWords that sound like something.\n\n**`spelled like`**\n**`spelled`**\n**`sp`**\nWords that are spelled like something.\n\n**`modified by`**\n**`jja`**\nPopular nouns modified by the given adjective, per Google Books Ngrams.\n\n**`that modify`**\n**`modifying`**\n**`jjb`**\nPopular adjectives used to modify the given noun, per Google Books Ngrams.\n\n**`associated with`**\n**`triggered by`**\n**`trg`**\nWords that are statistically associated with the query word in the same piece of text.\n\n**`that follow`**\n**`following`**\n**`after`**\n**`bga`**\nWords that frequently follow the given word (per Google Books Ngrams).\n\n**`that precede`**\n**`preceding`**\n**`before`**\n**`bgb`**\nFrequent predecessors of the given word (per Google Books Ngrams).",
+  "words-help": "Usage: `{0}words <command>: <string>` (or `{0}words <command> <string>` where `<string>` has no spaces)\n`<command>` can be one of:\n\n**`that rhyme with`**\n**`rhyme`**\n**`rhy`**\n**`nry`**\nWords that rhyme with a word.\n\n**`that mean`**\n**`means`**\n**`ml`**\nWords that mean something.\n\n**`that sound like`**\n**`sounds`**\n**`sl`**\nWords that sound like something.\n\n**`spelled like`**\n**`spelled`**\n**`sp`**\nWords that are spelled like something.\n\n**`modified by`**\n**`jja`**\nPopular nouns modified by the given adjective, per Google Books Ngrams.\n\n**`that modify`**\n**`modifying`**\n**`jjb`**\nPopular adjectives used to modify the given noun, per Google Books Ngrams.\n\n**`associated with`**\n**`triggered by`**\n**`trg`**\nWords that are statistically associated with the query word in the same piece of text.\n\n**`that follow`**\n**`following`**\n**`after`**\n**`bga`**\nWords that frequently follow the given word (per Google Books Ngrams).\n\n**`that precede`**\n**`preceding`**\n**`before`**\n**`bgb`**\nFrequent predecessors of the given word (per Google Books Ngrams).\n",
   "synonyms-description": "Synonyms (per WordNet)",
   "antonyms-description": "Antonyms (per WordNet)",
   "hypernyms-description": "Hypernyms (words that are more general than the word, per WordNet)",
@@ -9,6 +9,7 @@
   "holonyms-description": "Holonyms (words that are a part of the word, per WordNet)",
   "meronyms-description": "Meronyms (words that the word is part of, per WordNet)",
   "homophones-description": "Homophones (words that sound alike)",
+  "server-censor-title": "Censored words in {0} output (regex)",
   "syllable-count": "{0} syllable(s)",
   "perfect-rhymes": "Perfect Rhymes",
   "near-rhymes": "Near Rhymes",

@@ -5,8 +5,81 @@
       <input class="button" type="submit" value="{save}"/>
       <a href="/servers"><button class="button" type="button">{back}</button></a>
     </div>
-    <table style="width: 100%">
-{}
-    </table>
+    <div class="flex-left-right" style="align-items: flex-start">
+      <table>
+{channels}
+      </table>
+      <div class="flex-up-down">
+        <table>
+          <tr><th>{cmd}</th><th>{disabled}</th></tr>
+          <tr>
+            <td><select
+              id="cmd-select"
+              class="command"
+              onchange="selectChange(this, 'cmd')"
+              size="10"
+            >{cmds}</select></td>
+            <td><label class="switch red">
+              <input
+                onchange="cmdChange(this, 'parent^', 'cmd')"
+                id="cmd-checkbox"
+                type="checkbox"
+              />
+              <span class="slider"></span>
+            </label></td>
+          </tr>
+          <tr><th>{cog}</th><th>{disabled}</th></tr>
+          <tr>
+            <td><select
+              id="cog-select"
+              onchange="selectChange(this, 'cog')"
+              size="10"
+            >{cogs}</select></td>
+            <td><label class="switch red">
+              <input
+                onchange="cmdChange(this, 'cog', 'cog')"
+                id="cog-checkbox"
+                type="checkbox"
+              />
+              <span class="slider"></span>
+            </label></td>
+          </tr>
+          <tr><th colspan="2">{words_censor}</th></tr>
+          <tr><td colspan="2">
+            <textarea name="words_censor">{censor}</textarea>
+          </td></tr>
+        </table>
+      </div>
+    </div>
+    <input type="hidden" id="disable-cmd" name="disable_cmd" value="{jcmds}" />
+    <input type="hidden" id="disable-cog" name="disable_cog" value="{jcogs}" />
   </form>
 </div>
+<script>
+var deleted = {{
+  cmd: new Set({dcmds}),
+  cog: new Set({dcogs})
+}};
+function cmdChange(elem, attrib, type) {{
+  var toChange = document.getElementById(
+    type + '-select'
+  ).selectedOptions[0].value;
+  var children = document.querySelectorAll('[data-' + attrib + '="' + toChange + '"]');
+  for (var i = 0; i < children.length; i++) {{
+    children[i].style.display = elem.checked ? 'none' : null;
+  }}
+  if (elem.checked) {{
+    deleted[type].add(toChange)
+  }} else {{
+    deleted[type].delete(toChange)
+  }}
+  document.getElementById('disable-' + type).value = Array.from(
+    deleted[type]
+  ).join(',');
+}}
+function selectChange(elem, id) {{
+  document.getElementById(id + '-checkbox').checked = deleted[id].has(
+    elem.selectedOptions[0].value
+  );
+}}
+</script>

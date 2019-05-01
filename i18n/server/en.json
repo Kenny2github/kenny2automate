@@ -13,6 +13,9 @@
   "server;back": "Back",
   "server;channel": "Channel",
   "server;language": "Language",
+  "server;command": "Command",
+  "server;disabled": "Disabled?",
+  "server;cog": "Cog",
   "servers;h1": "Servers",
   "servers;div": "Choose a server to manage below.",
   "settings;h1": "Settings",
@@ -20,5 +23,5 @@
   "settings;lang": "Your language",
   "lang-auto": "Auto",
   "lang-none": "None",
-  "ping-message": "Message for {0}"
+  "ping-message": "Message for:"
 }

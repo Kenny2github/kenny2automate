@@ -1,3 +1,4 @@
+import re
 from itertools import groupby
 import functools
 import asyncio
@@ -11,12 +12,10 @@ from .i18n import i18n, embed
 class Words(Cog):
     """words/cog-description"""
 
-    def __init__(self, bot):
+    def __init__(self, bot, db):
         self.bot = bot
+        self.db = db
         self.api = datamuse.Datamuse()
-
-    def cog_check(self, ctx):
-        return ctx.guild is None
 
     async def q(self, call, *args, **kwargs):
         return await self.bot.loop.run_in_executor(
@@ -41,6 +40,7 @@ class Words(Cog):
         async with ctx.channel.typing():
             perfect = await self.q(self.api.words, rel_rhy=word, md='s')
             near = await self.q(self.api.words, rel_nry=word, md='s')
+        bad_words = self.censor(ctx)
         key = lambda i: i['numSyllables']
         perfect.sort(key=key)
         near.sort(key=key)
@@ -49,7 +49,11 @@ class Words(Cog):
         for n, syll in groupby(perfect, key):
             fields.append((
                 ('words/syllable-count', n),
-                joiner.join(i['word'] for i in syll),
+                joiner.join(
+                    i['word']
+                    for i in syll
+                    if not re.search(bad_words, i['word'], re.I)
+                ),
                 False
             ))
         await ctx.send(embed=embed(ctx,
@@ -62,7 +66,11 @@ class Words(Cog):
         for n, syll in groupby(near, key):
             fields.append((
                 ('words/syllable-count', n),
-                joiner.join(i['word'] for i in syll),
+                joiner.join(
+                    i['word']
+                    for i in syll
+                    if not re.search(bad_words, i['word'], re.I)
+                ),
                 False
             ))
         await ctx.send(embed=embed(ctx,
@@ -74,12 +82,26 @@ class Words(Cog):
 
     words_rhyme = words_rhy = words_nry = words_that_rhyme_with
 
-    @staticmethod
-    def join_words_embed(ctx, title, lewords, word):
+    def censor(self, ctx):
+        if ctx.guild is None:
+            return '\1'
+        else:
+            res = self.db.execute(
+                'SELECT words_censor FROM guilds WHERE guild_id=?',
+                (ctx.guild.id,)
+            ).fetchone()
+            if res is None or res[0] is None:
+                return '\1'
+            return res[0] or '\1'
+
+    def join_words_embed(self, ctx, title, lewords, word):
+        bad_words = self.censor(ctx)
         return embed(ctx,
             title=(title, word),
             description=i18n(ctx, 'comma-sep').join(
-                '{score}: {word}'.format(**i) for i in lewords
+                '{score}: {word}'.format(**i)
+                for i in lewords
+                if not re.search(bad_words, i['word'], re.I)
             ) or ('none-paren',),
             color=0x55acee
         )

@@ -87,13 +87,16 @@ body {
 input:checked + .slider {
   background-color: #2196f3;
 }
+.switch.red input:checked + .slider {
+  background-color: #f04747;
+}
 input:focus + .slider {
   box-shadow: 0 0 1px #2196f3;
 }
 input:checked + .slider:before {
   transform: translateX(26px);
 }
-input[type=text], .channel div {
+input[type=text], .channel div, textarea {
     font-size: 14px;
     color: #fff;
     border: 1px solid #1a1a1a;
@@ -104,19 +107,28 @@ input[type=text], .channel div {
     outline: none;
     transition: border 250ms ease-out;
 }
-input[type=text] {
+textarea {
+  resize: vertical;
+}
+input[type=text], textarea {
   width: 100%;
 }
-input[type=text]:hover, select:hover, .channel div:hover {
+input[type=text]:hover, select:hover, .channel div:hover, textarea:hover {
   border-color: #000;
 }
-input[type=text]:focus, select:focus, .channel div:focus {
+input[type=text]:focus, select:focus, .channel div:focus, textarea:focus {
   border-color: #000;
 }
-.channel div, .flex-left-right {
+.channel div, .flex-left-right, .flex-up-down {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.flex-left-right {
+  flex-direction: row;
+}
+.flex-up-down {
+  flex-direction: column;
 }
 select {
   color: #fff;
@@ -129,9 +141,10 @@ select {
   transition: border 250ms ease-out;
 }
 table {
+  width: 100%;
 }
 td, th {
-  border: 10px solid rgba(0, 0, 0, 0);
+  padding: 10px;
   text-align: center;
 }
 .right {
@@ -150,4 +163,10 @@ td.channel {
 .spacer {
   display: inline-block;
   width: 30px;
+}
+.command {
+  font-family: monospace;
+}
+code {
+  background-color: #2f3136;
 }
