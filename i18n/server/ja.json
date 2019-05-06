@@ -20,5 +20,5 @@
   "settings;lang": "言語",
   "lang-auto": "自動",
   "lang-none": "なし",
-  "ping-message": "{0}のメッセージ"
+  "ping-message": "メッセージ通知:"
 }
