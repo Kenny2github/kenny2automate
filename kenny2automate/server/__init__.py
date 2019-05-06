@@ -168,7 +168,9 @@ class Handler:
 
     async def elg(self, request):
         if (await self.checksesh(request)) is not None:
-            raise web.HTTPSeeOther(str(request.path))
+            if request.method != 'GET':
+                raise web.HTTPSeeOther(str(request.path))
+            self.notfound()
         if not self.logged_in(request):
             self.notfound()
 
