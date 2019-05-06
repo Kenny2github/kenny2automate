@@ -3,6 +3,7 @@ import sys
 import os
 import subprocess
 import time
+import random
 #mid-level
 import logging
 import traceback
@@ -304,7 +305,7 @@ async def whoami(ctx):
     )
     await ctx.send(embed=emb)
 
-@client.group(description='prefix-desc')
+@client.group(invoke_without_command=True, description='prefix-desc')
 @lone_group(False)
 async def prefix(ctx):
     pass
@@ -363,6 +364,12 @@ async def prefix_get(ctx):
             title=('prefix',),
             description=res['prefix']
         ))
+
+@client.command(description='someone-desc')
+async def someone(ctx):
+    await ctx.send(embed=discord.Embed(
+        description=random.choice(ctx.guild.members).mention
+    ))
 
 @client.command(description='ping-desc')
 async def ping(ctx):
