@@ -6,8 +6,6 @@ from ..games import Games, DummyCtx
 from ..i18n import i18n
 from .data import Weapon, weapons, Armor, armors, Item, items, monsters, Player
 
-GAME_NAME = 'Fight'
-
 locked = set()
 @contextmanager
 def lock(leid):
@@ -408,11 +406,13 @@ user_id=?', (ctx.author.id,))
             color=0
         ))
 
+    name = 'Fight'
+
     @check(lambda ctx: ctx.guild is not None)
     @fight.command(description='fight/player-desc')
     async def player(self, ctx, gold_at_stake: int, against: d.Member = None):
         """fight/player-help"""
-        player1, player2 = await self._gather_game(ctx, GAME_NAME, against)
+        player1, player2 = await self._gather_game(ctx, against)
         with lock(player1.dm_channel.id) as stopq:
             if stopq:
                 await ctx.send(i18n(ctx, 'fight/battle-cancelled', 1))

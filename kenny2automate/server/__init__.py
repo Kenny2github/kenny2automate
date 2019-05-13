@@ -14,7 +14,7 @@ DISCORD_API = 'https://discordapp.com/api/v6'
 LANG = {i: i18n(i, 'qqq') for i in LANG}
 GLOBAL_GAMES = [
     'Go Fish', 'Connect 4',
-    'Fight'
+    'Fight', 'Boggle'
 ]
 
 class Handler:

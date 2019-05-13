@@ -1,4 +1,5 @@
-from functools import wraps
+import asyncio
+from functools import wraps, partial
 
 class DummyCtx(object):
 	def __init__(self, **kwargs):
@@ -6,7 +7,7 @@ class DummyCtx(object):
 
 def dataclass(cls):
     def __init__(self, *args, **kwargs):
-        taken_care_of = []
+        taken_care_of = set()
         len_annos = len(cls.__annotations__)
         len_args = len(args)
         if len_annos < len_args:
@@ -20,19 +21,16 @@ def dataclass(cls):
                     name, cls.__annotations__[name].__name__
                 ))
             setattr(self, name, arg)
-            taken_care_of.append(name)
+            taken_care_of.add(name)
         for name, value in kwargs.items():
             if name in taken_care_of:
                 raise TypeError('__init__() got multiple values for argument '
                                 '{!r}'.format(name))
-            if name not in cls.__annotations__:
-                raise TypeError('__init__() got an unexpected keyword argument '
-                                '{!r}'.format(name))
-            if not isinstance(value, cls.__annotations__[name]):
+            if not isinstance(value, cls.__annotations__.get(name, object)):
                 raise TypeError('argument {!r} is not of type {!r}'.format(
                     name, cls.__annotations__[name].__name__
                 ))
-            taken_care_of.append(name)
+            taken_care_of.add(name)
             setattr(self, name, value)
         for name in cls.__annotations__:
             if name not in taken_care_of and not hasattr(cls, name):
@@ -40,7 +38,7 @@ def dataclass(cls):
                                 '{!r}'.format(name))
             #weird memory stuff
             elif hasattr(cls, name) \
-                    and cls.__annotations__[name] in (list, set, dict):
+                    and cls.__annotations__[name] in {list, set, dict}:
                 setattr(self, name, cls.__annotations__[name]())
     def copy(self):
         return cls(**self.__dict__)
@@ -74,3 +72,8 @@ def lone_group(in_cls=True):
 				await ctx.bot.help_command.send_group_help(ctx.command)
 		return newfunc
 	return wrapper
+
+async def q(call, *args, **kwargs):
+	return await asyncio.get_event_loop().run_in_executor(
+		None, partial(call, *args, **kwargs)
+	)

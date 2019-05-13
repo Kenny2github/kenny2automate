@@ -6,8 +6,6 @@ from .games import Games
 from .i18n import i18n, embed
 from .utils import DummyCtx, lone_group
 
-GO_FISH_NAME = 'Go Fish'
-
 class Card(object):
 	SUITS = tuple('\u2660 \u2663 \u2665 \u2666'.split(' '))
 	NUMBERS = tuple(('\U0001f1e6 2\u20e3 3\u20e3 4\u20e3 5\u20e3 6\u20e3'
@@ -32,8 +30,8 @@ class Card(object):
 	def __eq__(self, other):
 		return hash(self) == hash(other)
 
-class CardGames(Games):
-	"""card_games/cog-desc"""
+class Fish(Games):
+	"""fish/cog-desc"""
 	async def do_fish(self, ctxs):
 		players = [ctx.author for ctx in ctxs]
 		deck = [Card(i, j) for i in range(4) for j in range(13)]
@@ -52,30 +50,30 @@ class CardGames(Games):
 		books = [[] for _ in players]
 		def stats(pid, footer, desc=None):
 			emb = embed(dmx[pid],
-				title=('card_games/fish-stats-title',),
+				title=('fish/fish-stats-title',),
 				description=(
 					i18n(dmx[pid], *desc)
 					if desc
-					else ('card_games/fish-stats-description',)
+					else ('fish/fish-stats-description',)
 				),
 				color=0x0000FF,
 			)
 			emb.add_field(
-				name=i18n(dmx[pid], 'card_games/fish-stats-hand-title'),
+				name=i18n(dmx[pid], 'fish/fish-stats-hand-title'),
 				value=' '.join(str(c) for c in hands[pid]) \
-					or i18n(dmx[pid], 'card_games/fish-stats-empty-hand'),
+					or i18n(dmx[pid], 'fish/fish-stats-empty-hand'),
 				inline=False
 			)
 			emb.add_field(
-				name=i18n(dmx[pid], 'card_games/fish-stats-books-title'),
+				name=i18n(dmx[pid], 'fish/fish-stats-books-title'),
 				value='\n'.join(
 					' '.join(str(c) for c in b)
 					for b in books[pid]
-				) or i18n(dmx[pid], 'card_games/fish-stats-no-books'),
+				) or i18n(dmx[pid], 'fish/fish-stats-no-books'),
 				inline=False
 			)
 			emb.add_field(
-				name=i18n(dmx[pid], 'card_games/fish-stats-status-title'),
+				name=i18n(dmx[pid], 'fish/fish-stats-status-title'),
 				value=i18n(dmx[pid], footer),
 				inline=False
 			)
@@ -101,7 +99,7 @@ class CardGames(Games):
 					]
 			if newbooks:
 				await dmx[pid].send(embed=embed(dmx[pid],
-					title=('card_games/fish-checkbooks-title',),
+					title=('fish/fish-checkbooks-title',),
 					description='\n'.join(
 						' '.join(str(c) for c in b)
 						for b in newbooks
@@ -111,7 +109,7 @@ class CardGames(Games):
 		for pid in range(len(players)):
 			await checkbooks(pid)
 		for i, dm in enumerate(dmx[1:]):
-			await dm.send(embed=stats(i+1, 'card_games/fish-m-wait'))
+			await dm.send(embed=stats(i+1, 'fish/fish-m-wait'))
 		pid = 0
 		while all(hands) and deck and len(players) > 1:
 			pid %= len(players)
@@ -121,15 +119,15 @@ class CardGames(Games):
 				if player2 == player:
 					continue
 				await player2.send(embed=embed(dmx[pid2],
-					title=('card_games/fish-turn-title',),
+					title=('fish/fish-turn-title',),
 					description=(
-						'card_games/fish-turn',
+						'fish/fish-turn',
 						player.display_name
 					),
 					color=0xffffff
 				))
 			await dmx[pid].send(embed=stats(
-				pid, 'card_games/fish-m-card'
+				pid, 'fish/fish-m-card'
 			))
 			timedout = False
 			while matches and hands[pid]:
@@ -162,8 +160,8 @@ class CardGames(Games):
 					)
 				except asyncio.TimeoutError:
 					await player.send(embed=embed(dmx[pid],
-						title=('card_games/fish-timed-out-title',),
-						description=('card_games/fish-timed-out', 600),
+						title=('fish/fish-timed-out-title',),
+						description=('fish/fish-timed-out', 600),
 						color=0xff0000
 					))
 					del players[pid]
@@ -189,9 +187,9 @@ class CardGames(Games):
 					]
 					if matches2:
 						await dmx[pid2].send(embed=embed(dmx[pid2],
-							title=('card_games/fish-card-taken-title',),
+							title=('fish/fish-card-taken-title',),
 							description=(
-								'card_games/fish-card-taken',
+								'fish/fish-card-taken',
 								player.display_name,
 								Card.NUMBERS[num],
 								count
@@ -205,8 +203,8 @@ class CardGames(Games):
 					if not hands[pid]:
 						break
 					await dmx[pid].send(
-						embed=stats(pid, 'card_games/fish-m-card', (
-							'card_games/fish-card-got',
+						embed=stats(pid, 'fish/fish-m-card', (
+							'fish/fish-card-got',
 							' '.join(str(c) for c in matches)
 						))
 					)
@@ -223,9 +221,9 @@ class CardGames(Games):
 							if player2 == player:
 								continue
 							await dmx[pid2].send(embed=embed(dmx[pid2],
-								title=('card_games/fish-card-missed-title',),
+								title=('fish/fish-card-missed-title',),
 								description=(
-									'card_games/fish-card-missed-unsafe',
+									'fish/fish-card-missed-unsafe',
 									player.display_name,
 									Card.NUMBERS[num],
 									count
@@ -233,8 +231,8 @@ class CardGames(Games):
 								color=0xff8080
 							))
 						await dmx[pid].send(embed=stats(pid,
-							'card_games/fish-m-card', (
-								'card_games/fish-fish-got',
+							'fish/fish-m-card', (
+								'fish/fish-fish-got',
 								Card.NUMBERS[num]
 							)
 						))
@@ -243,9 +241,9 @@ class CardGames(Games):
 							if player2 == player:
 								continue
 							await dmx[pid2].send(embed=embed(dmx[pid2],
-								title=('card_games/fish-card-missed-title',),
+								title=('fish/fish-card-missed-title',),
 								description=(
-									'card_games/fish-card-missed',
+									'fish/fish-card-missed',
 									player.display_name,
 									Card.NUMBERS[num],
 									count
@@ -253,8 +251,8 @@ class CardGames(Games):
 								color=0x55acee
 							))
 						await dmx[pid].send(
-							embed=stats(pid, 'card_games/fish-m-wait', (
-								'card_games/fish-fish', draw
+							embed=stats(pid, 'fish/fish-m-wait', (
+								'fish/fish-fish', draw
 							))
 						)
 			if not timedout:
@@ -262,8 +260,8 @@ class CardGames(Games):
 		if not (len(players) > 1):
 			for dm in dmx:
 				await dm.send(embed=embed(dm,
-					title=('card_games/fish-all-timed-out-title',),
-					description=('card_games/fish-all-timed-out',),
+					title=('fish/fish-all-timed-out-title',),
+					description=('fish/fish-all-timed-out',),
 					color=0xff0000
 				))
 			return
@@ -274,9 +272,9 @@ class CardGames(Games):
 		if len(winners) > 1:
 			for dm in dmx:
 				await dm.send(embed=embed(dm,
-					title=('card_games/fish-winners-title',),
+					title=('fish/fish-winners-title',),
 					description=(
-						'card_games/fish-winners',
+						'fish/fish-winners',
 						i18n(dm, 'comma-sep').join(
 							player.display_name for player in winners[:-1]
 						)
@@ -288,42 +286,45 @@ class CardGames(Games):
 		else:
 			for dm in dmx:
 				await dm.send(embed=embed(dm,
-					title=('card_games/fish-winner-title',),
+					title=('fish/fish-winner-title',),
 					description=(
-						'card_games/fish-winner',
+						'fish/fish-winner',
 						winners[0].display_name
 					),
 					color=0x55acee
 				))
 
-	@group(invoke_without_command=True, description='card_games/fish-cmd-desc')
+	name = 'Go Fish'
+	maxim = float('inf')
+	minim = 2
+	scn = 'fish start'
+	jcn = 'fish join'
+
+	@group(invoke_without_command=True, description='fish/fish-cmd-desc')
 	@lone_group(True)
 	async def fish(self, ctx):
-		"""card_games/fish-cmd-help"""
+		"""fish/fish-cmd-help"""
 		pass
 
-	@fish.command(name='join', description='card_games/fish-join-desc')
+	@fish.command(name='join', description='fish/fish-join-desc')
 	async def fish_join(self, ctx):
-		await self._join_global_game(
-			ctx, GO_FISH_NAME, self.do_fish,
-			maxim=float('inf'), scn='fish start', jcn='fish join'
-		)
+		await self._join_global_game(ctx, self.do_fish)
 
-	@fish.command(name='leave', description='card_games/fish-leave-desc')
+	@fish.command(name='leave', description='fish/fish-leave-desc')
 	async def fish_leave(self, ctx):
-		await self._unjoin_global_game(ctx, GO_FISH_NAME)
+		await self._unjoin_global_game(ctx)
 
-	@fish.command(name='start', description='card_games/fish-start-desc')
+	@fish.command(name='start', description='fish/fish-start-desc')
 	async def fish_start(self, ctx):
-		"""card_games/fish-start-help"""
-		await self._start_global_game(ctx, GO_FISH_NAME, maxim=float('inf'))
+		"""fish/fish-start-help"""
+		await self._start_global_game(ctx)
 
-	@fish.command(name='help', description='card_games/fish-help-desc')
+	@fish.command(name='help', description='fish/fish-help-desc')
 	async def fish_help(self, ctx):
 		if not ctx.author.dm_channel:
 			await ctx.author.create_dm()
 		await ctx.author.dm_channel.send(embed=embed(ctx,
-			title=('games/help-title', GO_FISH_NAME),
-			description=('card_games/fish-help', ctx.prefix),
+			title=('games/help-title', self.name),
+			description=('fish/fish-help', ctx.prefix),
 			color=0x55acee
 		))

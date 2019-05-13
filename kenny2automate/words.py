@@ -1,13 +1,10 @@
 import re
 from itertools import groupby
-import functools
-import asyncio
-import discord
-from discord.ext import commands
 from discord.ext.commands import Cog, command
 from datamuse import datamuse
 import requests
 from .i18n import i18n, embed
+from .utils import q
 
 class Words(Cog):
     """words/cog-description"""
@@ -16,12 +13,6 @@ class Words(Cog):
         self.bot = bot
         self.db = db
         self.api = datamuse.Datamuse()
-
-    async def q(self, call, *args, **kwargs):
-        return await self.bot.loop.run_in_executor(
-            None,
-            functools.partial(call, *args, **kwargs)
-        )
 
     @command(invoke_without_command=True, description='words/words-description')
     async def words(self, ctx, *, cmd):
@@ -38,8 +29,8 @@ class Words(Cog):
 
     async def words_that_rhyme_with(self, ctx, *, word):
         async with ctx.channel.typing():
-            perfect = await self.q(self.api.words, rel_rhy=word, md='s')
-            near = await self.q(self.api.words, rel_nry=word, md='s')
+            perfect = await q(self.api.words, rel_rhy=word, md='s')
+            near = await q(self.api.words, rel_nry=word, md='s')
         bad_words = self.censor(ctx)
         key = lambda i: i['numSyllables']
         perfect.sort(key=key)
@@ -109,7 +100,7 @@ class Words(Cog):
     def _words(title, param, cmd=False, aliases=None, description=None):
         async def newfunc(self, ctx, *, word):
             async with ctx.channel.typing():
-                lewords = await self.q(self.api.words, **{param: word})
+                lewords = await q(self.api.words, **{param: word})
             await ctx.send(embed=self.join_words_embed(
                 ctx, 'words/' + title + '-title', lewords, word
             ))
@@ -143,7 +134,7 @@ class Words(Cog):
     @command(aliases=['define'], description='words/word-description')
     async def word(self, ctx, *, leword):
         async with ctx.channel.typing():
-            lewords = await self.q(
+            lewords = await q(
                 requests.get,
                 'https://api.datamuse.com/words',
                 params={

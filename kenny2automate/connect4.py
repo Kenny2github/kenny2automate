@@ -10,13 +10,11 @@ BLUE, RED, BLACK, SHAKE, NEIN, DOWN = \
 REGA, REGB, REGC, REGD, REGE, REGF, REGG = REGS = \
     '1\u20e3 2\u20e3 3\u20e3 4\u20e3 5\u20e3 6\u20e3 7\u20e3'.split(' ')
 
-GAME_NAME = 'Connect 4'
-
 class Connect4(Games):
     """connect4/cog-desc"""
     @command(description='connect4/leave-desc')
     async def connect4_leave(self, ctx):
-        await self._unjoin_global_game(ctx, GAME_NAME)
+        await self._unjoin_global_game(ctx)
 
     async def connect4_global(self, ctxs):
         """Global connect4 coroutine!"""
@@ -294,21 +292,25 @@ class Connect4(Games):
         )
         return boardmsgcont
 
+    name = 'Connect 4'
+    @property
+    def jcn(self):
+        return 'connect4 ' + self.bot.user.mention
+    scn = None
+    maxim = minim = 2
+
     @command(description='connect4/connect4-desc')
     @bot_has_permissions(manage_messages=True, add_reactions=True, read_message_history=True)
     async def connect4(self, ctx, against: discord.Member = None):
         """connect4/connect4-help"""
         if against and against.id == self.bot.user.id:
-            return await self._join_global_game(
-                ctx, GAME_NAME, self.connect4_global,
-                jcn='connect4 ' + self.bot.user.mention
-            )
+            return await self._join_global_game(ctx, self.connect4_global)
         regs = REGS[:]
         if against and against.id == ctx.author.id:
             player1 = player2 = against
         else:
             try:
-                player1, player2 = await self._gather_game(ctx, GAME_NAME, against)
+                player1, player2 = await self._gather_game(ctx, against)
             except TypeError: #returned None
                 return
         board = self.genboard()

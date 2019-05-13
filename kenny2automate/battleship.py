@@ -7,36 +7,36 @@ from .games import Games
 from .i18n import i18n, embed
 from .utils import DummyCtx
 
-GAME_NAME = 'Battleship'
-
 class Battleship(Games):
 	"""battleship/cog-desc"""
+
+	name = 'Battleship'
+
+	def help(ctx):
+		emb = embed(ctx,
+			title=('battleship/help-title',),
+			description=('battleship/help',),
+			color=0x55acee
+		)
+		emb.add_field(
+			name=i18n(ctx, 'battleship/help-1-title'),
+			value=i18n(ctx, 'battleship/help-1')
+		)
+		emb.add_field(
+			name=i18n(ctx, 'battleship/help-2-title'),
+			value=i18n(ctx, 'battleship/help-2')
+		)
+		return emb
+
 	@command(description='battleship/cmd-desc')
 	@bot_has_permissions(add_reactions=True, read_message_history=True)
 	async def battleship(
-		self, ctx, ascii: lambda x: x == 'yes' = 'no', against: d.Member = None
+		self, ctx, ascii: bool, against: d.Member = None
 	):
-		def helpfunc(ctx2):
-			emb = embed(ctx2,
-				title=('battleship/help-title',),
-				description=('battleship/help',),
-				color=0x55acee
-			)
-			emb.add_field(
-				name=i18n(ctx2, 'battleship/help-1-title'),
-				value=i18n(ctx2, 'battleship/help-1')
-			)
-			emb.add_field(
-				name=i18n(ctx2, 'battleship/help-2-title'),
-				value=i18n(ctx2, 'battleship/help-2')
-			)
-			return emb
 		try:
-			player1, player2 = await self._gather_game(ctx, GAME_NAME,
-				against, helpfunc)
+			player1, player2 = await self._gather_game(ctx, against)
 		except (TypeError, ValueError):
 			return
-		del helpfunc
 		dmx1, dmx2 = (
 			DummyCtx(
 				send=player.dm_channel.send,

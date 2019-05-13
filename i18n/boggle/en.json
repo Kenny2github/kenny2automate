@@ -1,0 +1,18 @@
+{
+  "cog-desc": "Play Boggle!",
+  "boggle-desc": "Play Boggle!",
+  "join-desc": "Join a game of Boggle.",
+  "leave-desc": "Leave your game of Boggle.",
+  "start-desc": "Start (or vote to start) your game of Boggle.",
+  "boggle-help": "http://www.fun-with-words.com/play_boggle.html\n**Note**: In this version, the `Q` implies the following `u`.",
+  "get-ready-title": "Get ready!",
+  "get-ready": "Starting in {0} seconds.",
+  "board-title": "Go!",
+  "board": "Below is the board.\n{0}",
+  "verifying-words": "Checking words against dictionary and board...",
+  "eliminating-dupes": "Eliminating words found by multiple players...",
+  "results-title": "Results",
+  "results": "Below are valid words from each player.",
+  "result": "Total: {0} point(s).\n{1}",
+  "winner-title": "Winner(s)"
+}

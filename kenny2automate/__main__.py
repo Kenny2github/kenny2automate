@@ -76,8 +76,9 @@ handler.setFormatter(logfmt)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG if cmdargs.v else logging.INFO)
 logger.addHandler(handler)
-sys.stderr = LoggerWriter(logger.error)
-sys.stdout = LoggerWriter(logger.debug)
+if not cmdargs.stdout:
+    sys.stderr = LoggerWriter(logger.error)
+    sys.stdout = LoggerWriter(logger.debug)
 
 sql.register_converter('pickle', pickle.loads)
 sql.register_converter('json', json.loads)
@@ -90,7 +91,7 @@ else:
 dbw = sql.connect('kenny2automate.db', detect_types=sql.PARSE_DECLTYPES)
 dbw.row_factory = sql.Row
 db = dbw.cursor()
-LATEST_DBV = 3
+LATEST_DBV = 4
 dbv = dbv or db.execute('PRAGMA user_version').fetchone()[0]
 if dbv < LATEST_DBV:
     logger.info('Current dbv {} is less than latest {}, upgrading...'.format(
@@ -230,10 +231,10 @@ if 'hangman' not in cmdargs.disable:
     logger.info('Loading Hangman', extra={'ctx': dmx})
     from kenny2automate.hangman import Hangman
     client.add_cog(Hangman(client, db))
-if 'cardgames' not in cmdargs.disable:
-    logger.info('Loading Card Games', extra={'ctx': dmx})
-    from kenny2automate.card_games import CardGames
-    client.add_cog(CardGames(client, db))
+if 'fish' not in cmdargs.disable:
+    logger.info('Loading Fish', extra={'ctx': dmx})
+    from kenny2automate.card_games import Fish
+    client.add_cog(Fish(client, db))
 if 'battleship' not in cmdargs.disable:
     logger.info('Loading Battleship', extra={'ctx': dmx})
     from kenny2automate.battleship import Battleship
@@ -254,6 +255,10 @@ if 'words' not in cmdargs.disable:
     logger.info('Loading Words', extra={'ctx': dmx})
     from kenny2automate.words import Words
     client.add_cog(Words(client, db))
+if 'boggle' not in cmdargs.disable:
+    logger.info('Loading Boggle', extra={'ctx': dmx})
+    from kenny2automate.boggle import Boggle
+    client.add_cog(Boggle(client, db))
 
 logger.info('Loading Eval', extra={'ctx': dmx})
 from kenny2automate.eval_ import eval_

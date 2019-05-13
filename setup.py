@@ -1,5 +1,9 @@
 from setuptools import setup, find_packages
 
+with open('requirements.txt') as f:
+	reqs = f.read()
+reqs = reqs.strip().splitlines()
+
 setup(
 	name='kenny2automate',
 	version='3.2',
@@ -26,11 +30,6 @@ setup(
 	],
 	keywords='discord bot fun',
 	packages=find_packages(),
-	install_requires=[
-		'discord.py<=1.0.0a1786+g77dd4e3',
-		'requests',
-		'aiohttp',
-		'python-datamuse'
-	],
+	install_requires=reqs,
 	python_requires='>=3.7',
 )

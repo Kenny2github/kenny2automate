@@ -1,5 +1,4 @@
 from discord.ext.commands import group, Cog
-from .i18n import i18n
 from .utils import lone_group
 
 class Units(Cog):

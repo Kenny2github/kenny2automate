@@ -22,11 +22,11 @@ async def eval_(ctx, *, arg):
             indent = line[:len(line) - len(strp)]
             break
     arg = ''.join(indent + line + '\n' for line in arg)
-    exec(f"async def func():\n{arg}", env)
     try:
         with redirect_stdout(out):
+            exec(f"async def func():\n{arg}", env)
             ret = await env['func']()
-    except BaseException as e:
+    except BaseException:
         trace = traceback.format_exc().replace(r'C:\Users\kenlh\Desktop\git\Kenny2github\\'[:-1], '')
         await ctx.send(f'```\n{out.getvalue()}```', embed=embed(ctx,
             title=('error',),
