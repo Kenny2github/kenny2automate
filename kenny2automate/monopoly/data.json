@@ -1,0 +1,229 @@
+{
+  "releases": {
+    "names": [
+      "Alpha",
+      "Beta",
+      "Pre",
+      "Stable"
+    ],
+    "cost": 200,
+    "rent": [25, 50, 100, 200],
+    "mort": 100
+  },
+  "tax": [
+    {
+      "name": "Pay for Nitro",
+      "tax": 200
+    },
+    {
+      "name": "Nitro Games",
+      "tax": 100
+    }
+  ],
+  "login": 200,
+  "teams": {
+    "names": [
+      "Trust & Safety Team",
+      "Developers"
+    ],
+    "cost": 150,
+    "rent": [4, 10],
+    "mort": 75
+  },
+  "groups": [
+    {
+      "name": "brown",
+      "properties": [
+        {
+          "name": "AFK",
+          "cost": 60,
+          "rent": [2, 10, 30, 90, 160, 250],
+          "hous": 50,
+          "mort": 30
+        },
+        {
+          "name": "#voice-chat",
+          "cost": 60,
+          "rent": [4, 20, 60, 180, 320, 450],
+          "hous": 50,
+          "mort": 30
+        }
+      ]
+    },
+    {
+      "name": "lightblue",
+      "properties": [
+        {
+          "name": "music",
+          "cost": 100,
+          "rent": [6, 30, 90, 270, 400, 550],
+          "hous": 50,
+          "mort": 50
+        },
+        {
+          "name": "#music-commands",
+          "cost": 100,
+          "rent": [6, 30, 90, 270, 400, 550],
+          "hous": 50,
+          "mort": 50
+        },
+        {
+          "name": "music-with-voice",
+          "cost": 120,
+          "rent": [8, 40, 100, 300, 450, 600],
+          "hous": 50,
+          "mort": 60
+        }
+      ]
+    },
+    {
+      "name": "pink",
+      "properties": [
+        {
+          "name": "General",
+          "cost": 140,
+          "rent": [10, 50, 150, 450, 625, 750],
+          "hous": 100,
+          "mort": 70
+        },
+        {
+          "name": "General 2",
+          "cost": 140,
+          "rent": [10, 50, 150, 450, 625, 750],
+          "hous": 100,
+          "mort": 70
+        },
+        {
+          "name": "Gaming",
+          "cost": 160,
+          "rent": [12, 60, 180, 500, 700, 900],
+          "hous": 100,
+          "mort": 80
+        }
+      ]
+    },
+    {
+      "name": "orange",
+      "properties": [
+        {
+          "name": "#spam",
+          "cost": 180,
+          "rent": [14, 70, 200, 550, 750, 950],
+          "hous": 100,
+          "mort": 90
+        },
+        {
+          "name": "#commands",
+          "cost": 180,
+          "rent": [14, 70, 200, 550, 750, 950],
+          "hous": 100,
+          "mort": 90
+        },
+        {
+          "name": "#welcome",
+          "cost": 200,
+          "rent": [16, 80, 220, 600, 800, 1000],
+          "hous": 100,
+          "mort": 100
+        }
+      ]
+    },
+    {
+      "name": "red",
+      "properties": [
+        {
+          "name": "#rules",
+          "cost": 220,
+          "rent": [18, 90, 250, 700, 875, 1050],
+          "hous": 150,
+          "mort": 110
+        },
+        {
+          "name": "#news",
+          "cost": 220,
+          "rent": [18, 90, 250, 700, 875, 1050],
+          "hous": 150,
+          "mort": 110
+        },
+        {
+          "name": "#giveaways",
+          "cost": 240,
+          "rent": [20, 100, 300, 750, 925, 1100],
+          "hous": 150,
+          "mort": 120
+        }
+      ]
+    },
+    {
+      "name": "yellow",
+      "properties": [
+        {
+          "name": "#nsfw",
+          "cost": 260,
+          "rent": [22, 110, 330, 800, 975, 1150],
+          "hous": 150,
+          "mort": 130
+        },
+        {
+          "name": "#now-live",
+          "cost": 260,
+          "rent": [22, 110, 330, 800, 975, 1150],
+          "hous": 150,
+          "mort": 130
+        },
+        {
+          "name": "#memes",
+          "cost": 280,
+          "rent": [24, 120, 360, 850, 1025, 1200],
+          "hous": 150,
+          "mort": 140
+        }
+      ]
+    },
+    {
+      "name": "green",
+      "properties": [
+        {
+          "name": "#offtopic",
+          "cost": 300,
+          "rent": [26, 130, 390, 900, 1100, 1275],
+          "hous": 200,
+          "mort": 150
+        },
+        {
+          "name": "#general",
+          "cost": 300,
+          "rent": [26, 130, 390, 900, 1100, 1275],
+          "hous": 200,
+          "mort": 150
+        },
+        {
+          "name": "#ontopic",
+          "cost": 320,
+          "rent": [28, 150, 450, 1000, 1200, 1400],
+          "hous": 200,
+          "mort": 160
+        }
+      ]
+    },
+    {
+      "name": "blue",
+      "properties": [
+        {
+          "name": "#subs-only",
+          "cost": 350,
+          "rent": [35, 175, 500, 1100, 1300, 1500],
+          "hous": 200,
+          "mort": 175
+        },
+        {
+          "name": "#admin-chat",
+          "cost": 400,
+          "rent": [50, 200, 600, 1400, 1700, 2000],
+          "hous": 200,
+          "mort": 200
+        }
+      ]
+    }
+  ]
+}

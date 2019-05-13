@@ -251,10 +251,18 @@ if 'units' not in cmdargs.disable:
     logger.info('Loading Units', extra={'ctx': dmx})
     from kenny2automate.units import Units
     client.add_cog(Units())
+if 'testimg' not in cmdargs.disable:
+	logger.info('Loading TestImg', extra={'ctx': dmx})
+	from kenny2automate.testimg import TestImg
+	client.add_cog(TestImg())
 if 'words' not in cmdargs.disable:
     logger.info('Loading Words', extra={'ctx': dmx})
     from kenny2automate.words import Words
     client.add_cog(Words(client, db))
+if 'monopoly' not in cmdargs.disable:
+    logger.info('Loading Monopoly', extra={'ctx': dmx})
+    from kenny2automate.monopoly import Monopoly
+    client.add_cog(Monopoly(client, db))
 if 'boggle' not in cmdargs.disable:
     logger.info('Loading Boggle', extra={'ctx': dmx})
     from kenny2automate.boggle import Boggle
