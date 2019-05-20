@@ -5,6 +5,8 @@ import subprocess
 import time
 import random
 #mid-level
+import requests
+from urllib.parse import quote as urlquote
 import logging
 import traceback
 import pickle
@@ -19,7 +21,7 @@ from discord.ext.commands import Bot
 from discord.ext.commands import bot_has_permissions
 from discord.ext.commands import has_permissions
 from discord.ext import commands
-from kenny2automate.utils import DummyCtx, lone_group
+from kenny2automate.utils import DummyCtx, lone_group, q
 from kenny2automate.server import Handler
 from kenny2automate.help import Kenny2help
 
@@ -424,6 +426,28 @@ async def ball(ctx, *, question: str):
         '8ball/u3', '8ball/u4', '8ball/u5', '8ball/n1',
         '8ball/n2', '8ball/n3', '8ball/n4', '8ball/n5'
     )[choice],)))
+
+@client.command(description='sdow-desc')
+async def sdow(ctx, page1: str, page2: str):
+    start = time.time()
+    async with ctx.typing():
+        r = await q(
+            requests.post, 'https://api.sixdegreesofwikipedia.com/paths',
+            json={'source': page1, 'target': page2}
+        )
+        deeta = r.json()
+        num_paths = len(deeta['paths'])
+        degrees = len(deeta['paths'][0])
+        tm = time.time() - start
+    await ctx.send(embed=discord.Embed(
+        description=i18n(
+            ctx, 'sdow', num_paths, degrees,
+            page1, page2, round(tm, 3),
+            'https://www.sixdegreesofwikipedia.com/?source={}&target={}'
+            .format(urlquote(page1, ''), urlquote(page2, ''))
+        ),
+        color=0x55acee
+    ))
 
 @client.command(description='whois-desc')
 async def whois(ctx, *, user: discord.User):
