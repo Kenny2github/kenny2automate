@@ -196,7 +196,7 @@ class Fish(Games):
 							),
 							color=0xff0000
 						))
-						hands[pid].extend(matches)
+				hands[pid].extend(matches)
 				if matches:
 					hands[pid].sort(key=lambda c: c.number)
 					await checkbooks(pid)
