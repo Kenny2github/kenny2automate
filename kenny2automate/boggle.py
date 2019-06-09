@@ -172,7 +172,7 @@ class Boggle(Games):
                     if not self.word_ok(word, board):
                         leword.discard(word)
                         continue
-                    if word.lower() not in ALL_WORDS:
+                    if word.upper() not in ALL_WORDS:
                         leword.discard(word)
         await self.mass_message(ctxs,
             title=('boggle/eliminating-dupes',),
