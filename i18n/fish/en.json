@@ -35,5 +35,10 @@
   "fish-all-timed-out-title": "Everyone Timed Out!",
   "fish-all-timed-out": "Everyone timed out! The game has been canceled.",
   "fish-timed-out-title": "You Timed Out",
-  "fish-timed-out": "You didn't make a move within {0} seconds! You have been removed from the game."
+  "fish-timed-out": "You didn't make a move within {0} seconds! You have been removed from the game.",
+  "fish-player-choice-title": "Choose a Player",
+  "fish-player-choice": "Choose a player to ask for cards from by clicking the number that represents them. Having done that, send a card number like Q or 10 to ask for it.",
+  "fish-other-card-taken": "{0} asked {1} for {2}s - since they had {3}, they were forced to hand them over.",
+  "fish-other-card-missed-unsafe": "{0} asked {1} for {2}s - although they had {3}, you are not safe yet.",
+  "fish-other-card-missed": "{0} asked {1} for {2}s - since they had {3}, you are safe."
 }

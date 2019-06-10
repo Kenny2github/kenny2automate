@@ -1,7 +1,7 @@
 import asyncio
 import discord
-from discord.ext.commands import Cog
-from .i18n import embed
+from discord.ext.commands import Cog, command
+from .i18n import i18n, embed
 from .utils import DummyCtx
 
 class Games(Cog):
@@ -86,7 +86,7 @@ class Games(Cog):
 			if res is not None:
 				legames = set(res.split(','))
 				if self.name in legames:
-					await ctx.send(embed=embed(ctx,
+					await ctx.author.send(embed=embed(ctx,
 						title=('error',),
 						description=('games/already-playing', self.name),
 						color=0xff0000
@@ -106,7 +106,7 @@ class Games(Cog):
 		if self.name in self._global_games:
 			for c in self._global_games[self.name]['ctxs']:
 				if c.author.id == ctx.author.id:
-					await ctx.send(embed=embed(ctx,
+					await ctx.author.send(embed=embed(ctx,
 						title=('error',),
 						description=('games/already-joined',),
 						color=0xff0000
@@ -115,7 +115,7 @@ class Games(Cog):
 			self._global_games[self.name]['ctxs'].append(ctx)
 			startx = self._global_games[self.name]['ctxs'][0]
 			ctlen = len(self._global_games[self.name]['ctxs'])
-			await startx.send(embed=embed(startx,
+			await startx.author.send(embed=embed(startx,
 				title=('games/player-joined-title',),
 				description=(
 					'games/player-joined',
@@ -124,14 +124,14 @@ class Games(Cog):
 				),
 				color=0x55acee
 			))
-			if ctlen >= self.minim and self.scn is not None:
-				await startx.send(embed=embed(startx,
+			if ctlen == self.minim and self.scn is not None:
+				await startx.author.send(embed=embed(startx,
 					title=('games/enough-players-title',),
 					description=('games/enough-players', ctx.prefix + self.scn),
 					color=0x55acee
 				))
 			elif ctlen >= self.maxim:
-				await self._start_global_game(startx)
+				return await self._start_global_game(startx)
 		else:
 			self._global_games[self.name] = {
 				'ctxs': [ctx],
@@ -186,17 +186,34 @@ class Games(Cog):
 						color=0x55acee
 					)))
 				await asyncio.gather(*coros, return_exceptions=True)
-		await ctx.send(embed=embed(ctx,
+		playercount = len(self._global_games[self.name]['ctxs'])
+		owner = self._global_games[self.name]['ctxs'][0]
+		if ctx.author.id == owner.author.id:
+			footer = None
+			if self.minim < self.maxim:
+				desc = 'games/joined-owner'
+			else:
+				desc = 'games/joined-faux-owner'
+		else:
+			if self.minim > playercount:
+				desc = 'games/joined-waiting-missing'
+			elif isinstance(self.maxim, int):
+				desc = 'games/joined-waiting-minmax'
+			else:
+				desc = 'games/joined-waiting-nomax'
+			if self.scn is not None:
+				footer = ('games/vote-to-start', ctx.prefix + self.scn)
+			else:
+				footer = None
+		await ctx.author.send(embed=embed(ctx,
 			title=('games/joined', self.name),
-			description=(
-				'games/joined-waiting-minmax', self.name,
-				self.maxim - len(self._global_games[self.name]['ctxs'])
-			) if isinstance(self.maxim, int) and self.minim < self.maxim else ((
-				'games/joined-waiting', self.name,
-				self.maxim - len(self._global_games[self.name]['ctxs'])
-			) if isinstance(self.maxim, int) else (
-				'games/joined-waiting-nomax', self.name
-			)),
+			description=(desc, self.name, (
+				self.minim
+				if self.minim > playercount
+				else self.maxim
+			) - playercount, owner.author.name
+			+ '#' + owner.author.discriminator),
+			footer=footer,
 			color=0x338acc
 		))
 
@@ -497,3 +514,22 @@ class Games(Cog):
 			qyoo.put_nowait(data)
 			await qyoo.join()
 		return data2
+
+@command(description='games/players-desc')
+async def players(ctx, *, game: str):
+	game = game.title()
+	if game not in Games._global_games:
+		return await ctx.send(embed=embed(ctx,
+			title=('error',),
+			description=('games/no-such-game', game),
+			footer=('games/possibly-such-game',),
+			color=0xff0000
+		))
+	await ctx.author.send(embed=embed(ctx,
+		title=('games/players-title', game),
+		description=i18n(ctx, 'comma-sep').join(
+			i.author.name + '#' + i.author.discriminator
+			for i in Games._global_games[game]['ctxs']
+		) or ('none',),
+		color=0x55acee
+	))

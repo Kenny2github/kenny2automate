@@ -14,7 +14,11 @@ class Words(Cog):
         self.db = db
         self.api = datamuse.Datamuse()
 
-    @command(invoke_without_command=True, description='words/words-description')
+    @command(
+        invoke_without_command=True,
+        description='words/words-description',
+        usage='words/words-usage'
+    )
     async def words(self, ctx, *, cmd):
         """words/words-help"""
         async def unknown(*_, **__):
