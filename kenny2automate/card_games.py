@@ -33,6 +33,8 @@ class Card(object):
 class Fish(Games):
 	"""fish/cog-desc"""
 	async def do_fish(self, ctxs):
+		def display_name(player):
+			return player.name + '#' + player.discriminator
 		players = [ctx.author for ctx in ctxs]
 		deck = [Card(i, j) for i in range(4) for j in range(13)]
 		random.shuffle(deck)
@@ -72,12 +74,40 @@ class Fish(Games):
 				) or i18n(dmx[pid], 'fish/fish-stats-no-books'),
 				inline=False
 			)
-			emb.add_field(
-				name=i18n(dmx[pid], 'fish/fish-stats-status-title'),
-				value=i18n(dmx[pid], footer),
-				inline=False
-			)
+			if len(players) <= 2:
+				emb.add_field(
+					name=i18n(dmx[pid], 'fish/fish-stats-status-title'),
+					value=i18n(dmx[pid], footer),
+					inline=False
+				)
 			return emb
+		async def playerchoose(pid):
+			okpids = [
+				chr(48 + i) + chr(8419)
+				for i in range(len(players))
+			]
+			msg = await dmx[pid].send(embed=embed(dmx[pid],
+				title=('fish/fish-player-choice-title',),
+				description='\n'.join(
+					'{}: {}#{}'.format(
+						chr(48 + i) + chr(8419),
+						j.name, j.discriminator
+					) for i, j in enumerate(players)
+					if i != pid
+				),
+				footer=('fish/fish-player-choice',),
+				color=0xffff00
+			))
+			for i in range(len(players)):
+				if i == pid:
+					continue
+				await msg.add_reaction(chr(48 + i) + chr(8419))
+			return msg.id
+		async def chooseplayer(pid, msgid):
+			msg = await dmx[pid].channel.fetch_message(msgid)
+			for r in msg.reactions:
+				if r.count > 1:
+					return ord(str(r)[0]) - 48
 		async def checkbooks(pid):
 			counts = {}
 			newbooks = []
@@ -122,7 +152,7 @@ class Fish(Games):
 					title=('fish/fish-turn-title',),
 					description=(
 						'fish/fish-turn',
-						player.display_name
+						display_name(player)
 					),
 					color=0xffffff
 				))
@@ -152,12 +182,20 @@ class Fish(Games):
 						if card.number == n:
 							return True
 					return False
+				chosen_pid = None
+				if len(players) > 2:
+					rmsg = await playerchoose(pid)
 				try:
-					msg = await self.bot.wait_for(
-						'message',
-						check=checc,
-						timeout=600.0
-					)
+					while chosen_pid is None:
+						msg = await self.bot.wait_for(
+							'message',
+							check=checc,
+							timeout=600.0
+						)
+						if len(players) > 2:
+							chosen_pid = await chooseplayer(pid, rmsg)
+						else:
+							chosen_pid = int(not pid)
 				except asyncio.TimeoutError:
 					await player.send(embed=embed(dmx[pid],
 						title=('fish/fish-timed-out-title',),
@@ -173,30 +211,39 @@ class Fish(Games):
 					timedout = True
 					break
 				num = num.index(msg.content.upper().strip())
-				matches = []
-				for pid2, player2 in enumerate(players):
-					if player2 == player:
-						continue
-					matches2 = [c for c in hands[pid2] if c.number == num]
-					matches.extend(matches2)
-					count = len(matches2)
-					hands[pid2] = [
-						c
-						for c in hands[pid2]
-						if c.number != num
-					]
-					if matches2:
+				matches = [c for c in hands[chosen_pid] if c.number == num]
+				count = len(matches)
+				hands[chosen_pid] = [
+					c
+					for c in hands[chosen_pid]
+					if c.number != num
+				]
+				if matches:
+					await dmx[chosen_pid].send(embed=embed(dmx[chosen_pid],
+						title=('fish/fish-card-taken-title',),
+						description=(
+							'fish/fish-card-taken',
+							display_name(player),
+							Card.NUMBERS[num],
+							count
+						),
+						color=0xff0000
+					))
+					for pid2, player2 in enumerate(players):
+						if pid2 == pid or pid2 == chosen_pid:
+							continue
 						await dmx[pid2].send(embed=embed(dmx[pid2],
 							title=('fish/fish-card-taken-title',),
 							description=(
-								'fish/fish-card-taken',
-								player.display_name,
+								'fish/fish-other-card-taken',
+								display_name(player),
+								display_name(players[chosen_pid]),
 								Card.NUMBERS[num],
 								count
 							),
-							color=0xff0000
+							color=0xff8080
 						))
-						hands[pid].extend(matches)
+				hands[pid].extend(matches)
 				if matches:
 					hands[pid].sort(key=lambda c: c.number)
 					await checkbooks(pid)
@@ -218,18 +265,31 @@ class Fish(Games):
 					if draw.number == num:
 						matches = True
 						for pid2, player2 in enumerate(players):
-							if player2 == player:
+							if pid2 == pid:
 								continue
-							await dmx[pid2].send(embed=embed(dmx[pid2],
-								title=('fish/fish-card-missed-title',),
-								description=(
-									'fish/fish-card-missed-unsafe',
-									player.display_name,
-									Card.NUMBERS[num],
-									count
-								),
-								color=0xff8080
-							))
+							if pid2 != chosen_pid:
+								await dmx[pid2].send(embed=embed(dmx[pid2],
+									title=('fish/fish-card-missed-title',),
+									description=(
+										'fish/fish-other-card-missed-unsafe',
+										display_name(player),
+										display_name(players[chosen_pid]),
+										Card.NUMBERS[num],
+										count
+									),
+									color=0xff8080
+								))
+							else:
+								await dmx[pid2].send(embed=embed(dmx[pid2],
+									title=('fish/fish-card-missed-title',),
+									description=(
+										'fish/fish-card-missed-unsafe',
+										display_name(player),
+										Card.NUMBERS[num],
+										count
+									),
+									color=0xff8080
+								))
 						await dmx[pid].send(embed=stats(pid,
 							'fish/fish-m-card', (
 								'fish/fish-fish-got',
@@ -238,18 +298,31 @@ class Fish(Games):
 						))
 					else:
 						for pid2, player2 in enumerate(players):
-							if player2 == player:
+							if pid2 == pid:
 								continue
-							await dmx[pid2].send(embed=embed(dmx[pid2],
-								title=('fish/fish-card-missed-title',),
-								description=(
-									'fish/fish-card-missed',
-									player.display_name,
-									Card.NUMBERS[num],
-									count
-								),
-								color=0x55acee
-							))
+							if pid2 != chosen_pid:
+								await dmx[pid2].send(embed=embed(dmx[pid2],
+									title=('fish/fish-card-missed-title',),
+									description=(
+										'fish/fish-other-card-missed',
+										display_name(player),
+										display_name(players[chosen_pid]),
+										Card.NUMBERS[num],
+										count
+									),
+									color=0x55acee
+								))
+							else:
+								await dmx[pid2].send(embed=embed(dmx[pid2],
+									title=('fish/fish-card-missed-title',),
+									description=(
+										'fish/fish-card-missed',
+										display_name(player),
+										Card.NUMBERS[num],
+										count
+									),
+									color=0x55acee
+								))
 						await dmx[pid].send(
 							embed=stats(pid, 'fish/fish-m-wait', (
 								'fish/fish-fish', draw
@@ -276,10 +349,10 @@ class Fish(Games):
 					description=(
 						'fish/fish-winners',
 						i18n(dm, 'comma-sep').join(
-							player.display_name for player in winners[:-1]
+							display_name(player) for player in winners[:-1]
 						)
 						+ i18n(dm, 'and-sep')
-						+ winners[-1].display_name
+						+ display_name(winners[-1])
 					),
 					color=0x55acee
 				))
@@ -289,13 +362,13 @@ class Fish(Games):
 					title=('fish/fish-winner-title',),
 					description=(
 						'fish/fish-winner',
-						winners[0].display_name
+						display_name(winners[0])
 					),
 					color=0x55acee
 				))
 
 	name = 'Go Fish'
-	maxim = float('inf')
+	maxim = 10
 	minim = 2
 	scn = 'fish start'
 	jcn = 'fish join'

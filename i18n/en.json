@@ -30,6 +30,7 @@
   "version-desc": "Get the bot's running process's current Git version.",
   "votetoban-desc": "Start a vote to ban someone from the server. Abuse results in a ban.",
   "stop-desc": "Stop the bot.",
+  "someone-desc": "Pseudo-mention a random person in the server! (Note: Does not actually ping.)",
   "help-desc": "Get help with the bot.",
   "help-cmds": "Below are uncategorized commands.",
   "description": "The most awesome bot to walk(?) the earth. Below are command categories.",

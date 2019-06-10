@@ -21,6 +21,7 @@ from discord.ext.commands import Bot
 from discord.ext.commands import bot_has_permissions
 from discord.ext.commands import has_permissions
 from discord.ext import commands
+from discord.ext import tasks
 from kenny2automate.utils import DummyCtx, lone_group, q
 from kenny2automate.server import Handler
 from kenny2automate.help import Kenny2help
@@ -273,6 +274,9 @@ if 'boggle' not in cmdargs.disable:
 logger.info('Loading Eval', extra={'ctx': dmx})
 from kenny2automate.eval_ import eval_
 client.add_command(eval_)
+logger.info('Loading Games', extra={'ctx': dmx})
+from kenny2automate.games import players
+client.add_command(players)
 
 @client.event
 async def on_ready(*_, **__):
@@ -381,6 +385,7 @@ async def prefix_get(ctx):
         ))
 
 @client.command(description='someone-desc')
+@commands.guild_only()
 async def someone(ctx):
     await ctx.send(embed=discord.Embed(
         description=random.choice(ctx.guild.members).mention
@@ -542,6 +547,18 @@ def recurse_mtimes(dir, *s):
             ))
 recurse_mtimes(os.path.abspath(os.path.dirname(__file__)))
 
+@tasks.loop(minutes=5.0)
+async def set_playing_status():
+    if set_playing_status.current_loop & 1:
+        lestat = str(len(client.guilds)) + ' servers'
+    else:
+        lestat = cmdargs.prefix + 'help'
+    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=lestat))
+
+@set_playing_status.before_loop
+async def before_playing():
+    await client.wait_until_ready()
+
 async def update_if_changed():
     await client.wait_until_ready()
     while 1:
@@ -568,6 +585,7 @@ with open('kenny2automate.txt') as f:
 
 try:
     wakeup = client.loop.create_task(update_if_changed())
+    set_playing_status.start()
     if cmdargs.loop:
         others = subprocess.check_output("ps aux | grep -v grep | grep 'kenny2automate' | awk '{print $2}'", shell=True).splitlines()
         for i in others:
@@ -587,6 +605,7 @@ finally:
     sys.stderr = sys.__stderr__
     try:
         wakeup.cancel()
+        set_playing_status.cancel()
     except RuntimeError as exc:
         print(exc) #probably already closed?
     client.loop.run_until_complete(client.close())

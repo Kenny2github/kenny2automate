@@ -1,12 +1,18 @@
+import subprocess
 from setuptools import setup, find_packages
 
 with open('requirements.txt') as f:
 	reqs = f.read()
 reqs = reqs.strip().splitlines()
 
+VERSION = subprocess.check_output(
+    "cd kenny2automate && git rev-parse --short HEAD",
+    shell=True
+).decode('ascii').strip()
+
 setup(
 	name='kenny2automate',
-	version='3.2',
+	version='19.0a' + VERSION,
 	description='A Python Discord bot',
 	url='https://github.com/Kenny2github/kenny2automate',
 	author='Kenny2github',
