@@ -1,6 +1,8 @@
 from os import path, remove, mkdir
 import time
 from contextlib import contextmanager
+import pygame.image
+import discord
 
 tmpdir = path.join(path.dirname(path.dirname(__file__)), 'temp')
 if not path.isdir(tmpdir):
@@ -31,3 +33,10 @@ def tmpf(*args, **kwargs):
         yield name
     finally:
         remove(name)
+
+async def sendsurf(meth, surf, tmpfileprefix,
+                   filename='image.png', **kwargs):
+    with tmpf(tmpfileprefix + '-', '.png') as name:
+        pygame.image.save(surf, name)
+        file = discord.File(name, filename)
+        await meth(file=file, **kwargs)
