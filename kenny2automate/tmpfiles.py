@@ -1,8 +1,13 @@
-from os import path, remove
+from os import path, remove, mkdir
 import time
 from contextlib import contextmanager
 
 tmpdir = path.join(path.dirname(path.dirname(__file__)), 'temp')
+if not path.isdir(tmpdir):
+    if path.exists(tmpdir):
+        remove(tmpdir)
+    else:
+        mkdir(tmpdir)
 
 INDEX = 0
 
