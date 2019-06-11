@@ -1,10 +1,26 @@
+#low-level
+import os
 import re
 import random
+#mid-level
 import asyncio
+#3rd-party
+from pygame import Surface, SRCALPHA
+import pygame.image
+import discord
 from discord.ext.commands import group
+#relative
 from .games import Games
 from .i18n import i18n, embed
 from .utils import DummyCtx, lone_group
+from .tmpfiles import sendsurf
+
+UNO_CARDS = os.path.dirname(os.path.dirname(__file__))
+UNO_CARDS = os.path.join(UNO_CARDS, 'resources', 'card_games', 'uno')
+UNO_SIZE = UNO_WIDTH, UNO_HEIGHT = 241, 361
+
+def unoimg(name):
+	return os.path.join(UNO_CARDS, name + '.png')
 
 class Card:
 	SUITS = ('\u2660', '\u2663', '\u2665', '\u2666')
@@ -30,13 +46,42 @@ class Card:
 	def __eq__(self, other):
 		return hash(self) == hash(other)
 
+class UnoCard(Card):
+	SUITS = ('red', 'yellow', 'green', 'blue')
+	NUMBERS = tuple(map(str, range(10))) + ('skip', 'reverse', 'draw2')
+
+	suit = 0
+	number = 0
+
+	def __init__(self, suit=0, number=0):
+		super().__init__(suit, number)
+		self.image = pygame.image.load(unoimg(
+			self.SUITS[suit] + '-' + self.NUMBERS[number]
+		))
+
+	@property
+	def worth(self):
+		if self.number < 10:
+			return self.number
+		return 10
+
+class SpecialUnoCard(UnoCard):
+	draw4 = False
+	suit = number = 13
+	def __init__(self, draw4: bool):
+		self.image = pygame.image.load(unoimg('draw4' if draw4 else 'wild'))
+
+def display_name(player):
+	return player.name + '#' + player.discriminator
+
 class Fish(Games):
 	"""fish/cog-desc"""
+
+	DECK = [Card(i, j) for i in range(4) for j in range(13)]
+
 	async def do_fish(self, ctxs):
-		def display_name(player):
-			return player.name + '#' + player.discriminator
 		players = [ctx.author for ctx in ctxs]
-		deck = [Card(i, j) for i in range(4) for j in range(13)]
+		deck = self.DECK[:]
 		random.shuffle(deck)
 		dmx = [
 			DummyCtx(
@@ -145,17 +190,14 @@ class Fish(Games):
 			pid %= len(players)
 			player = players[pid]
 			matches = True
-			for pid2, player2 in enumerate(players):
-				if player2 == player:
-					continue
-				await player2.send(embed=embed(dmx[pid2],
-					title=('fish/fish-turn-title',),
-					description=(
-						'fish/fish-turn',
-						display_name(player)
-					),
-					color=0xffffff
-				))
+			await asyncio.gather(player2.send(embed=embed(player2,
+				title=('fish/fish-turn-title',),
+				description=(
+					'fish/fish-turn',
+					display_name(player)
+				),
+				color=0xffffff
+			)) for player2 in players if player2 != player)
 			await dmx[pid].send(embed=stats(
 				pid, 'fish/fish-m-card'
 			))
@@ -229,20 +271,18 @@ class Fish(Games):
 						),
 						color=0xff0000
 					))
-					for pid2, player2 in enumerate(players):
-						if pid2 == pid or pid2 == chosen_pid:
-							continue
-						await dmx[pid2].send(embed=embed(dmx[pid2],
-							title=('fish/fish-card-taken-title',),
-							description=(
-								'fish/fish-other-card-taken',
-								display_name(player),
-								display_name(players[chosen_pid]),
-								Card.NUMBERS[num],
-								count
-							),
-							color=0xff8080
-						))
+					await asyncio.gather(dmx[pid2].send(embed=embed(dmx[pid2],
+						title=('fish/fish-card-taken-title',),
+						description=(
+							'fish/fish-other-card-taken',
+							display_name(player),
+							display_name(players[chosen_pid]),
+							Card.NUMBERS[num],
+							count
+						),
+						color=0xff8080
+					)) for pid2, player2 in enumerate(players)
+					if pid2 not in {pid, chosen_pid})
 				hands[pid].extend(matches)
 				if matches:
 					hands[pid].sort(key=lambda c: c.number)
@@ -331,41 +371,26 @@ class Fish(Games):
 			if not timedout:
 				pid += 1
 		if not (len(players) > 1):
-			for dm in dmx:
-				await dm.send(embed=embed(dm,
-					title=('fish/fish-all-timed-out-title',),
-					description=('fish/fish-all-timed-out',),
-					color=0xff0000
-				))
+			await asyncio.gather(dm.send(embed=embed(dm,
+				title=('fish/fish-all-timed-out-title',),
+				description=('fish/fish-all-timed-out',),
+				color=0xff0000
+			)) for dm in dmx)
 			return
 		books = tuple(map(len, books))
 		max_books = max(books)
 		winners = [i for i, j in enumerate(books) if j == max_books]
 		winners = tuple(players[i] for i in winners)
-		if len(winners) > 1:
-			for dm in dmx:
-				await dm.send(embed=embed(dm,
-					title=('fish/fish-winners-title',),
-					description=(
-						'fish/fish-winners',
-						i18n(dm, 'comma-sep').join(
-							display_name(player) for player in winners[:-1]
-						)
-						+ i18n(dm, 'and-sep')
-						+ display_name(winners[-1])
-					),
-					color=0x55acee
-				))
-		else:
-			for dm in dmx:
-				await dm.send(embed=embed(dm,
-					title=('fish/fish-winner-title',),
-					description=(
-						'fish/fish-winner',
-						display_name(winners[0])
-					),
-					color=0x55acee
-				))
+		await asyncio.gather(dm.send(embed=embed(dm,
+			title=('fish/fish-winners-title',),
+			description=(
+				'fish/fish-winners',
+				i18n(dm, 'comma-sep').join(
+					display_name(player) for player in winners
+				)
+			),
+			color=0x55acee
+		)) for dm in dmx)
 
 	name = 'Go Fish'
 	maxim = 10
@@ -394,10 +419,203 @@ class Fish(Games):
 
 	@fish.command(name='help', description='fish/fish-help-desc')
 	async def fish_help(self, ctx):
-		if not ctx.author.dm_channel:
-			await ctx.author.create_dm()
-		await ctx.author.dm_channel.send(embed=embed(ctx,
+		await ctx.author.send(embed=embed(ctx,
 			title=('games/help-title', self.name),
 			description=('fish/fish-help', ctx.prefix),
+			color=0x55acee
+		))
+
+class Uno(Games):
+	"""uno/cog-desc"""
+
+	DECK = [UnoCard(i, j) for i in range(4) for j in range(1, 13)]
+	DECK.extend([UnoCard(i, 0) for i in range(4)])
+	DECK.extend([SpecialUnoCard(True) for i in range(4)])
+	DECK.extend([SpecialUnoCard(False) for i in range(4)])
+
+	async def do_uno(self, ctxs):
+		players = [ctx.author for ctx in ctxs]
+		deck = self.DECK[:]
+		discard = [None]
+		random.shuffle(deck)
+		card = deck.pop()
+		while card.worth == 10:
+			deck.insert(random.randrange(108), card)
+			card = deck.pop()
+		discard[0] = card
+		hands = [[deck.pop() for _ in range(7)] for _ in players]
+		points = [0] * len(players)
+		async def handsurf(pid):
+			handlen = len(hands[pid])
+			padding = UNO_WIDTH // 4
+			surf = Surface(
+				(UNO_WIDTH * handlen + UNO_WIDTH + padding, UNO_HEIGHT),
+				SRCALPHA, 32
+			)
+			surf.fill((0, 0, 0, 0))
+			for i, j in enumerate(hands[pid]):
+				surf.blit(j.image, (UNO_WIDTH + padding + UNO_WIDTH * i, 0))
+			surf.blit(discard[0].image, (0, 0))
+			await sendsurf(
+				players[pid].send, surf, 'uno', 'hand.png',
+				embed=embed(players[pid],
+					title=('uno/hand-title',),
+					description=('uno/hand', points[pid]),
+					fields=((
+						('uno/card-numbers-title',),
+						('uno/card-numbers',),
+						False
+					),),
+					footer=('uno/waiting-for-card',) if can_turn(pid) else None,
+					color=0xffffff
+				).set_image(url='attachment://hand.png')
+			)
+		def can_card(card):
+			if isinstance(card, SpecialUnoCard):
+				return True
+			if isinstance(discard[0], SpecialUnoCard):
+				return card.suit == discard[0].suit
+			if card.number == discard[0].number:
+				return True
+			if card.suit == discard[0].suit:
+				return True
+			return False
+		def can_turn(pid):
+			for i in hands[pid]:
+				if can_card(i):
+					return True
+			return False
+		pid = 0
+		dpid = 1
+		while (deck or any(
+			can_turn(i) for i in range(len(players))
+		)) and len(players) > 1:
+			pid %= len(players)
+			player = players[pid]
+			if not can_turn(pid):
+				try:
+					hands[pid].append(deck.pop())
+				except IndexError:
+					pass
+			for hand in hands:
+				hand.sort(key=lambda c: c.suit)
+				hand.sort(key=lambda c: c.number)
+			await handsurf(pid)
+			if can_turn(pid):
+				try:
+					msg = await self.bot.wait_for('message', check=lambda m: (
+						m.channel.id == player.dm_channel.id
+						and m.author.id == player.id
+						and m.content.strip().isdecimal()
+						and 1 <= int(m.content) <= len(hands[pid])
+						and can_card(hands[pid][int(m.content) - 1])
+					), timeout=600.0)
+					card = hands[pid].pop(int(msg.content) - 1)
+					discard[0] = card
+					if card.number > 9: #special function!
+						if card.number == 10: #skip
+							pid += dpid
+						if card.number == 11: #reverse
+							if len(players) <= 2: #reverse is a skip for 2p
+								pid += dpid
+							else:
+								dpid = -dpid
+						if card.number == 12: #draw2
+							hands[
+								(pid + dpid) % len(players)
+							].extend([deck.pop(), deck.pop()])
+							pid += dpid
+						if card.number == 13: #wild of some sort
+							msg = await player.send(embed=embed(player,
+								title=('uno/choose-color-title',),
+								description=('uno/choose-color',),
+								color=0x55acee
+							))
+							HEARTS = '\u2764\U0001f49b\U0001f49a\U0001f499'
+							for i in HEARTS:
+								await msg.add_reaction(i)
+							reaction, user = await self.bot\
+								.wait_for('reaction_add', check=lambda r, u: (
+									u.id == player.id
+									and r.message.id == msg.id
+									and str(r) in HEARTS
+								))
+							color = HEARTS.index(str(reaction))
+							card.suit = color
+							if card.draw4: #it's a draw4!
+								hands[
+									(pid + dpid) % len(players)
+								].extend([deck.pop() for _ in range(4)])
+				except asyncio.TimeoutError:
+					await player.send(embed=embed(player,
+						title=('uno/uno-timed-out-title',),
+						description=('uno/uno-timed-out', 600),
+						color=0xff0000
+					))
+					del players[pid]
+					deck.extend(hands[pid])
+					random.shuffle(deck)
+					del hands[pid]
+					del points[pid]
+					continue
+			if len(hands[pid]) == 1:
+				await asyncio.gather(p.send(embed=embed(p,
+					title=('uno/uno-title',),
+					description=('uno/uno', display_name(player)),
+					color=0xff8080
+				)) for p in players if p != player)
+			elif len(hands[pid]) <= 0:
+				points[pid] += 10
+				hands[pid].extend(deck.pop() for _ in range(min(len(deck), 7))
+			pid += dpid
+		for pid in range(len(players)):
+			points[pid] -= sum(i.worth for i in hands[pid])
+		max_points = max(points)
+		winners = tuple(
+			players[i]
+			for i, j in enumerate(points)
+			if j == max_points
+		)
+		await asyncio.gather(player.send(embed=embed(player,
+			title=('fish/fish-winners-title',),
+			description=(
+				'fish/fish-winners',
+				i18n(player, 'comma-sep').join(
+					display_name(p) for p in winners
+				)
+			),
+			color=0x55acee
+		)) for player in players)
+
+	name = 'Uno'
+	maxim = float('inf')
+	minim = 2
+	scn = 'uno start'
+	jcn = 'uno join'
+
+	@group(invoke_without_command=True, description='uno/uno-cmd-desc')
+	@lone_group(True)
+	async def uno(self, ctx):
+		"""uno/uno-cmd-help"""
+		pass
+
+	@uno.command(name='join', description='uno/uno-join-desc')
+	async def uno_join(self, ctx):
+		await self._join_global_game(ctx, self.do_uno)
+
+	@uno.command(name='leave', description='uno/uno-leave-desc')
+	async def uno_leave(self, ctx):
+		await self._unjoin_global_game(ctx)
+
+	@uno.command(name='start', description='uno/uno-start-desc')
+	async def uno_start(self, ctx):
+		"""uno/uno-start-help"""
+		await self._start_global_game(ctx)
+
+	@uno.command(name='help', description='uno/uno-help-desc')
+	async def uno_help(self, ctx):
+		await ctx.author.send(embed=embed(ctx,
+			title=('games/help-title', self.name),
+			description=('uno/uno-help', ctx.prefix),
 			color=0x55acee
 		))

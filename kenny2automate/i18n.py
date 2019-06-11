@@ -26,14 +26,20 @@ LANG = tuple(
 
 def lang(ctx):
     """Get a language for a context."""
+    if hasattr(ctx, 'id'):
+        leid = ctx.id
+    else:
+        leid = ctx.author.id
     res = db.execute(
         'SELECT lang FROM users WHERE user_id=?',
-        (ctx.author.id,)
+        (leid,)
     ).fetchone()
     if res is None or res['lang'] is None:
+        if not hasattr(ctx, 'id'):
+            leid = ctx.channel.id
         res = db.execute(
             'SELECT lang FROM channels WHERE channel_id=?',
-            (ctx.channel.id,)
+            (leid,)
         ).fetchone()
         if res is None or res['lang'] is None:
             res = {'lang': 'en'}

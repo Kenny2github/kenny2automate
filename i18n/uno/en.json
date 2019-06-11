@@ -1,0 +1,17 @@
+{
+  "cog-desc": "Play UNO!",
+  "uno-cmd-desc": "Play UNO!",
+  "uno-cmd-help": "Run `{0}uno help` for information about the set of rules used here.",
+  "uno-join-desc": "Join a game of UNO!",
+  "uno-leave-desc": "Leave your game of UNO.",
+  "uno-start-desc": "Start (or vote to start) the game of UNO!",
+  "uno-help-desc": "Get information about the version of UNO this bot lets you play.",
+  "uno-help": "In this version, every time you empty your hand you get 10 points.\nOnce your hand runs out, you refill it with 7 more cards to continue playing.\nWhen the deck runs out, you still continue to play until nobody can make a move.\nOnce that has happened, any cards still in your hand are subtracted from your points, where non-number cards are worth 10.",
+  "hand-title": "Your Hand",
+  "hand": "On the left is the top card of the discard pile; on the right is your current hand. You have {0} points.",
+  "card-numbers-title": "Card Numbers",
+  "card-numbers": "The leftmost card in your hand (not the discard card, which is all the way on the left) is numbered 1, the second-to-left 2, and so on.",
+  "waiting-for-card": "Send the number of a card in your hand (e.g. 3 or 7) to play it.",
+  "choose-color-title": "Choose a Color",
+  "choose-color": "Click the heart with the color you want to set the game to."
+}
