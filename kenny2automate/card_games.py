@@ -6,11 +6,11 @@ from .games import Games
 from .i18n import i18n, embed
 from .utils import DummyCtx, lone_group
 
-class Card(object):
-	SUITS = tuple('\u2660 \u2663 \u2665 \u2666'.split(' '))
-	NUMBERS = tuple(('\U0001f1e6 2\u20e3 3\u20e3 4\u20e3 5\u20e3 6\u20e3'
-		' 7\u20e3 8\u20e3 9\u20e3 \U0001f51f \U0001f1ef'
-		' \U0001f1f6 \U0001f1f0').split(' '))
+class Card:
+	SUITS = ('\u2660', '\u2663', '\u2665', '\u2666')
+	NUMBERS = ('\U0001f1e6', '2\u20e3', '3\u20e3', '4\u20e3', '5\u20e3',
+		'6\u20e3', '7\u20e3', '8\u20e3', '9\u20e3', '\U0001f51f', '\U0001f1ef',
+		'\U0001f1f6', '\U0001f1f0')
 
 	suit = 0
 	number = 0
