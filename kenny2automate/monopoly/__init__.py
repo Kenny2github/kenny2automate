@@ -16,7 +16,10 @@ from .data import Board, Player, PlayerState, Jail
 
 sql.register_adapter(Board, pickle.dumps)
 
-MY_DIR = os.path.dirname(__file__)
+MY_DIR = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+    'resources', 'monopoly'
+)
 def f(name):
     return os.path.join(MY_DIR, name)
 
