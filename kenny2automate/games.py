@@ -2,7 +2,7 @@ import asyncio
 import discord
 from discord.ext.commands import Cog, command
 from .i18n import i18n, embed
-from .utils import DummyCtx
+from .utils import DummyCtx, background
 
 class Games(Cog):
 	def __init__(self, bot, db):
@@ -86,11 +86,11 @@ class Games(Cog):
 			if res is not None:
 				legames = set(res.split(','))
 				if self.name in legames:
-					await ctx.author.send(embed=embed(ctx,
+					background(ctx.author.send(embed=embed(ctx,
 						title=('error',),
 						description=('games/already-playing', self.name),
 						color=0xff0000
-					))
+					)))
 					return
 				legames.add(self.name)
 				self.db.execute(
@@ -106,16 +106,16 @@ class Games(Cog):
 		if self.name in self._global_games:
 			for c in self._global_games[self.name]['ctxs']:
 				if c.author.id == ctx.author.id:
-					await ctx.author.send(embed=embed(ctx,
+					background(ctx.author.send(embed=embed(ctx,
 						title=('error',),
 						description=('games/already-joined',),
 						color=0xff0000
-					))
+					)))
 					return
 			self._global_games[self.name]['ctxs'].append(ctx)
 			startx = self._global_games[self.name]['ctxs'][0]
 			ctlen = len(self._global_games[self.name]['ctxs'])
-			await startx.author.send(embed=embed(startx,
+			background(startx.author.send(embed=embed(startx,
 				title=('games/player-joined-title',),
 				description=(
 					'games/player-joined',
@@ -123,13 +123,13 @@ class Games(Cog):
 					max(0, self.maxim - ctlen)
 				),
 				color=0x55acee
-			))
+			)))
 			if ctlen == self.minim and self.scn is not None:
-				await startx.author.send(embed=embed(startx,
+				background(startx.author.send(embed=embed(startx,
 					title=('games/enough-players-title',),
 					description=('games/enough-players', ctx.prefix + self.scn),
 					color=0x55acee
-				))
+				)))
 			elif ctlen >= self.maxim:
 				return await self._start_global_game(startx)
 		else:
@@ -174,7 +174,7 @@ class Games(Cog):
 					if str(member.status) != 'online':
 						continue
 					if user.dm_channel is None:
-						await user.create_dm()
+						background(user.create_dm())
 					coros.append(user.dm_channel.send(embed=embed(
 						DummyCtx(
 							author=user,
@@ -205,7 +205,7 @@ class Games(Cog):
 				footer = ('games/vote-to-start', ctx.prefix + self.scn)
 			else:
 				footer = None
-		await ctx.author.send(embed=embed(ctx,
+		background(ctx.author.send(embed=embed(ctx,
 			title=('games/joined', self.name),
 			description=(desc, self.name, (
 				self.minim
@@ -215,26 +215,26 @@ class Games(Cog):
 			+ '#' + owner.author.discriminator),
 			footer=footer,
 			color=0x338acc
-		))
+		)))
 
 	async def _start_global_game(self, ctx):
 		if self.name not in self._global_games:
 			return
 		if len(self._global_games[self.name]['ctxs']) < self.minim:
-			await ctx.send(embed=embed(ctx,
+			background(ctx.send(embed=embed(ctx,
 				title=('error',),
 				description=(
 					'games/not-enough-players',
 					self.minim, len(self._global_games[self.name]['ctxs'])
 				),
 				color=0xff0000
-			))
+			)))
 			return
 		gam = self._global_games[self.name]
 		if ctx.author.id != gam['ctxs'][0].author.id:
 			gam['vote'] += 1
 			if gam['vote'] < len(gam['ctxs']) // 2:
-				return await ctx.send(embed=embed(ctx,
+				return background(ctx.send(embed=embed(ctx,
 					title=('games/voted-title',),
 					description=(
 						'games/voted',
@@ -242,7 +242,7 @@ class Games(Cog):
 						len(gam['ctxs']) // 2 - gam['vote']
 					),
 					color=0x55acee
-				))
+				)))
 		coro = gam['coro']
 		ctxs = []
 		if isinstance(self.maxim, int):
@@ -256,10 +256,12 @@ class Games(Cog):
 			gam['ctxs'] = []
 		if not len(gam['ctxs']):
 			del self._global_games[self.name], gam
-		for c in ctxs:
-			if not c.author.dm_channel:
-				await c.author.create_dm()
-		return asyncio.create_task(coro(ctxs))
+		await asyncio.gather(*(
+			c.author.create_dm()
+			for c in ctxs
+			if not c.author.dm_channel
+		))
+		return background(coro(ctxs))
 
 	async def _unjoin_global_game(self, ctx):
 		if self.name not in self._global_games:
@@ -270,11 +272,11 @@ class Games(Cog):
 				break
 		if not len(self._global_games[self.name]['ctxs']):
 			del self._global_games[self.name]
-		await ctx.send(embed=embed(ctx,
+		background(ctx.send(embed=embed(ctx,
 			title=('games/unjoined-title',),
 			description=('games/unjoined', self.name),
 			color=0
-		))
+		)))
 
 	def _kick_global_game(self, user):
 		if not isinstance(user, int):
@@ -313,22 +315,22 @@ class Games(Cog):
 		player1 = ctx.author
 		if against is not None:
 			if against.bot:
-				await ctx.send(embed=embed(ctx,
+				background(ctx.send(embed=embed(ctx,
 					title=('error',),
 					description=('games/no-bots',),
 					color=0xff0000
-				))
+				)))
 				return
 			elif against.status == discord.Status.offline:
-				await ctx.send(embed=embed(ctx,
+				background(ctx.send(embed=embed(ctx,
 					title=('error',),
 					description=('games/no-offline',),
 					color=0xff0000
-				))
+				)))
 				return
-		await msg.add_reaction(SHAKE)
+		background(msg.add_reaction(SHAKE))
 		if self.help is not None:
-			await msg.add_reaction(QUESTION)
+			background(msg.add_reaction(QUESTION))
 			@self.bot.listen()
 			async def on_reaction_add(reaction, user):
 				if all((
@@ -336,17 +338,15 @@ class Games(Cog):
 					reaction.message.id == msg.id,
 					not user.bot
 				)):
-					if not user.dm_channel:
-						await user.create_dm()
 					dmx = DummyCtx(author=user, channel=user.dm_channel)
-					await user.dm_channel.send(embed=self.help(dmx)
+					background(user.send(embed=self.help(dmx)
 						if callable(self.help)
-						else embed(dmx,
+						else embed(user,
 							title=('games/help-title', self.name),
 							description=(self.help,),
 							color=0x55acee
 						)
-					)
+					))
 		def clear_listener():
 			if self.help is not None:
 				self.bot.remove_listener(on_reaction_add)
@@ -361,22 +361,22 @@ class Games(Cog):
 					timeout=60.0
 				)
 			except asyncio.TimeoutError:
-				await msg.edit(
+				background(msg.edit(
 					embed=embed(ctx,
 						title=('games/game-timeout-title',),
 						description=('games/game-timeout', 60),
 						color=0xff0000
 					)
-				)
-				await msg.clear_reactions()
+				))
+				background(msg.clear_reactions())
 				clear_listener()
 				return
 			if user.id == ctx.author.id:
-				await ctx.send(embed=embed(ctx,
+				background(ctx.send(embed=embed(ctx,
 					title=('games/game-cancelled-title',),
 					description=('games/game-cancelled',),
 					color=0xff0000
-				))
+				)))
 				clear_listener()
 				return
 			player2 = user
@@ -392,30 +392,30 @@ class Games(Cog):
 					timeout=60.0
 				)
 			except asyncio.TimeoutError:
-				await msg.edit(
+				background(msg.edit(
 					embed=embed(ctx,
 						title=('games/game-timeout-title',),
 						description=('games/unready-player-2', 60),
 						color=0xff0000
 					)
-				)
-				await msg.clear_reactions()
+				))
+				background(msg.clear_reactions())
 				clear_listener()
 				return
 			if user.id == ctx.author.id:
-				await ctx.send(embed=embed(ctx,
+				background(ctx.send(embed=embed(ctx,
 					title=('games/game-cancelled-title',),
 					description=('games/game-cancelled',),
 					color=0xff0000
-				))
+				)))
 				clear_listener()
 				return
 			player2 = user
 			del reaction, user
 		if not player1.dm_channel:
-			await player1.create_dm()
+			background(player1.create_dm())
 		if not player2.dm_channel:
-			await player2.create_dm()
+			background(player2.create_dm())
 		clear_listener()
 		return (player1, player2)
 
@@ -430,10 +430,10 @@ class Games(Cog):
 			color=0x55acee
 		))
 		players = [ctx.author]
-		await msg.add_reaction(SHAKE)
-		await msg.add_reaction(CHECK)
+		background(msg.add_reaction(SHAKE))
+		background(msg.add_reaction(CHECK))
 		if self.help is not None:
-			await msg.add_reaction(QUESTION)
+			background(msg.add_reaction(QUESTION))
 			@self.bot.listen()
 			async def on_reaction_add(reaction, user):
 				if all((
@@ -441,17 +441,15 @@ class Games(Cog):
 					reaction.message.id == msg.id,
 					not user.bot
 				)):
-					if not user.dm_channel:
-						await user.create_dm()
 					dmx = DummyCtx(author=user, channel=user.dm_channel)
-					await user.dm_channel.send(embed=self.help(dmx)
+					background(user.send(embed=self.help(dmx)
 						if callable(self.help)
-						else embed(dmx,
+						else embed(user,
 							title=('games/help-title', self.name),
 							description=(self.help,),
 							color=0x55acee
 						)
-					)
+					))
 		def clear_listener():
 			if self.help is not None:
 				self.bot.remove_listener(on_reaction_add)
@@ -464,11 +462,11 @@ class Games(Cog):
 				timeout=60.0
 			)
 			if reaction.emoji == SHAKE:
-				await ctx.send(embed=embed(ctx,
+				background(ctx.send(embed=embed(ctx,
 					title=('games/game-cancelled-title',),
 					description=('games/game-cancelled',),
 					color=0xff0000
-				))
+				)))
 				clear_listener()
 				return
 		except asyncio.TimeoutError:
@@ -480,19 +478,19 @@ class Games(Cog):
 					if u.id != self.bot.user.id:
 						players.append(u)
 				break
-		for player in players:
-			if not player.dm_channel:
-				await player.create_dm()
+		await asyncio.gather(*(
+			player.create_dm()
+			for player in players
+			if not player.dm_channel
+		))
 		clear_listener()
 		return players
 
 	async def _game(self, ctx, against, coro1, coro2, **kwargs):
 		player1, player2 = await self._gather_game(ctx, against)
 		qyoo = asyncio.Queue()
-		await asyncio.gather(
-			coro1(ctx, player1, qyoo, **kwargs),
-			coro2(ctx, player2, qyoo, **kwargs)
-		)
+		background(coro1(ctx, player1, qyoo, **kwargs))
+		background(coro2(ctx, player2, qyoo, **kwargs))
 
 	@staticmethod
 	def unblock_me(qyoo):
@@ -519,17 +517,17 @@ class Games(Cog):
 async def players(ctx, *, game: str):
 	game = game.title()
 	if game not in Games._global_games:
-		return await ctx.send(embed=embed(ctx,
+		return background(ctx.send(embed=embed(ctx,
 			title=('error',),
 			description=('games/no-such-game', game),
 			footer=('games/possibly-such-game',),
 			color=0xff0000
-		))
-	await ctx.author.send(embed=embed(ctx,
+		)))
+	background(ctx.author.send(embed=embed(ctx,
 		title=('games/players-title', game),
 		description=i18n(ctx, 'comma-sep').join(
 			i.author.name + '#' + i.author.discriminator
 			for i in Games._global_games[game]['ctxs']
 		) or ('none',),
 		color=0x55acee
-	))
+	)))

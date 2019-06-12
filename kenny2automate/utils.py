@@ -77,3 +77,4 @@ async def q(call, *args, **kwargs):
 	return await asyncio.get_event_loop().run_in_executor(
 		None, partial(call, *args, **kwargs)
 	)
+background = asyncio.create_task
