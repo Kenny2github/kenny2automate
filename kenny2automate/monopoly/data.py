@@ -1,7 +1,9 @@
 from os.path import dirname, join
+import random
 from enum import IntFlag
 from json import load
 from ..i18n import embed
+from .cards import someones, nitros
 
 with open(join(dirname(__file__), 'data.json'), 'r') as f:
     data = load(f)
@@ -157,13 +159,12 @@ class Community(Special):
     name = 'Gifted Nitro'
     space: int
     async def action(self, ctx, player, dieroll):
-        await ctx.author.send('{} landed on Community Chest'.format(player)) #TODO
+        self.deck.insert(0, self.deck.pop(-1))
+        await self.deck[0].action(ctx, player, dieroll, self.board)
 
-class Chance(Special):
+class Chance(Community):
     name = '@someone'
     space: int
-    async def action(self, ctx, player, dieroll):
-        await ctx.author.send('{} landed on Chance'.format(player)) #TODO
 
 class Jail(Special):
     name = 'Banned/Just Furry'
@@ -235,6 +236,8 @@ class Board:
         Tax,
         Property
     ]
+    someone_deck: list
+    nitro_deck: list
 
     def __init__(self):
         spaceclasses = self.spaces
@@ -245,11 +248,21 @@ class Board:
         properties = (p for g in data['groups'] for p in g['properties'])
         groups = (g['name'] for g in data['groups'] for p in g['properties'])
         i = 0
+        self.someone_deck = someones[:]
+        self.nitro_deck = nitros[:]
+        random.shuffle(self.someone_deck)
+        random.shuffle(self.nitro_deck)
         for s in spaceclasses:
             if issubclass(s, Special):
                 spaces.append(s(space=i))
                 if s is Jail:
                     Jail.space = i
+                elif s is Chance:
+                    spaces[-1].deck = chance_deck
+                elif s is Community:
+                    spaces[-1].deck = community_deck
+                if issubclass(s, Community):
+                    spaces[-1].board = self
             elif s is Property:
                 spaces.append(s(**next(properties), group=next(groups), space=i))
             elif s is Release:
