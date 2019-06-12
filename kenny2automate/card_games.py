@@ -456,6 +456,8 @@ class Uno(Games):
 	async def do_uno(self, ctxs):
 		players = [ctx.author for ctx in ctxs]
 		deck = self.DECK[:]
+		for i in deck[-8:]:
+			i.suit = 13 #reset suits of wilds
 		random.shuffle(deck)
 		discard = [None]
 		card = deck.pop()
