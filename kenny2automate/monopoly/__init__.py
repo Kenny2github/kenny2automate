@@ -93,7 +93,7 @@ class Monopoly(Games):
             )
             for i in ctxs
         ]
-        board = Board()
+        board = Board(players)
         game_id = round(time.time()) + GAMES
         GAMES += 1
         self.db.execute(
@@ -202,6 +202,7 @@ class Monopoly(Games):
         space = board.spaces[player.on]
         print('{} is now on {} ({})'.format(player.name, player.on, space.name))
         action = (await space.action(ctx, player, die1 + die2))
+        space = board.spaces[player.on] #@someone and nitro change it
         if (
                 action is True #for sale to this worth
                 and (await self._choice(ctx, embed(ctx,
@@ -238,6 +239,7 @@ class Monopoly(Games):
         ):
             pass
         else:
+            player.worth -= action[1]
             for p in players:
                 if p.id == action[0]:
                     p.worth += action[1]

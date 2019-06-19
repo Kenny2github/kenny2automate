@@ -1,9 +1,9 @@
 from os.path import dirname, join
 import random
-from enum import IntFlag
 from json import load
 from ..i18n import embed
 from .cards import someones, nitros
+from .player import Player, PlayerState
 
 with open(join(dirname(__file__), 'data.json'), 'r') as f:
     data = load(f)
@@ -58,7 +58,6 @@ class Property(Space):
             if self.mortgaged:
                 return False
             amount = self.real_rent(self.houses, dieroll)
-            player.worth -= amount
             await ctx.author.send(embed=embed(ctx,
                 title=('monopoly/rent-title',),
                 description=('monopoly/rent-paid', amount, self.name),
@@ -160,7 +159,7 @@ class Community(Special):
     space: int
     async def action(self, ctx, player, dieroll):
         self.deck.insert(0, self.deck.pop(-1))
-        await self.deck[0].action(ctx, player, dieroll, self.board)
+        return await self.deck[0].action(ctx, player, dieroll, self.board)
 
 class Chance(Community):
     name = '@someone'
@@ -239,7 +238,8 @@ class Board:
     someone_deck: list
     nitro_deck: list
 
-    def __init__(self):
+    def __init__(self, players):
+        self.players = players
         spaceclasses = self.spaces
         spaces = []
         releases = iter(data['releases']['names'])
@@ -258,9 +258,9 @@ class Board:
                 if s is Jail:
                     Jail.space = i
                 elif s is Chance:
-                    spaces[-1].deck = chance_deck
+                    spaces[-1].deck = self.someone_deck
                 elif s is Community:
-                    spaces[-1].deck = community_deck
+                    spaces[-1].deck = self.nitro_deck
                 if issubclass(s, Community):
                     spaces[-1].board = self
             elif s is Property:
@@ -284,38 +284,3 @@ class Board:
         for p in self.spaces:
             if getattr(p, 'group', None) == name:
                 yield p
-
-class PlayerState(IntFlag):
-    NOTHING = 0b0000
-    JAILED1 = 0b0001
-    JAILED2 = 0b0010
-    JAILED3 = 0b0100
-    HAS_GOJ = 0b1000
-    IN_JAIL = 0b0111
-
-class Player:
-    def __init__(
-        self, name, id, token,
-        owned=None, on=0, worth=1500,
-        state=PlayerState.NOTHING
-    ):
-        self.name = name
-        self.id = id
-        self.token = token
-        self.owned = owned or set()
-        self.on = on
-        self.worth = worth
-        self.state = state
-
-    name: str #player name
-    id: int #player ID
-    token: int #token number
-
-    def __repr__(self):
-        return self.name
-
-    #dynamic
-    owned: set = set() #set of int spaces
-    on: int = 0 #int space that the player is on
-    worth: int = 1500 #net worth
-    state: PlayerState = PlayerState.NOTHING
