@@ -48,6 +48,8 @@ def lang(ctx):
 
 def i18n(ctx_or_lang, key, *params):
     """Return an i18n string by key, passing *params as format parameters."""
+    if key is None:
+        return None
     if not isinstance(ctx_or_lang, str):
         res = lang(ctx_or_lang)
     else:
