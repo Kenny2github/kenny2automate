@@ -32,7 +32,7 @@ REGS = {chr(i): chr(j) for i, j in zip(
     range(ord('\U0001f1e6'), ord('\U0001f1e6') + 26)
 )}
 
-with open(os.path.join(os.path.dirname(__file__), 'all_words.txt')) as f:
+with open(os.path.join('kenny2automate', 'all_words.txt')) as f:
     ALL_WORDS = set(i for i in f.read().split() if len(i) >= 3)
 
 class Boggle(Games):

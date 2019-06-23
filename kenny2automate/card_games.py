@@ -15,8 +15,7 @@ from .i18n import i18n, embed
 from .utils import DummyCtx, lone_group, background
 from .tmpfiles import sendsurf
 
-UNO_CARDS = os.path.dirname(os.path.dirname(__file__))
-UNO_CARDS = os.path.join(UNO_CARDS, 'resources', 'card_games', 'uno')
+UNO_CARDS = os.path.join('resources', 'card_games', 'uno')
 UNO_SIZE = UNO_WIDTH, UNO_HEIGHT = 241, 361
 
 def unoimg(name):
@@ -202,9 +201,9 @@ class Fish(Games):
 					),
 					color=0xffffff
 				)))
-			background(dmx[pid].send(embed=stats(
+			await dmx[pid].send(embed=stats(
 				pid, 'fish/fish-m-card'
-			)))
+			))
 			timedout = False
 			while matches and hands[pid]:
 				num = (
@@ -548,6 +547,7 @@ class Uno(Games):
 		while (deck or any(
 			can_turn(i) for i in range(len(players))
 		)) and len(players) > 1:
+			pid %= len(players)
 			player = players[pid]
 			if not can_turn(pid):
 				try:
@@ -703,7 +703,6 @@ class Uno(Games):
 			if skipped:
 				pid += dpid
 			pid += dpid
-			pid %= len(players)
 		for pid in range(len(players)):
 			points[pid] -= sum(i.worth for i in hands[pid])
 		max_points = max(points)

@@ -4,7 +4,7 @@ from contextlib import contextmanager
 import pygame.image
 import discord
 
-tmpdir = path.join(path.dirname(path.dirname(__file__)), 'temp')
+tmpdir = 'temp'
 if not path.isdir(tmpdir):
     if path.exists(tmpdir):
         remove(tmpdir)

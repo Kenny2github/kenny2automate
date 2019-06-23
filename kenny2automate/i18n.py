@@ -9,12 +9,9 @@ from discord.ext import commands as c
 from discord.ext.commands import command, has_permissions, Cog
 
 db = None
-i18ndir = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)),
-    'i18n'
-)
+i18ndir = os.path.abspath('i18n')
 with open(os.path.abspath(os.path.join(
-    os.path.dirname(__file__), 'countrylangs.json'
+    'kenny2automate', 'countrylangs.json'
 ))) as f:
     LANGS = json.load(f)
 
@@ -150,7 +147,6 @@ class I18n(Cog):
         LETTERS = ''.join(chr(ord('A') + i) for i in range(26))
         globs = [time.time()]
         @self.bot.event
-        @c.cooldown(1, 20.0)
         async def on_raw_reaction_add(event):
             emoji = event.emoji.name
             if not (
@@ -166,7 +162,11 @@ class I18n(Cog):
                 + LETTERS[INDICATOR_RANGE.index(ord(emoji[1]))]
             lang = LANGS[code][0]
             channel = self.bot.get_channel(event.channel_id)
-            text = (await channel.get_message(event.message_id)).content
+            if channel is None:
+                user = self.bot.get_user(event.user_id)
+                await user.create_dm()
+                channel = user.dm_channel
+            text = (await channel.fetch_message(event.message_id)).content
             erroridx = 0
             while erroridx >= 0:
                 try:
@@ -179,7 +179,7 @@ class I18n(Cog):
                     text = req.json()['result']
                     erroridx = -1
                 except KeyError:
-                    print(lang)
+                    print(lang, 'failed')
                     if '-' in lang:
                         #cache failed locale
                         LANGS[code][erroridx] = LANGS[code][erroridx] \

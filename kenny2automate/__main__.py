@@ -26,6 +26,8 @@ from kenny2automate.utils import DummyCtx, lone_group, q
 from kenny2automate.server import Handler
 from kenny2automate.help import Kenny2help
 
+os.chdir(os.path.dirname(os.path.dirname(__file__)))
+
 VERSION = subprocess.check_output(
     "cd kenny2automate && git rev-parse --short HEAD",
     shell=True
@@ -102,13 +104,13 @@ if dbv < LATEST_DBV:
     ), extra={'ctx': DummyCtx(author=DummyCtx(name='(startup)'))})
     for i in range(dbv + 1, LATEST_DBV + 1):
         if not os.path.isfile(os.path.join(
-                os.path.dirname(__file__), 'sql', 'v{}.sql'.format(i)
+                'kenny2automate', 'sql', 'v{}.sql'.format(i)
         )):
             logger.info('No script for v{}, skipping'.format(i),
                 extra={'ctx': DummyCtx(author=DummyCtx(name='(startup)'))})
             continue
         with open(os.path.join(
-                os.path.dirname(__file__), 'sql', 'v{}.sql'.format(i)
+                'kenny2automate', 'sql', 'v{}.sql'.format(i)
         )) as f:
             logger.info('Running script from v{} to v{}'.format(i - 1, i),
                 extra={'ctx': DummyCtx(author=DummyCtx(name='(startup)'))})
@@ -542,7 +544,7 @@ def recurse_mtimes(dir, *s):
                     os.path.join(*s, dir, i)
                 )
             ))
-recurse_mtimes(os.path.abspath(os.path.dirname(__file__)))
+recurse_mtimes(os.path.abspath('kenny2automate'))
 
 @tasks.loop(minutes=5.0)
 async def set_playing_status():
