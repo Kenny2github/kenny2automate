@@ -22,11 +22,14 @@ from discord.ext.commands import bot_has_permissions
 from discord.ext.commands import has_permissions
 from discord.ext import commands
 from discord.ext import tasks
+
+CWD = os.getcwd()
+os.chdir(os.path.dirname(os.path.dirname(__file__)))
+
+#self
 from kenny2automate.utils import DummyCtx, lone_group, q
 from kenny2automate.server import Handler
 from kenny2automate.help import Kenny2help
-
-os.chdir(os.path.dirname(os.path.dirname(__file__)))
 
 VERSION = subprocess.check_output(
     "cd kenny2automate && git rev-parse --short HEAD",
@@ -66,14 +69,16 @@ parser.add_argument(
 parser.add_argument('-v', action='store_true', help='let print() calls through')
 cmdargs = parser.parse_args()
 
-if not os.path.isdir('kenny2automate.log'):
-    os.mkdir('kenny2automate.log')
+if not os.path.isdir(os.path.join(CWD, 'kenny2automate.log')):
+    os.mkdir(os.path.join(CWD, 'kenny2automate.log'))
 
 handler = (
     logging.StreamHandler()
     if cmdargs.stdout
-    else logging.FileHandler('kenny2automate.log/{}.log'.format(
-        time.strftime('%Y-%m-%dT%H-%M-%SZ')
+    else logging.FileHandler(os.path.join(
+        CWD, 'kenny2automate.log', '{}.log'.format(
+            time.strftime('%Y-%m-%dT%H-%M-%SZ')
+        )
     ), 'w', 'utf8')
 )
 handler.setFormatter(logfmt)
@@ -89,11 +94,12 @@ sql.register_converter('pickle', pickle.loads)
 sql.register_converter('json', json.loads)
 sql.register_adapter(dict, json.dumps)
 sql.register_adapter(list, pickle.dumps)
-if not os.path.isfile('kenny2automate.db'):
+if not os.path.isfile(os.path.join(CWD, 'kenny2automate.db')):
     dbv = -1
 else:
     dbv = None
-dbw = sql.connect('kenny2automate.db', detect_types=sql.PARSE_DECLTYPES)
+dbw = sql.connect(os.path.join(CWD, 'kenny2automate.db'),
+                  detect_types=sql.PARSE_DECLTYPES)
 dbw.row_factory = sql.Row
 db = dbw.cursor()
 LATEST_DBV = 4
@@ -530,7 +536,10 @@ when admins were gone.'.format(dos, nos)
                 color=0x55acee
             ))
 
-WATCHED_FILES_MTIMES = [('kenny2automate.txt', os.path.getmtime('kenny2automate.txt'))]
+WATCHED_FILES_MTIMES = [(
+    os.path.join(CWD, 'kenny2automate.txt'),
+    os.path.getmtime(os.path.join(CWD, 'kenny2automate.txt'))
+)]
 def recurse_mtimes(dir, *s):
     for i in os.listdir(os.path.join(*s, dir)):
         if os.path.isdir(os.path.join(*s, dir, i)):
@@ -576,7 +585,7 @@ async def update_if_changed():
 async def stop(ctx):
     await client.close()
 
-with open('kenny2automate.txt') as f:
+with open(os.path.join(CWD, 'kenny2automate.txt')) as f:
     token = f.readline().strip()
     client_id = f.readline().strip()
     client_secret = f.readline().strip()
