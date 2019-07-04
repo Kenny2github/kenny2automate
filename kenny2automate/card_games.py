@@ -128,16 +128,12 @@ class Fish(Games):
 				)
 			return emb
 		async def playerchoose(pid):
-			okpids = [
-				chr(48 + i) + chr(8419)
-				for i in range(len(players))
-			]
 			msg = await dmx[pid].send(embed=embed(dmx[pid],
 				title=('fish/fish-player-choice-title',),
 				description='\n'.join(
-					'{}: {}#{}'.format(
+					'{}: {}'.format(
 						chr(48 + i) + chr(8419),
-						j.name, j.discriminator
+						display_name(j)
 					) for i, j in enumerate(players)
 					if i != pid
 				),
@@ -177,7 +173,7 @@ class Fish(Games):
 				background(dmx[pid].send(embed=embed(dmx[pid],
 					title=('fish/fish-checkbooks-title',),
 					description='\n'.join(
-						' '.join(str(c) for c in b)
+						' '.join(map(str, b))
 						for b in newbooks
 					),
 					color=0x55acee
@@ -433,7 +429,6 @@ class Fish(Games):
 
 	@fish.command(name='start', description='fish/fish-start-desc')
 	async def fish_start(self, ctx):
-		"""fish/fish-start-help"""
 		await self._start_global_game(ctx)
 
 	@fish.command(name='help', description='fish/fish-help-desc')
@@ -762,5 +757,231 @@ class Uno(Games):
 		await ctx.author.send(embed=embed(ctx,
 			title=('games/help-title', self.name),
 			description=('uno/uno-help', ctx.prefix),
+			color=0x55acee
+		))
+
+class Blackjack(Games):
+	"""blackjack/cog-desc"""
+
+	DECK = Fish.DECK[:]
+
+	async def do_blackjack(self, ctxs):
+		players = [ctx.author for ctx in ctxs]
+		timedout = set()
+		deck = self.DECK[:]
+		random.shuffle(deck)
+		cards = [[] for _ in players]
+		pool = set()
+		def pointpair(hand):
+			sum1 = sum2 = 0
+			for c in hand:
+				if c.number == 0:
+					sum1 += 1
+					sum2 += 11
+				elif c.number > 9:
+					sum1 += 10
+					sum2 += 10
+				else:
+					sum1 += c.number + 1
+					sum2 += c.number + 1
+			return (sum1, sum2)
+		def cand(sum1, sum2):
+			if sum1 > 21:
+				return sum2
+			if sum2 > 21:
+				return sum1
+			return max(sum1, sum2)
+		async def foreach(pid):
+			PLUS, CHEK = '\u2795\u2714'
+			player = players[pid]
+			cancelled = False
+			try:
+				done = False
+				while not done:
+					msg = await player.send(embed=embed(player,
+						title=('blackjack/hand-title',),
+						description=(
+							'blackjack/hand',
+							' '.join(map(str, hands[pid]))
+						),
+						color=0x0000ff
+					))
+					pts = cand(*pointpair(hands[pid]))
+					if pts >= 21: #over even if A is 1
+						return
+					background(msg.add_reaction(PLUS))
+					background(msg.add_reaction(CHEK))
+					reaction, user = await self.bot.wait_for('reaction_add',
+															 timeout=600.0,
+															 check=lambda r, u: (
+						r.message.id == msg.id
+						and u.id == players[pid].id
+						and str(r) in {PLUS, CHEK}
+					))
+					if str(reaction) == CHEK:
+						return
+					try:
+						hands[pid].append(deck.pop())
+					except IndexError:
+						return
+			except asyncio.TimeoutError:
+				cancelled = True
+				background(player.send(embed=embed(player,
+					title=('fish/fish-timed-out-title',),
+					description=('fish/fish-timed-out', 600),
+					color=0xff0000
+				)))
+				deck.extend(hands[pid])
+				deck.extend(cards[pid])
+				hands[pid] = cards[pid] = []
+				timedout.add(pid)
+				random.shuffle(deck)
+			except asyncio.CancelledError:
+				cancelled = True
+			finally:
+				if not cancelled:
+					await player.send(embed=embed(player,
+						title=('blackjack/done-title',),
+						description=('blackjack/done',),
+						color=0xff8080
+					))
+		while len(players) - len(timedout) >= 2 and len(deck) >= len(players) * 2:
+			hands = [
+				[deck.pop(), deck.pop()]
+				if i not in timedout
+				else [] for i in players
+			]
+			for h in hands:
+				h.sort(key=lambda c: c.number)
+			msg = '\n'.join(
+				'{}: {}'.format(display_name(p), hands[i][1])
+				for i, p in enumerate(players)
+				if i not in timedout
+			)
+			await asyncio.gather(*(p.send(embed=embed(p,
+				title=('blackjack/starting-cards',),
+				description=msg,
+				color=0xffffff
+			)) for i, p in enumerate(players) if i not in timedout))
+			await asyncio.gather(*(
+				foreach(i)
+				for i in range(len(players))
+				if i not in timedout
+			))
+			max_points = 0
+			poolq = False
+			for i, h in enumerate(hands):
+				if i in timedout:
+					continue
+				sum1, sum2 = pointpair(h)
+				pts = cand(sum1, sum2)
+				if pts > 21:
+					continue
+				if pts > max_points:
+					max_points = pts
+			if max_points == 0:
+				poolq = True
+			else:
+				mpc = 0
+				idx = 0
+				for i, h in enumerate(hands):
+					if i in timedout:
+						continue
+					if cand(*pointpair(h)) == max_points:
+						idx = i
+						mpc += 1
+					if mpc > 1:
+						poolq = True
+						break
+			for h in hands:
+				for c in h:
+					pool.add(c)
+			if not poolq:
+				cards[idx].extend(pool)
+				pool = set()
+				for i, p in enumerate(players):
+					if i in timedout:
+						continue
+					background(p.send(embed=embed(p,
+						title=('blackjack/round-over-title',),
+						description=(
+							'blackjack/round-over',
+							display_name(players[idx]), max_points
+						),
+						color=0xff0000
+					)))
+			else:
+				for i, p in enumerate(players):
+					if i in timedout:
+						continue
+					background(p.send(embed=embed(p,
+						title=('blackjack/round-over-title',),
+						description=(
+							'blackjack/round-over-pool', ' '.join(map(str, pool))
+						),
+						color=0xff8080
+					)))
+		points = tuple(map(len, cards))
+		max_points = max(points)
+		winners = {
+			i for i, j in enumerate(points)
+			if i not in timedout and j == max_points
+		}
+		for pid, player in enumerate(players):
+			if pid in timedout:
+				continue
+			background(player.send(embed=embed(player,
+				title=('uno/uno-winners-title',),
+				description=(
+					'uno/winners',
+					'\n'.join(
+						i18n(
+							player, 'blackjack/point',
+							display_name(players[i]), points[i]
+						)
+						for i in winners
+						if i not in timedout
+					)
+				),
+				fields=((
+					('uno/points',),
+					'\n'.join(
+						i18n(player, 'blackjack/point', display_name(p), points[i])
+						for i, p in enumerate(players)
+						if i not in winners and i not in timedout
+					) or i18n(player, 'none'),
+					False
+				),),
+				color=0x55acee
+			)))
+
+	name = 'Blackjack'
+	minim = 2
+	scn = 'blackjack start'
+	jcn = 'blackjack join'
+
+	@group(invoke_without_command=True, description='blackjack/blackjack-desc')
+	@lone_group(True)
+	async def blackjack(self, ctx):
+		"""blackjack/blackjack-cmd-help"""
+		pass
+
+	@blackjack.command(description='blackjack/join-desc')
+	async def join(self, ctx):
+		await self._join_global_game(ctx, self.do_blackjack)
+
+	@blackjack.command(description='blackjack/leave-desc')
+	async def leave(self, ctx):
+		await self._unjoin_global_game(ctx)
+
+	@blackjack.command(description='blackjack/start-desc')
+	async def start(self, ctx):
+		await self._start_global_game(ctx)
+
+	@blackjack.command(description='blackjack/help-desc')
+	async def help(self, ctx):
+		await ctx.author.send(embed=embed(ctx,
+			title=('games/help-title', self.name),
+			description=('blackjack/help', ctx.prefix),
 			color=0x55acee
 		))

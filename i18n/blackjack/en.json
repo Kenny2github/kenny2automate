@@ -1,0 +1,19 @@
+{
+  "cog-desc": "Play Blackjack!",
+  "blackjack-desc": "Play Blackjack!",
+  "blackjack-cmd-help": "Run `{0}blackjack join` to join a game, `{0}blackjack leave` to leave it, or `{0}blackjack start` to (vote to) start it.",
+  "join-desc": "Join a game of Blackjack!",
+  "leave-desc": "Leave your game of Blackjack.",
+  "start-desc": "Start or vote to start the game of Blackjack.",
+  "help-desc": "Get an explanation of the game.",
+  "help": "**Objective**\nThe objective of Blackjack is to get the most cards in your pile.\n\n**Rounds**\nEach round of blackjack goes roughly as follows:\n\n*Objective*\nThe objective of each round is to get the total value of your cards as close to 21 as possible, without going *over* 21.\nAce can be counted as either 1 or 11, and face cards count as 10.\n\n*Initial Hand*\n`1.` You are dealt two cards.\n`2.` One of your cards is shown to everyone else.\n\n*Hit*\n`3.` Whenever you like, if your total is under 21, you may *hit* - i.e. draw a card.\n`4.` If hitting brings your total above 21, you are *over* and you're immediately done.\n`5.` Otherwise, you may hit again until you don't feel safe hitting again.\n`6.` Once you're done hitting, click the check mark to mark yourself as done. You will then wait for other players to finish.\n\n*Round End*\n`7.` Once everyone is done, whoever has the highest total value not above 21 wins the round.\n`7a.` If multiple people have the highest score, everyone's cards go into the *pool*, which is collected by the next single winner.\n`7b.` Otherwise, the winner of the round takes all the cards in the pool and all cards in everyone's hands and puts them in their pile.\n`8.` Repeat from `1.`\n\n**End**\nOnce the deck runs out, the game is over and the person whose pile is the largest wins.",
+  "starting-cards": "Others' Cards",
+  "hand-title": "Your Hand",
+  "hand": "Below is your hand:\n{0}\nClick the \u2795 to ask for a hit, or \u2714 to declare that you're done.",
+  "done-title": "Declared Done",
+  "done": "You're done! Waiting for other players to finish...",
+  "round-over-title": "Round Over!",
+  "round-over": "The round is over! {0} won with {1} points and took everyone's cards.",
+  "round-over-pool": "The round is over! Multiple people had the highest score, so everyone's cards are now in the pool:\n{0}",
+  "point": "{0}: {1} cards"
+}

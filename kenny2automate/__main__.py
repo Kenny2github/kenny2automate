@@ -244,13 +244,16 @@ if 'hangman' not in cmdargs.disable:
     client.add_cog(Hangman(client, db))
 if 'card_games' not in cmdargs.disable:
     logger.info('Loading Card Games', extra={'ctx': dmx})
-    from kenny2automate.card_games import Fish, Uno
+    from kenny2automate.card_games import Fish, Uno, Blackjack
     if 'fish' not in cmdargs.disable:
         logger.info('Loading Fish', extra={'ctx': dmx})
         client.add_cog(Fish(client, db))
     if 'uno' not in cmdargs.disable:
         logger.info('Loading Uno', extra={'ctx': dmx})
         client.add_cog(Uno(client, db))
+    if 'blackjack' not in cmdargs.disable:
+        logger.info('Loading Blackjack', extra={'ctx': dmx})
+        client.add_cog(Blackjack(client, db))
 if 'battleship' not in cmdargs.disable:
     logger.info('Loading Battleship', extra={'ctx': dmx})
     from kenny2automate.battleship import Battleship
