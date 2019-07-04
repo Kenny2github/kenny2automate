@@ -9,10 +9,10 @@ from discord.ext import commands as c
 from discord.ext.commands import command, has_permissions, Cog
 
 db = None
-i18ndir = os.path.abspath('i18n')
-with open(os.path.abspath(os.path.join(
-    'kenny2automate', 'countrylangs.json'
-))) as f:
+i18ndir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'i18n')
+with open(os.path.join(
+    os.path.dirname(i18ndir), 'kenny2automate', 'countrylangs.json'
+)) as f:
     LANGS = json.load(f)
 
 LANG = tuple(
