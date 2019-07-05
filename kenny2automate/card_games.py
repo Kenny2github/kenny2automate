@@ -957,6 +957,7 @@ class Blackjack(Games):
 
 	name = 'Blackjack'
 	minim = 2
+	maxim = float('inf')
 	scn = 'blackjack start'
 	jcn = 'blackjack join'
 
