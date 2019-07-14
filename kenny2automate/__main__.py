@@ -472,6 +472,11 @@ async def whereis(ctx, *, channel: discord.TextChannel):
 
 @client.command(description='version-desc')
 async def version(ctx):
+    global VERSION
+    VERSION = subprocess.check_output(
+        "cd kenny2automate && git rev-parse --short HEAD",
+        shell=True
+    ).decode('ascii').strip()
     await ctx.send(embed=discord.Embed(description='`{}`'.format(VERSION)))
 
 @client.command(description='votetoban-desc')
@@ -564,7 +569,9 @@ async def set_playing_status():
         lestat = str(len(client.guilds)) + ' servers'
     else:
         lestat = cmdargs.prefix + 'help'
-    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=lestat))
+    await client.change_presence(activity=discord.Activity(
+        type=discord.ActivityType.watching, name=lestat
+    ))
 
 @set_playing_status.before_loop
 async def before_playing():

@@ -1,3 +1,4 @@
+import re
 import traceback
 from contextlib import redirect_stdout
 import discord
@@ -27,7 +28,7 @@ async def eval_(ctx, *, arg):
             exec(f"async def func():\n{arg}", env)
             ret = await env['func']()
     except BaseException:
-        trace = traceback.format_exc().replace(r'C:\Users\kenlh\Desktop\git\Kenny2github\\'[:-1], '')
+        trace = re.sub(r'".*?kenny2github\\', '"', traceback.format_exc(), re.I)
         await ctx.send(f'```\n{out.getvalue()}```', embed=embed(ctx,
             title=('error',),
             description=f'```{trace}```',
