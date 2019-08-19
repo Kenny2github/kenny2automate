@@ -8,6 +8,7 @@
   "hmmst": "hmmst",
   "none": "None",
   "none-paren": "(None)",
+  "help-failed": "Your DMs need to be open for me to send you help.",
   "help-footer": "Send `{0}help <category>` for a list of commands in that category.\nSend `{0}help <full name of command or group>` for help with that command or group.",
   "cog-no-category": "Commands with no category.",
   "eval-desc": "Execute Python code. Only available to owner.",
