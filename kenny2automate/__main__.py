@@ -5,7 +5,7 @@ import subprocess
 import time
 import random
 #mid-level
-import requests
+import re
 from urllib.parse import quote as urlquote
 import logging
 import traceback
@@ -16,6 +16,7 @@ import sqlite3 as sql
 import asyncio
 import argparse
 #3rd-party
+import requests
 import discord
 from discord.ext.commands import Bot
 from discord.ext.commands import bot_has_permissions
@@ -27,7 +28,7 @@ CWD = os.getcwd()
 os.chdir(os.path.dirname(os.path.dirname(__file__)))
 
 #self
-from kenny2automate.utils import DummyCtx, lone_group, q
+from kenny2automate.utils import DummyCtx, lone_group, q, background
 from kenny2automate.server import Handler
 from kenny2automate.help import Kenny2help
 
@@ -102,7 +103,7 @@ dbw = sql.connect(os.path.join(CWD, 'kenny2automate.db'),
                   detect_types=sql.PARSE_DECLTYPES)
 dbw.row_factory = sql.Row
 db = dbw.cursor()
-LATEST_DBV = 4
+LATEST_DBV = 5
 dbv = dbv or db.execute('PRAGMA user_version').fetchone()[0]
 if dbv < LATEST_DBV:
     logger.info('Current dbv {} is less than latest {}, upgrading...'.format(
@@ -461,6 +462,97 @@ async def sdow(ctx, page1: str, page2: str):
         ),
         color=0x55acee
     ))
+
+@client.group(invoke_without_command=True, description='sentence-desc',
+              aliases=['sent'])
+@lone_group(False)
+async def sentence(ctx):
+    """sentence-help"""
+    pass
+
+@sentence.command(description='sentence-get-desc')
+async def get(ctx):
+    words = db.execute('SELECT word FROM sentence_words').fetchall()
+    words = ' '.join(word[0] for word in words)
+    if ctx.guild is None:
+        bad_words = '\1'
+    else:
+        res = db.execute(
+            'SELECT words_censor FROM guilds WHERE guild_id=?',
+            (ctx.guild.id,)
+        ).fetchone()
+        if res is None or res[0] is None:
+            bad_words = '\1'
+        else:
+            bad_words = res[0] or '\1'
+    if re.search(bad_words, words):
+        background(ctx.send(embed=embed(ctx,
+            title=('error',),
+            description=('sentence-censored',),
+            color=0xff0000
+        )))
+        return
+    background(ctx.send(embed=embed(ctx,
+        title=('sentence-got',),
+        description=words,
+        color=0xffffff
+    )))
+
+SENTENCE_REGEX = re.compile(r'((?!^)[([{><=@#$*]|[ _|&-]|[],.:;")}?!%](?!$))')
+SENTENCE_OK_REGEX = re.compile('^[-&]$')
+SENTENCE_ENDS = '!.?'
+
+@sentence.command(description='sentence-add-desc')
+@commands.cooldown(1, 60.0)
+async def add(ctx, *, word):
+    m = re.search(SENTENCE_REGEX, word)
+    if m:
+        if re.search(SENTENCE_OK_REGEX, word):
+            pass
+        else:
+            await ctx.send(embed=embed(ctx,
+                title=('error',),
+                description=('sentence-bad-char', word[m.start()]),
+                color=0xff0000
+            ))
+            return
+    prev = db.execute('SELECT user_id FROM sentence_words \
+ORDER BY rowid DESC').fetchone()
+    if prev is not None:
+        prev = prev[0]
+        if prev == ctx.author.id:
+            background(ctx.send(embed=embed(ctx,
+                title=('error',),
+                description=('sentence-repeat',),
+                color=0xff0000
+            )))
+            return
+    db.execute('INSERT INTO sentence_words VALUES (?, ?)', (word, ctx.author.id))
+    if word[-1] in SENTENCE_ENDS:
+        data = db.execute('SELECT word, user_id FROM sentence_words').fetchall()
+        words = ' '.join(word['word'] for word in data)
+        users = set()
+        for i in data:
+            users.add(i['user_id'])
+        for i in users:
+            i = client.get_user(i)
+            background(i.send(embed=embed(ctx,
+                title=('sentence-finished-title',),
+                description=('sentence-finished', words),
+                color=0xffffff
+            )))
+        db.execute('DELETE FROM sentence_words')
+        background(ctx.send(embed=embed(ctx,
+            title=('sentence-ended-title',),
+            description=('sentence-ended',),
+            color=0xffffff
+        )))
+    else:
+        background(ctx.send(embed=embed(ctx,
+            title=('success',),
+            description=('sentence-added',),
+            color=0x55acee
+        )))
 
 @client.command(description='whois-desc')
 async def whois(ctx, *, user: discord.User):
