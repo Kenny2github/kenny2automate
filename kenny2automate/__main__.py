@@ -498,12 +498,12 @@ async def get(ctx):
         color=0xffffff
     )))
 
-SENTENCE_REGEX = re.compile(r'((?!^)[([{><=@#$*]|[ _|&-]|[],.:;")}?!%](?!$))')
+SENTENCE_REGEX = re.compile('((?!^)[([{><=@#$*]|[\x7f-\U0010ffff\x00-\x1f _|&-]|[],.:;")}?!%](?!$))')
 SENTENCE_OK_REGEX = re.compile('^[-&]$')
 SENTENCE_ENDS = '!.?'
 
 @sentence.command(description='sentence-add-desc')
-@commands.cooldown(1, 60.0)
+@commands.cooldown(1, 60.0, commands.BucketType.user)
 async def add(ctx, *, word):
     m = re.search(SENTENCE_REGEX, word)
     if m:
@@ -515,6 +515,7 @@ async def add(ctx, *, word):
                 description=('sentence-bad-char', word[m.start()]),
                 color=0xff0000
             ))
+            add.reset_cooldown(ctx)
             return
     prev = db.execute('SELECT user_id FROM sentence_words \
 ORDER BY rowid DESC').fetchone()
@@ -526,6 +527,7 @@ ORDER BY rowid DESC').fetchone()
                 description=('sentence-repeat',),
                 color=0xff0000
             )))
+            add.reset_cooldown(ctx)
             return
     db.execute('INSERT INTO sentence_words VALUES (?, ?)', (word, ctx.author.id))
     if word[-1] in SENTENCE_ENDS:
@@ -553,6 +555,7 @@ ORDER BY rowid DESC').fetchone()
             description=('sentence-added',),
             color=0x55acee
         )))
+    dbw.commit()
 
 @client.command(description='whois-desc')
 async def whois(ctx, *, user: discord.User):
@@ -675,7 +678,7 @@ async def update_if_changed():
         for f, mtime in WATCHED_FILES_MTIMES:
             if os.path.getmtime(f) > mtime:
                 if cmdargs.loop:
-                    os.system('./discordapp restart')
+                    os.system('/home/pi/discordapp restart')
                 raise KeyboardInterrupt
         try:
             await asyncio.sleep(1)
