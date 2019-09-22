@@ -1,6 +1,7 @@
 #low-level
 import os
 import re
+import math
 import random
 #mid-level
 import asyncio
@@ -17,9 +18,14 @@ from .tmpfiles import sendsurf
 
 UNO_CARDS = os.path.join('resources', 'card_games', 'uno')
 UNO_SIZE = UNO_WIDTH, UNO_HEIGHT = 241, 361
+SET_CARDS = os.path.join('resources', 'card_games', 'set')
+SET_SIZE = SET_WIDTH, SET_HEIGHT = 320, 180
 
 def unoimg(name):
 	return os.path.join(UNO_CARDS, name + '.png')
+
+def setimg(name):
+	return os.path.join(SET_CARDS, name + '.png')
 
 class Card:
 	SUITS = ('\u2660', '\u2663', '\u2665', '\u2666')
@@ -72,8 +78,43 @@ class SpecialUnoCard(UnoCard):
 		self.image = pygame.image.load(unoimg('draw4' if draw4 else 'wild'))
 		self.draw4 = draw4
 
-def display_name(player):
-	return player.name + '#' + player.discriminator
+class SetCard:
+	SHADES = ('filled', 'empty', 'cross')
+	SHAPES = ('circle', 'square', 'octagon')
+	COLORS = ('red', 'green', 'blue')
+	NUMBERS = (1, 2, 3)
+
+	shape = 0
+	color = 0
+	number = 0
+	shade = 0
+
+	def __init__(self, shade=0, shape=0, color=0, number=0):
+		self.shade = shade
+		self.shape = shape
+		self.color = color
+		self.number = number
+		self.image = pygame.image.load(setimg(
+			'{}-{}-{}-{}'.format(
+				self.SHADES[self.shade],
+				self.SHAPES[self.shape],
+				self.COLORS[self.color],
+				self.NUMBERS[self.number]
+			)
+		))
+
+	def __repr__(self):
+		return '{0}({1.shade}, {1.shape}, {1.color}, {1.number})'.format(
+			type(self).__name__, self
+		)
+
+	__str__ = __repr__
+
+	def __hash__(self):
+		return hash(self.shade, self.shape, self.color, self.number)
+
+	def __eq__(self, other):
+		return hash(self) == hash(other)
 
 class Fish(Games):
 	"""fish/cog-desc"""
@@ -133,7 +174,7 @@ class Fish(Games):
 				description='\n'.join(
 					'{}: {}'.format(
 						chr(48 + i) + chr(8419),
-						display_name(j)
+						str(j)
 					) for i, j in enumerate(players)
 					if i != pid
 				),
@@ -193,7 +234,7 @@ class Fish(Games):
 					title=('fish/fish-turn-title',),
 					description=(
 						'fish/fish-turn',
-						display_name(player)
+						str(player)
 					),
 					color=0xffffff
 				)))
@@ -264,7 +305,7 @@ class Fish(Games):
 						title=('fish/fish-card-taken-title',),
 						description=(
 							'fish/fish-card-taken',
-							display_name(player),
+							str(player),
 							Card.NUMBERS[num],
 							count
 						),
@@ -277,8 +318,8 @@ class Fish(Games):
 							title=('fish/fish-card-taken-title',),
 							description=(
 								'fish/fish-other-card-taken',
-								display_name(player),
-								display_name(players[chosen_pid]),
+								str(player),
+								str(players[chosen_pid]),
 								Card.NUMBERS[num],
 								count
 							),
@@ -313,8 +354,8 @@ class Fish(Games):
 									title=('fish/fish-card-missed-title',),
 									description=(
 										'fish/fish-other-card-missed-unsafe',
-										display_name(player),
-										display_name(players[chosen_pid]),
+										str(player),
+										str(players[chosen_pid]),
 										Card.NUMBERS[num],
 										count
 									),
@@ -325,7 +366,7 @@ class Fish(Games):
 									title=('fish/fish-card-missed-title',),
 									description=(
 										'fish/fish-card-missed-unsafe',
-										display_name(player),
+										str(player),
 										Card.NUMBERS[num],
 										count
 									),
@@ -346,8 +387,8 @@ class Fish(Games):
 									title=('fish/fish-card-missed-title',),
 									description=(
 										'fish/fish-other-card-missed',
-										display_name(player),
-										display_name(players[chosen_pid]),
+										str(player),
+										str(players[chosen_pid]),
 										Card.NUMBERS[num],
 										count
 									),
@@ -358,7 +399,7 @@ class Fish(Games):
 									title=('fish/fish-card-missed-title',),
 									description=(
 										'fish/fish-card-missed',
-										display_name(player),
+										str(player),
 										Card.NUMBERS[num],
 										count
 									),
@@ -391,14 +432,14 @@ class Fish(Games):
 				description=(
 					'uno/winners',
 					'\n'.join(
-						i18n(player, 'fish/point', display_name(players[i]), points[i])
+						i18n(player, 'fish/point', str(players[i]), points[i])
 						for i in winners
 					)
 				),
 				fields=((
 					('uno/points',),
 					'\n'.join(
-						i18n(player, 'fish/point', display_name(p), points[i])
+						i18n(player, 'fish/point', str(p), points[i])
 						for i, p in enumerate(players)
 						if i not in winners
 					) or i18n(player, 'none'),
@@ -645,7 +686,7 @@ class Uno(Games):
 						continue
 					background(p.send(embed=embed(p,
 						title=('uno/uno-title',),
-						description=('uno/uno', display_name(player)),
+						description=('uno/uno', str(player)),
 						color=0xff8080
 					)))
 			elif turned and len(hands[pid]) <= 0:
@@ -656,7 +697,7 @@ class Uno(Games):
 						continue
 					background(p.send(embed=embed(p,
 						title=('uno/empty-title',),
-						description=('uno/empty', display_name(player)),
+						description=('uno/empty', str(player)),
 						color=0xff0000
 					)))
 			if turned:
@@ -667,8 +708,8 @@ class Uno(Games):
 						p.send, discard[0].image, 'uno', 'card.png',
 						embed=embed(p,
 							title=('uno/card-played-title',),
-							description=('uno/card-played', display_name(player)),
-							footer=('uno/turn', display_name(players[
+							description=('uno/card-played', str(player)),
+							footer=('uno/turn', str(players[
 								(pid + dpid + dpid * skipped) % len(players)
 							])),
 							color=discord.Color.from_rgb(*UnoCard.COLORS[discard[0].suit])
@@ -681,8 +722,8 @@ class Uno(Games):
 					background(p.send(embed=embed(p,
 						title=('uno/turn-title',),
 						description=(
-							'uno/next-turn', display_name(player),
-								display_name(players[
+							'uno/next-turn', str(player),
+								str(players[
 								(pid + dpid + dpid * skipped) % len(players)
 							])
 						),
@@ -690,7 +731,7 @@ class Uno(Games):
 					)))
 			background(player.send(embed=embed(player,
 				title=('uno/turn-title',),
-				description=('uno/turn', display_name(players[
+				description=('uno/turn', str(players[
 					(pid + dpid + dpid * skipped) % len(players)
 				])),
 				color=discord.Color.greyple()
@@ -711,14 +752,14 @@ class Uno(Games):
 				description=(
 					'uno/winners',
 					'\n'.join(
-						i18n(player, 'uno/point', display_name(players[i]), points[i])
+						i18n(player, 'uno/point', str(players[i]), points[i])
 						for i in winners
 					)
 				),
 				fields=((
 					('uno/points',),
 					'\n'.join(
-						i18n(player, 'uno/point', display_name(p), points[i])
+						i18n(player, 'uno/point', str(p), points[i])
 						for i, p in enumerate(players)
 						if i not in winners
 					) or i18n(player, 'none'),
@@ -854,7 +895,7 @@ class Blackjack(Games):
 			for h in hands:
 				h.sort(key=lambda c: c.number)
 			msg = '\n'.join(
-				'{}: {}'.format(display_name(p), hands[i][1])
+				'{}: {}'.format(str(p), hands[i][1])
 				for i, p in enumerate(players)
 				if i not in timedout
 			)
@@ -906,7 +947,7 @@ class Blackjack(Games):
 						title=('blackjack/round-over-title',),
 						description=(
 							'blackjack/round-over',
-							display_name(players[idx]), max_points
+							str(players[idx]), max_points
 						),
 						color=0xff0000
 					)))
@@ -937,7 +978,7 @@ class Blackjack(Games):
 					'\n'.join(
 						i18n(
 							player, 'blackjack/point',
-							display_name(players[i]), points[i]
+							str(players[i]), points[i]
 						)
 						for i in winners
 						if i not in timedout
@@ -946,7 +987,7 @@ class Blackjack(Games):
 				fields=((
 					('uno/points',),
 					'\n'.join(
-						i18n(player, 'blackjack/point', display_name(p), points[i])
+						i18n(player, 'blackjack/point', str(p), points[i])
 						for i, p in enumerate(players)
 						if i not in winners and i not in timedout
 					) or i18n(player, 'none'),
@@ -986,3 +1027,113 @@ class Blackjack(Games):
 			description=('blackjack/help', ctx.prefix),
 			color=0x55acee
 		))
+
+class SetGame(Games):
+	"""setgame/cog-desc"""
+
+	DECK = [
+		SetCard(i, j, k, l)
+		for i in range(3)
+		for j in range(3)
+		for k in range(3)
+		for l in range(3)
+	]
+
+	async def do_setgame(self, ctxs):
+		players = [ctx.author for ctx in ctxs]
+		deck = self.DECK[:]
+		random.shuffle(deck)
+		table = [deck.pop() for _ in range(9)]
+		points = {p.id: 0 for p in players}
+		def tablesurf(tab, p):
+			random.shuffle(tab)
+			tablen = len(tab)
+			rows = math.ceil(tablen / 3)
+			surf = Surface(SET_WIDTH * 3, SET_HEIGHT * rows, SRCALPHA, 32)
+			assert surf.get_height() > 0
+			surf.fill((0, 0, 0, 0))
+			for i in range(rows):
+				for j in range(3):
+					if i * 3 + j > tablen:
+						break
+					surf.blit(tab[i * 3 + j].image, (SET_WIDTH * j, SET_HEIGHT * i))
+			return surf
+		def hasset(tab):
+			for i in tab:
+				for j in tab:
+					for k in tab:
+						if all(len({
+							getattr(i, attr),
+							getattr(j, attr),
+							getattr(k, attr)
+						}) in {1, 3} for attr in {
+							'shape', 'shade',
+							'number', 'color'
+						}):
+							return True
+			return False
+		while deck:
+			for i in range(min(3, len(deck))):
+				table.append(deck.pop())
+			msgs = await asyncio.gather(sendsurf(
+				p.send, surf, 'set', 'table.png',
+				embed=embed(p,
+					title=('setgame/table-title',),
+					description=('setgame/table', points[p.id]),
+					footer=(
+						('setgame/instructions',)
+						if hasset(table)
+						else ('setgame/nosets',)
+					),
+					color=0xffffff
+				).set_image(url='attachment://table.png')
+			) for p in players)
+			msgs = {p.id: msgs[i] for i, p in enumerate(players)}
+			while deck and not hasset(table):
+				for i in range(min(3, len(deck))):
+					table.append(deck.pop())
+				msgs = await asyncio.gather(sendsurf(
+					p.send, surf, 'set', 'table.png',
+					embed=embed(p,
+						title=('setgame/table-title',),
+						description=('setgame/table', points[p.id]),
+						footer=(
+							('setgame/instructions',)
+							if hasset(table)
+							else ('setgame/nosets',)
+						),
+						color=0xffffff
+					).set_image(url='attachment://table.png')
+				) for p in players)
+				msgs = {p.id: msgs[i] for i, p in enumerate(players)}
+			if not deck and not hasset(table):
+				break
+			msg = await self.bot.wait_for('message', lambda m: (
+				m.content.casefold() == 'set'
+				and m.author.id in msgs
+				and isinstance(m.channel, discord.DMChannel)
+			))
+
+	name = 'Set'
+	maxim = float('inf')
+	minim = 1 #you can just try to beat your score
+	scn = 'setgame start'
+	jcn = 'setgame join'
+
+	@group(invoke_without_command=True, description='setgame/setgame-cmd-desc')
+	@lone_group(True)
+	async def setgame(self, ctx):
+		"""setgame/setgame-cmd-help"""
+		pass
+
+	@setgame.command(description='setgame/setgame-join-desc')
+	async def join(self, ctx):
+		await self._join_global_game(ctx, self.do_setgame)
+
+	@setgame.command(description='setgame/setgame-leave-desc')
+	async def leave(self, ctx):
+		await self._unjoin_global_game(ctx)
+
+	@setgame.command(description='setgame/setgame-start-desc')
+	async def start(self, ctx):
+		await self._start_global_game(ctx)
