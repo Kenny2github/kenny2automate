@@ -20,6 +20,7 @@
   "unjoined-title": "Left",
   "unjoined": "You have left the game of {0}.",
   "joined-owner": "You have joined the game of {0}, now waiting for at least {1} more players to join before you can start the game...",
+  "joined-waiting-you": "You have joined the game of {0}, now waiting for you to start the game...",
   "joined-faux-owner": "You have joined the game of {0}, now waiting for {1} more people to join...",
   "joined-waiting-missing": "You have joined the game of {0}, now waiting for at least {1} more players to join...",
   "joined-waiting-minmax": "You have joined the game of {0}, now waiting for {1} more players to join or for {2} to start the game...",

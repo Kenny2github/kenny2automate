@@ -191,7 +191,10 @@ class Games(Cog):
 		if ctx.author.id == owner.author.id:
 			footer = None
 			if self.minim < self.maxim:
-				desc = 'games/joined-owner'
+				if isinstance(self.maxim, int):
+					desc = 'games/joined-owner'
+				else:
+					desc = 'games/joined-waiting-you'
 			else:
 				desc = 'games/joined-faux-owner'
 		else:

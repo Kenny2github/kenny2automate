@@ -82,7 +82,7 @@ class SetCard:
 	SHADES = ('filled', 'empty', 'cross')
 	SHAPES = ('circle', 'square', 'octagon')
 	COLORS = ('red', 'green', 'blue')
-	NUMBERS = (1, 2, 3)
+	NUMBERS = ('1', '2', '3')
 
 	shape = 0
 	color = 0
@@ -90,6 +90,14 @@ class SetCard:
 	shade = 0
 
 	def __init__(self, shade=0, shape=0, color=0, number=0):
+		if not isinstance(shade, int):
+			shade = self.SHADES.index(shade)
+		if not isinstance(shape, int):
+			shape = self.SHAPES.index(shape)
+		if not isinstance(color, int):
+			color = self.COLORS.index(color)
+		if not isinstance(number, int):
+			number = self.NUMBERS.index(number)
 		self.shade = shade
 		self.shape = shape
 		self.color = color
@@ -108,13 +116,27 @@ class SetCard:
 			type(self).__name__, self
 		)
 
-	__str__ = __repr__
+	def __str__(self):
+		return '{}({!r}, {!r}, {!r}, {!r})'.format(
+			type(self).__name__,
+			self.SHADES[self.shade],
+			self.SHAPES[self.shape],
+			self.COLORS[self.color],
+			self.NUMBERS[self.number]
+		)
 
 	def __hash__(self):
-		return hash(self.shade, self.shape, self.color, self.number)
+		return hash((self.shade, self.shape, self.color, self.number))
 
 	def __eq__(self, other):
 		return hash(self) == hash(other)
+
+	def isset(self, other1, other2):
+		for attr in ('shade', 'shape', 'color', 'number'):
+			if len({getattr(self, attr), getattr(other1, attr),
+					getattr(other2, attr)}) not in {1, 3}:
+				return False
+		return True
 
 class Fish(Games):
 	"""fish/cog-desc"""
@@ -1039,17 +1061,18 @@ class SetGame(Games):
 		for l in range(3)
 	]
 
+	COORD_REGEX = re.compile(r'^([a-c][0-9]+|[0-9]+[a-c])[,\s]+([a-c][0-9]+|[0-9]+[a-c])[,\s]+([a-c][0-9]+|[0-9]+[a-c])$', re.I)
+
 	async def do_setgame(self, ctxs):
 		players = [ctx.author for ctx in ctxs]
 		deck = self.DECK[:]
 		random.shuffle(deck)
 		table = [deck.pop() for _ in range(9)]
 		points = {p.id: 0 for p in players}
-		def tablesurf(tab, p):
-			random.shuffle(tab)
+		def tablesurf(tab):
 			tablen = len(tab)
 			rows = math.ceil(tablen / 3)
-			surf = Surface(SET_WIDTH * 3, SET_HEIGHT * rows, SRCALPHA, 32)
+			surf = Surface((SET_WIDTH * 3, SET_HEIGHT * rows), SRCALPHA, 32)
 			assert surf.get_height() > 0
 			surf.fill((0, 0, 0, 0))
 			for i in range(rows):
@@ -1062,57 +1085,125 @@ class SetGame(Games):
 			for i in tab:
 				for j in tab:
 					for k in tab:
-						if all(len({
-							getattr(i, attr),
-							getattr(j, attr),
-							getattr(k, attr)
-						}) in {1, 3} for attr in {
-							'shape', 'shade',
-							'number', 'color'
-						}):
+						if i is j or j is k or i is k:
+							continue
+						if i.isset(j, k):
 							return True
 			return False
 		while deck:
-			for i in range(min(3, len(deck))):
-				table.append(deck.pop())
-			msgs = await asyncio.gather(sendsurf(
-				p.send, surf, 'set', 'table.png',
-				embed=embed(p,
-					title=('setgame/table-title',),
-					description=('setgame/table', points[p.id]),
-					footer=(
-						('setgame/instructions',)
-						if hasset(table)
-						else ('setgame/nosets',)
-					),
-					color=0xffffff
-				).set_image(url='attachment://table.png')
-			) for p in players)
-			msgs = {p.id: msgs[i] for i, p in enumerate(players)}
-			while deck and not hasset(table):
-				for i in range(min(3, len(deck))):
+			while len(table) < 12:
+				try:
 					table.append(deck.pop())
-				msgs = await asyncio.gather(sendsurf(
+				except IndexError:
+					pass
+			surf = tablesurf(table)
+			hs = hasset(table)
+			for p in players:
+				background(sendsurf(
 					p.send, surf, 'set', 'table.png',
 					embed=embed(p,
 						title=('setgame/table-title',),
 						description=('setgame/table', points[p.id]),
-						footer=(
-							('setgame/instructions',)
-							if hasset(table)
-							else ('setgame/nosets',)
-						),
+						fields=((
+							('setgame/instructions-title',),
+							('setgame/instructions',),
+							False
+						),) if hs else None,
+						footer=None if hs else ('setgame/nosets',),
 						color=0xffffff
 					).set_image(url='attachment://table.png')
-				) for p in players)
-				msgs = {p.id: msgs[i] for i, p in enumerate(players)}
+				))
+			while deck and not hasset(table):
+				for i in range(min(3, len(deck))):
+					table.append(deck.pop())
+				surf = tablesurf(table)
+				hs = hasset(table)
+				for p in players:
+					background(sendsurf(
+						p.send, surf, 'set', 'table.png',
+						embed=embed(p,
+							title=('setgame/table-title',),
+							description=('setgame/table', points[p.id]),
+							fields=((
+								('setgame/instructions-title',),
+								('setgame/instructions',),
+								False
+							),) if hs else None,
+							footer=None if hs else ('setgame/nosets',),
+							color=0xffffff
+						).set_image(url='attachment://table.png')
+					))
 			if not deck and not hasset(table):
 				break
-			msg = await self.bot.wait_for('message', lambda m: (
-				m.content.casefold() == 'set'
-				and m.author.id in msgs
-				and isinstance(m.channel, discord.DMChannel)
-			))
+			cards = []
+			while not cards or not cards[0].isset(cards[1], cards[2]):
+				try:
+					msg = await self.bot.wait_for('message', check=lambda m: (
+						self.COORD_REGEX.match(m.content)
+						and m.author in players
+						and isinstance(m.channel, discord.DMChannel)
+					), timeout=600.0)
+				except asyncio.TimeoutError:
+					for p in players:
+						background(p.send(embed=embed(p,
+							title=('games/game-timeout-title',),
+							description=('setgame/timed-out',),
+							color=0xff0000
+						)))
+					return
+				cards = [
+					table[
+						(int(re.search('[0-9]+', i).group(0)) - 1) * 3 #row
+						+ 'abc'.index(re.search('[a-c]', i).group(0)) #col
+					] for i in re.split('[,\s]+', msg.content)[:3]
+				]
+			for p in players:
+				if p.id == msg.author.id:
+					continue
+				background(p.send(embed=embed(p,
+					title=('setgame/set-called-title',),
+					description=('setgame/set-called',
+								 str(msg.author), msg.content),
+					color=0xffff00
+				)))
+			for c in cards:
+				table.remove(c)
+			points[msg.author.id] += 1
+			background(msg.author.send(embed=embed(msg.author,
+				title=('setgame/added-points-title',),
+				description=('setgame/added-points', points[msg.author.id]),
+				color=0x55acee
+			)))
+		max_points = max(points.values())
+		winners = {
+			i: j for i, j in points.items()
+			if j == max_points
+		}
+		for player in players:
+			background(player.send(embed=embed(player,
+				title=('uno/uno-winners-title',),
+				description=(
+					'uno/winners',
+					'\n'.join(
+						i18n(
+							player, 'uno/point',
+							str(p), points[p.id]
+						)
+						for p in players
+						if p.id in winners
+					)
+				),
+				fields=((
+					('uno/points',),
+					'\n'.join(
+						i18n(player, 'uno/point', str(p), points[p.id])
+						for p in players
+						if p.id not in winners
+					) or i18n(player, 'none'),
+					False
+				),),
+				color=0x55acee
+			)))
 
 	name = 'Set'
 	maxim = float('inf')
