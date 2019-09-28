@@ -1155,7 +1155,7 @@ class SetGame(Games):
 					table[
 						(int(re.search('[0-9]+', i).group(0)) - 1) * 3 #row
 						+ 'abc'.index(re.search('[a-c]', i).group(0)) #col
-					] for i in re.split('[,\s]+', msg.content)[:3]
+					] for i in re.split(r'[,\s]+', msg.content)[:3]
 				]
 			for p in players:
 				if p.id == msg.author.id:

@@ -282,6 +282,10 @@ if 'boggle' not in cmdargs.disable:
     logger.info('Loading Boggle', extra={'ctx': dmx})
     from kenny2automate.boggle import Boggle
     client.add_cog(Boggle(client, db))
+if 'chess' not in cmdargs.disable:
+    logger.info('Loading Chess', extra={'ctx': dmx})
+    from kenny2automate.chess import Chess
+    client.add_cog(Chess(client, db))
 
 logger.info('Loading Eval', extra={'ctx': dmx})
 from kenny2automate.eval_ import eval_

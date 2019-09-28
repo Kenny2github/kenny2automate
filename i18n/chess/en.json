@@ -1,0 +1,14 @@
+{
+  "cog-desc": "Play Chess!",
+  "cmd-desc": "Play Chess! Run `{0}help chess`.",
+  "cmd-help": "If you don't know how to play chess: https://en.wikipedia.org/wiki/Chess",
+  "here-desc": "Look for an opponent within your server.",
+  "join-desc": "Join a game with anyone at all.",
+  "leave-desc": "Stop looking for a game.",
+  "board-title": "Board",
+  "instructions": "Send the coordinates of a piece then the coordinates of where to send that piece, e.g. \"d2 d4\" (no quotes).",
+  "waiting": "Waiting for your opponent...",
+  "timed-out": "No response after 10 minutes! The game has been cancelled.",
+  "promotion-title": "Pawn Promotion!",
+  "promotion": "You can promote your pawn! Send one of the following piece names:\n`queen`\n`knight`\n`rook`\n`bishop`"
+}
