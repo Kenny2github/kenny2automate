@@ -6,9 +6,11 @@
   "join-desc": "Join a game with anyone at all.",
   "leave-desc": "Stop looking for a game.",
   "board-title": "Board",
-  "instructions": "Send the coordinates of a piece then the coordinates of where to send that piece, e.g. \"d2 d4\" (no quotes).",
+  "instructions": "Send the [algebraic notation](https://en.wikipedia.org/wiki/Algebraic_notation_(chess%29) for your move, e.g. `d4` or `Na3`.",
   "waiting": "Waiting for your opponent...",
   "timed-out": "No response after 10 minutes! The game has been cancelled.",
-  "promotion-title": "Pawn Promotion!",
-  "promotion": "You can promote your pawn! Send one of the following piece names:\n`queen`\n`knight`\n`rook`\n`bishop`"
+  "game-end-title": "Game Over",
+  "draw": "The game is a draw!",
+  "game-end": "The game has ended! Winner: {0}",
+  "last-move": "Last move: {0}"
 }

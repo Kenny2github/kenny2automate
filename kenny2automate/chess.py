@@ -2,6 +2,7 @@ import os
 import re
 import asyncio
 import pygame
+from chess import Board
 import discord
 from discord.ext.commands import group
 from .games import Games
@@ -16,193 +17,17 @@ from .tmpfiles import sendsurf
 def img(name):
     return pygame.image.load(os.path.join('resources', 'chess', name + '.png'))
 
-IMGS = {
-    i: {
-        'white': img('white-' + i.lower()),
-        'black': img('black-' + i.lower())
-    } for i in ('Queen', 'King', 'Bishop', 'Rook', 'Knight', 'Pawn')
-}
-
-class Piece:
-    moves = 0
-
-    def __init__(self, pos, color):
-        self.x, self.y = pos
-        self.color = color
-        self.image = IMGS[type(self).__name__]
-
-    def move_valid(self, newpos, board):
-        """newpos: (x, y); board: Optional<Piece>[8][8]"""
-        x, y = newpos
-        there = board[x][y]
-        if there is not None and there.color == self.color:
-            return False
-        return True
-
-    def move(self, newpos, board):
-        x, y = newpos
-        board[self.x][self.y], board[x][y] = None, board[self.x][self.y]
-        self.x, self.y = x, y
-        self.moves += 1
-
-    def __repr__(self):
-        return '{!s}({!r}, {!r})'.format(
-            type(self).__name__,
-            (self.x, self.y),
-            self.color
-        )
-
-    __str__ = __repr__
-
-class Queen(Piece):
-    def move_valid(self, newpos, board):
-        if not super().move_valid(newpos, board):
-            return False
-        x, y = newpos
-        dx, dy = x - self.x, y - self.y
-        if abs(dx) != abs(dy) and not (dx == 0 or dy == 0):
-            return False
-        if dx == 0:
-            for i in range(self.y + dy // abs(dy), y, dy // abs(dy)):
-                if board[x][i] is not None:
-                    return False
-        elif dy == 0:
-            for i in range(self.x + dx // abs(dx), x, dx // abs(dx)):
-                if board[i][y] is not None:
-                    return False
-        else:
-            for i, j in zip(
-                    range(self.x + dx // abs(dx), x, dx // abs(dx)),
-                    range(self.y + dy // abs(dy), y, dy // abs(dy))
-            ):
-                if board[i][j] is not None:
-                    return False
-        return True
-
-class King(Piece):
-    def is_checked(self, pos, board):
-        for i in board:
-            for piece in i:
-                if piece is None:
-                    continue
-                if piece.color != self.color and piece.move_valid(pos, board):
-                    return True
-        return False
-    def move_valid(self, newpos, board):
-        x, y = newpos
-        dx, dy = x - self.x, y - self.y
-        if not super().move_valid(newpos, board):
-            #castle is triggered by moving onto rook
-            if self.moves == 0 and (y == 0 or y == 7) and dy == 0:
-                #castle logic
-                if isinstance(board[x][y], Rook) and board[x][y].moves == 0:
-                    for i in range(self.x + dx // abs(dx), x, dx // abs(dx)):
-                        if (
-                            board[i][y] is not None
-                            and (
-                                abs(i - self.x) <= 2
-                                and self.is_checked((i, y), board)
-                            )
-                        ):
-                            return False
-                    nrx = self.x + dx // abs(dx) #new rook x - king is moved later
-                    board[x][y].move((nrx, y), board)
-                    return True
-                return False
-            return False
-        #ensure move does not place king in check
-        if self.is_checked(newpos, board):
-            return False
-        return abs(self.x - x) <= 1 and abs(self.y - y) <= 1
-
-    def move(self, newpos, board):
-        #remember, this method assumes it's already valid
-        x, y = newpos
-        dx, dy = x - self.x, y - self.y
-        if self.moves == 0 and (x == 0 or x == 7) and dy == 0:
-            x = self.x + 2 * (dx // abs(dx)) #new king x
-        super().move((x, y), board)
-
-class Bishop(Piece):
-    def move_valid(self, newpos, board):
-        if not super().move_valid(newpos, board):
-            return False
-        x, y = newpos
-        dx, dy = x - self.x, y - self.y
-        if abs(dx) != abs(dy):
-            return False
-        for i, j in zip(
-                range(self.x + dx // abs(dx), x, dx // abs(dx)),
-                range(self.y + dy // abs(dy), y, dy // abs(dy))
-        ):
-            if board[i][j] is not None:
-                return False
-        return True
-
-class Knight(Piece):
-    def move_valid(self, newpos, board):
-        if not super().move_valid(newpos, board):
-            return False
-        x, y = newpos
-        dx, dy = x - self.x, y - self.y
-        if abs(dx) == 2:
-            return abs(dy) == 1
-        if abs(dy) == 2:
-            return abs(dx) == 1
-        return False
-
-class Rook(Piece):
-    def move_valid(self, newpos, board):
-        if not super().move_valid(newpos, board):
-            return False
-        x, y = newpos
-        dx, dy = x - self.x, y - self.y
-        if dx != 0 and dy != 0:
-            return False
-        if dx == 0:
-            for i in range(self.y + dy // abs(dy), y, dy // abs(dy)):
-                if board[x][i] is not None:
-                    return False
-        elif dy == 0:
-            for i in range(self.x + dx // abs(dx), x, dx // abs(dx)):
-                if board[i][y] is not None:
-                    return False
-        return True
-
-class Pawn(Piece): #here we go
-    def move_valid(self, newpos, board):
-        if not super().move_valid(newpos, board):
-            return False
-        x, y = newpos
-        dx, dy = x - self.x, y - self.y
-        if self.moves == 0 and dx == 0 and abs(dy) == 2: #starting move
-            return board[x][self.y + dy // abs(dy)] is None
-        if dx != 0:
-            if abs(dx) != 1 or abs(dy) != 1:
-                return False
-            if board[x][y] is not None: #pawn capture
-                return True
-            #en passant
-            cx, cy = None, None
-            if self.x > 0:
-                possible = board[self.x - 1][self.y]
-                if possible is not None and possible.color != self.color:
-                    cx, cy = self.x - 1, self.y
-                elif self.x < 7:
-                    possible = board[self.x + 1][self.y]
-                    if possible is not None and possible.color != self.color:
-                        cx, cy = self.x + 1, self.y
-            if cx is not None:
-                board[cx][cy] = None
-                return True
-            return False
-        return True
+IMGS = {}
+for i in ('Queen', 'King', 'Bishop', 'Rook', 'Knight', 'Pawn'):
+    if i == 'Knight':
+        IMGS[i[1].upper()] = img('white-' + i.lower())
+        IMGS[i[1]] = img('black-' + i.lower())
+    else:
+        IMGS[i[0]] = img('white-' + i.lower())
+        IMGS[i[0].lower()] = img('black-' + i.lower())
 
 class Chess(Games):
     """chess/cog-desc"""
-
-    COORD_REGEX = re.compile(r'^([a-h][0-8]|[0-8][a-h])'
-                             r'[,\s]+([a-h][0-8]|[0-8][a-h])$', re.I)
 
     ALGEBRAIC = re.compile(r"^(?:(?P<piece>[BNRKQP]?)" #what piece moved, can be blank
                            r"(?P<scol>[a-h])?(?P<srow>[0-8])?" #from where, if necessary
@@ -348,53 +173,53 @@ class Chess(Games):
 
     async def _chess(self, ctxs):
         player1, player2 = ctxs[0].author, ctxs[1].author
-        board = self.new_board()
+        board = Board()
         def boardimg(bd, color):
-            src = pygame.image.load(img(color + '-board'))
-            for x, col in enumerate(bd):
-                for y, row in enumerate(col):
-                    if row is None:
-                        continue
+            src = img(color + '-board')
+            for x in range(8):
+                for y in range(8):
+                    square = x + y * 8
                     rx = x * 256 + 256
                     if color == 'white':
                         ry = 2048 - y * 256
                     elif color == 'black':
                         ry = y * 256 + 256
-                    src.blit(row.image, (rx, ry))
+                    piece = board.piece_at(square)
+                    if piece:
+                        src.blit(IMGS[piece.symbol()], (rx, ry))
             return src
-        async def sendboard(bd, turn):
+        async def sendboard(bd, turn, mov):
             surf1 = boardimg(bd, 'white')
             surf2 = boardimg(bd, 'black')
             await asyncio.gather(sendsurf(
                 player1.send, surf1, 'chess', 'board.png',
                 embed=embed(player1,
                     title=('chess/board-title',),
-                    footer=('chess/instructions',)
+                    description=('chess/instructions',)
                         if turn == 'white'
                         else ('chess/waiting',),
+                    footer=('chess/last-move', mov),
                     color=0xffffff * (turn == 'white')
                 ).set_image(url='attachment://board.png')
             ), sendsurf(
                 player2.send, surf2, 'chess', 'board.png',
                 embed=embed(player2,
                     title=('chess/board-title',),
-                    footer=('chess/instructions',)
+                    description=('chess/instructions',)
                         if turn == 'black'
                         else ('chess/waiting',),
+                    footer=('chess/last-move', mov),
                     color=0xffffff * (turn == 'white')
                 ).set_image(url='attachment://board.png')
             ))
-        while 1:
+        msg = DummyCtx(content='game start')
+        while not board.is_game_over():
             ### WHITE ###
-            background(sendboard(board, 'white'))
-            valid = False
-            while not valid:
+            background(sendboard(board, 'white', msg.content))
+            while True:
                 try:
                     msg = await self.bot.wait_for('message', check=lambda m: (
-                        (
-                            self.COORD_REGEX.match(m.content)
-                            or self.ALGEBRAIC.match(m.content)
-                        )
+                        self.ALGEBRAIC.match(m.content)
                         and m.author.id == player1.id
                         and isinstance(m.channel, discord.DMChannel)
                     ), timeout=600.0)
@@ -406,66 +231,20 @@ class Chess(Games):
                             color=0xff0000
                         )))
                     return
-                if ' ' in msg.content or ',' in msg.content:
-                    (x1, y1), (x2, y2) = [(
-                        ord(re.search('[a-h]', i).group(0).upper()) - 65,
-                        int(re.search('[0-8]', i).group(0)) - 1
-                    ) for i in re.split(r'[,\s]+', msg.content)[:2]]
-                    promotion = None
+                try:
+                    board.push_san(msg.content)
+                except ValueError:
+                    continue
                 else:
-                    valid, (x1, y1), (x2, y2), promotion = self.pos_from_alg(
-                        self.ALGEBRAIC.match(msg.content),
-                        'white', board
-                    )
-                    print(valid, x1, y1, x2, y2, promotion)
-                    if not valid:
-                        continue
-                print('white:', x1, y1, x2, y2)
-                if board[x1][y1] is not None:
-                    valid = board[x1][y1].move_valid((x2, y2), board)
-                    if valid:
-                        print(board[x1][y1])
-                else:
-                    valid = False
-            board[x1][y1].move((x2, y2), board)
-            #pawn promotion
-            if y2 == 7 and isinstance(board[x2][y2], Pawn): #7 is end for white
-                if promotion is not None:
-                    cls = promotion
-                else:
-                    background(player1.send(embed=embed(player1,
-                        title=('chess/promotion-title',),
-                        description=('chess/promotion',),
-                        color=0xffffff
-                    )))
-                    try:
-                        msg = await self.bot.wait_for('message', check=lambda m: (
-                            m.content.casefold() in {
-                                'queen', 'knight', 'rook', 'bishop'
-                            }
-                            and m.author.id == player1.id
-                            and isinstance(m.channel, discord.DMChannel)
-                        ), timeout=600.0)
-                    except asyncio.TimeoutError:
-                        for p in (player1, player2):
-                            background(p.send(embed=embed(p,
-                                title=('games/game-timeout-title',),
-                                description=('chess/timed-out',),
-                                color=0xff0000
-                            )))
-                        return
-                    cls = globals()[msg.content.title()]
-                board[x2][y2] = cls((x2, y2), 'white')
+                    break
+            if board.is_game_over():
+                break
             ### BLACK ###
-            background(sendboard(board, 'black'))
-            valid = False
-            while not valid:
+            background(sendboard(board, 'black', msg.content))
+            while True:
                 try:
                     msg = await self.bot.wait_for('message', check=lambda m: (
-                        (
-                            self.COORD_REGEX.match(m.content)
-                            or self.ALGEBRAIC.match(m.content)
-                        )
+                        self.ALGEBRAIC.match(m.content)
                         and m.author.id == player2.id
                         and isinstance(m.channel, discord.DMChannel)
                     ), timeout=600.0)
@@ -477,53 +256,36 @@ class Chess(Games):
                             color=0xff0000
                         )))
                     return
-                if ' ' in msg.content or ',' in msg.content:
-                    (x1, y1), (x2, y2) = [(
-                        ord(re.search('[a-h]', i).group(0).upper()) - 65,
-                        int(re.search('[0-8]', i).group(0)) - 1
-                    ) for i in re.split(r'[,\s]+', msg.content)[:2]]
-                    promotion = None
+                try:
+                    board.push_san(msg.content)
+                except ValueError:
+                    continue
                 else:
-                    valid, (x1, y1), (x2, y2), promotion = self.pos_from_alg(
-                        self.ALGEBRAIC.match(msg.content),
-                        'black', board
-                    )
-                    print(valid, x1, y1, x2, y2, promotion)
-                    if not valid:
-                        continue
-                print('black:', x1, y1, x2, y2)
-                if board[x1][y1] is not None:
-                    valid = board[x1][y1].move_valid((x2, y2), board)
-                    if valid:
-                        print(board[x1][y1])
-                else:
-                    valid = False
-            board[x1][y1].move((x2, y2), board)
-            #pawn promotion
-            if y2 == 0 and isinstance(board[x2][y2], Pawn): #0 is end for black
-                if promotion is not None:
-                    cls = promotion
-                else:
-                    background(player2.send(embed=embed(player2,
-                        title=('chess/promotion-title',),
-                        description=('chess/promotion',),
-                        color=0xffffff
-                    )))
-                    try:
-                        msg = await self.bot.wait_for('message', check=lambda m: (
-                            m.content.casefold() in {
-                                'queen', 'knight', 'rook', 'bishop'
-                            }
-                            and m.author.id == player2.id
-                            and isinstance(m.channel, discord.DMChannel)
-                        ), timeout=600.0)
-                    except asyncio.TimeoutError:
-                        for p in (player1, player2):
-                            background(p.send(embed=embed(p,
-                                title=('games/game-timeout-title',),
-                                description=('chess/timed-out',),
-                                color=0xff0000
-                            )))
-                        return
-                    cls = globals()[msg.content.title()]
-                board[x2][y2] = cls((x2, y2), 'black')
+                    break
+        result = board.result()
+        winner = player1 if result == '1-0' else (
+            player2 if result == '0-1' else None
+        )
+        surf = boardimg(board, 'white')
+        if winner is None:
+            for p in (player1, player2):
+                background(sendsurf(
+                    p.send, surf, 'chess', 'board.png',
+                    embed=embed(p,
+                        title=('chess/game-end-title',),
+                        description=('chess/draw',),
+                        footer=('chess/last-move', msg.content),
+                        color=0x808080
+                    ).set_image(url='attachment://board.png')
+                ))
+        else:
+            for p in (player1, player2):
+                background(sendsurf(
+                    p.send, surf, 'chess', 'board.png',
+                    embed=embed(p,
+                        title=('chess/game-end-title',),
+                        description=('chess/game-end', str(winner)),
+                        footer=('chess/last-move', msg.content),
+                        color=0xffffff if winner is player1 else 0
+                    ).set_image(url='attachment://board.png')
+                ))
