@@ -1,0 +1,18 @@
+{
+  "cog-desc": "Play Set!",
+  "table-title": "Table",
+  "table": "Below are the cards on the table. You have **{0}** points.",
+  "instructions-title": "Instructions",
+  "instructions": "If you see a set, send three comma-separated coordinates of cards.\nThe columns are A, B, and C from left to right, and the rows start at 1 at the top.\nFor example, if the top left, top middle, and top right cards form a set, send `a1, b1, c1`;\nif the first three cards on the left form a set, send `a1, a2, a3`. (no quotes).",
+  "nosets": "There are no sets in this table. Drawing three more cards...",
+  "set-called-title": "Set Called",
+  "set-called": "{0} has found a set: {1}\nThey have gained a point.",
+  "added-points-title": "Points Added",
+  "added-points": "You now have **{0}** points.",
+  "timed-out": "The game has ended due to inactivity. If you were still playing, that means y'all gotta up your set game.",
+  "setgame-cmd-desc": "Play Set, a game of logic! Run `{0}help setgame` for rules.",
+  "setgame-cmd-help": "Game rules:\n\n**Concepts**\nSet has 81 cards in its deck. Each card has 4 attributes: color (red, green, or blue); number (1, 2, or 3); shape (circle, square, or octagon); and shade (hollow, filled, or X).\nA set is a combination of 3 cards where, for each attribute, the attribute is either the same across all 3 cards, or different across all three.\nFor example, a triplet of 1, 2, and 3 solid blue octagons is the same in all attributes except number, where it is all different. Therefore, it forms a set. 1, 2, and 2 solid blue octagons, however, is the same in 3 attributes, but the 4th (again, number) is the same in 2 but different in 1 of the cards. Therefore, it does not form a set.\n\n**Initialization**\n12 cards are dealt to the table. If no sets are possible, 3 more cards are automatically dealt. This goes on until at least one set is possible.\n\n**Gameplay**\nWhen you find a set, send the three coordinates separated by commas and/or spaces, where the leftmost column is A, middle column is B, rightmost column is C, and rows start from the top at 1.\nIf it is valid, you will get a point, and cards will be dealt to the table until a) the number of cards on the table is 12, or there is at least 1 possible set, whichever comes last, or b) the deck runs out.\n\n**Ending**\nRounds continue until the deck runs out AND no more sets are possible.\nOnce the game ends, whoever has the most points wins.",
+  "setgame-join-desc": "Join a game of Set!",
+  "setgame-leave-desc": "Leave a game of Set.",
+  "setgame-start-desc": "Start (or vote to start) your game of Set."
+}

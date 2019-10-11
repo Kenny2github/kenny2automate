@@ -115,6 +115,8 @@ class Games(Cog):
 			self._global_games[self.name]['ctxs'].append(ctx)
 			startx = self._global_games[self.name]['ctxs'][0]
 			ctlen = len(self._global_games[self.name]['ctxs'])
+			if ctlen >= self.maxim:
+				return await self._start_global_game(startx)
 			background(startx.author.send(embed=embed(startx,
 				title=('games/player-joined-title',),
 				description=(
@@ -130,8 +132,6 @@ class Games(Cog):
 					description=('games/enough-players', ctx.prefix + self.scn),
 					color=0x55acee
 				)))
-			elif ctlen >= self.maxim:
-				return await self._start_global_game(startx)
 		else:
 			self._global_games[self.name] = {
 				'ctxs': [ctx],
@@ -191,7 +191,10 @@ class Games(Cog):
 		if ctx.author.id == owner.author.id:
 			footer = None
 			if self.minim < self.maxim:
-				desc = 'games/joined-owner'
+				if isinstance(self.maxim, int):
+					desc = 'games/joined-owner'
+				else:
+					desc = 'games/joined-waiting-you'
 			else:
 				desc = 'games/joined-faux-owner'
 		else:

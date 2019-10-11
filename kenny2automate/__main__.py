@@ -5,7 +5,7 @@ import subprocess
 import time
 import random
 #mid-level
-import requests
+import re
 from urllib.parse import quote as urlquote
 import logging
 import traceback
@@ -16,6 +16,7 @@ import sqlite3 as sql
 import asyncio
 import argparse
 #3rd-party
+import requests
 import discord
 from discord.ext.commands import Bot
 from discord.ext.commands import bot_has_permissions
@@ -27,7 +28,7 @@ CWD = os.getcwd()
 os.chdir(os.path.dirname(os.path.dirname(__file__)))
 
 #self
-from kenny2automate.utils import DummyCtx, lone_group, q
+from kenny2automate.utils import DummyCtx, lone_group, q, background
 from kenny2automate.server import Handler
 from kenny2automate.help import Kenny2help
 
@@ -102,7 +103,7 @@ dbw = sql.connect(os.path.join(CWD, 'kenny2automate.db'),
                   detect_types=sql.PARSE_DECLTYPES)
 dbw.row_factory = sql.Row
 db = dbw.cursor()
-LATEST_DBV = 4
+LATEST_DBV = 5
 dbv = dbv or db.execute('PRAGMA user_version').fetchone()[0]
 if dbv < LATEST_DBV:
     logger.info('Current dbv {} is less than latest {}, upgrading...'.format(
@@ -244,7 +245,7 @@ if 'hangman' not in cmdargs.disable:
     client.add_cog(Hangman(client, db))
 if 'card_games' not in cmdargs.disable:
     logger.info('Loading Card Games', extra={'ctx': dmx})
-    from kenny2automate.card_games import Fish, Uno, Blackjack
+    from kenny2automate.card_games import Fish, Uno, Blackjack, SetGame
     if 'fish' not in cmdargs.disable:
         logger.info('Loading Fish', extra={'ctx': dmx})
         client.add_cog(Fish(client, db))
@@ -254,6 +255,9 @@ if 'card_games' not in cmdargs.disable:
     if 'blackjack' not in cmdargs.disable:
         logger.info('Loading Blackjack', extra={'ctx': dmx})
         client.add_cog(Blackjack(client, db))
+    if 'setgame' not in cmdargs.disable:
+        logger.info('Loading Set', extra={'ctx': dmx})
+        client.add_cog(SetGame(client, db))
 if 'battleship' not in cmdargs.disable:
     logger.info('Loading Battleship', extra={'ctx': dmx})
     from kenny2automate.battleship import Battleship
@@ -286,6 +290,10 @@ if 'boggle' not in cmdargs.disable:
     logger.info('Loading Boggle', extra={'ctx': dmx})
     from kenny2automate.boggle import Boggle
     client.add_cog(Boggle(client, db))
+if 'chess' not in cmdargs.disable:
+    logger.info('Loading Chess', extra={'ctx': dmx})
+    from kenny2automate.chess import Chess
+    client.add_cog(Chess(client, db))
 
 logger.info('Loading Eval', extra={'ctx': dmx})
 from kenny2automate.eval_ import eval_
@@ -470,6 +478,100 @@ async def sdow(ctx, page1: str, page2: str):
         color=0x55acee
     ))
 
+@client.group(invoke_without_command=True, description='sentence-desc',
+              aliases=['sent'])
+@lone_group(False)
+async def sentence(ctx):
+    """sentence-help"""
+    pass
+
+@sentence.command(description='sentence-get-desc')
+async def get(ctx):
+    words = db.execute('SELECT word FROM sentence_words').fetchall()
+    words = ' '.join(word[0] for word in words)
+    if ctx.guild is None:
+        bad_words = '\1'
+    else:
+        res = db.execute(
+            'SELECT words_censor FROM guilds WHERE guild_id=?',
+            (ctx.guild.id,)
+        ).fetchone()
+        if res is None or res[0] is None:
+            bad_words = '\1'
+        else:
+            bad_words = res[0] or '\1'
+    if re.search(bad_words, words):
+        background(ctx.send(embed=embed(ctx,
+            title=('error',),
+            description=('sentence-censored',),
+            color=0xff0000
+        )))
+        return
+    background(ctx.send(embed=embed(ctx,
+        title=('sentence-got',),
+        description=words,
+        color=0xffffff
+    )))
+
+SENTENCE_REGEX = re.compile('((?!^)[([{><=@#$*]|[\x7f-\U0010ffff\x00-\x1f _|&-]|[],.:;")}?!%](?!$))')
+SENTENCE_OK_REGEX = re.compile('^[-&]$')
+SENTENCE_ENDS = '!.?'
+
+@sentence.command(description='sentence-add-desc')
+@commands.cooldown(1, 60.0, commands.BucketType.user)
+async def add(ctx, *, word):
+    m = re.search(SENTENCE_REGEX, word)
+    if m:
+        if re.search(SENTENCE_OK_REGEX, word):
+            pass
+        else:
+            await ctx.send(embed=embed(ctx,
+                title=('error',),
+                description=('sentence-bad-char', word[m.start()]),
+                color=0xff0000
+            ))
+            add.reset_cooldown(ctx)
+            return
+    prev = db.execute('SELECT user_id FROM sentence_words \
+ORDER BY rowid DESC').fetchone()
+    if prev is not None:
+        prev = prev[0]
+        if prev == ctx.author.id:
+            background(ctx.send(embed=embed(ctx,
+                title=('error',),
+                description=('sentence-repeat',),
+                color=0xff0000
+            )))
+            add.reset_cooldown(ctx)
+            return
+    db.execute('INSERT INTO sentence_words VALUES (?, ?)', (word, ctx.author.id))
+    if word[-1] in SENTENCE_ENDS:
+        data = db.execute('SELECT word, user_id FROM sentence_words').fetchall()
+        words = ' '.join(word['word'] for word in data)
+        users = set()
+        for i in data:
+            users.add(i['user_id'])
+        for i in users:
+            i = client.get_user(i)
+            background(i.send(embed=embed(ctx,
+                title=('sentence-finished-title',),
+                description=('sentence-finished', words),
+                color=0xffffff
+            )))
+        db.execute('DELETE FROM sentence_words')
+        background(ctx.send(embed=embed(ctx,
+            title=('sentence-ended-title',),
+            description=('sentence-ended',),
+            color=0xffffff
+        )))
+    else:
+        background(ctx.send(embed=embed(ctx,
+            title=('success',),
+            description=('sentence-added',),
+            color=0x55acee
+        )))
+    dbw.commit()
+
 @client.command(description='whois-desc')
 async def whois(ctx, *, user: discord.User):
     await ctx.send(embed=discord.Embed(description=user.mention))
@@ -480,6 +582,11 @@ async def whereis(ctx, *, channel: discord.TextChannel):
 
 @client.command(description='version-desc')
 async def version(ctx):
+    global VERSION
+    VERSION = subprocess.check_output(
+        "cd kenny2automate && git rev-parse --short HEAD",
+        shell=True
+    ).decode('ascii').strip()
     await ctx.send(embed=discord.Embed(description='`{}`'.format(VERSION)))
 
 @client.command(description='votetoban-desc')
@@ -572,7 +679,9 @@ async def set_playing_status():
         lestat = str(len(client.guilds)) + ' servers'
     else:
         lestat = cmdargs.prefix + 'help'
-    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=lestat))
+    await client.change_presence(activity=discord.Activity(
+        type=discord.ActivityType.watching, name=lestat
+    ))
 
 @set_playing_status.before_loop
 async def before_playing():
@@ -584,7 +693,7 @@ async def update_if_changed():
         for f, mtime in WATCHED_FILES_MTIMES:
             if os.path.getmtime(f) > mtime:
                 if cmdargs.loop:
-                    os.system('./discordapp restart')
+                    os.system('/home/pi/discordapp restart')
                 raise KeyboardInterrupt
         try:
             await asyncio.sleep(1)

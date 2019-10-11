@@ -1,9 +1,20 @@
+from discord import Forbidden
 from discord.ext import commands
 from .i18n import i18n, embed
 
 class Kenny2help(commands.HelpCommand):
 	def get_destination(self):
 		return self.context.author
+
+	async def send_the_help(self, emb):
+		try:
+			await self.get_destination().send(embed=emb)
+		except Forbidden:
+			await self.context.send(embed=embed(self.context,
+				title=('error',),
+				description=('help-failed',),
+				color=0xff0000
+			))
 
 	async def send_bot_help(self, mapping):
 		ctx = self.context
@@ -38,7 +49,7 @@ class Kenny2help(commands.HelpCommand):
 			),
 			footer=('help-footer', ctx.prefix)
 		)
-		await self.get_destination().send(embed=em)
+		await self.send_the_help(em)
 
 	async def send_cog_help(self, cog):
 		ctx = self.context
@@ -51,7 +62,7 @@ class Kenny2help(commands.HelpCommand):
 				for i in filtered
 			)
 		)
-		await self.get_destination().send(embed=em)
+		await self.send_the_help(em)
 
 	def command_string(self, cmd):
 		ctx = self.context
@@ -76,7 +87,7 @@ class Kenny2help(commands.HelpCommand):
 				for i in filtered
 			)
 		)
-		await self.get_destination().send(embed=em)
+		await self.send_the_help(em)
 
 	async def send_command_help(self, command):
 		ctx = self.context
@@ -90,4 +101,4 @@ class Kenny2help(commands.HelpCommand):
 			description=desc,
 			color=0x55acee
 		)
-		await self.get_destination().send(embed=em)
+		await self.send_the_help(em)
