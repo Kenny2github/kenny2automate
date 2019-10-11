@@ -3,7 +3,7 @@ import re
 import asyncio
 import pygame
 import discord
-from discord.ext.commands import group, Cog
+from discord.ext.commands import group, Cog, cooldown
 from .i18n import embed
 from .utils import lone_group
 from .tmpfiles import sendsurf
@@ -50,6 +50,7 @@ class Place(Cog):
         surf = pygame.transform.scale(surf, SIZE)
         await sendsurf(ctx.send, surf, 'place', 'portion.png')
 
+    @cooldown(1, 300.0, commands.BucketType.user)
     @place.command(description='place/set-desc')
     async def set(self, ctx, x: int, y: int, r: int, g: int, b: int):
         CHECK, CROSS = '\u2705\u274e'
