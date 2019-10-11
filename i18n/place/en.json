@@ -1,0 +1,13 @@
+{
+  "cmd-desc": "[/r/place](https://reddit.com/r/place), but on Discord. Run `{0}help place.`",
+  "cmd-help": "Run `{0}place get` to get the place image at that moment. Run `{0}help place set` for its usage",
+  "get-desc": "Get the place image. Specify `x` and `y` to get the 100x100 portion of the image around that pixel only.",
+  "set-desc": "Set the color of a pixel `x` from the left and `y` from the top to the RGB color `r`, `g`, `b`.",
+  "coord-error": "Invalid coordinates {0},{1}",
+  "color-error": "Invalid RGB {0},{1},{2}",
+  "confirm-title": "Confirm",
+  "confirm": "Is this pixel change correct?",
+  "set": "Set pixel at ({0}, {1}) to ({2}, {3}, {4})",
+  "cancelled-title": "Cancelled",
+  "cancelled": "Cancelled setting pixel."
+}
