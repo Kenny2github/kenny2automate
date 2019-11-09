@@ -294,6 +294,10 @@ if 'chess' not in cmdargs.disable:
     logger.info('Loading Chess', extra={'ctx': dmx})
     from kenny2automate.chess import Chess
     client.add_cog(Chess(client, db))
+if 'place' not in cmdargs.disable:
+    logger.info('Loading Place', extra={'ctx': dmx})
+    from kenny2automate.place import Place
+    client.add_cog(Place())
 
 logger.info('Loading Eval', extra={'ctx': dmx})
 from kenny2automate.eval_ import eval_

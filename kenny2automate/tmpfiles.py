@@ -39,4 +39,4 @@ async def sendsurf(meth, surf, tmpfileprefix,
     with tmpf(tmpfileprefix + '-', '.png') as name:
         pygame.image.save(surf, name)
         file = discord.File(name, filename)
-        await meth(file=file, **kwargs)
+        return await meth(file=file, **kwargs)
