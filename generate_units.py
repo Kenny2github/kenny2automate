@@ -72,7 +72,10 @@ units = (
         (['umpg', 'us-miles-per-gallon', 'us-mile-per-gallon'], '(1/2.352)'),
         (['impg', 'imperial-miles-per-gallon', 'imperial-mile-per-gallon', 'mile-per-gallon', 'miles-per-gallon'], '(1/2.825)'),
         (['kmpL', 'kilometer-per-liter', 'kilometers-per-liter', 'kilometre-per-litre', 'kilometres-per-litre'], '1'),
-        (['Lphkm', 'liters-per-hundred-kilometers', 'liter-per-hundred-kilometers', 'litres-per-hundred-kilometres', 'litre-per-hundred-kilometres'], 'amount * 100 / amount')
+        # 100 / kmpL = Lphkm. This conversion works out to be
+        # amount * 1 * 100 / (amount * amount) / 1 for Lphkm to kmpL
+        # and amount * 1 / 1 * 100 / (amount * amount) for kmpL to Lphkm
+        (['Lphkm', 'liters-per-hundred-kilometers', 'liter-per-hundred-kilometers', 'litres-per-hundred-kilometres', 'litre-per-hundred-kilometres'], '1 * 100 / (amount * amount)')
     )),
     (['length'], (
         (['km', 'kilometer', 'kilometers', 'kilometre', 'kilometres'], '1000'),
@@ -190,7 +193,7 @@ for kind, pairs in units:
         unit1, *aliases = unit1
         print(f"""    @{kind}.group(aliases={aliases!r}, invoke_without_command=True, description='units/{kind}-{unit1}-desc')
     @lone_group(True)
-    async def {unit1}(ctx):
+    async def {unit1}(self, ctx):
         pass
 
 """)
@@ -211,15 +214,22 @@ for kind, pairs in units:
                 elif unit1 == 'K':
                     factor = '(amount - 273.15)'
                     if unit2 == 'F':
-                        factor += '* 9 / 5 + 32'
+                        factor += ' * 9 / 5 + 32'
                 print(f"""    @{unit1}.command(aliases={aliases!r}, invoke_without_command=True, description='units/{kind}-{unit1}-{unit2}-desc')
     async def {unit2}(ctx, amount: float):
         await ctx.send({factor})
+
+    del {unit2}
 """)
             else:
                 print(f"""    @{unit1}.command(aliases={aliases!r}, invoke_without_command=True, description='units/{kind}-{unit1}-{unit2}-desc')
     async def {unit2}(ctx, amount: float):
-        await ctx.send(amount * {factor1} / {factor2})
+        try:
+            await ctx.send(amount * {factor1} / {factor2})
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del {unit2}
 """)
 
 sys.stdout.close()
