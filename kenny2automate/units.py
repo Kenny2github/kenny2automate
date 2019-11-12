@@ -1,3 +1,4 @@
+from math import pi
 from discord.ext.commands import group, Cog
 from .utils import lone_group
 
@@ -16,277 +17,557 @@ class Units(Cog):
         pass
 
 
-    @area.group(invoke_without_command=True, description='units/area-sqkm-desc')
+    @area.group(aliases=['square-kilometers', 'square-kilometres', 'square-kilometer', 'square-kilometre'], invoke_without_command=True, description='units/area-sqkm-desc')
     @lone_group(True)
-    async def sqkm(ctx):
+    async def sqkm(self, ctx):
         pass
 
 
-    @sqkm.command(invoke_without_command=True, description='units/area-sqkm-sqm-desc')
+    @sqkm.command(aliases=['square-meters', 'square-metres', 'square-meter', 'square-metre'], invoke_without_command=True, description='units/area-sqkm-sqm-desc')
     async def sqm(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 1)
+        try:
+            await ctx.send(amount * 1e6 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqkm.command(invoke_without_command=True, description='units/area-sqkm-sqmil-desc')
+    del sqm
+
+    @sqkm.command(aliases=['square-miles', 'square-mile'], invoke_without_command=True, description='units/area-sqkm-sqmil-desc')
     async def sqmil(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 2.59e6)
+        try:
+            await ctx.send(amount * 1e6 / 2.59e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqkm.command(invoke_without_command=True, description='units/area-sqkm-sqyard-desc')
+    del sqmil
+
+    @sqkm.command(aliases=['square-yards', 'square-yard'], invoke_without_command=True, description='units/area-sqkm-sqyard-desc')
     async def sqyard(ctx, amount: float):
-        await ctx.send(amount * 1e6 / (1/1.196))
+        try:
+            await ctx.send(amount * 1e6 / (1/1.196))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqkm.command(invoke_without_command=True, description='units/area-sqkm-sqft-desc')
+    del sqyard
+
+    @sqkm.command(aliases=['square-feet', 'square-foot'], invoke_without_command=True, description='units/area-sqkm-sqft-desc')
     async def sqft(ctx, amount: float):
-        await ctx.send(amount * 1e6 / (1/10.764))
+        try:
+            await ctx.send(amount * 1e6 / (1/10.764))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqkm.command(invoke_without_command=True, description='units/area-sqkm-sqin-desc')
+    del sqft
+
+    @sqkm.command(aliases=['square-inches', 'square-inch'], invoke_without_command=True, description='units/area-sqkm-sqin-desc')
     async def sqin(ctx, amount: float):
-        await ctx.send(amount * 1e6 / (1/1550.003))
+        try:
+            await ctx.send(amount * 1e6 / (1/1550.003))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqkm.command(invoke_without_command=True, description='units/area-sqkm-hectare-desc')
+    del sqin
+
+    @sqkm.command(aliases=['hectares'], invoke_without_command=True, description='units/area-sqkm-hectare-desc')
     async def hectare(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 10000)
+        try:
+            await ctx.send(amount * 1e6 / 10000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqkm.command(invoke_without_command=True, description='units/area-sqkm-acre-desc')
+    del hectare
+
+    @sqkm.command(aliases=['acres'], invoke_without_command=True, description='units/area-sqkm-acre-desc')
     async def acre(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 4046.856)
+        try:
+            await ctx.send(amount * 1e6 / 4046.856)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @area.group(invoke_without_command=True, description='units/area-sqm-desc')
+    del acre
+
+    @area.group(aliases=['square-meters', 'square-metres', 'square-meter', 'square-metre'], invoke_without_command=True, description='units/area-sqm-desc')
     @lone_group(True)
-    async def sqm(ctx):
+    async def sqm(self, ctx):
         pass
 
 
-    @sqm.command(invoke_without_command=True, description='units/area-sqm-sqkm-desc')
+    @sqm.command(aliases=['square-kilometers', 'square-kilometres', 'square-kilometer', 'square-kilometre'], invoke_without_command=True, description='units/area-sqm-sqkm-desc')
     async def sqkm(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e6)
+        try:
+            await ctx.send(amount * 1 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqm.command(invoke_without_command=True, description='units/area-sqm-sqmil-desc')
+    del sqkm
+
+    @sqm.command(aliases=['square-miles', 'square-mile'], invoke_without_command=True, description='units/area-sqm-sqmil-desc')
     async def sqmil(ctx, amount: float):
-        await ctx.send(amount * 1 / 2.59e6)
+        try:
+            await ctx.send(amount * 1 / 2.59e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqm.command(invoke_without_command=True, description='units/area-sqm-sqyard-desc')
+    del sqmil
+
+    @sqm.command(aliases=['square-yards', 'square-yard'], invoke_without_command=True, description='units/area-sqm-sqyard-desc')
     async def sqyard(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/1.196))
+        try:
+            await ctx.send(amount * 1 / (1/1.196))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqm.command(invoke_without_command=True, description='units/area-sqm-sqft-desc')
+    del sqyard
+
+    @sqm.command(aliases=['square-feet', 'square-foot'], invoke_without_command=True, description='units/area-sqm-sqft-desc')
     async def sqft(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/10.764))
+        try:
+            await ctx.send(amount * 1 / (1/10.764))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqm.command(invoke_without_command=True, description='units/area-sqm-sqin-desc')
+    del sqft
+
+    @sqm.command(aliases=['square-inches', 'square-inch'], invoke_without_command=True, description='units/area-sqm-sqin-desc')
     async def sqin(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/1550.003))
+        try:
+            await ctx.send(amount * 1 / (1/1550.003))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqm.command(invoke_without_command=True, description='units/area-sqm-hectare-desc')
+    del sqin
+
+    @sqm.command(aliases=['hectares'], invoke_without_command=True, description='units/area-sqm-hectare-desc')
     async def hectare(ctx, amount: float):
-        await ctx.send(amount * 1 / 10000)
+        try:
+            await ctx.send(amount * 1 / 10000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqm.command(invoke_without_command=True, description='units/area-sqm-acre-desc')
+    del hectare
+
+    @sqm.command(aliases=['acres'], invoke_without_command=True, description='units/area-sqm-acre-desc')
     async def acre(ctx, amount: float):
-        await ctx.send(amount * 1 / 4046.856)
+        try:
+            await ctx.send(amount * 1 / 4046.856)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @area.group(invoke_without_command=True, description='units/area-sqmil-desc')
+    del acre
+
+    @area.group(aliases=['square-miles', 'square-mile'], invoke_without_command=True, description='units/area-sqmil-desc')
     @lone_group(True)
-    async def sqmil(ctx):
+    async def sqmil(self, ctx):
         pass
 
 
-    @sqmil.command(invoke_without_command=True, description='units/area-sqmil-sqkm-desc')
+    @sqmil.command(aliases=['square-kilometers', 'square-kilometres', 'square-kilometer', 'square-kilometre'], invoke_without_command=True, description='units/area-sqmil-sqkm-desc')
     async def sqkm(ctx, amount: float):
-        await ctx.send(amount * 2.59e6 / 1e6)
+        try:
+            await ctx.send(amount * 2.59e6 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqmil.command(invoke_without_command=True, description='units/area-sqmil-sqm-desc')
+    del sqkm
+
+    @sqmil.command(aliases=['square-meters', 'square-metres', 'square-meter', 'square-metre'], invoke_without_command=True, description='units/area-sqmil-sqm-desc')
     async def sqm(ctx, amount: float):
-        await ctx.send(amount * 2.59e6 / 1)
+        try:
+            await ctx.send(amount * 2.59e6 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqmil.command(invoke_without_command=True, description='units/area-sqmil-sqyard-desc')
+    del sqm
+
+    @sqmil.command(aliases=['square-yards', 'square-yard'], invoke_without_command=True, description='units/area-sqmil-sqyard-desc')
     async def sqyard(ctx, amount: float):
-        await ctx.send(amount * 2.59e6 / (1/1.196))
+        try:
+            await ctx.send(amount * 2.59e6 / (1/1.196))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqmil.command(invoke_without_command=True, description='units/area-sqmil-sqft-desc')
+    del sqyard
+
+    @sqmil.command(aliases=['square-feet', 'square-foot'], invoke_without_command=True, description='units/area-sqmil-sqft-desc')
     async def sqft(ctx, amount: float):
-        await ctx.send(amount * 2.59e6 / (1/10.764))
+        try:
+            await ctx.send(amount * 2.59e6 / (1/10.764))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqmil.command(invoke_without_command=True, description='units/area-sqmil-sqin-desc')
+    del sqft
+
+    @sqmil.command(aliases=['square-inches', 'square-inch'], invoke_without_command=True, description='units/area-sqmil-sqin-desc')
     async def sqin(ctx, amount: float):
-        await ctx.send(amount * 2.59e6 / (1/1550.003))
+        try:
+            await ctx.send(amount * 2.59e6 / (1/1550.003))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqmil.command(invoke_without_command=True, description='units/area-sqmil-hectare-desc')
+    del sqin
+
+    @sqmil.command(aliases=['hectares'], invoke_without_command=True, description='units/area-sqmil-hectare-desc')
     async def hectare(ctx, amount: float):
-        await ctx.send(amount * 2.59e6 / 10000)
+        try:
+            await ctx.send(amount * 2.59e6 / 10000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqmil.command(invoke_without_command=True, description='units/area-sqmil-acre-desc')
+    del hectare
+
+    @sqmil.command(aliases=['acres'], invoke_without_command=True, description='units/area-sqmil-acre-desc')
     async def acre(ctx, amount: float):
-        await ctx.send(amount * 2.59e6 / 4046.856)
+        try:
+            await ctx.send(amount * 2.59e6 / 4046.856)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @area.group(invoke_without_command=True, description='units/area-sqyard-desc')
+    del acre
+
+    @area.group(aliases=['square-yards', 'square-yard'], invoke_without_command=True, description='units/area-sqyard-desc')
     @lone_group(True)
-    async def sqyard(ctx):
+    async def sqyard(self, ctx):
         pass
 
 
-    @sqyard.command(invoke_without_command=True, description='units/area-sqyard-sqkm-desc')
+    @sqyard.command(aliases=['square-kilometers', 'square-kilometres', 'square-kilometer', 'square-kilometre'], invoke_without_command=True, description='units/area-sqyard-sqkm-desc')
     async def sqkm(ctx, amount: float):
-        await ctx.send(amount * (1/1.196) / 1e6)
+        try:
+            await ctx.send(amount * (1/1.196) / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqyard.command(invoke_without_command=True, description='units/area-sqyard-sqm-desc')
+    del sqkm
+
+    @sqyard.command(aliases=['square-meters', 'square-metres', 'square-meter', 'square-metre'], invoke_without_command=True, description='units/area-sqyard-sqm-desc')
     async def sqm(ctx, amount: float):
-        await ctx.send(amount * (1/1.196) / 1)
+        try:
+            await ctx.send(amount * (1/1.196) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqyard.command(invoke_without_command=True, description='units/area-sqyard-sqmil-desc')
+    del sqm
+
+    @sqyard.command(aliases=['square-miles', 'square-mile'], invoke_without_command=True, description='units/area-sqyard-sqmil-desc')
     async def sqmil(ctx, amount: float):
-        await ctx.send(amount * (1/1.196) / 2.59e6)
+        try:
+            await ctx.send(amount * (1/1.196) / 2.59e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqyard.command(invoke_without_command=True, description='units/area-sqyard-sqft-desc')
+    del sqmil
+
+    @sqyard.command(aliases=['square-feet', 'square-foot'], invoke_without_command=True, description='units/area-sqyard-sqft-desc')
     async def sqft(ctx, amount: float):
-        await ctx.send(amount * (1/1.196) / (1/10.764))
+        try:
+            await ctx.send(amount * (1/1.196) / (1/10.764))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqyard.command(invoke_without_command=True, description='units/area-sqyard-sqin-desc')
+    del sqft
+
+    @sqyard.command(aliases=['square-inches', 'square-inch'], invoke_without_command=True, description='units/area-sqyard-sqin-desc')
     async def sqin(ctx, amount: float):
-        await ctx.send(amount * (1/1.196) / (1/1550.003))
+        try:
+            await ctx.send(amount * (1/1.196) / (1/1550.003))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqyard.command(invoke_without_command=True, description='units/area-sqyard-hectare-desc')
+    del sqin
+
+    @sqyard.command(aliases=['hectares'], invoke_without_command=True, description='units/area-sqyard-hectare-desc')
     async def hectare(ctx, amount: float):
-        await ctx.send(amount * (1/1.196) / 10000)
+        try:
+            await ctx.send(amount * (1/1.196) / 10000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqyard.command(invoke_without_command=True, description='units/area-sqyard-acre-desc')
+    del hectare
+
+    @sqyard.command(aliases=['acres'], invoke_without_command=True, description='units/area-sqyard-acre-desc')
     async def acre(ctx, amount: float):
-        await ctx.send(amount * (1/1.196) / 4046.856)
+        try:
+            await ctx.send(amount * (1/1.196) / 4046.856)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @area.group(invoke_without_command=True, description='units/area-sqft-desc')
+    del acre
+
+    @area.group(aliases=['square-feet', 'square-foot'], invoke_without_command=True, description='units/area-sqft-desc')
     @lone_group(True)
-    async def sqft(ctx):
+    async def sqft(self, ctx):
         pass
 
 
-    @sqft.command(invoke_without_command=True, description='units/area-sqft-sqkm-desc')
+    @sqft.command(aliases=['square-kilometers', 'square-kilometres', 'square-kilometer', 'square-kilometre'], invoke_without_command=True, description='units/area-sqft-sqkm-desc')
     async def sqkm(ctx, amount: float):
-        await ctx.send(amount * (1/10.764) / 1e6)
+        try:
+            await ctx.send(amount * (1/10.764) / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqft.command(invoke_without_command=True, description='units/area-sqft-sqm-desc')
+    del sqkm
+
+    @sqft.command(aliases=['square-meters', 'square-metres', 'square-meter', 'square-metre'], invoke_without_command=True, description='units/area-sqft-sqm-desc')
     async def sqm(ctx, amount: float):
-        await ctx.send(amount * (1/10.764) / 1)
+        try:
+            await ctx.send(amount * (1/10.764) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqft.command(invoke_without_command=True, description='units/area-sqft-sqmil-desc')
+    del sqm
+
+    @sqft.command(aliases=['square-miles', 'square-mile'], invoke_without_command=True, description='units/area-sqft-sqmil-desc')
     async def sqmil(ctx, amount: float):
-        await ctx.send(amount * (1/10.764) / 2.59e6)
+        try:
+            await ctx.send(amount * (1/10.764) / 2.59e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqft.command(invoke_without_command=True, description='units/area-sqft-sqyard-desc')
+    del sqmil
+
+    @sqft.command(aliases=['square-yards', 'square-yard'], invoke_without_command=True, description='units/area-sqft-sqyard-desc')
     async def sqyard(ctx, amount: float):
-        await ctx.send(amount * (1/10.764) / (1/1.196))
+        try:
+            await ctx.send(amount * (1/10.764) / (1/1.196))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqft.command(invoke_without_command=True, description='units/area-sqft-sqin-desc')
+    del sqyard
+
+    @sqft.command(aliases=['square-inches', 'square-inch'], invoke_without_command=True, description='units/area-sqft-sqin-desc')
     async def sqin(ctx, amount: float):
-        await ctx.send(amount * (1/10.764) / (1/1550.003))
+        try:
+            await ctx.send(amount * (1/10.764) / (1/1550.003))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqft.command(invoke_without_command=True, description='units/area-sqft-hectare-desc')
+    del sqin
+
+    @sqft.command(aliases=['hectares'], invoke_without_command=True, description='units/area-sqft-hectare-desc')
     async def hectare(ctx, amount: float):
-        await ctx.send(amount * (1/10.764) / 10000)
+        try:
+            await ctx.send(amount * (1/10.764) / 10000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqft.command(invoke_without_command=True, description='units/area-sqft-acre-desc')
+    del hectare
+
+    @sqft.command(aliases=['acres'], invoke_without_command=True, description='units/area-sqft-acre-desc')
     async def acre(ctx, amount: float):
-        await ctx.send(amount * (1/10.764) / 4046.856)
+        try:
+            await ctx.send(amount * (1/10.764) / 4046.856)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @area.group(invoke_without_command=True, description='units/area-sqin-desc')
+    del acre
+
+    @area.group(aliases=['square-inches', 'square-inch'], invoke_without_command=True, description='units/area-sqin-desc')
     @lone_group(True)
-    async def sqin(ctx):
+    async def sqin(self, ctx):
         pass
 
 
-    @sqin.command(invoke_without_command=True, description='units/area-sqin-sqkm-desc')
+    @sqin.command(aliases=['square-kilometers', 'square-kilometres', 'square-kilometer', 'square-kilometre'], invoke_without_command=True, description='units/area-sqin-sqkm-desc')
     async def sqkm(ctx, amount: float):
-        await ctx.send(amount * (1/1550.003) / 1e6)
+        try:
+            await ctx.send(amount * (1/1550.003) / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqin.command(invoke_without_command=True, description='units/area-sqin-sqm-desc')
+    del sqkm
+
+    @sqin.command(aliases=['square-meters', 'square-metres', 'square-meter', 'square-metre'], invoke_without_command=True, description='units/area-sqin-sqm-desc')
     async def sqm(ctx, amount: float):
-        await ctx.send(amount * (1/1550.003) / 1)
+        try:
+            await ctx.send(amount * (1/1550.003) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqin.command(invoke_without_command=True, description='units/area-sqin-sqmil-desc')
+    del sqm
+
+    @sqin.command(aliases=['square-miles', 'square-mile'], invoke_without_command=True, description='units/area-sqin-sqmil-desc')
     async def sqmil(ctx, amount: float):
-        await ctx.send(amount * (1/1550.003) / 2.59e6)
+        try:
+            await ctx.send(amount * (1/1550.003) / 2.59e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqin.command(invoke_without_command=True, description='units/area-sqin-sqyard-desc')
+    del sqmil
+
+    @sqin.command(aliases=['square-yards', 'square-yard'], invoke_without_command=True, description='units/area-sqin-sqyard-desc')
     async def sqyard(ctx, amount: float):
-        await ctx.send(amount * (1/1550.003) / (1/1.196))
+        try:
+            await ctx.send(amount * (1/1550.003) / (1/1.196))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqin.command(invoke_without_command=True, description='units/area-sqin-sqft-desc')
+    del sqyard
+
+    @sqin.command(aliases=['square-feet', 'square-foot'], invoke_without_command=True, description='units/area-sqin-sqft-desc')
     async def sqft(ctx, amount: float):
-        await ctx.send(amount * (1/1550.003) / (1/10.764))
+        try:
+            await ctx.send(amount * (1/1550.003) / (1/10.764))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqin.command(invoke_without_command=True, description='units/area-sqin-hectare-desc')
+    del sqft
+
+    @sqin.command(aliases=['hectares'], invoke_without_command=True, description='units/area-sqin-hectare-desc')
     async def hectare(ctx, amount: float):
-        await ctx.send(amount * (1/1550.003) / 10000)
+        try:
+            await ctx.send(amount * (1/1550.003) / 10000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @sqin.command(invoke_without_command=True, description='units/area-sqin-acre-desc')
+    del hectare
+
+    @sqin.command(aliases=['acres'], invoke_without_command=True, description='units/area-sqin-acre-desc')
     async def acre(ctx, amount: float):
-        await ctx.send(amount * (1/1550.003) / 4046.856)
+        try:
+            await ctx.send(amount * (1/1550.003) / 4046.856)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @area.group(invoke_without_command=True, description='units/area-hectare-desc')
+    del acre
+
+    @area.group(aliases=['hectares'], invoke_without_command=True, description='units/area-hectare-desc')
     @lone_group(True)
-    async def hectare(ctx):
+    async def hectare(self, ctx):
         pass
 
 
-    @hectare.command(invoke_without_command=True, description='units/area-hectare-sqkm-desc')
+    @hectare.command(aliases=['square-kilometers', 'square-kilometres', 'square-kilometer', 'square-kilometre'], invoke_without_command=True, description='units/area-hectare-sqkm-desc')
     async def sqkm(ctx, amount: float):
-        await ctx.send(amount * 10000 / 1e6)
+        try:
+            await ctx.send(amount * 10000 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @hectare.command(invoke_without_command=True, description='units/area-hectare-sqm-desc')
+    del sqkm
+
+    @hectare.command(aliases=['square-meters', 'square-metres', 'square-meter', 'square-metre'], invoke_without_command=True, description='units/area-hectare-sqm-desc')
     async def sqm(ctx, amount: float):
-        await ctx.send(amount * 10000 / 1)
+        try:
+            await ctx.send(amount * 10000 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @hectare.command(invoke_without_command=True, description='units/area-hectare-sqmil-desc')
+    del sqm
+
+    @hectare.command(aliases=['square-miles', 'square-mile'], invoke_without_command=True, description='units/area-hectare-sqmil-desc')
     async def sqmil(ctx, amount: float):
-        await ctx.send(amount * 10000 / 2.59e6)
+        try:
+            await ctx.send(amount * 10000 / 2.59e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @hectare.command(invoke_without_command=True, description='units/area-hectare-sqyard-desc')
+    del sqmil
+
+    @hectare.command(aliases=['square-yards', 'square-yard'], invoke_without_command=True, description='units/area-hectare-sqyard-desc')
     async def sqyard(ctx, amount: float):
-        await ctx.send(amount * 10000 / (1/1.196))
+        try:
+            await ctx.send(amount * 10000 / (1/1.196))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @hectare.command(invoke_without_command=True, description='units/area-hectare-sqft-desc')
+    del sqyard
+
+    @hectare.command(aliases=['square-feet', 'square-foot'], invoke_without_command=True, description='units/area-hectare-sqft-desc')
     async def sqft(ctx, amount: float):
-        await ctx.send(amount * 10000 / (1/10.764))
+        try:
+            await ctx.send(amount * 10000 / (1/10.764))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @hectare.command(invoke_without_command=True, description='units/area-hectare-sqin-desc')
+    del sqft
+
+    @hectare.command(aliases=['square-inches', 'square-inch'], invoke_without_command=True, description='units/area-hectare-sqin-desc')
     async def sqin(ctx, amount: float):
-        await ctx.send(amount * 10000 / (1/1550.003))
+        try:
+            await ctx.send(amount * 10000 / (1/1550.003))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @hectare.command(invoke_without_command=True, description='units/area-hectare-acre-desc')
+    del sqin
+
+    @hectare.command(aliases=['acres'], invoke_without_command=True, description='units/area-hectare-acre-desc')
     async def acre(ctx, amount: float):
-        await ctx.send(amount * 10000 / 4046.856)
+        try:
+            await ctx.send(amount * 10000 / 4046.856)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @area.group(invoke_without_command=True, description='units/area-acre-desc')
+    del acre
+
+    @area.group(aliases=['acres'], invoke_without_command=True, description='units/area-acre-desc')
     @lone_group(True)
-    async def acre(ctx):
+    async def acre(self, ctx):
         pass
 
 
-    @acre.command(invoke_without_command=True, description='units/area-acre-sqkm-desc')
+    @acre.command(aliases=['square-kilometers', 'square-kilometres', 'square-kilometer', 'square-kilometre'], invoke_without_command=True, description='units/area-acre-sqkm-desc')
     async def sqkm(ctx, amount: float):
-        await ctx.send(amount * 4046.856 / 1e6)
+        try:
+            await ctx.send(amount * 4046.856 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @acre.command(invoke_without_command=True, description='units/area-acre-sqm-desc')
+    del sqkm
+
+    @acre.command(aliases=['square-meters', 'square-metres', 'square-meter', 'square-metre'], invoke_without_command=True, description='units/area-acre-sqm-desc')
     async def sqm(ctx, amount: float):
-        await ctx.send(amount * 4046.856 / 1)
+        try:
+            await ctx.send(amount * 4046.856 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @acre.command(invoke_without_command=True, description='units/area-acre-sqmil-desc')
+    del sqm
+
+    @acre.command(aliases=['square-miles', 'square-mile'], invoke_without_command=True, description='units/area-acre-sqmil-desc')
     async def sqmil(ctx, amount: float):
-        await ctx.send(amount * 4046.856 / 2.59e6)
+        try:
+            await ctx.send(amount * 4046.856 / 2.59e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @acre.command(invoke_without_command=True, description='units/area-acre-sqyard-desc')
+    del sqmil
+
+    @acre.command(aliases=['square-yards', 'square-yard'], invoke_without_command=True, description='units/area-acre-sqyard-desc')
     async def sqyard(ctx, amount: float):
-        await ctx.send(amount * 4046.856 / (1/1.196))
+        try:
+            await ctx.send(amount * 4046.856 / (1/1.196))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @acre.command(invoke_without_command=True, description='units/area-acre-sqft-desc')
+    del sqyard
+
+    @acre.command(aliases=['square-feet', 'square-foot'], invoke_without_command=True, description='units/area-acre-sqft-desc')
     async def sqft(ctx, amount: float):
-        await ctx.send(amount * 4046.856 / (1/10.764))
+        try:
+            await ctx.send(amount * 4046.856 / (1/10.764))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @acre.command(invoke_without_command=True, description='units/area-acre-sqin-desc')
+    del sqft
+
+    @acre.command(aliases=['square-inches', 'square-inch'], invoke_without_command=True, description='units/area-acre-sqin-desc')
     async def sqin(ctx, amount: float):
-        await ctx.send(amount * 4046.856 / (1/1550.003))
+        try:
+            await ctx.send(amount * 4046.856 / (1/1550.003))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @acre.command(invoke_without_command=True, description='units/area-acre-hectare-desc')
+    del sqin
+
+    @acre.command(aliases=['hectares'], invoke_without_command=True, description='units/area-acre-hectare-desc')
     async def hectare(ctx, amount: float):
-        await ctx.send(amount * 4046.856 / 10000)
+        try:
+            await ctx.send(amount * 4046.856 / 10000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del hectare
 
 
     @convert.group(aliases=[], invoke_without_command=True, description='units/data-desc')
@@ -295,707 +576,1487 @@ class Units(Cog):
         pass
 
 
-    @data.group(invoke_without_command=True, description='units/data-bps-desc')
+    @data.group(aliases=['bit-per-second', 'bits-per-second'], invoke_without_command=True, description='units/data-bps-desc')
     @lone_group(True)
-    async def bps(ctx):
+    async def bps(self, ctx):
         pass
 
 
-    @bps.command(invoke_without_command=True, description='units/data-bps-kbps-desc')
+    @bps.command(aliases=['kilobit-per-second', 'kilobits-per-second'], invoke_without_command=True, description='units/data-bps-kbps-desc')
     async def kbps(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e3)
+        try:
+            await ctx.send(amount * 1 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @bps.command(invoke_without_command=True, description='units/data-bps-KBps-desc')
+    del kbps
+
+    @bps.command(aliases=['kilobyte-per-second', 'kilobytes-per-second'], invoke_without_command=True, description='units/data-bps-KBps-desc')
     async def KBps(ctx, amount: float):
-        await ctx.send(amount * 1 / 8e3)
+        try:
+            await ctx.send(amount * 1 / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @bps.command(invoke_without_command=True, description='units/data-bps-kibps-desc')
+    del KBps
+
+    @bps.command(aliases=['kibibit-per-second', 'kibibits-per-second'], invoke_without_command=True, description='units/data-bps-kibps-desc')
     async def kibps(ctx, amount: float):
-        await ctx.send(amount * 1 / 1024)
+        try:
+            await ctx.send(amount * 1 / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @bps.command(invoke_without_command=True, description='units/data-bps-mbps-desc')
+    del kibps
+
+    @bps.command(aliases=['megabit-per-second', 'megabits-per-second'], invoke_without_command=True, description='units/data-bps-mbps-desc')
     async def mbps(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e6)
+        try:
+            await ctx.send(amount * 1 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @bps.command(invoke_without_command=True, description='units/data-bps-MBps-desc')
+    del mbps
+
+    @bps.command(aliases=['megabyte-per-second', 'megabytes-per-second'], invoke_without_command=True, description='units/data-bps-MBps-desc')
     async def MBps(ctx, amount: float):
-        await ctx.send(amount * 1 / 8e6)
+        try:
+            await ctx.send(amount * 1 / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @bps.command(invoke_without_command=True, description='units/data-bps-mibps-desc')
+    del MBps
+
+    @bps.command(aliases=['mebibit-per-second', 'mebibits-per-second'], invoke_without_command=True, description='units/data-bps-mibps-desc')
     async def mibps(ctx, amount: float):
-        await ctx.send(amount * 1 / (1024**2))
+        try:
+            await ctx.send(amount * 1 / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @bps.command(invoke_without_command=True, description='units/data-bps-gbps-desc')
+    del mibps
+
+    @bps.command(aliases=['gigabit-per-second', 'gigabits-per-second'], invoke_without_command=True, description='units/data-bps-gbps-desc')
     async def gbps(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e9)
+        try:
+            await ctx.send(amount * 1 / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @bps.command(invoke_without_command=True, description='units/data-bps-GBps-desc')
+    del gbps
+
+    @bps.command(aliases=['gigabyte-per-second', 'gigabytes-per-second'], invoke_without_command=True, description='units/data-bps-GBps-desc')
     async def GBps(ctx, amount: float):
-        await ctx.send(amount * 1 / 8e9)
+        try:
+            await ctx.send(amount * 1 / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @bps.command(invoke_without_command=True, description='units/data-bps-gibps-desc')
+    del GBps
+
+    @bps.command(aliases=['gigibit-per-second', 'gigibits-per-second'], invoke_without_command=True, description='units/data-bps-gibps-desc')
     async def gibps(ctx, amount: float):
-        await ctx.send(amount * 1 / (1024**3))
+        try:
+            await ctx.send(amount * 1 / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @bps.command(invoke_without_command=True, description='units/data-bps-tbps-desc')
+    del gibps
+
+    @bps.command(aliases=['terabit-per-second', 'terabits-per-second'], invoke_without_command=True, description='units/data-bps-tbps-desc')
     async def tbps(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e12)
+        try:
+            await ctx.send(amount * 1 / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @bps.command(invoke_without_command=True, description='units/data-bps-TBps-desc')
+    del tbps
+
+    @bps.command(aliases=['terabyte-per-second', 'terabytes-per-second'], invoke_without_command=True, description='units/data-bps-TBps-desc')
     async def TBps(ctx, amount: float):
-        await ctx.send(amount * 1 / 8e12)
+        try:
+            await ctx.send(amount * 1 / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @bps.command(invoke_without_command=True, description='units/data-bps-tibps-desc')
+    del TBps
+
+    @bps.command(aliases=['tebibit-per-second', 'tebibits-per-second'], invoke_without_command=True, description='units/data-bps-tibps-desc')
     async def tibps(ctx, amount: float):
-        await ctx.send(amount * 1 / (1024**4))
+        try:
+            await ctx.send(amount * 1 / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @data.group(invoke_without_command=True, description='units/data-kbps-desc')
+    del tibps
+
+    @data.group(aliases=['kilobit-per-second', 'kilobits-per-second'], invoke_without_command=True, description='units/data-kbps-desc')
     @lone_group(True)
-    async def kbps(ctx):
+    async def kbps(self, ctx):
         pass
 
 
-    @kbps.command(invoke_without_command=True, description='units/data-kbps-bps-desc')
+    @kbps.command(aliases=['bit-per-second', 'bits-per-second'], invoke_without_command=True, description='units/data-kbps-bps-desc')
     async def bps(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 1)
+        try:
+            await ctx.send(amount * 1e3 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kbps.command(invoke_without_command=True, description='units/data-kbps-KBps-desc')
+    del bps
+
+    @kbps.command(aliases=['kilobyte-per-second', 'kilobytes-per-second'], invoke_without_command=True, description='units/data-kbps-KBps-desc')
     async def KBps(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 8e3)
+        try:
+            await ctx.send(amount * 1e3 / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kbps.command(invoke_without_command=True, description='units/data-kbps-kibps-desc')
+    del KBps
+
+    @kbps.command(aliases=['kibibit-per-second', 'kibibits-per-second'], invoke_without_command=True, description='units/data-kbps-kibps-desc')
     async def kibps(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 1024)
+        try:
+            await ctx.send(amount * 1e3 / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kbps.command(invoke_without_command=True, description='units/data-kbps-mbps-desc')
+    del kibps
+
+    @kbps.command(aliases=['megabit-per-second', 'megabits-per-second'], invoke_without_command=True, description='units/data-kbps-mbps-desc')
     async def mbps(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 1e6)
+        try:
+            await ctx.send(amount * 1e3 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kbps.command(invoke_without_command=True, description='units/data-kbps-MBps-desc')
+    del mbps
+
+    @kbps.command(aliases=['megabyte-per-second', 'megabytes-per-second'], invoke_without_command=True, description='units/data-kbps-MBps-desc')
     async def MBps(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 8e6)
+        try:
+            await ctx.send(amount * 1e3 / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kbps.command(invoke_without_command=True, description='units/data-kbps-mibps-desc')
+    del MBps
+
+    @kbps.command(aliases=['mebibit-per-second', 'mebibits-per-second'], invoke_without_command=True, description='units/data-kbps-mibps-desc')
     async def mibps(ctx, amount: float):
-        await ctx.send(amount * 1e3 / (1024**2))
+        try:
+            await ctx.send(amount * 1e3 / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kbps.command(invoke_without_command=True, description='units/data-kbps-gbps-desc')
+    del mibps
+
+    @kbps.command(aliases=['gigabit-per-second', 'gigabits-per-second'], invoke_without_command=True, description='units/data-kbps-gbps-desc')
     async def gbps(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 1e9)
+        try:
+            await ctx.send(amount * 1e3 / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kbps.command(invoke_without_command=True, description='units/data-kbps-GBps-desc')
+    del gbps
+
+    @kbps.command(aliases=['gigabyte-per-second', 'gigabytes-per-second'], invoke_without_command=True, description='units/data-kbps-GBps-desc')
     async def GBps(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 8e9)
+        try:
+            await ctx.send(amount * 1e3 / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kbps.command(invoke_without_command=True, description='units/data-kbps-gibps-desc')
+    del GBps
+
+    @kbps.command(aliases=['gigibit-per-second', 'gigibits-per-second'], invoke_without_command=True, description='units/data-kbps-gibps-desc')
     async def gibps(ctx, amount: float):
-        await ctx.send(amount * 1e3 / (1024**3))
+        try:
+            await ctx.send(amount * 1e3 / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kbps.command(invoke_without_command=True, description='units/data-kbps-tbps-desc')
+    del gibps
+
+    @kbps.command(aliases=['terabit-per-second', 'terabits-per-second'], invoke_without_command=True, description='units/data-kbps-tbps-desc')
     async def tbps(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 1e12)
+        try:
+            await ctx.send(amount * 1e3 / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kbps.command(invoke_without_command=True, description='units/data-kbps-TBps-desc')
+    del tbps
+
+    @kbps.command(aliases=['terabyte-per-second', 'terabytes-per-second'], invoke_without_command=True, description='units/data-kbps-TBps-desc')
     async def TBps(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 8e12)
+        try:
+            await ctx.send(amount * 1e3 / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kbps.command(invoke_without_command=True, description='units/data-kbps-tibps-desc')
+    del TBps
+
+    @kbps.command(aliases=['tebibit-per-second', 'tebibits-per-second'], invoke_without_command=True, description='units/data-kbps-tibps-desc')
     async def tibps(ctx, amount: float):
-        await ctx.send(amount * 1e3 / (1024**4))
+        try:
+            await ctx.send(amount * 1e3 / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @data.group(invoke_without_command=True, description='units/data-KBps-desc')
+    del tibps
+
+    @data.group(aliases=['kilobyte-per-second', 'kilobytes-per-second'], invoke_without_command=True, description='units/data-KBps-desc')
     @lone_group(True)
-    async def KBps(ctx):
+    async def KBps(self, ctx):
         pass
 
 
-    @KBps.command(invoke_without_command=True, description='units/data-KBps-bps-desc')
+    @KBps.command(aliases=['bit-per-second', 'bits-per-second'], invoke_without_command=True, description='units/data-KBps-bps-desc')
     async def bps(ctx, amount: float):
-        await ctx.send(amount * 8e3 / 1)
+        try:
+            await ctx.send(amount * 8e3 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KBps.command(invoke_without_command=True, description='units/data-KBps-kbps-desc')
+    del bps
+
+    @KBps.command(aliases=['kilobit-per-second', 'kilobits-per-second'], invoke_without_command=True, description='units/data-KBps-kbps-desc')
     async def kbps(ctx, amount: float):
-        await ctx.send(amount * 8e3 / 1e3)
+        try:
+            await ctx.send(amount * 8e3 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KBps.command(invoke_without_command=True, description='units/data-KBps-kibps-desc')
+    del kbps
+
+    @KBps.command(aliases=['kibibit-per-second', 'kibibits-per-second'], invoke_without_command=True, description='units/data-KBps-kibps-desc')
     async def kibps(ctx, amount: float):
-        await ctx.send(amount * 8e3 / 1024)
+        try:
+            await ctx.send(amount * 8e3 / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KBps.command(invoke_without_command=True, description='units/data-KBps-mbps-desc')
+    del kibps
+
+    @KBps.command(aliases=['megabit-per-second', 'megabits-per-second'], invoke_without_command=True, description='units/data-KBps-mbps-desc')
     async def mbps(ctx, amount: float):
-        await ctx.send(amount * 8e3 / 1e6)
+        try:
+            await ctx.send(amount * 8e3 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KBps.command(invoke_without_command=True, description='units/data-KBps-MBps-desc')
+    del mbps
+
+    @KBps.command(aliases=['megabyte-per-second', 'megabytes-per-second'], invoke_without_command=True, description='units/data-KBps-MBps-desc')
     async def MBps(ctx, amount: float):
-        await ctx.send(amount * 8e3 / 8e6)
+        try:
+            await ctx.send(amount * 8e3 / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KBps.command(invoke_without_command=True, description='units/data-KBps-mibps-desc')
+    del MBps
+
+    @KBps.command(aliases=['mebibit-per-second', 'mebibits-per-second'], invoke_without_command=True, description='units/data-KBps-mibps-desc')
     async def mibps(ctx, amount: float):
-        await ctx.send(amount * 8e3 / (1024**2))
+        try:
+            await ctx.send(amount * 8e3 / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KBps.command(invoke_without_command=True, description='units/data-KBps-gbps-desc')
+    del mibps
+
+    @KBps.command(aliases=['gigabit-per-second', 'gigabits-per-second'], invoke_without_command=True, description='units/data-KBps-gbps-desc')
     async def gbps(ctx, amount: float):
-        await ctx.send(amount * 8e3 / 1e9)
+        try:
+            await ctx.send(amount * 8e3 / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KBps.command(invoke_without_command=True, description='units/data-KBps-GBps-desc')
+    del gbps
+
+    @KBps.command(aliases=['gigabyte-per-second', 'gigabytes-per-second'], invoke_without_command=True, description='units/data-KBps-GBps-desc')
     async def GBps(ctx, amount: float):
-        await ctx.send(amount * 8e3 / 8e9)
+        try:
+            await ctx.send(amount * 8e3 / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KBps.command(invoke_without_command=True, description='units/data-KBps-gibps-desc')
+    del GBps
+
+    @KBps.command(aliases=['gigibit-per-second', 'gigibits-per-second'], invoke_without_command=True, description='units/data-KBps-gibps-desc')
     async def gibps(ctx, amount: float):
-        await ctx.send(amount * 8e3 / (1024**3))
+        try:
+            await ctx.send(amount * 8e3 / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KBps.command(invoke_without_command=True, description='units/data-KBps-tbps-desc')
+    del gibps
+
+    @KBps.command(aliases=['terabit-per-second', 'terabits-per-second'], invoke_without_command=True, description='units/data-KBps-tbps-desc')
     async def tbps(ctx, amount: float):
-        await ctx.send(amount * 8e3 / 1e12)
+        try:
+            await ctx.send(amount * 8e3 / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KBps.command(invoke_without_command=True, description='units/data-KBps-TBps-desc')
+    del tbps
+
+    @KBps.command(aliases=['terabyte-per-second', 'terabytes-per-second'], invoke_without_command=True, description='units/data-KBps-TBps-desc')
     async def TBps(ctx, amount: float):
-        await ctx.send(amount * 8e3 / 8e12)
+        try:
+            await ctx.send(amount * 8e3 / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KBps.command(invoke_without_command=True, description='units/data-KBps-tibps-desc')
+    del TBps
+
+    @KBps.command(aliases=['tebibit-per-second', 'tebibits-per-second'], invoke_without_command=True, description='units/data-KBps-tibps-desc')
     async def tibps(ctx, amount: float):
-        await ctx.send(amount * 8e3 / (1024**4))
+        try:
+            await ctx.send(amount * 8e3 / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @data.group(invoke_without_command=True, description='units/data-kibps-desc')
+    del tibps
+
+    @data.group(aliases=['kibibit-per-second', 'kibibits-per-second'], invoke_without_command=True, description='units/data-kibps-desc')
     @lone_group(True)
-    async def kibps(ctx):
+    async def kibps(self, ctx):
         pass
 
 
-    @kibps.command(invoke_without_command=True, description='units/data-kibps-bps-desc')
+    @kibps.command(aliases=['bit-per-second', 'bits-per-second'], invoke_without_command=True, description='units/data-kibps-bps-desc')
     async def bps(ctx, amount: float):
-        await ctx.send(amount * 1024 / 1)
+        try:
+            await ctx.send(amount * 1024 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kibps.command(invoke_without_command=True, description='units/data-kibps-kbps-desc')
+    del bps
+
+    @kibps.command(aliases=['kilobit-per-second', 'kilobits-per-second'], invoke_without_command=True, description='units/data-kibps-kbps-desc')
     async def kbps(ctx, amount: float):
-        await ctx.send(amount * 1024 / 1e3)
+        try:
+            await ctx.send(amount * 1024 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kibps.command(invoke_without_command=True, description='units/data-kibps-KBps-desc')
+    del kbps
+
+    @kibps.command(aliases=['kilobyte-per-second', 'kilobytes-per-second'], invoke_without_command=True, description='units/data-kibps-KBps-desc')
     async def KBps(ctx, amount: float):
-        await ctx.send(amount * 1024 / 8e3)
+        try:
+            await ctx.send(amount * 1024 / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kibps.command(invoke_without_command=True, description='units/data-kibps-mbps-desc')
+    del KBps
+
+    @kibps.command(aliases=['megabit-per-second', 'megabits-per-second'], invoke_without_command=True, description='units/data-kibps-mbps-desc')
     async def mbps(ctx, amount: float):
-        await ctx.send(amount * 1024 / 1e6)
+        try:
+            await ctx.send(amount * 1024 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kibps.command(invoke_without_command=True, description='units/data-kibps-MBps-desc')
+    del mbps
+
+    @kibps.command(aliases=['megabyte-per-second', 'megabytes-per-second'], invoke_without_command=True, description='units/data-kibps-MBps-desc')
     async def MBps(ctx, amount: float):
-        await ctx.send(amount * 1024 / 8e6)
+        try:
+            await ctx.send(amount * 1024 / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kibps.command(invoke_without_command=True, description='units/data-kibps-mibps-desc')
+    del MBps
+
+    @kibps.command(aliases=['mebibit-per-second', 'mebibits-per-second'], invoke_without_command=True, description='units/data-kibps-mibps-desc')
     async def mibps(ctx, amount: float):
-        await ctx.send(amount * 1024 / (1024**2))
+        try:
+            await ctx.send(amount * 1024 / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kibps.command(invoke_without_command=True, description='units/data-kibps-gbps-desc')
+    del mibps
+
+    @kibps.command(aliases=['gigabit-per-second', 'gigabits-per-second'], invoke_without_command=True, description='units/data-kibps-gbps-desc')
     async def gbps(ctx, amount: float):
-        await ctx.send(amount * 1024 / 1e9)
+        try:
+            await ctx.send(amount * 1024 / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kibps.command(invoke_without_command=True, description='units/data-kibps-GBps-desc')
+    del gbps
+
+    @kibps.command(aliases=['gigabyte-per-second', 'gigabytes-per-second'], invoke_without_command=True, description='units/data-kibps-GBps-desc')
     async def GBps(ctx, amount: float):
-        await ctx.send(amount * 1024 / 8e9)
+        try:
+            await ctx.send(amount * 1024 / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kibps.command(invoke_without_command=True, description='units/data-kibps-gibps-desc')
+    del GBps
+
+    @kibps.command(aliases=['gigibit-per-second', 'gigibits-per-second'], invoke_without_command=True, description='units/data-kibps-gibps-desc')
     async def gibps(ctx, amount: float):
-        await ctx.send(amount * 1024 / (1024**3))
+        try:
+            await ctx.send(amount * 1024 / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kibps.command(invoke_without_command=True, description='units/data-kibps-tbps-desc')
+    del gibps
+
+    @kibps.command(aliases=['terabit-per-second', 'terabits-per-second'], invoke_without_command=True, description='units/data-kibps-tbps-desc')
     async def tbps(ctx, amount: float):
-        await ctx.send(amount * 1024 / 1e12)
+        try:
+            await ctx.send(amount * 1024 / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kibps.command(invoke_without_command=True, description='units/data-kibps-TBps-desc')
+    del tbps
+
+    @kibps.command(aliases=['terabyte-per-second', 'terabytes-per-second'], invoke_without_command=True, description='units/data-kibps-TBps-desc')
     async def TBps(ctx, amount: float):
-        await ctx.send(amount * 1024 / 8e12)
+        try:
+            await ctx.send(amount * 1024 / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kibps.command(invoke_without_command=True, description='units/data-kibps-tibps-desc')
+    del TBps
+
+    @kibps.command(aliases=['tebibit-per-second', 'tebibits-per-second'], invoke_without_command=True, description='units/data-kibps-tibps-desc')
     async def tibps(ctx, amount: float):
-        await ctx.send(amount * 1024 / (1024**4))
+        try:
+            await ctx.send(amount * 1024 / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @data.group(invoke_without_command=True, description='units/data-mbps-desc')
+    del tibps
+
+    @data.group(aliases=['megabit-per-second', 'megabits-per-second'], invoke_without_command=True, description='units/data-mbps-desc')
     @lone_group(True)
-    async def mbps(ctx):
+    async def mbps(self, ctx):
         pass
 
 
-    @mbps.command(invoke_without_command=True, description='units/data-mbps-bps-desc')
+    @mbps.command(aliases=['bit-per-second', 'bits-per-second'], invoke_without_command=True, description='units/data-mbps-bps-desc')
     async def bps(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 1)
+        try:
+            await ctx.send(amount * 1e6 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mbps.command(invoke_without_command=True, description='units/data-mbps-kbps-desc')
+    del bps
+
+    @mbps.command(aliases=['kilobit-per-second', 'kilobits-per-second'], invoke_without_command=True, description='units/data-mbps-kbps-desc')
     async def kbps(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 1e3)
+        try:
+            await ctx.send(amount * 1e6 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mbps.command(invoke_without_command=True, description='units/data-mbps-KBps-desc')
+    del kbps
+
+    @mbps.command(aliases=['kilobyte-per-second', 'kilobytes-per-second'], invoke_without_command=True, description='units/data-mbps-KBps-desc')
     async def KBps(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 8e3)
+        try:
+            await ctx.send(amount * 1e6 / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mbps.command(invoke_without_command=True, description='units/data-mbps-kibps-desc')
+    del KBps
+
+    @mbps.command(aliases=['kibibit-per-second', 'kibibits-per-second'], invoke_without_command=True, description='units/data-mbps-kibps-desc')
     async def kibps(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 1024)
+        try:
+            await ctx.send(amount * 1e6 / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mbps.command(invoke_without_command=True, description='units/data-mbps-MBps-desc')
+    del kibps
+
+    @mbps.command(aliases=['megabyte-per-second', 'megabytes-per-second'], invoke_without_command=True, description='units/data-mbps-MBps-desc')
     async def MBps(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 8e6)
+        try:
+            await ctx.send(amount * 1e6 / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mbps.command(invoke_without_command=True, description='units/data-mbps-mibps-desc')
+    del MBps
+
+    @mbps.command(aliases=['mebibit-per-second', 'mebibits-per-second'], invoke_without_command=True, description='units/data-mbps-mibps-desc')
     async def mibps(ctx, amount: float):
-        await ctx.send(amount * 1e6 / (1024**2))
+        try:
+            await ctx.send(amount * 1e6 / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mbps.command(invoke_without_command=True, description='units/data-mbps-gbps-desc')
+    del mibps
+
+    @mbps.command(aliases=['gigabit-per-second', 'gigabits-per-second'], invoke_without_command=True, description='units/data-mbps-gbps-desc')
     async def gbps(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 1e9)
+        try:
+            await ctx.send(amount * 1e6 / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mbps.command(invoke_without_command=True, description='units/data-mbps-GBps-desc')
+    del gbps
+
+    @mbps.command(aliases=['gigabyte-per-second', 'gigabytes-per-second'], invoke_without_command=True, description='units/data-mbps-GBps-desc')
     async def GBps(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 8e9)
+        try:
+            await ctx.send(amount * 1e6 / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mbps.command(invoke_without_command=True, description='units/data-mbps-gibps-desc')
+    del GBps
+
+    @mbps.command(aliases=['gigibit-per-second', 'gigibits-per-second'], invoke_without_command=True, description='units/data-mbps-gibps-desc')
     async def gibps(ctx, amount: float):
-        await ctx.send(amount * 1e6 / (1024**3))
+        try:
+            await ctx.send(amount * 1e6 / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mbps.command(invoke_without_command=True, description='units/data-mbps-tbps-desc')
+    del gibps
+
+    @mbps.command(aliases=['terabit-per-second', 'terabits-per-second'], invoke_without_command=True, description='units/data-mbps-tbps-desc')
     async def tbps(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 1e12)
+        try:
+            await ctx.send(amount * 1e6 / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mbps.command(invoke_without_command=True, description='units/data-mbps-TBps-desc')
+    del tbps
+
+    @mbps.command(aliases=['terabyte-per-second', 'terabytes-per-second'], invoke_without_command=True, description='units/data-mbps-TBps-desc')
     async def TBps(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 8e12)
+        try:
+            await ctx.send(amount * 1e6 / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mbps.command(invoke_without_command=True, description='units/data-mbps-tibps-desc')
+    del TBps
+
+    @mbps.command(aliases=['tebibit-per-second', 'tebibits-per-second'], invoke_without_command=True, description='units/data-mbps-tibps-desc')
     async def tibps(ctx, amount: float):
-        await ctx.send(amount * 1e6 / (1024**4))
+        try:
+            await ctx.send(amount * 1e6 / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @data.group(invoke_without_command=True, description='units/data-MBps-desc')
+    del tibps
+
+    @data.group(aliases=['megabyte-per-second', 'megabytes-per-second'], invoke_without_command=True, description='units/data-MBps-desc')
     @lone_group(True)
-    async def MBps(ctx):
+    async def MBps(self, ctx):
         pass
 
 
-    @MBps.command(invoke_without_command=True, description='units/data-MBps-bps-desc')
+    @MBps.command(aliases=['bit-per-second', 'bits-per-second'], invoke_without_command=True, description='units/data-MBps-bps-desc')
     async def bps(ctx, amount: float):
-        await ctx.send(amount * 8e6 / 1)
+        try:
+            await ctx.send(amount * 8e6 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MBps.command(invoke_without_command=True, description='units/data-MBps-kbps-desc')
+    del bps
+
+    @MBps.command(aliases=['kilobit-per-second', 'kilobits-per-second'], invoke_without_command=True, description='units/data-MBps-kbps-desc')
     async def kbps(ctx, amount: float):
-        await ctx.send(amount * 8e6 / 1e3)
+        try:
+            await ctx.send(amount * 8e6 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MBps.command(invoke_without_command=True, description='units/data-MBps-KBps-desc')
+    del kbps
+
+    @MBps.command(aliases=['kilobyte-per-second', 'kilobytes-per-second'], invoke_without_command=True, description='units/data-MBps-KBps-desc')
     async def KBps(ctx, amount: float):
-        await ctx.send(amount * 8e6 / 8e3)
+        try:
+            await ctx.send(amount * 8e6 / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MBps.command(invoke_without_command=True, description='units/data-MBps-kibps-desc')
+    del KBps
+
+    @MBps.command(aliases=['kibibit-per-second', 'kibibits-per-second'], invoke_without_command=True, description='units/data-MBps-kibps-desc')
     async def kibps(ctx, amount: float):
-        await ctx.send(amount * 8e6 / 1024)
+        try:
+            await ctx.send(amount * 8e6 / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MBps.command(invoke_without_command=True, description='units/data-MBps-mbps-desc')
+    del kibps
+
+    @MBps.command(aliases=['megabit-per-second', 'megabits-per-second'], invoke_without_command=True, description='units/data-MBps-mbps-desc')
     async def mbps(ctx, amount: float):
-        await ctx.send(amount * 8e6 / 1e6)
+        try:
+            await ctx.send(amount * 8e6 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MBps.command(invoke_without_command=True, description='units/data-MBps-mibps-desc')
+    del mbps
+
+    @MBps.command(aliases=['mebibit-per-second', 'mebibits-per-second'], invoke_without_command=True, description='units/data-MBps-mibps-desc')
     async def mibps(ctx, amount: float):
-        await ctx.send(amount * 8e6 / (1024**2))
+        try:
+            await ctx.send(amount * 8e6 / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MBps.command(invoke_without_command=True, description='units/data-MBps-gbps-desc')
+    del mibps
+
+    @MBps.command(aliases=['gigabit-per-second', 'gigabits-per-second'], invoke_without_command=True, description='units/data-MBps-gbps-desc')
     async def gbps(ctx, amount: float):
-        await ctx.send(amount * 8e6 / 1e9)
+        try:
+            await ctx.send(amount * 8e6 / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MBps.command(invoke_without_command=True, description='units/data-MBps-GBps-desc')
+    del gbps
+
+    @MBps.command(aliases=['gigabyte-per-second', 'gigabytes-per-second'], invoke_without_command=True, description='units/data-MBps-GBps-desc')
     async def GBps(ctx, amount: float):
-        await ctx.send(amount * 8e6 / 8e9)
+        try:
+            await ctx.send(amount * 8e6 / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MBps.command(invoke_without_command=True, description='units/data-MBps-gibps-desc')
+    del GBps
+
+    @MBps.command(aliases=['gigibit-per-second', 'gigibits-per-second'], invoke_without_command=True, description='units/data-MBps-gibps-desc')
     async def gibps(ctx, amount: float):
-        await ctx.send(amount * 8e6 / (1024**3))
+        try:
+            await ctx.send(amount * 8e6 / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MBps.command(invoke_without_command=True, description='units/data-MBps-tbps-desc')
+    del gibps
+
+    @MBps.command(aliases=['terabit-per-second', 'terabits-per-second'], invoke_without_command=True, description='units/data-MBps-tbps-desc')
     async def tbps(ctx, amount: float):
-        await ctx.send(amount * 8e6 / 1e12)
+        try:
+            await ctx.send(amount * 8e6 / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MBps.command(invoke_without_command=True, description='units/data-MBps-TBps-desc')
+    del tbps
+
+    @MBps.command(aliases=['terabyte-per-second', 'terabytes-per-second'], invoke_without_command=True, description='units/data-MBps-TBps-desc')
     async def TBps(ctx, amount: float):
-        await ctx.send(amount * 8e6 / 8e12)
+        try:
+            await ctx.send(amount * 8e6 / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MBps.command(invoke_without_command=True, description='units/data-MBps-tibps-desc')
+    del TBps
+
+    @MBps.command(aliases=['tebibit-per-second', 'tebibits-per-second'], invoke_without_command=True, description='units/data-MBps-tibps-desc')
     async def tibps(ctx, amount: float):
-        await ctx.send(amount * 8e6 / (1024**4))
+        try:
+            await ctx.send(amount * 8e6 / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @data.group(invoke_without_command=True, description='units/data-mibps-desc')
+    del tibps
+
+    @data.group(aliases=['mebibit-per-second', 'mebibits-per-second'], invoke_without_command=True, description='units/data-mibps-desc')
     @lone_group(True)
-    async def mibps(ctx):
+    async def mibps(self, ctx):
         pass
 
 
-    @mibps.command(invoke_without_command=True, description='units/data-mibps-bps-desc')
+    @mibps.command(aliases=['bit-per-second', 'bits-per-second'], invoke_without_command=True, description='units/data-mibps-bps-desc')
     async def bps(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / 1)
+        try:
+            await ctx.send(amount * (1024**2) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mibps.command(invoke_without_command=True, description='units/data-mibps-kbps-desc')
+    del bps
+
+    @mibps.command(aliases=['kilobit-per-second', 'kilobits-per-second'], invoke_without_command=True, description='units/data-mibps-kbps-desc')
     async def kbps(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / 1e3)
+        try:
+            await ctx.send(amount * (1024**2) / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mibps.command(invoke_without_command=True, description='units/data-mibps-KBps-desc')
+    del kbps
+
+    @mibps.command(aliases=['kilobyte-per-second', 'kilobytes-per-second'], invoke_without_command=True, description='units/data-mibps-KBps-desc')
     async def KBps(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / 8e3)
+        try:
+            await ctx.send(amount * (1024**2) / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mibps.command(invoke_without_command=True, description='units/data-mibps-kibps-desc')
+    del KBps
+
+    @mibps.command(aliases=['kibibit-per-second', 'kibibits-per-second'], invoke_without_command=True, description='units/data-mibps-kibps-desc')
     async def kibps(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / 1024)
+        try:
+            await ctx.send(amount * (1024**2) / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mibps.command(invoke_without_command=True, description='units/data-mibps-mbps-desc')
+    del kibps
+
+    @mibps.command(aliases=['megabit-per-second', 'megabits-per-second'], invoke_without_command=True, description='units/data-mibps-mbps-desc')
     async def mbps(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / 1e6)
+        try:
+            await ctx.send(amount * (1024**2) / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mibps.command(invoke_without_command=True, description='units/data-mibps-MBps-desc')
+    del mbps
+
+    @mibps.command(aliases=['megabyte-per-second', 'megabytes-per-second'], invoke_without_command=True, description='units/data-mibps-MBps-desc')
     async def MBps(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / 8e6)
+        try:
+            await ctx.send(amount * (1024**2) / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mibps.command(invoke_without_command=True, description='units/data-mibps-gbps-desc')
+    del MBps
+
+    @mibps.command(aliases=['gigabit-per-second', 'gigabits-per-second'], invoke_without_command=True, description='units/data-mibps-gbps-desc')
     async def gbps(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / 1e9)
+        try:
+            await ctx.send(amount * (1024**2) / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mibps.command(invoke_without_command=True, description='units/data-mibps-GBps-desc')
+    del gbps
+
+    @mibps.command(aliases=['gigabyte-per-second', 'gigabytes-per-second'], invoke_without_command=True, description='units/data-mibps-GBps-desc')
     async def GBps(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / 8e9)
+        try:
+            await ctx.send(amount * (1024**2) / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mibps.command(invoke_without_command=True, description='units/data-mibps-gibps-desc')
+    del GBps
+
+    @mibps.command(aliases=['gigibit-per-second', 'gigibits-per-second'], invoke_without_command=True, description='units/data-mibps-gibps-desc')
     async def gibps(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / (1024**3))
+        try:
+            await ctx.send(amount * (1024**2) / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mibps.command(invoke_without_command=True, description='units/data-mibps-tbps-desc')
+    del gibps
+
+    @mibps.command(aliases=['terabit-per-second', 'terabits-per-second'], invoke_without_command=True, description='units/data-mibps-tbps-desc')
     async def tbps(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / 1e12)
+        try:
+            await ctx.send(amount * (1024**2) / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mibps.command(invoke_without_command=True, description='units/data-mibps-TBps-desc')
+    del tbps
+
+    @mibps.command(aliases=['terabyte-per-second', 'terabytes-per-second'], invoke_without_command=True, description='units/data-mibps-TBps-desc')
     async def TBps(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / 8e12)
+        try:
+            await ctx.send(amount * (1024**2) / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mibps.command(invoke_without_command=True, description='units/data-mibps-tibps-desc')
+    del TBps
+
+    @mibps.command(aliases=['tebibit-per-second', 'tebibits-per-second'], invoke_without_command=True, description='units/data-mibps-tibps-desc')
     async def tibps(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / (1024**4))
+        try:
+            await ctx.send(amount * (1024**2) / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @data.group(invoke_without_command=True, description='units/data-gbps-desc')
+    del tibps
+
+    @data.group(aliases=['gigabit-per-second', 'gigabits-per-second'], invoke_without_command=True, description='units/data-gbps-desc')
     @lone_group(True)
-    async def gbps(ctx):
+    async def gbps(self, ctx):
         pass
 
 
-    @gbps.command(invoke_without_command=True, description='units/data-gbps-bps-desc')
+    @gbps.command(aliases=['bit-per-second', 'bits-per-second'], invoke_without_command=True, description='units/data-gbps-bps-desc')
     async def bps(ctx, amount: float):
-        await ctx.send(amount * 1e9 / 1)
+        try:
+            await ctx.send(amount * 1e9 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gbps.command(invoke_without_command=True, description='units/data-gbps-kbps-desc')
+    del bps
+
+    @gbps.command(aliases=['kilobit-per-second', 'kilobits-per-second'], invoke_without_command=True, description='units/data-gbps-kbps-desc')
     async def kbps(ctx, amount: float):
-        await ctx.send(amount * 1e9 / 1e3)
+        try:
+            await ctx.send(amount * 1e9 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gbps.command(invoke_without_command=True, description='units/data-gbps-KBps-desc')
+    del kbps
+
+    @gbps.command(aliases=['kilobyte-per-second', 'kilobytes-per-second'], invoke_without_command=True, description='units/data-gbps-KBps-desc')
     async def KBps(ctx, amount: float):
-        await ctx.send(amount * 1e9 / 8e3)
+        try:
+            await ctx.send(amount * 1e9 / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gbps.command(invoke_without_command=True, description='units/data-gbps-kibps-desc')
+    del KBps
+
+    @gbps.command(aliases=['kibibit-per-second', 'kibibits-per-second'], invoke_without_command=True, description='units/data-gbps-kibps-desc')
     async def kibps(ctx, amount: float):
-        await ctx.send(amount * 1e9 / 1024)
+        try:
+            await ctx.send(amount * 1e9 / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gbps.command(invoke_without_command=True, description='units/data-gbps-mbps-desc')
+    del kibps
+
+    @gbps.command(aliases=['megabit-per-second', 'megabits-per-second'], invoke_without_command=True, description='units/data-gbps-mbps-desc')
     async def mbps(ctx, amount: float):
-        await ctx.send(amount * 1e9 / 1e6)
+        try:
+            await ctx.send(amount * 1e9 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gbps.command(invoke_without_command=True, description='units/data-gbps-MBps-desc')
+    del mbps
+
+    @gbps.command(aliases=['megabyte-per-second', 'megabytes-per-second'], invoke_without_command=True, description='units/data-gbps-MBps-desc')
     async def MBps(ctx, amount: float):
-        await ctx.send(amount * 1e9 / 8e6)
+        try:
+            await ctx.send(amount * 1e9 / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gbps.command(invoke_without_command=True, description='units/data-gbps-mibps-desc')
+    del MBps
+
+    @gbps.command(aliases=['mebibit-per-second', 'mebibits-per-second'], invoke_without_command=True, description='units/data-gbps-mibps-desc')
     async def mibps(ctx, amount: float):
-        await ctx.send(amount * 1e9 / (1024**2))
+        try:
+            await ctx.send(amount * 1e9 / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gbps.command(invoke_without_command=True, description='units/data-gbps-GBps-desc')
+    del mibps
+
+    @gbps.command(aliases=['gigabyte-per-second', 'gigabytes-per-second'], invoke_without_command=True, description='units/data-gbps-GBps-desc')
     async def GBps(ctx, amount: float):
-        await ctx.send(amount * 1e9 / 8e9)
+        try:
+            await ctx.send(amount * 1e9 / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gbps.command(invoke_without_command=True, description='units/data-gbps-gibps-desc')
+    del GBps
+
+    @gbps.command(aliases=['gigibit-per-second', 'gigibits-per-second'], invoke_without_command=True, description='units/data-gbps-gibps-desc')
     async def gibps(ctx, amount: float):
-        await ctx.send(amount * 1e9 / (1024**3))
+        try:
+            await ctx.send(amount * 1e9 / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gbps.command(invoke_without_command=True, description='units/data-gbps-tbps-desc')
+    del gibps
+
+    @gbps.command(aliases=['terabit-per-second', 'terabits-per-second'], invoke_without_command=True, description='units/data-gbps-tbps-desc')
     async def tbps(ctx, amount: float):
-        await ctx.send(amount * 1e9 / 1e12)
+        try:
+            await ctx.send(amount * 1e9 / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gbps.command(invoke_without_command=True, description='units/data-gbps-TBps-desc')
+    del tbps
+
+    @gbps.command(aliases=['terabyte-per-second', 'terabytes-per-second'], invoke_without_command=True, description='units/data-gbps-TBps-desc')
     async def TBps(ctx, amount: float):
-        await ctx.send(amount * 1e9 / 8e12)
+        try:
+            await ctx.send(amount * 1e9 / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gbps.command(invoke_without_command=True, description='units/data-gbps-tibps-desc')
+    del TBps
+
+    @gbps.command(aliases=['tebibit-per-second', 'tebibits-per-second'], invoke_without_command=True, description='units/data-gbps-tibps-desc')
     async def tibps(ctx, amount: float):
-        await ctx.send(amount * 1e9 / (1024**4))
+        try:
+            await ctx.send(amount * 1e9 / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @data.group(invoke_without_command=True, description='units/data-GBps-desc')
+    del tibps
+
+    @data.group(aliases=['gigabyte-per-second', 'gigabytes-per-second'], invoke_without_command=True, description='units/data-GBps-desc')
     @lone_group(True)
-    async def GBps(ctx):
+    async def GBps(self, ctx):
         pass
 
 
-    @GBps.command(invoke_without_command=True, description='units/data-GBps-bps-desc')
+    @GBps.command(aliases=['bit-per-second', 'bits-per-second'], invoke_without_command=True, description='units/data-GBps-bps-desc')
     async def bps(ctx, amount: float):
-        await ctx.send(amount * 8e9 / 1)
+        try:
+            await ctx.send(amount * 8e9 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GBps.command(invoke_without_command=True, description='units/data-GBps-kbps-desc')
+    del bps
+
+    @GBps.command(aliases=['kilobit-per-second', 'kilobits-per-second'], invoke_without_command=True, description='units/data-GBps-kbps-desc')
     async def kbps(ctx, amount: float):
-        await ctx.send(amount * 8e9 / 1e3)
+        try:
+            await ctx.send(amount * 8e9 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GBps.command(invoke_without_command=True, description='units/data-GBps-KBps-desc')
+    del kbps
+
+    @GBps.command(aliases=['kilobyte-per-second', 'kilobytes-per-second'], invoke_without_command=True, description='units/data-GBps-KBps-desc')
     async def KBps(ctx, amount: float):
-        await ctx.send(amount * 8e9 / 8e3)
+        try:
+            await ctx.send(amount * 8e9 / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GBps.command(invoke_without_command=True, description='units/data-GBps-kibps-desc')
+    del KBps
+
+    @GBps.command(aliases=['kibibit-per-second', 'kibibits-per-second'], invoke_without_command=True, description='units/data-GBps-kibps-desc')
     async def kibps(ctx, amount: float):
-        await ctx.send(amount * 8e9 / 1024)
+        try:
+            await ctx.send(amount * 8e9 / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GBps.command(invoke_without_command=True, description='units/data-GBps-mbps-desc')
+    del kibps
+
+    @GBps.command(aliases=['megabit-per-second', 'megabits-per-second'], invoke_without_command=True, description='units/data-GBps-mbps-desc')
     async def mbps(ctx, amount: float):
-        await ctx.send(amount * 8e9 / 1e6)
+        try:
+            await ctx.send(amount * 8e9 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GBps.command(invoke_without_command=True, description='units/data-GBps-MBps-desc')
+    del mbps
+
+    @GBps.command(aliases=['megabyte-per-second', 'megabytes-per-second'], invoke_without_command=True, description='units/data-GBps-MBps-desc')
     async def MBps(ctx, amount: float):
-        await ctx.send(amount * 8e9 / 8e6)
+        try:
+            await ctx.send(amount * 8e9 / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GBps.command(invoke_without_command=True, description='units/data-GBps-mibps-desc')
+    del MBps
+
+    @GBps.command(aliases=['mebibit-per-second', 'mebibits-per-second'], invoke_without_command=True, description='units/data-GBps-mibps-desc')
     async def mibps(ctx, amount: float):
-        await ctx.send(amount * 8e9 / (1024**2))
+        try:
+            await ctx.send(amount * 8e9 / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GBps.command(invoke_without_command=True, description='units/data-GBps-gbps-desc')
+    del mibps
+
+    @GBps.command(aliases=['gigabit-per-second', 'gigabits-per-second'], invoke_without_command=True, description='units/data-GBps-gbps-desc')
     async def gbps(ctx, amount: float):
-        await ctx.send(amount * 8e9 / 1e9)
+        try:
+            await ctx.send(amount * 8e9 / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GBps.command(invoke_without_command=True, description='units/data-GBps-gibps-desc')
+    del gbps
+
+    @GBps.command(aliases=['gigibit-per-second', 'gigibits-per-second'], invoke_without_command=True, description='units/data-GBps-gibps-desc')
     async def gibps(ctx, amount: float):
-        await ctx.send(amount * 8e9 / (1024**3))
+        try:
+            await ctx.send(amount * 8e9 / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GBps.command(invoke_without_command=True, description='units/data-GBps-tbps-desc')
+    del gibps
+
+    @GBps.command(aliases=['terabit-per-second', 'terabits-per-second'], invoke_without_command=True, description='units/data-GBps-tbps-desc')
     async def tbps(ctx, amount: float):
-        await ctx.send(amount * 8e9 / 1e12)
+        try:
+            await ctx.send(amount * 8e9 / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GBps.command(invoke_without_command=True, description='units/data-GBps-TBps-desc')
+    del tbps
+
+    @GBps.command(aliases=['terabyte-per-second', 'terabytes-per-second'], invoke_without_command=True, description='units/data-GBps-TBps-desc')
     async def TBps(ctx, amount: float):
-        await ctx.send(amount * 8e9 / 8e12)
+        try:
+            await ctx.send(amount * 8e9 / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GBps.command(invoke_without_command=True, description='units/data-GBps-tibps-desc')
+    del TBps
+
+    @GBps.command(aliases=['tebibit-per-second', 'tebibits-per-second'], invoke_without_command=True, description='units/data-GBps-tibps-desc')
     async def tibps(ctx, amount: float):
-        await ctx.send(amount * 8e9 / (1024**4))
+        try:
+            await ctx.send(amount * 8e9 / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @data.group(invoke_without_command=True, description='units/data-gibps-desc')
+    del tibps
+
+    @data.group(aliases=['gigibit-per-second', 'gigibits-per-second'], invoke_without_command=True, description='units/data-gibps-desc')
     @lone_group(True)
-    async def gibps(ctx):
+    async def gibps(self, ctx):
         pass
 
 
-    @gibps.command(invoke_without_command=True, description='units/data-gibps-bps-desc')
+    @gibps.command(aliases=['bit-per-second', 'bits-per-second'], invoke_without_command=True, description='units/data-gibps-bps-desc')
     async def bps(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / 1)
+        try:
+            await ctx.send(amount * (1024**3) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gibps.command(invoke_without_command=True, description='units/data-gibps-kbps-desc')
+    del bps
+
+    @gibps.command(aliases=['kilobit-per-second', 'kilobits-per-second'], invoke_without_command=True, description='units/data-gibps-kbps-desc')
     async def kbps(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / 1e3)
+        try:
+            await ctx.send(amount * (1024**3) / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gibps.command(invoke_without_command=True, description='units/data-gibps-KBps-desc')
+    del kbps
+
+    @gibps.command(aliases=['kilobyte-per-second', 'kilobytes-per-second'], invoke_without_command=True, description='units/data-gibps-KBps-desc')
     async def KBps(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / 8e3)
+        try:
+            await ctx.send(amount * (1024**3) / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gibps.command(invoke_without_command=True, description='units/data-gibps-kibps-desc')
+    del KBps
+
+    @gibps.command(aliases=['kibibit-per-second', 'kibibits-per-second'], invoke_without_command=True, description='units/data-gibps-kibps-desc')
     async def kibps(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / 1024)
+        try:
+            await ctx.send(amount * (1024**3) / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gibps.command(invoke_without_command=True, description='units/data-gibps-mbps-desc')
+    del kibps
+
+    @gibps.command(aliases=['megabit-per-second', 'megabits-per-second'], invoke_without_command=True, description='units/data-gibps-mbps-desc')
     async def mbps(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / 1e6)
+        try:
+            await ctx.send(amount * (1024**3) / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gibps.command(invoke_without_command=True, description='units/data-gibps-MBps-desc')
+    del mbps
+
+    @gibps.command(aliases=['megabyte-per-second', 'megabytes-per-second'], invoke_without_command=True, description='units/data-gibps-MBps-desc')
     async def MBps(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / 8e6)
+        try:
+            await ctx.send(amount * (1024**3) / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gibps.command(invoke_without_command=True, description='units/data-gibps-mibps-desc')
+    del MBps
+
+    @gibps.command(aliases=['mebibit-per-second', 'mebibits-per-second'], invoke_without_command=True, description='units/data-gibps-mibps-desc')
     async def mibps(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / (1024**2))
+        try:
+            await ctx.send(amount * (1024**3) / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gibps.command(invoke_without_command=True, description='units/data-gibps-gbps-desc')
+    del mibps
+
+    @gibps.command(aliases=['gigabit-per-second', 'gigabits-per-second'], invoke_without_command=True, description='units/data-gibps-gbps-desc')
     async def gbps(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / 1e9)
+        try:
+            await ctx.send(amount * (1024**3) / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gibps.command(invoke_without_command=True, description='units/data-gibps-GBps-desc')
+    del gbps
+
+    @gibps.command(aliases=['gigabyte-per-second', 'gigabytes-per-second'], invoke_without_command=True, description='units/data-gibps-GBps-desc')
     async def GBps(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / 8e9)
+        try:
+            await ctx.send(amount * (1024**3) / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gibps.command(invoke_without_command=True, description='units/data-gibps-tbps-desc')
+    del GBps
+
+    @gibps.command(aliases=['terabit-per-second', 'terabits-per-second'], invoke_without_command=True, description='units/data-gibps-tbps-desc')
     async def tbps(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / 1e12)
+        try:
+            await ctx.send(amount * (1024**3) / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gibps.command(invoke_without_command=True, description='units/data-gibps-TBps-desc')
+    del tbps
+
+    @gibps.command(aliases=['terabyte-per-second', 'terabytes-per-second'], invoke_without_command=True, description='units/data-gibps-TBps-desc')
     async def TBps(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / 8e12)
+        try:
+            await ctx.send(amount * (1024**3) / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gibps.command(invoke_without_command=True, description='units/data-gibps-tibps-desc')
+    del TBps
+
+    @gibps.command(aliases=['tebibit-per-second', 'tebibits-per-second'], invoke_without_command=True, description='units/data-gibps-tibps-desc')
     async def tibps(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / (1024**4))
+        try:
+            await ctx.send(amount * (1024**3) / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @data.group(invoke_without_command=True, description='units/data-tbps-desc')
+    del tibps
+
+    @data.group(aliases=['terabit-per-second', 'terabits-per-second'], invoke_without_command=True, description='units/data-tbps-desc')
     @lone_group(True)
-    async def tbps(ctx):
+    async def tbps(self, ctx):
         pass
 
 
-    @tbps.command(invoke_without_command=True, description='units/data-tbps-bps-desc')
+    @tbps.command(aliases=['bit-per-second', 'bits-per-second'], invoke_without_command=True, description='units/data-tbps-bps-desc')
     async def bps(ctx, amount: float):
-        await ctx.send(amount * 1e12 / 1)
+        try:
+            await ctx.send(amount * 1e12 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbps.command(invoke_without_command=True, description='units/data-tbps-kbps-desc')
+    del bps
+
+    @tbps.command(aliases=['kilobit-per-second', 'kilobits-per-second'], invoke_without_command=True, description='units/data-tbps-kbps-desc')
     async def kbps(ctx, amount: float):
-        await ctx.send(amount * 1e12 / 1e3)
+        try:
+            await ctx.send(amount * 1e12 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbps.command(invoke_without_command=True, description='units/data-tbps-KBps-desc')
+    del kbps
+
+    @tbps.command(aliases=['kilobyte-per-second', 'kilobytes-per-second'], invoke_without_command=True, description='units/data-tbps-KBps-desc')
     async def KBps(ctx, amount: float):
-        await ctx.send(amount * 1e12 / 8e3)
+        try:
+            await ctx.send(amount * 1e12 / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbps.command(invoke_without_command=True, description='units/data-tbps-kibps-desc')
+    del KBps
+
+    @tbps.command(aliases=['kibibit-per-second', 'kibibits-per-second'], invoke_without_command=True, description='units/data-tbps-kibps-desc')
     async def kibps(ctx, amount: float):
-        await ctx.send(amount * 1e12 / 1024)
+        try:
+            await ctx.send(amount * 1e12 / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbps.command(invoke_without_command=True, description='units/data-tbps-mbps-desc')
+    del kibps
+
+    @tbps.command(aliases=['megabit-per-second', 'megabits-per-second'], invoke_without_command=True, description='units/data-tbps-mbps-desc')
     async def mbps(ctx, amount: float):
-        await ctx.send(amount * 1e12 / 1e6)
+        try:
+            await ctx.send(amount * 1e12 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbps.command(invoke_without_command=True, description='units/data-tbps-MBps-desc')
+    del mbps
+
+    @tbps.command(aliases=['megabyte-per-second', 'megabytes-per-second'], invoke_without_command=True, description='units/data-tbps-MBps-desc')
     async def MBps(ctx, amount: float):
-        await ctx.send(amount * 1e12 / 8e6)
+        try:
+            await ctx.send(amount * 1e12 / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbps.command(invoke_without_command=True, description='units/data-tbps-mibps-desc')
+    del MBps
+
+    @tbps.command(aliases=['mebibit-per-second', 'mebibits-per-second'], invoke_without_command=True, description='units/data-tbps-mibps-desc')
     async def mibps(ctx, amount: float):
-        await ctx.send(amount * 1e12 / (1024**2))
+        try:
+            await ctx.send(amount * 1e12 / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbps.command(invoke_without_command=True, description='units/data-tbps-gbps-desc')
+    del mibps
+
+    @tbps.command(aliases=['gigabit-per-second', 'gigabits-per-second'], invoke_without_command=True, description='units/data-tbps-gbps-desc')
     async def gbps(ctx, amount: float):
-        await ctx.send(amount * 1e12 / 1e9)
+        try:
+            await ctx.send(amount * 1e12 / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbps.command(invoke_without_command=True, description='units/data-tbps-GBps-desc')
+    del gbps
+
+    @tbps.command(aliases=['gigabyte-per-second', 'gigabytes-per-second'], invoke_without_command=True, description='units/data-tbps-GBps-desc')
     async def GBps(ctx, amount: float):
-        await ctx.send(amount * 1e12 / 8e9)
+        try:
+            await ctx.send(amount * 1e12 / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbps.command(invoke_without_command=True, description='units/data-tbps-gibps-desc')
+    del GBps
+
+    @tbps.command(aliases=['gigibit-per-second', 'gigibits-per-second'], invoke_without_command=True, description='units/data-tbps-gibps-desc')
     async def gibps(ctx, amount: float):
-        await ctx.send(amount * 1e12 / (1024**3))
+        try:
+            await ctx.send(amount * 1e12 / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbps.command(invoke_without_command=True, description='units/data-tbps-TBps-desc')
+    del gibps
+
+    @tbps.command(aliases=['terabyte-per-second', 'terabytes-per-second'], invoke_without_command=True, description='units/data-tbps-TBps-desc')
     async def TBps(ctx, amount: float):
-        await ctx.send(amount * 1e12 / 8e12)
+        try:
+            await ctx.send(amount * 1e12 / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbps.command(invoke_without_command=True, description='units/data-tbps-tibps-desc')
+    del TBps
+
+    @tbps.command(aliases=['tebibit-per-second', 'tebibits-per-second'], invoke_without_command=True, description='units/data-tbps-tibps-desc')
     async def tibps(ctx, amount: float):
-        await ctx.send(amount * 1e12 / (1024**4))
+        try:
+            await ctx.send(amount * 1e12 / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @data.group(invoke_without_command=True, description='units/data-TBps-desc')
+    del tibps
+
+    @data.group(aliases=['terabyte-per-second', 'terabytes-per-second'], invoke_without_command=True, description='units/data-TBps-desc')
     @lone_group(True)
-    async def TBps(ctx):
+    async def TBps(self, ctx):
         pass
 
 
-    @TBps.command(invoke_without_command=True, description='units/data-TBps-bps-desc')
+    @TBps.command(aliases=['bit-per-second', 'bits-per-second'], invoke_without_command=True, description='units/data-TBps-bps-desc')
     async def bps(ctx, amount: float):
-        await ctx.send(amount * 8e12 / 1)
+        try:
+            await ctx.send(amount * 8e12 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TBps.command(invoke_without_command=True, description='units/data-TBps-kbps-desc')
+    del bps
+
+    @TBps.command(aliases=['kilobit-per-second', 'kilobits-per-second'], invoke_without_command=True, description='units/data-TBps-kbps-desc')
     async def kbps(ctx, amount: float):
-        await ctx.send(amount * 8e12 / 1e3)
+        try:
+            await ctx.send(amount * 8e12 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TBps.command(invoke_without_command=True, description='units/data-TBps-KBps-desc')
+    del kbps
+
+    @TBps.command(aliases=['kilobyte-per-second', 'kilobytes-per-second'], invoke_without_command=True, description='units/data-TBps-KBps-desc')
     async def KBps(ctx, amount: float):
-        await ctx.send(amount * 8e12 / 8e3)
+        try:
+            await ctx.send(amount * 8e12 / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TBps.command(invoke_without_command=True, description='units/data-TBps-kibps-desc')
+    del KBps
+
+    @TBps.command(aliases=['kibibit-per-second', 'kibibits-per-second'], invoke_without_command=True, description='units/data-TBps-kibps-desc')
     async def kibps(ctx, amount: float):
-        await ctx.send(amount * 8e12 / 1024)
+        try:
+            await ctx.send(amount * 8e12 / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TBps.command(invoke_without_command=True, description='units/data-TBps-mbps-desc')
+    del kibps
+
+    @TBps.command(aliases=['megabit-per-second', 'megabits-per-second'], invoke_without_command=True, description='units/data-TBps-mbps-desc')
     async def mbps(ctx, amount: float):
-        await ctx.send(amount * 8e12 / 1e6)
+        try:
+            await ctx.send(amount * 8e12 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TBps.command(invoke_without_command=True, description='units/data-TBps-MBps-desc')
+    del mbps
+
+    @TBps.command(aliases=['megabyte-per-second', 'megabytes-per-second'], invoke_without_command=True, description='units/data-TBps-MBps-desc')
     async def MBps(ctx, amount: float):
-        await ctx.send(amount * 8e12 / 8e6)
+        try:
+            await ctx.send(amount * 8e12 / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TBps.command(invoke_without_command=True, description='units/data-TBps-mibps-desc')
+    del MBps
+
+    @TBps.command(aliases=['mebibit-per-second', 'mebibits-per-second'], invoke_without_command=True, description='units/data-TBps-mibps-desc')
     async def mibps(ctx, amount: float):
-        await ctx.send(amount * 8e12 / (1024**2))
+        try:
+            await ctx.send(amount * 8e12 / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TBps.command(invoke_without_command=True, description='units/data-TBps-gbps-desc')
+    del mibps
+
+    @TBps.command(aliases=['gigabit-per-second', 'gigabits-per-second'], invoke_without_command=True, description='units/data-TBps-gbps-desc')
     async def gbps(ctx, amount: float):
-        await ctx.send(amount * 8e12 / 1e9)
+        try:
+            await ctx.send(amount * 8e12 / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TBps.command(invoke_without_command=True, description='units/data-TBps-GBps-desc')
+    del gbps
+
+    @TBps.command(aliases=['gigabyte-per-second', 'gigabytes-per-second'], invoke_without_command=True, description='units/data-TBps-GBps-desc')
     async def GBps(ctx, amount: float):
-        await ctx.send(amount * 8e12 / 8e9)
+        try:
+            await ctx.send(amount * 8e12 / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TBps.command(invoke_without_command=True, description='units/data-TBps-gibps-desc')
+    del GBps
+
+    @TBps.command(aliases=['gigibit-per-second', 'gigibits-per-second'], invoke_without_command=True, description='units/data-TBps-gibps-desc')
     async def gibps(ctx, amount: float):
-        await ctx.send(amount * 8e12 / (1024**3))
+        try:
+            await ctx.send(amount * 8e12 / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TBps.command(invoke_without_command=True, description='units/data-TBps-tbps-desc')
+    del gibps
+
+    @TBps.command(aliases=['terabit-per-second', 'terabits-per-second'], invoke_without_command=True, description='units/data-TBps-tbps-desc')
     async def tbps(ctx, amount: float):
-        await ctx.send(amount * 8e12 / 1e12)
+        try:
+            await ctx.send(amount * 8e12 / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TBps.command(invoke_without_command=True, description='units/data-TBps-tibps-desc')
+    del tbps
+
+    @TBps.command(aliases=['tebibit-per-second', 'tebibits-per-second'], invoke_without_command=True, description='units/data-TBps-tibps-desc')
     async def tibps(ctx, amount: float):
-        await ctx.send(amount * 8e12 / (1024**4))
+        try:
+            await ctx.send(amount * 8e12 / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @data.group(invoke_without_command=True, description='units/data-tibps-desc')
+    del tibps
+
+    @data.group(aliases=['tebibit-per-second', 'tebibits-per-second'], invoke_without_command=True, description='units/data-tibps-desc')
     @lone_group(True)
-    async def tibps(ctx):
+    async def tibps(self, ctx):
         pass
 
 
-    @tibps.command(invoke_without_command=True, description='units/data-tibps-bps-desc')
+    @tibps.command(aliases=['bit-per-second', 'bits-per-second'], invoke_without_command=True, description='units/data-tibps-bps-desc')
     async def bps(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / 1)
+        try:
+            await ctx.send(amount * (1024**4) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tibps.command(invoke_without_command=True, description='units/data-tibps-kbps-desc')
+    del bps
+
+    @tibps.command(aliases=['kilobit-per-second', 'kilobits-per-second'], invoke_without_command=True, description='units/data-tibps-kbps-desc')
     async def kbps(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / 1e3)
+        try:
+            await ctx.send(amount * (1024**4) / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tibps.command(invoke_without_command=True, description='units/data-tibps-KBps-desc')
+    del kbps
+
+    @tibps.command(aliases=['kilobyte-per-second', 'kilobytes-per-second'], invoke_without_command=True, description='units/data-tibps-KBps-desc')
     async def KBps(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / 8e3)
+        try:
+            await ctx.send(amount * (1024**4) / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tibps.command(invoke_without_command=True, description='units/data-tibps-kibps-desc')
+    del KBps
+
+    @tibps.command(aliases=['kibibit-per-second', 'kibibits-per-second'], invoke_without_command=True, description='units/data-tibps-kibps-desc')
     async def kibps(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / 1024)
+        try:
+            await ctx.send(amount * (1024**4) / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tibps.command(invoke_without_command=True, description='units/data-tibps-mbps-desc')
+    del kibps
+
+    @tibps.command(aliases=['megabit-per-second', 'megabits-per-second'], invoke_without_command=True, description='units/data-tibps-mbps-desc')
     async def mbps(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / 1e6)
+        try:
+            await ctx.send(amount * (1024**4) / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tibps.command(invoke_without_command=True, description='units/data-tibps-MBps-desc')
+    del mbps
+
+    @tibps.command(aliases=['megabyte-per-second', 'megabytes-per-second'], invoke_without_command=True, description='units/data-tibps-MBps-desc')
     async def MBps(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / 8e6)
+        try:
+            await ctx.send(amount * (1024**4) / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tibps.command(invoke_without_command=True, description='units/data-tibps-mibps-desc')
+    del MBps
+
+    @tibps.command(aliases=['mebibit-per-second', 'mebibits-per-second'], invoke_without_command=True, description='units/data-tibps-mibps-desc')
     async def mibps(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / (1024**2))
+        try:
+            await ctx.send(amount * (1024**4) / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tibps.command(invoke_without_command=True, description='units/data-tibps-gbps-desc')
+    del mibps
+
+    @tibps.command(aliases=['gigabit-per-second', 'gigabits-per-second'], invoke_without_command=True, description='units/data-tibps-gbps-desc')
     async def gbps(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / 1e9)
+        try:
+            await ctx.send(amount * (1024**4) / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tibps.command(invoke_without_command=True, description='units/data-tibps-GBps-desc')
+    del gbps
+
+    @tibps.command(aliases=['gigabyte-per-second', 'gigabytes-per-second'], invoke_without_command=True, description='units/data-tibps-GBps-desc')
     async def GBps(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / 8e9)
+        try:
+            await ctx.send(amount * (1024**4) / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tibps.command(invoke_without_command=True, description='units/data-tibps-gibps-desc')
+    del GBps
+
+    @tibps.command(aliases=['gigibit-per-second', 'gigibits-per-second'], invoke_without_command=True, description='units/data-tibps-gibps-desc')
     async def gibps(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / (1024**3))
+        try:
+            await ctx.send(amount * (1024**4) / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tibps.command(invoke_without_command=True, description='units/data-tibps-tbps-desc')
+    del gibps
+
+    @tibps.command(aliases=['terabit-per-second', 'terabits-per-second'], invoke_without_command=True, description='units/data-tibps-tbps-desc')
     async def tbps(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / 1e12)
+        try:
+            await ctx.send(amount * (1024**4) / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tibps.command(invoke_without_command=True, description='units/data-tibps-TBps-desc')
+    del tbps
+
+    @tibps.command(aliases=['terabyte-per-second', 'terabytes-per-second'], invoke_without_command=True, description='units/data-tibps-TBps-desc')
     async def TBps(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / 8e12)
+        try:
+            await ctx.send(amount * (1024**4) / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del TBps
 
 
     @convert.group(aliases=[], invoke_without_command=True, description='units/storage-desc')
@@ -1004,1985 +2065,4295 @@ class Units(Cog):
         pass
 
 
-    @storage.group(invoke_without_command=True, description='units/storage-b-desc')
+    @storage.group(aliases=['bit', 'bits'], invoke_without_command=True, description='units/storage-b-desc')
     @lone_group(True)
-    async def b(ctx):
+    async def b(self, ctx):
         pass
 
 
-    @b.command(invoke_without_command=True, description='units/storage-b-kb-desc')
+    @b.command(aliases=['kilobit', 'kilobits'], invoke_without_command=True, description='units/storage-b-kb-desc')
     async def kb(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e3)
+        try:
+            await ctx.send(amount * 1 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @b.command(invoke_without_command=True, description='units/storage-b-kib-desc')
+    del kb
+
+    @b.command(aliases=['kibibit', 'kibibits'], invoke_without_command=True, description='units/storage-b-kib-desc')
     async def kib(ctx, amount: float):
-        await ctx.send(amount * 1 / 1024)
+        try:
+            await ctx.send(amount * 1 / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @b.command(invoke_without_command=True, description='units/storage-b-mb-desc')
+    del kib
+
+    @b.command(aliases=['megabit', 'megabits'], invoke_without_command=True, description='units/storage-b-mb-desc')
     async def mb(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e6)
+        try:
+            await ctx.send(amount * 1 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @b.command(invoke_without_command=True, description='units/storage-b-mib-desc')
+    del mb
+
+    @b.command(aliases=['mebibit', 'mebibits'], invoke_without_command=True, description='units/storage-b-mib-desc')
     async def mib(ctx, amount: float):
-        await ctx.send(amount * 1 / (1024**2))
+        try:
+            await ctx.send(amount * 1 / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @b.command(invoke_without_command=True, description='units/storage-b-gb-desc')
+    del mib
+
+    @b.command(aliases=['gigabit', 'gigabits'], invoke_without_command=True, description='units/storage-b-gb-desc')
     async def gb(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e9)
+        try:
+            await ctx.send(amount * 1 / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @b.command(invoke_without_command=True, description='units/storage-b-gib-desc')
+    del gb
+
+    @b.command(aliases=['gibibit', 'gibibits'], invoke_without_command=True, description='units/storage-b-gib-desc')
     async def gib(ctx, amount: float):
-        await ctx.send(amount * 1 / (1024**3))
+        try:
+            await ctx.send(amount * 1 / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @b.command(invoke_without_command=True, description='units/storage-b-tb-desc')
+    del gib
+
+    @b.command(aliases=['terabit', 'terabits'], invoke_without_command=True, description='units/storage-b-tb-desc')
     async def tb(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e12)
+        try:
+            await ctx.send(amount * 1 / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @b.command(invoke_without_command=True, description='units/storage-b-tib-desc')
+    del tb
+
+    @b.command(aliases=['tebibit', 'tebibits'], invoke_without_command=True, description='units/storage-b-tib-desc')
     async def tib(ctx, amount: float):
-        await ctx.send(amount * 1 / (1024**4))
+        try:
+            await ctx.send(amount * 1 / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @b.command(invoke_without_command=True, description='units/storage-b-pb-desc')
+    del tib
+
+    @b.command(aliases=['petabit', 'petabits'], invoke_without_command=True, description='units/storage-b-pb-desc')
     async def pb(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e15)
+        try:
+            await ctx.send(amount * 1 / 1e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @b.command(invoke_without_command=True, description='units/storage-b-pib-desc')
+    del pb
+
+    @b.command(aliases=['pebibit', 'pebibits'], invoke_without_command=True, description='units/storage-b-pib-desc')
     async def pib(ctx, amount: float):
-        await ctx.send(amount * 1 / (1024**5))
+        try:
+            await ctx.send(amount * 1 / (1024**5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @b.command(invoke_without_command=True, description='units/storage-b-B-desc')
+    del pib
+
+    @b.command(aliases=['byte', 'bytes'], invoke_without_command=True, description='units/storage-b-B-desc')
     async def B(ctx, amount: float):
-        await ctx.send(amount * 1 / 8)
+        try:
+            await ctx.send(amount * 1 / 8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @b.command(invoke_without_command=True, description='units/storage-b-KB-desc')
+    del B
+
+    @b.command(aliases=['kilobyte', 'kilobytes'], invoke_without_command=True, description='units/storage-b-KB-desc')
     async def KB(ctx, amount: float):
-        await ctx.send(amount * 1 / 8e3)
+        try:
+            await ctx.send(amount * 1 / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @b.command(invoke_without_command=True, description='units/storage-b-KiB-desc')
+    del KB
+
+    @b.command(aliases=['kibibyte', 'kibibytes'], invoke_without_command=True, description='units/storage-b-KiB-desc')
     async def KiB(ctx, amount: float):
-        await ctx.send(amount * 1 / (8 * 1024))
+        try:
+            await ctx.send(amount * 1 / (8 * 1024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @b.command(invoke_without_command=True, description='units/storage-b-MB-desc')
+    del KiB
+
+    @b.command(aliases=['megabyte', 'megabytes'], invoke_without_command=True, description='units/storage-b-MB-desc')
     async def MB(ctx, amount: float):
-        await ctx.send(amount * 1 / 8e6)
+        try:
+            await ctx.send(amount * 1 / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @b.command(invoke_without_command=True, description='units/storage-b-MiB-desc')
+    del MB
+
+    @b.command(aliases=['mebibyte', 'mebibytes'], invoke_without_command=True, description='units/storage-b-MiB-desc')
     async def MiB(ctx, amount: float):
-        await ctx.send(amount * 1 / (8 * 1024 ** 2))
+        try:
+            await ctx.send(amount * 1 / (8 * 1024 ** 2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @b.command(invoke_without_command=True, description='units/storage-b-GB-desc')
+    del MiB
+
+    @b.command(aliases=['gigabyte', 'gigabytes'], invoke_without_command=True, description='units/storage-b-GB-desc')
     async def GB(ctx, amount: float):
-        await ctx.send(amount * 1 / 8e9)
+        try:
+            await ctx.send(amount * 1 / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @b.command(invoke_without_command=True, description='units/storage-b-GiB-desc')
+    del GB
+
+    @b.command(aliases=['gibibyte', 'gibibytes'], invoke_without_command=True, description='units/storage-b-GiB-desc')
     async def GiB(ctx, amount: float):
-        await ctx.send(amount * 1 / (8 * 1024 ** 3))
+        try:
+            await ctx.send(amount * 1 / (8 * 1024 ** 3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @b.command(invoke_without_command=True, description='units/storage-b-TB-desc')
+    del GiB
+
+    @b.command(aliases=['terabyte', 'terabytes'], invoke_without_command=True, description='units/storage-b-TB-desc')
     async def TB(ctx, amount: float):
-        await ctx.send(amount * 1 / 8e12)
+        try:
+            await ctx.send(amount * 1 / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @b.command(invoke_without_command=True, description='units/storage-b-TiB-desc')
+    del TB
+
+    @b.command(aliases=['tebibyte', 'tebibytes'], invoke_without_command=True, description='units/storage-b-TiB-desc')
     async def TiB(ctx, amount: float):
-        await ctx.send(amount * 1 / (8 * 1024 ** 4))
+        try:
+            await ctx.send(amount * 1 / (8 * 1024 ** 4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @b.command(invoke_without_command=True, description='units/storage-b-PB-desc')
+    del TiB
+
+    @b.command(aliases=['petabyte', 'petabytes'], invoke_without_command=True, description='units/storage-b-PB-desc')
     async def PB(ctx, amount: float):
-        await ctx.send(amount * 1 / 8e15)
+        try:
+            await ctx.send(amount * 1 / 8e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @b.command(invoke_without_command=True, description='units/storage-b-PiB-desc')
+    del PB
+
+    @b.command(aliases=['pebibyte', 'pebibytes'], invoke_without_command=True, description='units/storage-b-PiB-desc')
     async def PiB(ctx, amount: float):
-        await ctx.send(amount * 1 / (8 * 1024 ** 5))
+        try:
+            await ctx.send(amount * 1 / (8 * 1024 ** 5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @storage.group(invoke_without_command=True, description='units/storage-kb-desc')
+    del PiB
+
+    @storage.group(aliases=['kilobit', 'kilobits'], invoke_without_command=True, description='units/storage-kb-desc')
     @lone_group(True)
-    async def kb(ctx):
+    async def kb(self, ctx):
         pass
 
 
-    @kb.command(invoke_without_command=True, description='units/storage-kb-b-desc')
+    @kb.command(aliases=['bit', 'bits'], invoke_without_command=True, description='units/storage-kb-b-desc')
     async def b(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 1)
+        try:
+            await ctx.send(amount * 1e3 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kb.command(invoke_without_command=True, description='units/storage-kb-kib-desc')
+    del b
+
+    @kb.command(aliases=['kibibit', 'kibibits'], invoke_without_command=True, description='units/storage-kb-kib-desc')
     async def kib(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 1024)
+        try:
+            await ctx.send(amount * 1e3 / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kb.command(invoke_without_command=True, description='units/storage-kb-mb-desc')
+    del kib
+
+    @kb.command(aliases=['megabit', 'megabits'], invoke_without_command=True, description='units/storage-kb-mb-desc')
     async def mb(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 1e6)
+        try:
+            await ctx.send(amount * 1e3 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kb.command(invoke_without_command=True, description='units/storage-kb-mib-desc')
+    del mb
+
+    @kb.command(aliases=['mebibit', 'mebibits'], invoke_without_command=True, description='units/storage-kb-mib-desc')
     async def mib(ctx, amount: float):
-        await ctx.send(amount * 1e3 / (1024**2))
+        try:
+            await ctx.send(amount * 1e3 / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kb.command(invoke_without_command=True, description='units/storage-kb-gb-desc')
+    del mib
+
+    @kb.command(aliases=['gigabit', 'gigabits'], invoke_without_command=True, description='units/storage-kb-gb-desc')
     async def gb(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 1e9)
+        try:
+            await ctx.send(amount * 1e3 / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kb.command(invoke_without_command=True, description='units/storage-kb-gib-desc')
+    del gb
+
+    @kb.command(aliases=['gibibit', 'gibibits'], invoke_without_command=True, description='units/storage-kb-gib-desc')
     async def gib(ctx, amount: float):
-        await ctx.send(amount * 1e3 / (1024**3))
+        try:
+            await ctx.send(amount * 1e3 / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kb.command(invoke_without_command=True, description='units/storage-kb-tb-desc')
+    del gib
+
+    @kb.command(aliases=['terabit', 'terabits'], invoke_without_command=True, description='units/storage-kb-tb-desc')
     async def tb(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 1e12)
+        try:
+            await ctx.send(amount * 1e3 / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kb.command(invoke_without_command=True, description='units/storage-kb-tib-desc')
+    del tb
+
+    @kb.command(aliases=['tebibit', 'tebibits'], invoke_without_command=True, description='units/storage-kb-tib-desc')
     async def tib(ctx, amount: float):
-        await ctx.send(amount * 1e3 / (1024**4))
+        try:
+            await ctx.send(amount * 1e3 / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kb.command(invoke_without_command=True, description='units/storage-kb-pb-desc')
+    del tib
+
+    @kb.command(aliases=['petabit', 'petabits'], invoke_without_command=True, description='units/storage-kb-pb-desc')
     async def pb(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 1e15)
+        try:
+            await ctx.send(amount * 1e3 / 1e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kb.command(invoke_without_command=True, description='units/storage-kb-pib-desc')
+    del pb
+
+    @kb.command(aliases=['pebibit', 'pebibits'], invoke_without_command=True, description='units/storage-kb-pib-desc')
     async def pib(ctx, amount: float):
-        await ctx.send(amount * 1e3 / (1024**5))
+        try:
+            await ctx.send(amount * 1e3 / (1024**5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kb.command(invoke_without_command=True, description='units/storage-kb-B-desc')
+    del pib
+
+    @kb.command(aliases=['byte', 'bytes'], invoke_without_command=True, description='units/storage-kb-B-desc')
     async def B(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 8)
+        try:
+            await ctx.send(amount * 1e3 / 8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kb.command(invoke_without_command=True, description='units/storage-kb-KB-desc')
+    del B
+
+    @kb.command(aliases=['kilobyte', 'kilobytes'], invoke_without_command=True, description='units/storage-kb-KB-desc')
     async def KB(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 8e3)
+        try:
+            await ctx.send(amount * 1e3 / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kb.command(invoke_without_command=True, description='units/storage-kb-KiB-desc')
+    del KB
+
+    @kb.command(aliases=['kibibyte', 'kibibytes'], invoke_without_command=True, description='units/storage-kb-KiB-desc')
     async def KiB(ctx, amount: float):
-        await ctx.send(amount * 1e3 / (8 * 1024))
+        try:
+            await ctx.send(amount * 1e3 / (8 * 1024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kb.command(invoke_without_command=True, description='units/storage-kb-MB-desc')
+    del KiB
+
+    @kb.command(aliases=['megabyte', 'megabytes'], invoke_without_command=True, description='units/storage-kb-MB-desc')
     async def MB(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 8e6)
+        try:
+            await ctx.send(amount * 1e3 / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kb.command(invoke_without_command=True, description='units/storage-kb-MiB-desc')
+    del MB
+
+    @kb.command(aliases=['mebibyte', 'mebibytes'], invoke_without_command=True, description='units/storage-kb-MiB-desc')
     async def MiB(ctx, amount: float):
-        await ctx.send(amount * 1e3 / (8 * 1024 ** 2))
+        try:
+            await ctx.send(amount * 1e3 / (8 * 1024 ** 2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kb.command(invoke_without_command=True, description='units/storage-kb-GB-desc')
+    del MiB
+
+    @kb.command(aliases=['gigabyte', 'gigabytes'], invoke_without_command=True, description='units/storage-kb-GB-desc')
     async def GB(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 8e9)
+        try:
+            await ctx.send(amount * 1e3 / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kb.command(invoke_without_command=True, description='units/storage-kb-GiB-desc')
+    del GB
+
+    @kb.command(aliases=['gibibyte', 'gibibytes'], invoke_without_command=True, description='units/storage-kb-GiB-desc')
     async def GiB(ctx, amount: float):
-        await ctx.send(amount * 1e3 / (8 * 1024 ** 3))
+        try:
+            await ctx.send(amount * 1e3 / (8 * 1024 ** 3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kb.command(invoke_without_command=True, description='units/storage-kb-TB-desc')
+    del GiB
+
+    @kb.command(aliases=['terabyte', 'terabytes'], invoke_without_command=True, description='units/storage-kb-TB-desc')
     async def TB(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 8e12)
+        try:
+            await ctx.send(amount * 1e3 / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kb.command(invoke_without_command=True, description='units/storage-kb-TiB-desc')
+    del TB
+
+    @kb.command(aliases=['tebibyte', 'tebibytes'], invoke_without_command=True, description='units/storage-kb-TiB-desc')
     async def TiB(ctx, amount: float):
-        await ctx.send(amount * 1e3 / (8 * 1024 ** 4))
+        try:
+            await ctx.send(amount * 1e3 / (8 * 1024 ** 4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kb.command(invoke_without_command=True, description='units/storage-kb-PB-desc')
+    del TiB
+
+    @kb.command(aliases=['petabyte', 'petabytes'], invoke_without_command=True, description='units/storage-kb-PB-desc')
     async def PB(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 8e15)
+        try:
+            await ctx.send(amount * 1e3 / 8e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kb.command(invoke_without_command=True, description='units/storage-kb-PiB-desc')
+    del PB
+
+    @kb.command(aliases=['pebibyte', 'pebibytes'], invoke_without_command=True, description='units/storage-kb-PiB-desc')
     async def PiB(ctx, amount: float):
-        await ctx.send(amount * 1e3 / (8 * 1024 ** 5))
+        try:
+            await ctx.send(amount * 1e3 / (8 * 1024 ** 5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @storage.group(invoke_without_command=True, description='units/storage-kib-desc')
+    del PiB
+
+    @storage.group(aliases=['kibibit', 'kibibits'], invoke_without_command=True, description='units/storage-kib-desc')
     @lone_group(True)
-    async def kib(ctx):
+    async def kib(self, ctx):
         pass
 
 
-    @kib.command(invoke_without_command=True, description='units/storage-kib-b-desc')
+    @kib.command(aliases=['bit', 'bits'], invoke_without_command=True, description='units/storage-kib-b-desc')
     async def b(ctx, amount: float):
-        await ctx.send(amount * 1024 / 1)
+        try:
+            await ctx.send(amount * 1024 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kib.command(invoke_without_command=True, description='units/storage-kib-kb-desc')
+    del b
+
+    @kib.command(aliases=['kilobit', 'kilobits'], invoke_without_command=True, description='units/storage-kib-kb-desc')
     async def kb(ctx, amount: float):
-        await ctx.send(amount * 1024 / 1e3)
+        try:
+            await ctx.send(amount * 1024 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kib.command(invoke_without_command=True, description='units/storage-kib-mb-desc')
+    del kb
+
+    @kib.command(aliases=['megabit', 'megabits'], invoke_without_command=True, description='units/storage-kib-mb-desc')
     async def mb(ctx, amount: float):
-        await ctx.send(amount * 1024 / 1e6)
+        try:
+            await ctx.send(amount * 1024 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kib.command(invoke_without_command=True, description='units/storage-kib-mib-desc')
+    del mb
+
+    @kib.command(aliases=['mebibit', 'mebibits'], invoke_without_command=True, description='units/storage-kib-mib-desc')
     async def mib(ctx, amount: float):
-        await ctx.send(amount * 1024 / (1024**2))
+        try:
+            await ctx.send(amount * 1024 / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kib.command(invoke_without_command=True, description='units/storage-kib-gb-desc')
+    del mib
+
+    @kib.command(aliases=['gigabit', 'gigabits'], invoke_without_command=True, description='units/storage-kib-gb-desc')
     async def gb(ctx, amount: float):
-        await ctx.send(amount * 1024 / 1e9)
+        try:
+            await ctx.send(amount * 1024 / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kib.command(invoke_without_command=True, description='units/storage-kib-gib-desc')
+    del gb
+
+    @kib.command(aliases=['gibibit', 'gibibits'], invoke_without_command=True, description='units/storage-kib-gib-desc')
     async def gib(ctx, amount: float):
-        await ctx.send(amount * 1024 / (1024**3))
+        try:
+            await ctx.send(amount * 1024 / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kib.command(invoke_without_command=True, description='units/storage-kib-tb-desc')
+    del gib
+
+    @kib.command(aliases=['terabit', 'terabits'], invoke_without_command=True, description='units/storage-kib-tb-desc')
     async def tb(ctx, amount: float):
-        await ctx.send(amount * 1024 / 1e12)
+        try:
+            await ctx.send(amount * 1024 / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kib.command(invoke_without_command=True, description='units/storage-kib-tib-desc')
+    del tb
+
+    @kib.command(aliases=['tebibit', 'tebibits'], invoke_without_command=True, description='units/storage-kib-tib-desc')
     async def tib(ctx, amount: float):
-        await ctx.send(amount * 1024 / (1024**4))
+        try:
+            await ctx.send(amount * 1024 / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kib.command(invoke_without_command=True, description='units/storage-kib-pb-desc')
+    del tib
+
+    @kib.command(aliases=['petabit', 'petabits'], invoke_without_command=True, description='units/storage-kib-pb-desc')
     async def pb(ctx, amount: float):
-        await ctx.send(amount * 1024 / 1e15)
+        try:
+            await ctx.send(amount * 1024 / 1e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kib.command(invoke_without_command=True, description='units/storage-kib-pib-desc')
+    del pb
+
+    @kib.command(aliases=['pebibit', 'pebibits'], invoke_without_command=True, description='units/storage-kib-pib-desc')
     async def pib(ctx, amount: float):
-        await ctx.send(amount * 1024 / (1024**5))
+        try:
+            await ctx.send(amount * 1024 / (1024**5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kib.command(invoke_without_command=True, description='units/storage-kib-B-desc')
+    del pib
+
+    @kib.command(aliases=['byte', 'bytes'], invoke_without_command=True, description='units/storage-kib-B-desc')
     async def B(ctx, amount: float):
-        await ctx.send(amount * 1024 / 8)
+        try:
+            await ctx.send(amount * 1024 / 8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kib.command(invoke_without_command=True, description='units/storage-kib-KB-desc')
+    del B
+
+    @kib.command(aliases=['kilobyte', 'kilobytes'], invoke_without_command=True, description='units/storage-kib-KB-desc')
     async def KB(ctx, amount: float):
-        await ctx.send(amount * 1024 / 8e3)
+        try:
+            await ctx.send(amount * 1024 / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kib.command(invoke_without_command=True, description='units/storage-kib-KiB-desc')
+    del KB
+
+    @kib.command(aliases=['kibibyte', 'kibibytes'], invoke_without_command=True, description='units/storage-kib-KiB-desc')
     async def KiB(ctx, amount: float):
-        await ctx.send(amount * 1024 / (8 * 1024))
+        try:
+            await ctx.send(amount * 1024 / (8 * 1024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kib.command(invoke_without_command=True, description='units/storage-kib-MB-desc')
+    del KiB
+
+    @kib.command(aliases=['megabyte', 'megabytes'], invoke_without_command=True, description='units/storage-kib-MB-desc')
     async def MB(ctx, amount: float):
-        await ctx.send(amount * 1024 / 8e6)
+        try:
+            await ctx.send(amount * 1024 / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kib.command(invoke_without_command=True, description='units/storage-kib-MiB-desc')
+    del MB
+
+    @kib.command(aliases=['mebibyte', 'mebibytes'], invoke_without_command=True, description='units/storage-kib-MiB-desc')
     async def MiB(ctx, amount: float):
-        await ctx.send(amount * 1024 / (8 * 1024 ** 2))
+        try:
+            await ctx.send(amount * 1024 / (8 * 1024 ** 2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kib.command(invoke_without_command=True, description='units/storage-kib-GB-desc')
+    del MiB
+
+    @kib.command(aliases=['gigabyte', 'gigabytes'], invoke_without_command=True, description='units/storage-kib-GB-desc')
     async def GB(ctx, amount: float):
-        await ctx.send(amount * 1024 / 8e9)
+        try:
+            await ctx.send(amount * 1024 / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kib.command(invoke_without_command=True, description='units/storage-kib-GiB-desc')
+    del GB
+
+    @kib.command(aliases=['gibibyte', 'gibibytes'], invoke_without_command=True, description='units/storage-kib-GiB-desc')
     async def GiB(ctx, amount: float):
-        await ctx.send(amount * 1024 / (8 * 1024 ** 3))
+        try:
+            await ctx.send(amount * 1024 / (8 * 1024 ** 3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kib.command(invoke_without_command=True, description='units/storage-kib-TB-desc')
+    del GiB
+
+    @kib.command(aliases=['terabyte', 'terabytes'], invoke_without_command=True, description='units/storage-kib-TB-desc')
     async def TB(ctx, amount: float):
-        await ctx.send(amount * 1024 / 8e12)
+        try:
+            await ctx.send(amount * 1024 / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kib.command(invoke_without_command=True, description='units/storage-kib-TiB-desc')
+    del TB
+
+    @kib.command(aliases=['tebibyte', 'tebibytes'], invoke_without_command=True, description='units/storage-kib-TiB-desc')
     async def TiB(ctx, amount: float):
-        await ctx.send(amount * 1024 / (8 * 1024 ** 4))
+        try:
+            await ctx.send(amount * 1024 / (8 * 1024 ** 4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kib.command(invoke_without_command=True, description='units/storage-kib-PB-desc')
+    del TiB
+
+    @kib.command(aliases=['petabyte', 'petabytes'], invoke_without_command=True, description='units/storage-kib-PB-desc')
     async def PB(ctx, amount: float):
-        await ctx.send(amount * 1024 / 8e15)
+        try:
+            await ctx.send(amount * 1024 / 8e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kib.command(invoke_without_command=True, description='units/storage-kib-PiB-desc')
+    del PB
+
+    @kib.command(aliases=['pebibyte', 'pebibytes'], invoke_without_command=True, description='units/storage-kib-PiB-desc')
     async def PiB(ctx, amount: float):
-        await ctx.send(amount * 1024 / (8 * 1024 ** 5))
+        try:
+            await ctx.send(amount * 1024 / (8 * 1024 ** 5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @storage.group(invoke_without_command=True, description='units/storage-mb-desc')
+    del PiB
+
+    @storage.group(aliases=['megabit', 'megabits'], invoke_without_command=True, description='units/storage-mb-desc')
     @lone_group(True)
-    async def mb(ctx):
+    async def mb(self, ctx):
         pass
 
 
-    @mb.command(invoke_without_command=True, description='units/storage-mb-b-desc')
+    @mb.command(aliases=['bit', 'bits'], invoke_without_command=True, description='units/storage-mb-b-desc')
     async def b(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 1)
+        try:
+            await ctx.send(amount * 1e6 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mb.command(invoke_without_command=True, description='units/storage-mb-kb-desc')
+    del b
+
+    @mb.command(aliases=['kilobit', 'kilobits'], invoke_without_command=True, description='units/storage-mb-kb-desc')
     async def kb(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 1e3)
+        try:
+            await ctx.send(amount * 1e6 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mb.command(invoke_without_command=True, description='units/storage-mb-kib-desc')
+    del kb
+
+    @mb.command(aliases=['kibibit', 'kibibits'], invoke_without_command=True, description='units/storage-mb-kib-desc')
     async def kib(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 1024)
+        try:
+            await ctx.send(amount * 1e6 / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mb.command(invoke_without_command=True, description='units/storage-mb-mib-desc')
+    del kib
+
+    @mb.command(aliases=['mebibit', 'mebibits'], invoke_without_command=True, description='units/storage-mb-mib-desc')
     async def mib(ctx, amount: float):
-        await ctx.send(amount * 1e6 / (1024**2))
+        try:
+            await ctx.send(amount * 1e6 / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mb.command(invoke_without_command=True, description='units/storage-mb-gb-desc')
+    del mib
+
+    @mb.command(aliases=['gigabit', 'gigabits'], invoke_without_command=True, description='units/storage-mb-gb-desc')
     async def gb(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 1e9)
+        try:
+            await ctx.send(amount * 1e6 / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mb.command(invoke_without_command=True, description='units/storage-mb-gib-desc')
+    del gb
+
+    @mb.command(aliases=['gibibit', 'gibibits'], invoke_without_command=True, description='units/storage-mb-gib-desc')
     async def gib(ctx, amount: float):
-        await ctx.send(amount * 1e6 / (1024**3))
+        try:
+            await ctx.send(amount * 1e6 / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mb.command(invoke_without_command=True, description='units/storage-mb-tb-desc')
+    del gib
+
+    @mb.command(aliases=['terabit', 'terabits'], invoke_without_command=True, description='units/storage-mb-tb-desc')
     async def tb(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 1e12)
+        try:
+            await ctx.send(amount * 1e6 / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mb.command(invoke_without_command=True, description='units/storage-mb-tib-desc')
+    del tb
+
+    @mb.command(aliases=['tebibit', 'tebibits'], invoke_without_command=True, description='units/storage-mb-tib-desc')
     async def tib(ctx, amount: float):
-        await ctx.send(amount * 1e6 / (1024**4))
+        try:
+            await ctx.send(amount * 1e6 / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mb.command(invoke_without_command=True, description='units/storage-mb-pb-desc')
+    del tib
+
+    @mb.command(aliases=['petabit', 'petabits'], invoke_without_command=True, description='units/storage-mb-pb-desc')
     async def pb(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 1e15)
+        try:
+            await ctx.send(amount * 1e6 / 1e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mb.command(invoke_without_command=True, description='units/storage-mb-pib-desc')
+    del pb
+
+    @mb.command(aliases=['pebibit', 'pebibits'], invoke_without_command=True, description='units/storage-mb-pib-desc')
     async def pib(ctx, amount: float):
-        await ctx.send(amount * 1e6 / (1024**5))
+        try:
+            await ctx.send(amount * 1e6 / (1024**5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mb.command(invoke_without_command=True, description='units/storage-mb-B-desc')
+    del pib
+
+    @mb.command(aliases=['byte', 'bytes'], invoke_without_command=True, description='units/storage-mb-B-desc')
     async def B(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 8)
+        try:
+            await ctx.send(amount * 1e6 / 8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mb.command(invoke_without_command=True, description='units/storage-mb-KB-desc')
+    del B
+
+    @mb.command(aliases=['kilobyte', 'kilobytes'], invoke_without_command=True, description='units/storage-mb-KB-desc')
     async def KB(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 8e3)
+        try:
+            await ctx.send(amount * 1e6 / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mb.command(invoke_without_command=True, description='units/storage-mb-KiB-desc')
+    del KB
+
+    @mb.command(aliases=['kibibyte', 'kibibytes'], invoke_without_command=True, description='units/storage-mb-KiB-desc')
     async def KiB(ctx, amount: float):
-        await ctx.send(amount * 1e6 / (8 * 1024))
+        try:
+            await ctx.send(amount * 1e6 / (8 * 1024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mb.command(invoke_without_command=True, description='units/storage-mb-MB-desc')
+    del KiB
+
+    @mb.command(aliases=['megabyte', 'megabytes'], invoke_without_command=True, description='units/storage-mb-MB-desc')
     async def MB(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 8e6)
+        try:
+            await ctx.send(amount * 1e6 / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mb.command(invoke_without_command=True, description='units/storage-mb-MiB-desc')
+    del MB
+
+    @mb.command(aliases=['mebibyte', 'mebibytes'], invoke_without_command=True, description='units/storage-mb-MiB-desc')
     async def MiB(ctx, amount: float):
-        await ctx.send(amount * 1e6 / (8 * 1024 ** 2))
+        try:
+            await ctx.send(amount * 1e6 / (8 * 1024 ** 2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mb.command(invoke_without_command=True, description='units/storage-mb-GB-desc')
+    del MiB
+
+    @mb.command(aliases=['gigabyte', 'gigabytes'], invoke_without_command=True, description='units/storage-mb-GB-desc')
     async def GB(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 8e9)
+        try:
+            await ctx.send(amount * 1e6 / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mb.command(invoke_without_command=True, description='units/storage-mb-GiB-desc')
+    del GB
+
+    @mb.command(aliases=['gibibyte', 'gibibytes'], invoke_without_command=True, description='units/storage-mb-GiB-desc')
     async def GiB(ctx, amount: float):
-        await ctx.send(amount * 1e6 / (8 * 1024 ** 3))
+        try:
+            await ctx.send(amount * 1e6 / (8 * 1024 ** 3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mb.command(invoke_without_command=True, description='units/storage-mb-TB-desc')
+    del GiB
+
+    @mb.command(aliases=['terabyte', 'terabytes'], invoke_without_command=True, description='units/storage-mb-TB-desc')
     async def TB(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 8e12)
+        try:
+            await ctx.send(amount * 1e6 / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mb.command(invoke_without_command=True, description='units/storage-mb-TiB-desc')
+    del TB
+
+    @mb.command(aliases=['tebibyte', 'tebibytes'], invoke_without_command=True, description='units/storage-mb-TiB-desc')
     async def TiB(ctx, amount: float):
-        await ctx.send(amount * 1e6 / (8 * 1024 ** 4))
+        try:
+            await ctx.send(amount * 1e6 / (8 * 1024 ** 4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mb.command(invoke_without_command=True, description='units/storage-mb-PB-desc')
+    del TiB
+
+    @mb.command(aliases=['petabyte', 'petabytes'], invoke_without_command=True, description='units/storage-mb-PB-desc')
     async def PB(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 8e15)
+        try:
+            await ctx.send(amount * 1e6 / 8e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mb.command(invoke_without_command=True, description='units/storage-mb-PiB-desc')
+    del PB
+
+    @mb.command(aliases=['pebibyte', 'pebibytes'], invoke_without_command=True, description='units/storage-mb-PiB-desc')
     async def PiB(ctx, amount: float):
-        await ctx.send(amount * 1e6 / (8 * 1024 ** 5))
+        try:
+            await ctx.send(amount * 1e6 / (8 * 1024 ** 5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @storage.group(invoke_without_command=True, description='units/storage-mib-desc')
+    del PiB
+
+    @storage.group(aliases=['mebibit', 'mebibits'], invoke_without_command=True, description='units/storage-mib-desc')
     @lone_group(True)
-    async def mib(ctx):
+    async def mib(self, ctx):
         pass
 
 
-    @mib.command(invoke_without_command=True, description='units/storage-mib-b-desc')
+    @mib.command(aliases=['bit', 'bits'], invoke_without_command=True, description='units/storage-mib-b-desc')
     async def b(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / 1)
+        try:
+            await ctx.send(amount * (1024**2) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mib.command(invoke_without_command=True, description='units/storage-mib-kb-desc')
+    del b
+
+    @mib.command(aliases=['kilobit', 'kilobits'], invoke_without_command=True, description='units/storage-mib-kb-desc')
     async def kb(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / 1e3)
+        try:
+            await ctx.send(amount * (1024**2) / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mib.command(invoke_without_command=True, description='units/storage-mib-kib-desc')
+    del kb
+
+    @mib.command(aliases=['kibibit', 'kibibits'], invoke_without_command=True, description='units/storage-mib-kib-desc')
     async def kib(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / 1024)
+        try:
+            await ctx.send(amount * (1024**2) / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mib.command(invoke_without_command=True, description='units/storage-mib-mb-desc')
+    del kib
+
+    @mib.command(aliases=['megabit', 'megabits'], invoke_without_command=True, description='units/storage-mib-mb-desc')
     async def mb(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / 1e6)
+        try:
+            await ctx.send(amount * (1024**2) / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mib.command(invoke_without_command=True, description='units/storage-mib-gb-desc')
+    del mb
+
+    @mib.command(aliases=['gigabit', 'gigabits'], invoke_without_command=True, description='units/storage-mib-gb-desc')
     async def gb(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / 1e9)
+        try:
+            await ctx.send(amount * (1024**2) / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mib.command(invoke_without_command=True, description='units/storage-mib-gib-desc')
+    del gb
+
+    @mib.command(aliases=['gibibit', 'gibibits'], invoke_without_command=True, description='units/storage-mib-gib-desc')
     async def gib(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / (1024**3))
+        try:
+            await ctx.send(amount * (1024**2) / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mib.command(invoke_without_command=True, description='units/storage-mib-tb-desc')
+    del gib
+
+    @mib.command(aliases=['terabit', 'terabits'], invoke_without_command=True, description='units/storage-mib-tb-desc')
     async def tb(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / 1e12)
+        try:
+            await ctx.send(amount * (1024**2) / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mib.command(invoke_without_command=True, description='units/storage-mib-tib-desc')
+    del tb
+
+    @mib.command(aliases=['tebibit', 'tebibits'], invoke_without_command=True, description='units/storage-mib-tib-desc')
     async def tib(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / (1024**4))
+        try:
+            await ctx.send(amount * (1024**2) / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mib.command(invoke_without_command=True, description='units/storage-mib-pb-desc')
+    del tib
+
+    @mib.command(aliases=['petabit', 'petabits'], invoke_without_command=True, description='units/storage-mib-pb-desc')
     async def pb(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / 1e15)
+        try:
+            await ctx.send(amount * (1024**2) / 1e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mib.command(invoke_without_command=True, description='units/storage-mib-pib-desc')
+    del pb
+
+    @mib.command(aliases=['pebibit', 'pebibits'], invoke_without_command=True, description='units/storage-mib-pib-desc')
     async def pib(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / (1024**5))
+        try:
+            await ctx.send(amount * (1024**2) / (1024**5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mib.command(invoke_without_command=True, description='units/storage-mib-B-desc')
+    del pib
+
+    @mib.command(aliases=['byte', 'bytes'], invoke_without_command=True, description='units/storage-mib-B-desc')
     async def B(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / 8)
+        try:
+            await ctx.send(amount * (1024**2) / 8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mib.command(invoke_without_command=True, description='units/storage-mib-KB-desc')
+    del B
+
+    @mib.command(aliases=['kilobyte', 'kilobytes'], invoke_without_command=True, description='units/storage-mib-KB-desc')
     async def KB(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / 8e3)
+        try:
+            await ctx.send(amount * (1024**2) / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mib.command(invoke_without_command=True, description='units/storage-mib-KiB-desc')
+    del KB
+
+    @mib.command(aliases=['kibibyte', 'kibibytes'], invoke_without_command=True, description='units/storage-mib-KiB-desc')
     async def KiB(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / (8 * 1024))
+        try:
+            await ctx.send(amount * (1024**2) / (8 * 1024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mib.command(invoke_without_command=True, description='units/storage-mib-MB-desc')
+    del KiB
+
+    @mib.command(aliases=['megabyte', 'megabytes'], invoke_without_command=True, description='units/storage-mib-MB-desc')
     async def MB(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / 8e6)
+        try:
+            await ctx.send(amount * (1024**2) / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mib.command(invoke_without_command=True, description='units/storage-mib-MiB-desc')
+    del MB
+
+    @mib.command(aliases=['mebibyte', 'mebibytes'], invoke_without_command=True, description='units/storage-mib-MiB-desc')
     async def MiB(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / (8 * 1024 ** 2))
+        try:
+            await ctx.send(amount * (1024**2) / (8 * 1024 ** 2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mib.command(invoke_without_command=True, description='units/storage-mib-GB-desc')
+    del MiB
+
+    @mib.command(aliases=['gigabyte', 'gigabytes'], invoke_without_command=True, description='units/storage-mib-GB-desc')
     async def GB(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / 8e9)
+        try:
+            await ctx.send(amount * (1024**2) / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mib.command(invoke_without_command=True, description='units/storage-mib-GiB-desc')
+    del GB
+
+    @mib.command(aliases=['gibibyte', 'gibibytes'], invoke_without_command=True, description='units/storage-mib-GiB-desc')
     async def GiB(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / (8 * 1024 ** 3))
+        try:
+            await ctx.send(amount * (1024**2) / (8 * 1024 ** 3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mib.command(invoke_without_command=True, description='units/storage-mib-TB-desc')
+    del GiB
+
+    @mib.command(aliases=['terabyte', 'terabytes'], invoke_without_command=True, description='units/storage-mib-TB-desc')
     async def TB(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / 8e12)
+        try:
+            await ctx.send(amount * (1024**2) / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mib.command(invoke_without_command=True, description='units/storage-mib-TiB-desc')
+    del TB
+
+    @mib.command(aliases=['tebibyte', 'tebibytes'], invoke_without_command=True, description='units/storage-mib-TiB-desc')
     async def TiB(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / (8 * 1024 ** 4))
+        try:
+            await ctx.send(amount * (1024**2) / (8 * 1024 ** 4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mib.command(invoke_without_command=True, description='units/storage-mib-PB-desc')
+    del TiB
+
+    @mib.command(aliases=['petabyte', 'petabytes'], invoke_without_command=True, description='units/storage-mib-PB-desc')
     async def PB(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / 8e15)
+        try:
+            await ctx.send(amount * (1024**2) / 8e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mib.command(invoke_without_command=True, description='units/storage-mib-PiB-desc')
+    del PB
+
+    @mib.command(aliases=['pebibyte', 'pebibytes'], invoke_without_command=True, description='units/storage-mib-PiB-desc')
     async def PiB(ctx, amount: float):
-        await ctx.send(amount * (1024**2) / (8 * 1024 ** 5))
+        try:
+            await ctx.send(amount * (1024**2) / (8 * 1024 ** 5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @storage.group(invoke_without_command=True, description='units/storage-gb-desc')
+    del PiB
+
+    @storage.group(aliases=['gigabit', 'gigabits'], invoke_without_command=True, description='units/storage-gb-desc')
     @lone_group(True)
-    async def gb(ctx):
+    async def gb(self, ctx):
         pass
 
 
-    @gb.command(invoke_without_command=True, description='units/storage-gb-b-desc')
+    @gb.command(aliases=['bit', 'bits'], invoke_without_command=True, description='units/storage-gb-b-desc')
     async def b(ctx, amount: float):
-        await ctx.send(amount * 1e9 / 1)
+        try:
+            await ctx.send(amount * 1e9 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gb.command(invoke_without_command=True, description='units/storage-gb-kb-desc')
+    del b
+
+    @gb.command(aliases=['kilobit', 'kilobits'], invoke_without_command=True, description='units/storage-gb-kb-desc')
     async def kb(ctx, amount: float):
-        await ctx.send(amount * 1e9 / 1e3)
+        try:
+            await ctx.send(amount * 1e9 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gb.command(invoke_without_command=True, description='units/storage-gb-kib-desc')
+    del kb
+
+    @gb.command(aliases=['kibibit', 'kibibits'], invoke_without_command=True, description='units/storage-gb-kib-desc')
     async def kib(ctx, amount: float):
-        await ctx.send(amount * 1e9 / 1024)
+        try:
+            await ctx.send(amount * 1e9 / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gb.command(invoke_without_command=True, description='units/storage-gb-mb-desc')
+    del kib
+
+    @gb.command(aliases=['megabit', 'megabits'], invoke_without_command=True, description='units/storage-gb-mb-desc')
     async def mb(ctx, amount: float):
-        await ctx.send(amount * 1e9 / 1e6)
+        try:
+            await ctx.send(amount * 1e9 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gb.command(invoke_without_command=True, description='units/storage-gb-mib-desc')
+    del mb
+
+    @gb.command(aliases=['mebibit', 'mebibits'], invoke_without_command=True, description='units/storage-gb-mib-desc')
     async def mib(ctx, amount: float):
-        await ctx.send(amount * 1e9 / (1024**2))
+        try:
+            await ctx.send(amount * 1e9 / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gb.command(invoke_without_command=True, description='units/storage-gb-gib-desc')
+    del mib
+
+    @gb.command(aliases=['gibibit', 'gibibits'], invoke_without_command=True, description='units/storage-gb-gib-desc')
     async def gib(ctx, amount: float):
-        await ctx.send(amount * 1e9 / (1024**3))
+        try:
+            await ctx.send(amount * 1e9 / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gb.command(invoke_without_command=True, description='units/storage-gb-tb-desc')
+    del gib
+
+    @gb.command(aliases=['terabit', 'terabits'], invoke_without_command=True, description='units/storage-gb-tb-desc')
     async def tb(ctx, amount: float):
-        await ctx.send(amount * 1e9 / 1e12)
+        try:
+            await ctx.send(amount * 1e9 / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gb.command(invoke_without_command=True, description='units/storage-gb-tib-desc')
+    del tb
+
+    @gb.command(aliases=['tebibit', 'tebibits'], invoke_without_command=True, description='units/storage-gb-tib-desc')
     async def tib(ctx, amount: float):
-        await ctx.send(amount * 1e9 / (1024**4))
+        try:
+            await ctx.send(amount * 1e9 / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gb.command(invoke_without_command=True, description='units/storage-gb-pb-desc')
+    del tib
+
+    @gb.command(aliases=['petabit', 'petabits'], invoke_without_command=True, description='units/storage-gb-pb-desc')
     async def pb(ctx, amount: float):
-        await ctx.send(amount * 1e9 / 1e15)
+        try:
+            await ctx.send(amount * 1e9 / 1e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gb.command(invoke_without_command=True, description='units/storage-gb-pib-desc')
+    del pb
+
+    @gb.command(aliases=['pebibit', 'pebibits'], invoke_without_command=True, description='units/storage-gb-pib-desc')
     async def pib(ctx, amount: float):
-        await ctx.send(amount * 1e9 / (1024**5))
+        try:
+            await ctx.send(amount * 1e9 / (1024**5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gb.command(invoke_without_command=True, description='units/storage-gb-B-desc')
+    del pib
+
+    @gb.command(aliases=['byte', 'bytes'], invoke_without_command=True, description='units/storage-gb-B-desc')
     async def B(ctx, amount: float):
-        await ctx.send(amount * 1e9 / 8)
+        try:
+            await ctx.send(amount * 1e9 / 8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gb.command(invoke_without_command=True, description='units/storage-gb-KB-desc')
+    del B
+
+    @gb.command(aliases=['kilobyte', 'kilobytes'], invoke_without_command=True, description='units/storage-gb-KB-desc')
     async def KB(ctx, amount: float):
-        await ctx.send(amount * 1e9 / 8e3)
+        try:
+            await ctx.send(amount * 1e9 / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gb.command(invoke_without_command=True, description='units/storage-gb-KiB-desc')
+    del KB
+
+    @gb.command(aliases=['kibibyte', 'kibibytes'], invoke_without_command=True, description='units/storage-gb-KiB-desc')
     async def KiB(ctx, amount: float):
-        await ctx.send(amount * 1e9 / (8 * 1024))
+        try:
+            await ctx.send(amount * 1e9 / (8 * 1024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gb.command(invoke_without_command=True, description='units/storage-gb-MB-desc')
+    del KiB
+
+    @gb.command(aliases=['megabyte', 'megabytes'], invoke_without_command=True, description='units/storage-gb-MB-desc')
     async def MB(ctx, amount: float):
-        await ctx.send(amount * 1e9 / 8e6)
+        try:
+            await ctx.send(amount * 1e9 / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gb.command(invoke_without_command=True, description='units/storage-gb-MiB-desc')
+    del MB
+
+    @gb.command(aliases=['mebibyte', 'mebibytes'], invoke_without_command=True, description='units/storage-gb-MiB-desc')
     async def MiB(ctx, amount: float):
-        await ctx.send(amount * 1e9 / (8 * 1024 ** 2))
+        try:
+            await ctx.send(amount * 1e9 / (8 * 1024 ** 2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gb.command(invoke_without_command=True, description='units/storage-gb-GB-desc')
+    del MiB
+
+    @gb.command(aliases=['gigabyte', 'gigabytes'], invoke_without_command=True, description='units/storage-gb-GB-desc')
     async def GB(ctx, amount: float):
-        await ctx.send(amount * 1e9 / 8e9)
+        try:
+            await ctx.send(amount * 1e9 / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gb.command(invoke_without_command=True, description='units/storage-gb-GiB-desc')
+    del GB
+
+    @gb.command(aliases=['gibibyte', 'gibibytes'], invoke_without_command=True, description='units/storage-gb-GiB-desc')
     async def GiB(ctx, amount: float):
-        await ctx.send(amount * 1e9 / (8 * 1024 ** 3))
+        try:
+            await ctx.send(amount * 1e9 / (8 * 1024 ** 3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gb.command(invoke_without_command=True, description='units/storage-gb-TB-desc')
+    del GiB
+
+    @gb.command(aliases=['terabyte', 'terabytes'], invoke_without_command=True, description='units/storage-gb-TB-desc')
     async def TB(ctx, amount: float):
-        await ctx.send(amount * 1e9 / 8e12)
+        try:
+            await ctx.send(amount * 1e9 / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gb.command(invoke_without_command=True, description='units/storage-gb-TiB-desc')
+    del TB
+
+    @gb.command(aliases=['tebibyte', 'tebibytes'], invoke_without_command=True, description='units/storage-gb-TiB-desc')
     async def TiB(ctx, amount: float):
-        await ctx.send(amount * 1e9 / (8 * 1024 ** 4))
+        try:
+            await ctx.send(amount * 1e9 / (8 * 1024 ** 4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gb.command(invoke_without_command=True, description='units/storage-gb-PB-desc')
+    del TiB
+
+    @gb.command(aliases=['petabyte', 'petabytes'], invoke_without_command=True, description='units/storage-gb-PB-desc')
     async def PB(ctx, amount: float):
-        await ctx.send(amount * 1e9 / 8e15)
+        try:
+            await ctx.send(amount * 1e9 / 8e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gb.command(invoke_without_command=True, description='units/storage-gb-PiB-desc')
+    del PB
+
+    @gb.command(aliases=['pebibyte', 'pebibytes'], invoke_without_command=True, description='units/storage-gb-PiB-desc')
     async def PiB(ctx, amount: float):
-        await ctx.send(amount * 1e9 / (8 * 1024 ** 5))
+        try:
+            await ctx.send(amount * 1e9 / (8 * 1024 ** 5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @storage.group(invoke_without_command=True, description='units/storage-gib-desc')
+    del PiB
+
+    @storage.group(aliases=['gibibit', 'gibibits'], invoke_without_command=True, description='units/storage-gib-desc')
     @lone_group(True)
-    async def gib(ctx):
+    async def gib(self, ctx):
         pass
 
 
-    @gib.command(invoke_without_command=True, description='units/storage-gib-b-desc')
+    @gib.command(aliases=['bit', 'bits'], invoke_without_command=True, description='units/storage-gib-b-desc')
     async def b(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / 1)
+        try:
+            await ctx.send(amount * (1024**3) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gib.command(invoke_without_command=True, description='units/storage-gib-kb-desc')
+    del b
+
+    @gib.command(aliases=['kilobit', 'kilobits'], invoke_without_command=True, description='units/storage-gib-kb-desc')
     async def kb(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / 1e3)
+        try:
+            await ctx.send(amount * (1024**3) / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gib.command(invoke_without_command=True, description='units/storage-gib-kib-desc')
+    del kb
+
+    @gib.command(aliases=['kibibit', 'kibibits'], invoke_without_command=True, description='units/storage-gib-kib-desc')
     async def kib(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / 1024)
+        try:
+            await ctx.send(amount * (1024**3) / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gib.command(invoke_without_command=True, description='units/storage-gib-mb-desc')
+    del kib
+
+    @gib.command(aliases=['megabit', 'megabits'], invoke_without_command=True, description='units/storage-gib-mb-desc')
     async def mb(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / 1e6)
+        try:
+            await ctx.send(amount * (1024**3) / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gib.command(invoke_without_command=True, description='units/storage-gib-mib-desc')
+    del mb
+
+    @gib.command(aliases=['mebibit', 'mebibits'], invoke_without_command=True, description='units/storage-gib-mib-desc')
     async def mib(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / (1024**2))
+        try:
+            await ctx.send(amount * (1024**3) / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gib.command(invoke_without_command=True, description='units/storage-gib-gb-desc')
+    del mib
+
+    @gib.command(aliases=['gigabit', 'gigabits'], invoke_without_command=True, description='units/storage-gib-gb-desc')
     async def gb(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / 1e9)
+        try:
+            await ctx.send(amount * (1024**3) / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gib.command(invoke_without_command=True, description='units/storage-gib-tb-desc')
+    del gb
+
+    @gib.command(aliases=['terabit', 'terabits'], invoke_without_command=True, description='units/storage-gib-tb-desc')
     async def tb(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / 1e12)
+        try:
+            await ctx.send(amount * (1024**3) / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gib.command(invoke_without_command=True, description='units/storage-gib-tib-desc')
+    del tb
+
+    @gib.command(aliases=['tebibit', 'tebibits'], invoke_without_command=True, description='units/storage-gib-tib-desc')
     async def tib(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / (1024**4))
+        try:
+            await ctx.send(amount * (1024**3) / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gib.command(invoke_without_command=True, description='units/storage-gib-pb-desc')
+    del tib
+
+    @gib.command(aliases=['petabit', 'petabits'], invoke_without_command=True, description='units/storage-gib-pb-desc')
     async def pb(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / 1e15)
+        try:
+            await ctx.send(amount * (1024**3) / 1e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gib.command(invoke_without_command=True, description='units/storage-gib-pib-desc')
+    del pb
+
+    @gib.command(aliases=['pebibit', 'pebibits'], invoke_without_command=True, description='units/storage-gib-pib-desc')
     async def pib(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / (1024**5))
+        try:
+            await ctx.send(amount * (1024**3) / (1024**5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gib.command(invoke_without_command=True, description='units/storage-gib-B-desc')
+    del pib
+
+    @gib.command(aliases=['byte', 'bytes'], invoke_without_command=True, description='units/storage-gib-B-desc')
     async def B(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / 8)
+        try:
+            await ctx.send(amount * (1024**3) / 8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gib.command(invoke_without_command=True, description='units/storage-gib-KB-desc')
+    del B
+
+    @gib.command(aliases=['kilobyte', 'kilobytes'], invoke_without_command=True, description='units/storage-gib-KB-desc')
     async def KB(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / 8e3)
+        try:
+            await ctx.send(amount * (1024**3) / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gib.command(invoke_without_command=True, description='units/storage-gib-KiB-desc')
+    del KB
+
+    @gib.command(aliases=['kibibyte', 'kibibytes'], invoke_without_command=True, description='units/storage-gib-KiB-desc')
     async def KiB(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / (8 * 1024))
+        try:
+            await ctx.send(amount * (1024**3) / (8 * 1024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gib.command(invoke_without_command=True, description='units/storage-gib-MB-desc')
+    del KiB
+
+    @gib.command(aliases=['megabyte', 'megabytes'], invoke_without_command=True, description='units/storage-gib-MB-desc')
     async def MB(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / 8e6)
+        try:
+            await ctx.send(amount * (1024**3) / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gib.command(invoke_without_command=True, description='units/storage-gib-MiB-desc')
+    del MB
+
+    @gib.command(aliases=['mebibyte', 'mebibytes'], invoke_without_command=True, description='units/storage-gib-MiB-desc')
     async def MiB(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / (8 * 1024 ** 2))
+        try:
+            await ctx.send(amount * (1024**3) / (8 * 1024 ** 2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gib.command(invoke_without_command=True, description='units/storage-gib-GB-desc')
+    del MiB
+
+    @gib.command(aliases=['gigabyte', 'gigabytes'], invoke_without_command=True, description='units/storage-gib-GB-desc')
     async def GB(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / 8e9)
+        try:
+            await ctx.send(amount * (1024**3) / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gib.command(invoke_without_command=True, description='units/storage-gib-GiB-desc')
+    del GB
+
+    @gib.command(aliases=['gibibyte', 'gibibytes'], invoke_without_command=True, description='units/storage-gib-GiB-desc')
     async def GiB(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / (8 * 1024 ** 3))
+        try:
+            await ctx.send(amount * (1024**3) / (8 * 1024 ** 3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gib.command(invoke_without_command=True, description='units/storage-gib-TB-desc')
+    del GiB
+
+    @gib.command(aliases=['terabyte', 'terabytes'], invoke_without_command=True, description='units/storage-gib-TB-desc')
     async def TB(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / 8e12)
+        try:
+            await ctx.send(amount * (1024**3) / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gib.command(invoke_without_command=True, description='units/storage-gib-TiB-desc')
+    del TB
+
+    @gib.command(aliases=['tebibyte', 'tebibytes'], invoke_without_command=True, description='units/storage-gib-TiB-desc')
     async def TiB(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / (8 * 1024 ** 4))
+        try:
+            await ctx.send(amount * (1024**3) / (8 * 1024 ** 4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gib.command(invoke_without_command=True, description='units/storage-gib-PB-desc')
+    del TiB
+
+    @gib.command(aliases=['petabyte', 'petabytes'], invoke_without_command=True, description='units/storage-gib-PB-desc')
     async def PB(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / 8e15)
+        try:
+            await ctx.send(amount * (1024**3) / 8e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gib.command(invoke_without_command=True, description='units/storage-gib-PiB-desc')
+    del PB
+
+    @gib.command(aliases=['pebibyte', 'pebibytes'], invoke_without_command=True, description='units/storage-gib-PiB-desc')
     async def PiB(ctx, amount: float):
-        await ctx.send(amount * (1024**3) / (8 * 1024 ** 5))
+        try:
+            await ctx.send(amount * (1024**3) / (8 * 1024 ** 5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @storage.group(invoke_without_command=True, description='units/storage-tb-desc')
+    del PiB
+
+    @storage.group(aliases=['terabit', 'terabits'], invoke_without_command=True, description='units/storage-tb-desc')
     @lone_group(True)
-    async def tb(ctx):
+    async def tb(self, ctx):
         pass
 
 
-    @tb.command(invoke_without_command=True, description='units/storage-tb-b-desc')
+    @tb.command(aliases=['bit', 'bits'], invoke_without_command=True, description='units/storage-tb-b-desc')
     async def b(ctx, amount: float):
-        await ctx.send(amount * 1e12 / 1)
+        try:
+            await ctx.send(amount * 1e12 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tb.command(invoke_without_command=True, description='units/storage-tb-kb-desc')
+    del b
+
+    @tb.command(aliases=['kilobit', 'kilobits'], invoke_without_command=True, description='units/storage-tb-kb-desc')
     async def kb(ctx, amount: float):
-        await ctx.send(amount * 1e12 / 1e3)
+        try:
+            await ctx.send(amount * 1e12 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tb.command(invoke_without_command=True, description='units/storage-tb-kib-desc')
+    del kb
+
+    @tb.command(aliases=['kibibit', 'kibibits'], invoke_without_command=True, description='units/storage-tb-kib-desc')
     async def kib(ctx, amount: float):
-        await ctx.send(amount * 1e12 / 1024)
+        try:
+            await ctx.send(amount * 1e12 / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tb.command(invoke_without_command=True, description='units/storage-tb-mb-desc')
+    del kib
+
+    @tb.command(aliases=['megabit', 'megabits'], invoke_without_command=True, description='units/storage-tb-mb-desc')
     async def mb(ctx, amount: float):
-        await ctx.send(amount * 1e12 / 1e6)
+        try:
+            await ctx.send(amount * 1e12 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tb.command(invoke_without_command=True, description='units/storage-tb-mib-desc')
+    del mb
+
+    @tb.command(aliases=['mebibit', 'mebibits'], invoke_without_command=True, description='units/storage-tb-mib-desc')
     async def mib(ctx, amount: float):
-        await ctx.send(amount * 1e12 / (1024**2))
+        try:
+            await ctx.send(amount * 1e12 / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tb.command(invoke_without_command=True, description='units/storage-tb-gb-desc')
+    del mib
+
+    @tb.command(aliases=['gigabit', 'gigabits'], invoke_without_command=True, description='units/storage-tb-gb-desc')
     async def gb(ctx, amount: float):
-        await ctx.send(amount * 1e12 / 1e9)
+        try:
+            await ctx.send(amount * 1e12 / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tb.command(invoke_without_command=True, description='units/storage-tb-gib-desc')
+    del gb
+
+    @tb.command(aliases=['gibibit', 'gibibits'], invoke_without_command=True, description='units/storage-tb-gib-desc')
     async def gib(ctx, amount: float):
-        await ctx.send(amount * 1e12 / (1024**3))
+        try:
+            await ctx.send(amount * 1e12 / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tb.command(invoke_without_command=True, description='units/storage-tb-tib-desc')
+    del gib
+
+    @tb.command(aliases=['tebibit', 'tebibits'], invoke_without_command=True, description='units/storage-tb-tib-desc')
     async def tib(ctx, amount: float):
-        await ctx.send(amount * 1e12 / (1024**4))
+        try:
+            await ctx.send(amount * 1e12 / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tb.command(invoke_without_command=True, description='units/storage-tb-pb-desc')
+    del tib
+
+    @tb.command(aliases=['petabit', 'petabits'], invoke_without_command=True, description='units/storage-tb-pb-desc')
     async def pb(ctx, amount: float):
-        await ctx.send(amount * 1e12 / 1e15)
+        try:
+            await ctx.send(amount * 1e12 / 1e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tb.command(invoke_without_command=True, description='units/storage-tb-pib-desc')
+    del pb
+
+    @tb.command(aliases=['pebibit', 'pebibits'], invoke_without_command=True, description='units/storage-tb-pib-desc')
     async def pib(ctx, amount: float):
-        await ctx.send(amount * 1e12 / (1024**5))
+        try:
+            await ctx.send(amount * 1e12 / (1024**5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tb.command(invoke_without_command=True, description='units/storage-tb-B-desc')
+    del pib
+
+    @tb.command(aliases=['byte', 'bytes'], invoke_without_command=True, description='units/storage-tb-B-desc')
     async def B(ctx, amount: float):
-        await ctx.send(amount * 1e12 / 8)
+        try:
+            await ctx.send(amount * 1e12 / 8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tb.command(invoke_without_command=True, description='units/storage-tb-KB-desc')
+    del B
+
+    @tb.command(aliases=['kilobyte', 'kilobytes'], invoke_without_command=True, description='units/storage-tb-KB-desc')
     async def KB(ctx, amount: float):
-        await ctx.send(amount * 1e12 / 8e3)
+        try:
+            await ctx.send(amount * 1e12 / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tb.command(invoke_without_command=True, description='units/storage-tb-KiB-desc')
+    del KB
+
+    @tb.command(aliases=['kibibyte', 'kibibytes'], invoke_without_command=True, description='units/storage-tb-KiB-desc')
     async def KiB(ctx, amount: float):
-        await ctx.send(amount * 1e12 / (8 * 1024))
+        try:
+            await ctx.send(amount * 1e12 / (8 * 1024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tb.command(invoke_without_command=True, description='units/storage-tb-MB-desc')
+    del KiB
+
+    @tb.command(aliases=['megabyte', 'megabytes'], invoke_without_command=True, description='units/storage-tb-MB-desc')
     async def MB(ctx, amount: float):
-        await ctx.send(amount * 1e12 / 8e6)
+        try:
+            await ctx.send(amount * 1e12 / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tb.command(invoke_without_command=True, description='units/storage-tb-MiB-desc')
+    del MB
+
+    @tb.command(aliases=['mebibyte', 'mebibytes'], invoke_without_command=True, description='units/storage-tb-MiB-desc')
     async def MiB(ctx, amount: float):
-        await ctx.send(amount * 1e12 / (8 * 1024 ** 2))
+        try:
+            await ctx.send(amount * 1e12 / (8 * 1024 ** 2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tb.command(invoke_without_command=True, description='units/storage-tb-GB-desc')
+    del MiB
+
+    @tb.command(aliases=['gigabyte', 'gigabytes'], invoke_without_command=True, description='units/storage-tb-GB-desc')
     async def GB(ctx, amount: float):
-        await ctx.send(amount * 1e12 / 8e9)
+        try:
+            await ctx.send(amount * 1e12 / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tb.command(invoke_without_command=True, description='units/storage-tb-GiB-desc')
+    del GB
+
+    @tb.command(aliases=['gibibyte', 'gibibytes'], invoke_without_command=True, description='units/storage-tb-GiB-desc')
     async def GiB(ctx, amount: float):
-        await ctx.send(amount * 1e12 / (8 * 1024 ** 3))
+        try:
+            await ctx.send(amount * 1e12 / (8 * 1024 ** 3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tb.command(invoke_without_command=True, description='units/storage-tb-TB-desc')
+    del GiB
+
+    @tb.command(aliases=['terabyte', 'terabytes'], invoke_without_command=True, description='units/storage-tb-TB-desc')
     async def TB(ctx, amount: float):
-        await ctx.send(amount * 1e12 / 8e12)
+        try:
+            await ctx.send(amount * 1e12 / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tb.command(invoke_without_command=True, description='units/storage-tb-TiB-desc')
+    del TB
+
+    @tb.command(aliases=['tebibyte', 'tebibytes'], invoke_without_command=True, description='units/storage-tb-TiB-desc')
     async def TiB(ctx, amount: float):
-        await ctx.send(amount * 1e12 / (8 * 1024 ** 4))
+        try:
+            await ctx.send(amount * 1e12 / (8 * 1024 ** 4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tb.command(invoke_without_command=True, description='units/storage-tb-PB-desc')
+    del TiB
+
+    @tb.command(aliases=['petabyte', 'petabytes'], invoke_without_command=True, description='units/storage-tb-PB-desc')
     async def PB(ctx, amount: float):
-        await ctx.send(amount * 1e12 / 8e15)
+        try:
+            await ctx.send(amount * 1e12 / 8e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tb.command(invoke_without_command=True, description='units/storage-tb-PiB-desc')
+    del PB
+
+    @tb.command(aliases=['pebibyte', 'pebibytes'], invoke_without_command=True, description='units/storage-tb-PiB-desc')
     async def PiB(ctx, amount: float):
-        await ctx.send(amount * 1e12 / (8 * 1024 ** 5))
+        try:
+            await ctx.send(amount * 1e12 / (8 * 1024 ** 5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @storage.group(invoke_without_command=True, description='units/storage-tib-desc')
+    del PiB
+
+    @storage.group(aliases=['tebibit', 'tebibits'], invoke_without_command=True, description='units/storage-tib-desc')
     @lone_group(True)
-    async def tib(ctx):
+    async def tib(self, ctx):
         pass
 
 
-    @tib.command(invoke_without_command=True, description='units/storage-tib-b-desc')
+    @tib.command(aliases=['bit', 'bits'], invoke_without_command=True, description='units/storage-tib-b-desc')
     async def b(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / 1)
+        try:
+            await ctx.send(amount * (1024**4) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tib.command(invoke_without_command=True, description='units/storage-tib-kb-desc')
+    del b
+
+    @tib.command(aliases=['kilobit', 'kilobits'], invoke_without_command=True, description='units/storage-tib-kb-desc')
     async def kb(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / 1e3)
+        try:
+            await ctx.send(amount * (1024**4) / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tib.command(invoke_without_command=True, description='units/storage-tib-kib-desc')
+    del kb
+
+    @tib.command(aliases=['kibibit', 'kibibits'], invoke_without_command=True, description='units/storage-tib-kib-desc')
     async def kib(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / 1024)
+        try:
+            await ctx.send(amount * (1024**4) / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tib.command(invoke_without_command=True, description='units/storage-tib-mb-desc')
+    del kib
+
+    @tib.command(aliases=['megabit', 'megabits'], invoke_without_command=True, description='units/storage-tib-mb-desc')
     async def mb(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / 1e6)
+        try:
+            await ctx.send(amount * (1024**4) / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tib.command(invoke_without_command=True, description='units/storage-tib-mib-desc')
+    del mb
+
+    @tib.command(aliases=['mebibit', 'mebibits'], invoke_without_command=True, description='units/storage-tib-mib-desc')
     async def mib(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / (1024**2))
+        try:
+            await ctx.send(amount * (1024**4) / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tib.command(invoke_without_command=True, description='units/storage-tib-gb-desc')
+    del mib
+
+    @tib.command(aliases=['gigabit', 'gigabits'], invoke_without_command=True, description='units/storage-tib-gb-desc')
     async def gb(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / 1e9)
+        try:
+            await ctx.send(amount * (1024**4) / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tib.command(invoke_without_command=True, description='units/storage-tib-gib-desc')
+    del gb
+
+    @tib.command(aliases=['gibibit', 'gibibits'], invoke_without_command=True, description='units/storage-tib-gib-desc')
     async def gib(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / (1024**3))
+        try:
+            await ctx.send(amount * (1024**4) / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tib.command(invoke_without_command=True, description='units/storage-tib-tb-desc')
+    del gib
+
+    @tib.command(aliases=['terabit', 'terabits'], invoke_without_command=True, description='units/storage-tib-tb-desc')
     async def tb(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / 1e12)
+        try:
+            await ctx.send(amount * (1024**4) / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tib.command(invoke_without_command=True, description='units/storage-tib-pb-desc')
+    del tb
+
+    @tib.command(aliases=['petabit', 'petabits'], invoke_without_command=True, description='units/storage-tib-pb-desc')
     async def pb(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / 1e15)
+        try:
+            await ctx.send(amount * (1024**4) / 1e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tib.command(invoke_without_command=True, description='units/storage-tib-pib-desc')
+    del pb
+
+    @tib.command(aliases=['pebibit', 'pebibits'], invoke_without_command=True, description='units/storage-tib-pib-desc')
     async def pib(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / (1024**5))
+        try:
+            await ctx.send(amount * (1024**4) / (1024**5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tib.command(invoke_without_command=True, description='units/storage-tib-B-desc')
+    del pib
+
+    @tib.command(aliases=['byte', 'bytes'], invoke_without_command=True, description='units/storage-tib-B-desc')
     async def B(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / 8)
+        try:
+            await ctx.send(amount * (1024**4) / 8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tib.command(invoke_without_command=True, description='units/storage-tib-KB-desc')
+    del B
+
+    @tib.command(aliases=['kilobyte', 'kilobytes'], invoke_without_command=True, description='units/storage-tib-KB-desc')
     async def KB(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / 8e3)
+        try:
+            await ctx.send(amount * (1024**4) / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tib.command(invoke_without_command=True, description='units/storage-tib-KiB-desc')
+    del KB
+
+    @tib.command(aliases=['kibibyte', 'kibibytes'], invoke_without_command=True, description='units/storage-tib-KiB-desc')
     async def KiB(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / (8 * 1024))
+        try:
+            await ctx.send(amount * (1024**4) / (8 * 1024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tib.command(invoke_without_command=True, description='units/storage-tib-MB-desc')
+    del KiB
+
+    @tib.command(aliases=['megabyte', 'megabytes'], invoke_without_command=True, description='units/storage-tib-MB-desc')
     async def MB(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / 8e6)
+        try:
+            await ctx.send(amount * (1024**4) / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tib.command(invoke_without_command=True, description='units/storage-tib-MiB-desc')
+    del MB
+
+    @tib.command(aliases=['mebibyte', 'mebibytes'], invoke_without_command=True, description='units/storage-tib-MiB-desc')
     async def MiB(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / (8 * 1024 ** 2))
+        try:
+            await ctx.send(amount * (1024**4) / (8 * 1024 ** 2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tib.command(invoke_without_command=True, description='units/storage-tib-GB-desc')
+    del MiB
+
+    @tib.command(aliases=['gigabyte', 'gigabytes'], invoke_without_command=True, description='units/storage-tib-GB-desc')
     async def GB(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / 8e9)
+        try:
+            await ctx.send(amount * (1024**4) / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tib.command(invoke_without_command=True, description='units/storage-tib-GiB-desc')
+    del GB
+
+    @tib.command(aliases=['gibibyte', 'gibibytes'], invoke_without_command=True, description='units/storage-tib-GiB-desc')
     async def GiB(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / (8 * 1024 ** 3))
+        try:
+            await ctx.send(amount * (1024**4) / (8 * 1024 ** 3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tib.command(invoke_without_command=True, description='units/storage-tib-TB-desc')
+    del GiB
+
+    @tib.command(aliases=['terabyte', 'terabytes'], invoke_without_command=True, description='units/storage-tib-TB-desc')
     async def TB(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / 8e12)
+        try:
+            await ctx.send(amount * (1024**4) / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tib.command(invoke_without_command=True, description='units/storage-tib-TiB-desc')
+    del TB
+
+    @tib.command(aliases=['tebibyte', 'tebibytes'], invoke_without_command=True, description='units/storage-tib-TiB-desc')
     async def TiB(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / (8 * 1024 ** 4))
+        try:
+            await ctx.send(amount * (1024**4) / (8 * 1024 ** 4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tib.command(invoke_without_command=True, description='units/storage-tib-PB-desc')
+    del TiB
+
+    @tib.command(aliases=['petabyte', 'petabytes'], invoke_without_command=True, description='units/storage-tib-PB-desc')
     async def PB(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / 8e15)
+        try:
+            await ctx.send(amount * (1024**4) / 8e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tib.command(invoke_without_command=True, description='units/storage-tib-PiB-desc')
+    del PB
+
+    @tib.command(aliases=['pebibyte', 'pebibytes'], invoke_without_command=True, description='units/storage-tib-PiB-desc')
     async def PiB(ctx, amount: float):
-        await ctx.send(amount * (1024**4) / (8 * 1024 ** 5))
+        try:
+            await ctx.send(amount * (1024**4) / (8 * 1024 ** 5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @storage.group(invoke_without_command=True, description='units/storage-pb-desc')
+    del PiB
+
+    @storage.group(aliases=['petabit', 'petabits'], invoke_without_command=True, description='units/storage-pb-desc')
     @lone_group(True)
-    async def pb(ctx):
+    async def pb(self, ctx):
         pass
 
 
-    @pb.command(invoke_without_command=True, description='units/storage-pb-b-desc')
+    @pb.command(aliases=['bit', 'bits'], invoke_without_command=True, description='units/storage-pb-b-desc')
     async def b(ctx, amount: float):
-        await ctx.send(amount * 1e15 / 1)
+        try:
+            await ctx.send(amount * 1e15 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pb.command(invoke_without_command=True, description='units/storage-pb-kb-desc')
+    del b
+
+    @pb.command(aliases=['kilobit', 'kilobits'], invoke_without_command=True, description='units/storage-pb-kb-desc')
     async def kb(ctx, amount: float):
-        await ctx.send(amount * 1e15 / 1e3)
+        try:
+            await ctx.send(amount * 1e15 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pb.command(invoke_without_command=True, description='units/storage-pb-kib-desc')
+    del kb
+
+    @pb.command(aliases=['kibibit', 'kibibits'], invoke_without_command=True, description='units/storage-pb-kib-desc')
     async def kib(ctx, amount: float):
-        await ctx.send(amount * 1e15 / 1024)
+        try:
+            await ctx.send(amount * 1e15 / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pb.command(invoke_without_command=True, description='units/storage-pb-mb-desc')
+    del kib
+
+    @pb.command(aliases=['megabit', 'megabits'], invoke_without_command=True, description='units/storage-pb-mb-desc')
     async def mb(ctx, amount: float):
-        await ctx.send(amount * 1e15 / 1e6)
+        try:
+            await ctx.send(amount * 1e15 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pb.command(invoke_without_command=True, description='units/storage-pb-mib-desc')
+    del mb
+
+    @pb.command(aliases=['mebibit', 'mebibits'], invoke_without_command=True, description='units/storage-pb-mib-desc')
     async def mib(ctx, amount: float):
-        await ctx.send(amount * 1e15 / (1024**2))
+        try:
+            await ctx.send(amount * 1e15 / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pb.command(invoke_without_command=True, description='units/storage-pb-gb-desc')
+    del mib
+
+    @pb.command(aliases=['gigabit', 'gigabits'], invoke_without_command=True, description='units/storage-pb-gb-desc')
     async def gb(ctx, amount: float):
-        await ctx.send(amount * 1e15 / 1e9)
+        try:
+            await ctx.send(amount * 1e15 / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pb.command(invoke_without_command=True, description='units/storage-pb-gib-desc')
+    del gb
+
+    @pb.command(aliases=['gibibit', 'gibibits'], invoke_without_command=True, description='units/storage-pb-gib-desc')
     async def gib(ctx, amount: float):
-        await ctx.send(amount * 1e15 / (1024**3))
+        try:
+            await ctx.send(amount * 1e15 / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pb.command(invoke_without_command=True, description='units/storage-pb-tb-desc')
+    del gib
+
+    @pb.command(aliases=['terabit', 'terabits'], invoke_without_command=True, description='units/storage-pb-tb-desc')
     async def tb(ctx, amount: float):
-        await ctx.send(amount * 1e15 / 1e12)
+        try:
+            await ctx.send(amount * 1e15 / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pb.command(invoke_without_command=True, description='units/storage-pb-tib-desc')
+    del tb
+
+    @pb.command(aliases=['tebibit', 'tebibits'], invoke_without_command=True, description='units/storage-pb-tib-desc')
     async def tib(ctx, amount: float):
-        await ctx.send(amount * 1e15 / (1024**4))
+        try:
+            await ctx.send(amount * 1e15 / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pb.command(invoke_without_command=True, description='units/storage-pb-pib-desc')
+    del tib
+
+    @pb.command(aliases=['pebibit', 'pebibits'], invoke_without_command=True, description='units/storage-pb-pib-desc')
     async def pib(ctx, amount: float):
-        await ctx.send(amount * 1e15 / (1024**5))
+        try:
+            await ctx.send(amount * 1e15 / (1024**5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pb.command(invoke_without_command=True, description='units/storage-pb-B-desc')
+    del pib
+
+    @pb.command(aliases=['byte', 'bytes'], invoke_without_command=True, description='units/storage-pb-B-desc')
     async def B(ctx, amount: float):
-        await ctx.send(amount * 1e15 / 8)
+        try:
+            await ctx.send(amount * 1e15 / 8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pb.command(invoke_without_command=True, description='units/storage-pb-KB-desc')
+    del B
+
+    @pb.command(aliases=['kilobyte', 'kilobytes'], invoke_without_command=True, description='units/storage-pb-KB-desc')
     async def KB(ctx, amount: float):
-        await ctx.send(amount * 1e15 / 8e3)
+        try:
+            await ctx.send(amount * 1e15 / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pb.command(invoke_without_command=True, description='units/storage-pb-KiB-desc')
+    del KB
+
+    @pb.command(aliases=['kibibyte', 'kibibytes'], invoke_without_command=True, description='units/storage-pb-KiB-desc')
     async def KiB(ctx, amount: float):
-        await ctx.send(amount * 1e15 / (8 * 1024))
+        try:
+            await ctx.send(amount * 1e15 / (8 * 1024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pb.command(invoke_without_command=True, description='units/storage-pb-MB-desc')
+    del KiB
+
+    @pb.command(aliases=['megabyte', 'megabytes'], invoke_without_command=True, description='units/storage-pb-MB-desc')
     async def MB(ctx, amount: float):
-        await ctx.send(amount * 1e15 / 8e6)
+        try:
+            await ctx.send(amount * 1e15 / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pb.command(invoke_without_command=True, description='units/storage-pb-MiB-desc')
+    del MB
+
+    @pb.command(aliases=['mebibyte', 'mebibytes'], invoke_without_command=True, description='units/storage-pb-MiB-desc')
     async def MiB(ctx, amount: float):
-        await ctx.send(amount * 1e15 / (8 * 1024 ** 2))
+        try:
+            await ctx.send(amount * 1e15 / (8 * 1024 ** 2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pb.command(invoke_without_command=True, description='units/storage-pb-GB-desc')
+    del MiB
+
+    @pb.command(aliases=['gigabyte', 'gigabytes'], invoke_without_command=True, description='units/storage-pb-GB-desc')
     async def GB(ctx, amount: float):
-        await ctx.send(amount * 1e15 / 8e9)
+        try:
+            await ctx.send(amount * 1e15 / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pb.command(invoke_without_command=True, description='units/storage-pb-GiB-desc')
+    del GB
+
+    @pb.command(aliases=['gibibyte', 'gibibytes'], invoke_without_command=True, description='units/storage-pb-GiB-desc')
     async def GiB(ctx, amount: float):
-        await ctx.send(amount * 1e15 / (8 * 1024 ** 3))
+        try:
+            await ctx.send(amount * 1e15 / (8 * 1024 ** 3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pb.command(invoke_without_command=True, description='units/storage-pb-TB-desc')
+    del GiB
+
+    @pb.command(aliases=['terabyte', 'terabytes'], invoke_without_command=True, description='units/storage-pb-TB-desc')
     async def TB(ctx, amount: float):
-        await ctx.send(amount * 1e15 / 8e12)
+        try:
+            await ctx.send(amount * 1e15 / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pb.command(invoke_without_command=True, description='units/storage-pb-TiB-desc')
+    del TB
+
+    @pb.command(aliases=['tebibyte', 'tebibytes'], invoke_without_command=True, description='units/storage-pb-TiB-desc')
     async def TiB(ctx, amount: float):
-        await ctx.send(amount * 1e15 / (8 * 1024 ** 4))
+        try:
+            await ctx.send(amount * 1e15 / (8 * 1024 ** 4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pb.command(invoke_without_command=True, description='units/storage-pb-PB-desc')
+    del TiB
+
+    @pb.command(aliases=['petabyte', 'petabytes'], invoke_without_command=True, description='units/storage-pb-PB-desc')
     async def PB(ctx, amount: float):
-        await ctx.send(amount * 1e15 / 8e15)
+        try:
+            await ctx.send(amount * 1e15 / 8e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pb.command(invoke_without_command=True, description='units/storage-pb-PiB-desc')
+    del PB
+
+    @pb.command(aliases=['pebibyte', 'pebibytes'], invoke_without_command=True, description='units/storage-pb-PiB-desc')
     async def PiB(ctx, amount: float):
-        await ctx.send(amount * 1e15 / (8 * 1024 ** 5))
+        try:
+            await ctx.send(amount * 1e15 / (8 * 1024 ** 5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @storage.group(invoke_without_command=True, description='units/storage-pib-desc')
+    del PiB
+
+    @storage.group(aliases=['pebibit', 'pebibits'], invoke_without_command=True, description='units/storage-pib-desc')
     @lone_group(True)
-    async def pib(ctx):
+    async def pib(self, ctx):
         pass
 
 
-    @pib.command(invoke_without_command=True, description='units/storage-pib-b-desc')
+    @pib.command(aliases=['bit', 'bits'], invoke_without_command=True, description='units/storage-pib-b-desc')
     async def b(ctx, amount: float):
-        await ctx.send(amount * (1024**5) / 1)
+        try:
+            await ctx.send(amount * (1024**5) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pib.command(invoke_without_command=True, description='units/storage-pib-kb-desc')
+    del b
+
+    @pib.command(aliases=['kilobit', 'kilobits'], invoke_without_command=True, description='units/storage-pib-kb-desc')
     async def kb(ctx, amount: float):
-        await ctx.send(amount * (1024**5) / 1e3)
+        try:
+            await ctx.send(amount * (1024**5) / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pib.command(invoke_without_command=True, description='units/storage-pib-kib-desc')
+    del kb
+
+    @pib.command(aliases=['kibibit', 'kibibits'], invoke_without_command=True, description='units/storage-pib-kib-desc')
     async def kib(ctx, amount: float):
-        await ctx.send(amount * (1024**5) / 1024)
+        try:
+            await ctx.send(amount * (1024**5) / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pib.command(invoke_without_command=True, description='units/storage-pib-mb-desc')
+    del kib
+
+    @pib.command(aliases=['megabit', 'megabits'], invoke_without_command=True, description='units/storage-pib-mb-desc')
     async def mb(ctx, amount: float):
-        await ctx.send(amount * (1024**5) / 1e6)
+        try:
+            await ctx.send(amount * (1024**5) / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pib.command(invoke_without_command=True, description='units/storage-pib-mib-desc')
+    del mb
+
+    @pib.command(aliases=['mebibit', 'mebibits'], invoke_without_command=True, description='units/storage-pib-mib-desc')
     async def mib(ctx, amount: float):
-        await ctx.send(amount * (1024**5) / (1024**2))
+        try:
+            await ctx.send(amount * (1024**5) / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pib.command(invoke_without_command=True, description='units/storage-pib-gb-desc')
+    del mib
+
+    @pib.command(aliases=['gigabit', 'gigabits'], invoke_without_command=True, description='units/storage-pib-gb-desc')
     async def gb(ctx, amount: float):
-        await ctx.send(amount * (1024**5) / 1e9)
+        try:
+            await ctx.send(amount * (1024**5) / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pib.command(invoke_without_command=True, description='units/storage-pib-gib-desc')
+    del gb
+
+    @pib.command(aliases=['gibibit', 'gibibits'], invoke_without_command=True, description='units/storage-pib-gib-desc')
     async def gib(ctx, amount: float):
-        await ctx.send(amount * (1024**5) / (1024**3))
+        try:
+            await ctx.send(amount * (1024**5) / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pib.command(invoke_without_command=True, description='units/storage-pib-tb-desc')
+    del gib
+
+    @pib.command(aliases=['terabit', 'terabits'], invoke_without_command=True, description='units/storage-pib-tb-desc')
     async def tb(ctx, amount: float):
-        await ctx.send(amount * (1024**5) / 1e12)
+        try:
+            await ctx.send(amount * (1024**5) / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pib.command(invoke_without_command=True, description='units/storage-pib-tib-desc')
+    del tb
+
+    @pib.command(aliases=['tebibit', 'tebibits'], invoke_without_command=True, description='units/storage-pib-tib-desc')
     async def tib(ctx, amount: float):
-        await ctx.send(amount * (1024**5) / (1024**4))
+        try:
+            await ctx.send(amount * (1024**5) / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pib.command(invoke_without_command=True, description='units/storage-pib-pb-desc')
+    del tib
+
+    @pib.command(aliases=['petabit', 'petabits'], invoke_without_command=True, description='units/storage-pib-pb-desc')
     async def pb(ctx, amount: float):
-        await ctx.send(amount * (1024**5) / 1e15)
+        try:
+            await ctx.send(amount * (1024**5) / 1e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pib.command(invoke_without_command=True, description='units/storage-pib-B-desc')
+    del pb
+
+    @pib.command(aliases=['byte', 'bytes'], invoke_without_command=True, description='units/storage-pib-B-desc')
     async def B(ctx, amount: float):
-        await ctx.send(amount * (1024**5) / 8)
+        try:
+            await ctx.send(amount * (1024**5) / 8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pib.command(invoke_without_command=True, description='units/storage-pib-KB-desc')
+    del B
+
+    @pib.command(aliases=['kilobyte', 'kilobytes'], invoke_without_command=True, description='units/storage-pib-KB-desc')
     async def KB(ctx, amount: float):
-        await ctx.send(amount * (1024**5) / 8e3)
+        try:
+            await ctx.send(amount * (1024**5) / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pib.command(invoke_without_command=True, description='units/storage-pib-KiB-desc')
+    del KB
+
+    @pib.command(aliases=['kibibyte', 'kibibytes'], invoke_without_command=True, description='units/storage-pib-KiB-desc')
     async def KiB(ctx, amount: float):
-        await ctx.send(amount * (1024**5) / (8 * 1024))
+        try:
+            await ctx.send(amount * (1024**5) / (8 * 1024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pib.command(invoke_without_command=True, description='units/storage-pib-MB-desc')
+    del KiB
+
+    @pib.command(aliases=['megabyte', 'megabytes'], invoke_without_command=True, description='units/storage-pib-MB-desc')
     async def MB(ctx, amount: float):
-        await ctx.send(amount * (1024**5) / 8e6)
+        try:
+            await ctx.send(amount * (1024**5) / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pib.command(invoke_without_command=True, description='units/storage-pib-MiB-desc')
+    del MB
+
+    @pib.command(aliases=['mebibyte', 'mebibytes'], invoke_without_command=True, description='units/storage-pib-MiB-desc')
     async def MiB(ctx, amount: float):
-        await ctx.send(amount * (1024**5) / (8 * 1024 ** 2))
+        try:
+            await ctx.send(amount * (1024**5) / (8 * 1024 ** 2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pib.command(invoke_without_command=True, description='units/storage-pib-GB-desc')
+    del MiB
+
+    @pib.command(aliases=['gigabyte', 'gigabytes'], invoke_without_command=True, description='units/storage-pib-GB-desc')
     async def GB(ctx, amount: float):
-        await ctx.send(amount * (1024**5) / 8e9)
+        try:
+            await ctx.send(amount * (1024**5) / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pib.command(invoke_without_command=True, description='units/storage-pib-GiB-desc')
+    del GB
+
+    @pib.command(aliases=['gibibyte', 'gibibytes'], invoke_without_command=True, description='units/storage-pib-GiB-desc')
     async def GiB(ctx, amount: float):
-        await ctx.send(amount * (1024**5) / (8 * 1024 ** 3))
+        try:
+            await ctx.send(amount * (1024**5) / (8 * 1024 ** 3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pib.command(invoke_without_command=True, description='units/storage-pib-TB-desc')
+    del GiB
+
+    @pib.command(aliases=['terabyte', 'terabytes'], invoke_without_command=True, description='units/storage-pib-TB-desc')
     async def TB(ctx, amount: float):
-        await ctx.send(amount * (1024**5) / 8e12)
+        try:
+            await ctx.send(amount * (1024**5) / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pib.command(invoke_without_command=True, description='units/storage-pib-TiB-desc')
+    del TB
+
+    @pib.command(aliases=['tebibyte', 'tebibytes'], invoke_without_command=True, description='units/storage-pib-TiB-desc')
     async def TiB(ctx, amount: float):
-        await ctx.send(amount * (1024**5) / (8 * 1024 ** 4))
+        try:
+            await ctx.send(amount * (1024**5) / (8 * 1024 ** 4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pib.command(invoke_without_command=True, description='units/storage-pib-PB-desc')
+    del TiB
+
+    @pib.command(aliases=['petabyte', 'petabytes'], invoke_without_command=True, description='units/storage-pib-PB-desc')
     async def PB(ctx, amount: float):
-        await ctx.send(amount * (1024**5) / 8e15)
+        try:
+            await ctx.send(amount * (1024**5) / 8e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pib.command(invoke_without_command=True, description='units/storage-pib-PiB-desc')
+    del PB
+
+    @pib.command(aliases=['pebibyte', 'pebibytes'], invoke_without_command=True, description='units/storage-pib-PiB-desc')
     async def PiB(ctx, amount: float):
-        await ctx.send(amount * (1024**5) / (8 * 1024 ** 5))
+        try:
+            await ctx.send(amount * (1024**5) / (8 * 1024 ** 5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @storage.group(invoke_without_command=True, description='units/storage-B-desc')
+    del PiB
+
+    @storage.group(aliases=['byte', 'bytes'], invoke_without_command=True, description='units/storage-B-desc')
     @lone_group(True)
-    async def B(ctx):
+    async def B(self, ctx):
         pass
 
 
-    @B.command(invoke_without_command=True, description='units/storage-B-b-desc')
+    @B.command(aliases=['bit', 'bits'], invoke_without_command=True, description='units/storage-B-b-desc')
     async def b(ctx, amount: float):
-        await ctx.send(amount * 8 / 1)
+        try:
+            await ctx.send(amount * 8 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @B.command(invoke_without_command=True, description='units/storage-B-kb-desc')
+    del b
+
+    @B.command(aliases=['kilobit', 'kilobits'], invoke_without_command=True, description='units/storage-B-kb-desc')
     async def kb(ctx, amount: float):
-        await ctx.send(amount * 8 / 1e3)
+        try:
+            await ctx.send(amount * 8 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @B.command(invoke_without_command=True, description='units/storage-B-kib-desc')
+    del kb
+
+    @B.command(aliases=['kibibit', 'kibibits'], invoke_without_command=True, description='units/storage-B-kib-desc')
     async def kib(ctx, amount: float):
-        await ctx.send(amount * 8 / 1024)
+        try:
+            await ctx.send(amount * 8 / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @B.command(invoke_without_command=True, description='units/storage-B-mb-desc')
+    del kib
+
+    @B.command(aliases=['megabit', 'megabits'], invoke_without_command=True, description='units/storage-B-mb-desc')
     async def mb(ctx, amount: float):
-        await ctx.send(amount * 8 / 1e6)
+        try:
+            await ctx.send(amount * 8 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @B.command(invoke_without_command=True, description='units/storage-B-mib-desc')
+    del mb
+
+    @B.command(aliases=['mebibit', 'mebibits'], invoke_without_command=True, description='units/storage-B-mib-desc')
     async def mib(ctx, amount: float):
-        await ctx.send(amount * 8 / (1024**2))
+        try:
+            await ctx.send(amount * 8 / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @B.command(invoke_without_command=True, description='units/storage-B-gb-desc')
+    del mib
+
+    @B.command(aliases=['gigabit', 'gigabits'], invoke_without_command=True, description='units/storage-B-gb-desc')
     async def gb(ctx, amount: float):
-        await ctx.send(amount * 8 / 1e9)
+        try:
+            await ctx.send(amount * 8 / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @B.command(invoke_without_command=True, description='units/storage-B-gib-desc')
+    del gb
+
+    @B.command(aliases=['gibibit', 'gibibits'], invoke_without_command=True, description='units/storage-B-gib-desc')
     async def gib(ctx, amount: float):
-        await ctx.send(amount * 8 / (1024**3))
+        try:
+            await ctx.send(amount * 8 / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @B.command(invoke_without_command=True, description='units/storage-B-tb-desc')
+    del gib
+
+    @B.command(aliases=['terabit', 'terabits'], invoke_without_command=True, description='units/storage-B-tb-desc')
     async def tb(ctx, amount: float):
-        await ctx.send(amount * 8 / 1e12)
+        try:
+            await ctx.send(amount * 8 / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @B.command(invoke_without_command=True, description='units/storage-B-tib-desc')
+    del tb
+
+    @B.command(aliases=['tebibit', 'tebibits'], invoke_without_command=True, description='units/storage-B-tib-desc')
     async def tib(ctx, amount: float):
-        await ctx.send(amount * 8 / (1024**4))
+        try:
+            await ctx.send(amount * 8 / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @B.command(invoke_without_command=True, description='units/storage-B-pb-desc')
+    del tib
+
+    @B.command(aliases=['petabit', 'petabits'], invoke_without_command=True, description='units/storage-B-pb-desc')
     async def pb(ctx, amount: float):
-        await ctx.send(amount * 8 / 1e15)
+        try:
+            await ctx.send(amount * 8 / 1e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @B.command(invoke_without_command=True, description='units/storage-B-pib-desc')
+    del pb
+
+    @B.command(aliases=['pebibit', 'pebibits'], invoke_without_command=True, description='units/storage-B-pib-desc')
     async def pib(ctx, amount: float):
-        await ctx.send(amount * 8 / (1024**5))
+        try:
+            await ctx.send(amount * 8 / (1024**5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @B.command(invoke_without_command=True, description='units/storage-B-KB-desc')
+    del pib
+
+    @B.command(aliases=['kilobyte', 'kilobytes'], invoke_without_command=True, description='units/storage-B-KB-desc')
     async def KB(ctx, amount: float):
-        await ctx.send(amount * 8 / 8e3)
+        try:
+            await ctx.send(amount * 8 / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @B.command(invoke_without_command=True, description='units/storage-B-KiB-desc')
+    del KB
+
+    @B.command(aliases=['kibibyte', 'kibibytes'], invoke_without_command=True, description='units/storage-B-KiB-desc')
     async def KiB(ctx, amount: float):
-        await ctx.send(amount * 8 / (8 * 1024))
+        try:
+            await ctx.send(amount * 8 / (8 * 1024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @B.command(invoke_without_command=True, description='units/storage-B-MB-desc')
+    del KiB
+
+    @B.command(aliases=['megabyte', 'megabytes'], invoke_without_command=True, description='units/storage-B-MB-desc')
     async def MB(ctx, amount: float):
-        await ctx.send(amount * 8 / 8e6)
+        try:
+            await ctx.send(amount * 8 / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @B.command(invoke_without_command=True, description='units/storage-B-MiB-desc')
+    del MB
+
+    @B.command(aliases=['mebibyte', 'mebibytes'], invoke_without_command=True, description='units/storage-B-MiB-desc')
     async def MiB(ctx, amount: float):
-        await ctx.send(amount * 8 / (8 * 1024 ** 2))
+        try:
+            await ctx.send(amount * 8 / (8 * 1024 ** 2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @B.command(invoke_without_command=True, description='units/storage-B-GB-desc')
+    del MiB
+
+    @B.command(aliases=['gigabyte', 'gigabytes'], invoke_without_command=True, description='units/storage-B-GB-desc')
     async def GB(ctx, amount: float):
-        await ctx.send(amount * 8 / 8e9)
+        try:
+            await ctx.send(amount * 8 / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @B.command(invoke_without_command=True, description='units/storage-B-GiB-desc')
+    del GB
+
+    @B.command(aliases=['gibibyte', 'gibibytes'], invoke_without_command=True, description='units/storage-B-GiB-desc')
     async def GiB(ctx, amount: float):
-        await ctx.send(amount * 8 / (8 * 1024 ** 3))
+        try:
+            await ctx.send(amount * 8 / (8 * 1024 ** 3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @B.command(invoke_without_command=True, description='units/storage-B-TB-desc')
+    del GiB
+
+    @B.command(aliases=['terabyte', 'terabytes'], invoke_without_command=True, description='units/storage-B-TB-desc')
     async def TB(ctx, amount: float):
-        await ctx.send(amount * 8 / 8e12)
+        try:
+            await ctx.send(amount * 8 / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @B.command(invoke_without_command=True, description='units/storage-B-TiB-desc')
+    del TB
+
+    @B.command(aliases=['tebibyte', 'tebibytes'], invoke_without_command=True, description='units/storage-B-TiB-desc')
     async def TiB(ctx, amount: float):
-        await ctx.send(amount * 8 / (8 * 1024 ** 4))
+        try:
+            await ctx.send(amount * 8 / (8 * 1024 ** 4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @B.command(invoke_without_command=True, description='units/storage-B-PB-desc')
+    del TiB
+
+    @B.command(aliases=['petabyte', 'petabytes'], invoke_without_command=True, description='units/storage-B-PB-desc')
     async def PB(ctx, amount: float):
-        await ctx.send(amount * 8 / 8e15)
+        try:
+            await ctx.send(amount * 8 / 8e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @B.command(invoke_without_command=True, description='units/storage-B-PiB-desc')
+    del PB
+
+    @B.command(aliases=['pebibyte', 'pebibytes'], invoke_without_command=True, description='units/storage-B-PiB-desc')
     async def PiB(ctx, amount: float):
-        await ctx.send(amount * 8 / (8 * 1024 ** 5))
+        try:
+            await ctx.send(amount * 8 / (8 * 1024 ** 5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @storage.group(invoke_without_command=True, description='units/storage-KB-desc')
+    del PiB
+
+    @storage.group(aliases=['kilobyte', 'kilobytes'], invoke_without_command=True, description='units/storage-KB-desc')
     @lone_group(True)
-    async def KB(ctx):
+    async def KB(self, ctx):
         pass
 
 
-    @KB.command(invoke_without_command=True, description='units/storage-KB-b-desc')
+    @KB.command(aliases=['bit', 'bits'], invoke_without_command=True, description='units/storage-KB-b-desc')
     async def b(ctx, amount: float):
-        await ctx.send(amount * 8e3 / 1)
+        try:
+            await ctx.send(amount * 8e3 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KB.command(invoke_without_command=True, description='units/storage-KB-kb-desc')
+    del b
+
+    @KB.command(aliases=['kilobit', 'kilobits'], invoke_without_command=True, description='units/storage-KB-kb-desc')
     async def kb(ctx, amount: float):
-        await ctx.send(amount * 8e3 / 1e3)
+        try:
+            await ctx.send(amount * 8e3 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KB.command(invoke_without_command=True, description='units/storage-KB-kib-desc')
+    del kb
+
+    @KB.command(aliases=['kibibit', 'kibibits'], invoke_without_command=True, description='units/storage-KB-kib-desc')
     async def kib(ctx, amount: float):
-        await ctx.send(amount * 8e3 / 1024)
+        try:
+            await ctx.send(amount * 8e3 / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KB.command(invoke_without_command=True, description='units/storage-KB-mb-desc')
+    del kib
+
+    @KB.command(aliases=['megabit', 'megabits'], invoke_without_command=True, description='units/storage-KB-mb-desc')
     async def mb(ctx, amount: float):
-        await ctx.send(amount * 8e3 / 1e6)
+        try:
+            await ctx.send(amount * 8e3 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KB.command(invoke_without_command=True, description='units/storage-KB-mib-desc')
+    del mb
+
+    @KB.command(aliases=['mebibit', 'mebibits'], invoke_without_command=True, description='units/storage-KB-mib-desc')
     async def mib(ctx, amount: float):
-        await ctx.send(amount * 8e3 / (1024**2))
+        try:
+            await ctx.send(amount * 8e3 / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KB.command(invoke_without_command=True, description='units/storage-KB-gb-desc')
+    del mib
+
+    @KB.command(aliases=['gigabit', 'gigabits'], invoke_without_command=True, description='units/storage-KB-gb-desc')
     async def gb(ctx, amount: float):
-        await ctx.send(amount * 8e3 / 1e9)
+        try:
+            await ctx.send(amount * 8e3 / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KB.command(invoke_without_command=True, description='units/storage-KB-gib-desc')
+    del gb
+
+    @KB.command(aliases=['gibibit', 'gibibits'], invoke_without_command=True, description='units/storage-KB-gib-desc')
     async def gib(ctx, amount: float):
-        await ctx.send(amount * 8e3 / (1024**3))
+        try:
+            await ctx.send(amount * 8e3 / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KB.command(invoke_without_command=True, description='units/storage-KB-tb-desc')
+    del gib
+
+    @KB.command(aliases=['terabit', 'terabits'], invoke_without_command=True, description='units/storage-KB-tb-desc')
     async def tb(ctx, amount: float):
-        await ctx.send(amount * 8e3 / 1e12)
+        try:
+            await ctx.send(amount * 8e3 / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KB.command(invoke_without_command=True, description='units/storage-KB-tib-desc')
+    del tb
+
+    @KB.command(aliases=['tebibit', 'tebibits'], invoke_without_command=True, description='units/storage-KB-tib-desc')
     async def tib(ctx, amount: float):
-        await ctx.send(amount * 8e3 / (1024**4))
+        try:
+            await ctx.send(amount * 8e3 / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KB.command(invoke_without_command=True, description='units/storage-KB-pb-desc')
+    del tib
+
+    @KB.command(aliases=['petabit', 'petabits'], invoke_without_command=True, description='units/storage-KB-pb-desc')
     async def pb(ctx, amount: float):
-        await ctx.send(amount * 8e3 / 1e15)
+        try:
+            await ctx.send(amount * 8e3 / 1e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KB.command(invoke_without_command=True, description='units/storage-KB-pib-desc')
+    del pb
+
+    @KB.command(aliases=['pebibit', 'pebibits'], invoke_without_command=True, description='units/storage-KB-pib-desc')
     async def pib(ctx, amount: float):
-        await ctx.send(amount * 8e3 / (1024**5))
+        try:
+            await ctx.send(amount * 8e3 / (1024**5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KB.command(invoke_without_command=True, description='units/storage-KB-B-desc')
+    del pib
+
+    @KB.command(aliases=['byte', 'bytes'], invoke_without_command=True, description='units/storage-KB-B-desc')
     async def B(ctx, amount: float):
-        await ctx.send(amount * 8e3 / 8)
+        try:
+            await ctx.send(amount * 8e3 / 8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KB.command(invoke_without_command=True, description='units/storage-KB-KiB-desc')
+    del B
+
+    @KB.command(aliases=['kibibyte', 'kibibytes'], invoke_without_command=True, description='units/storage-KB-KiB-desc')
     async def KiB(ctx, amount: float):
-        await ctx.send(amount * 8e3 / (8 * 1024))
+        try:
+            await ctx.send(amount * 8e3 / (8 * 1024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KB.command(invoke_without_command=True, description='units/storage-KB-MB-desc')
+    del KiB
+
+    @KB.command(aliases=['megabyte', 'megabytes'], invoke_without_command=True, description='units/storage-KB-MB-desc')
     async def MB(ctx, amount: float):
-        await ctx.send(amount * 8e3 / 8e6)
+        try:
+            await ctx.send(amount * 8e3 / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KB.command(invoke_without_command=True, description='units/storage-KB-MiB-desc')
+    del MB
+
+    @KB.command(aliases=['mebibyte', 'mebibytes'], invoke_without_command=True, description='units/storage-KB-MiB-desc')
     async def MiB(ctx, amount: float):
-        await ctx.send(amount * 8e3 / (8 * 1024 ** 2))
+        try:
+            await ctx.send(amount * 8e3 / (8 * 1024 ** 2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KB.command(invoke_without_command=True, description='units/storage-KB-GB-desc')
+    del MiB
+
+    @KB.command(aliases=['gigabyte', 'gigabytes'], invoke_without_command=True, description='units/storage-KB-GB-desc')
     async def GB(ctx, amount: float):
-        await ctx.send(amount * 8e3 / 8e9)
+        try:
+            await ctx.send(amount * 8e3 / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KB.command(invoke_without_command=True, description='units/storage-KB-GiB-desc')
+    del GB
+
+    @KB.command(aliases=['gibibyte', 'gibibytes'], invoke_without_command=True, description='units/storage-KB-GiB-desc')
     async def GiB(ctx, amount: float):
-        await ctx.send(amount * 8e3 / (8 * 1024 ** 3))
+        try:
+            await ctx.send(amount * 8e3 / (8 * 1024 ** 3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KB.command(invoke_without_command=True, description='units/storage-KB-TB-desc')
+    del GiB
+
+    @KB.command(aliases=['terabyte', 'terabytes'], invoke_without_command=True, description='units/storage-KB-TB-desc')
     async def TB(ctx, amount: float):
-        await ctx.send(amount * 8e3 / 8e12)
+        try:
+            await ctx.send(amount * 8e3 / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KB.command(invoke_without_command=True, description='units/storage-KB-TiB-desc')
+    del TB
+
+    @KB.command(aliases=['tebibyte', 'tebibytes'], invoke_without_command=True, description='units/storage-KB-TiB-desc')
     async def TiB(ctx, amount: float):
-        await ctx.send(amount * 8e3 / (8 * 1024 ** 4))
+        try:
+            await ctx.send(amount * 8e3 / (8 * 1024 ** 4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KB.command(invoke_without_command=True, description='units/storage-KB-PB-desc')
+    del TiB
+
+    @KB.command(aliases=['petabyte', 'petabytes'], invoke_without_command=True, description='units/storage-KB-PB-desc')
     async def PB(ctx, amount: float):
-        await ctx.send(amount * 8e3 / 8e15)
+        try:
+            await ctx.send(amount * 8e3 / 8e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KB.command(invoke_without_command=True, description='units/storage-KB-PiB-desc')
+    del PB
+
+    @KB.command(aliases=['pebibyte', 'pebibytes'], invoke_without_command=True, description='units/storage-KB-PiB-desc')
     async def PiB(ctx, amount: float):
-        await ctx.send(amount * 8e3 / (8 * 1024 ** 5))
+        try:
+            await ctx.send(amount * 8e3 / (8 * 1024 ** 5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @storage.group(invoke_without_command=True, description='units/storage-KiB-desc')
+    del PiB
+
+    @storage.group(aliases=['kibibyte', 'kibibytes'], invoke_without_command=True, description='units/storage-KiB-desc')
     @lone_group(True)
-    async def KiB(ctx):
+    async def KiB(self, ctx):
         pass
 
 
-    @KiB.command(invoke_without_command=True, description='units/storage-KiB-b-desc')
+    @KiB.command(aliases=['bit', 'bits'], invoke_without_command=True, description='units/storage-KiB-b-desc')
     async def b(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024) / 1)
+        try:
+            await ctx.send(amount * (8 * 1024) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KiB.command(invoke_without_command=True, description='units/storage-KiB-kb-desc')
+    del b
+
+    @KiB.command(aliases=['kilobit', 'kilobits'], invoke_without_command=True, description='units/storage-KiB-kb-desc')
     async def kb(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024) / 1e3)
+        try:
+            await ctx.send(amount * (8 * 1024) / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KiB.command(invoke_without_command=True, description='units/storage-KiB-kib-desc')
+    del kb
+
+    @KiB.command(aliases=['kibibit', 'kibibits'], invoke_without_command=True, description='units/storage-KiB-kib-desc')
     async def kib(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024) / 1024)
+        try:
+            await ctx.send(amount * (8 * 1024) / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KiB.command(invoke_without_command=True, description='units/storage-KiB-mb-desc')
+    del kib
+
+    @KiB.command(aliases=['megabit', 'megabits'], invoke_without_command=True, description='units/storage-KiB-mb-desc')
     async def mb(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024) / 1e6)
+        try:
+            await ctx.send(amount * (8 * 1024) / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KiB.command(invoke_without_command=True, description='units/storage-KiB-mib-desc')
+    del mb
+
+    @KiB.command(aliases=['mebibit', 'mebibits'], invoke_without_command=True, description='units/storage-KiB-mib-desc')
     async def mib(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024) / (1024**2))
+        try:
+            await ctx.send(amount * (8 * 1024) / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KiB.command(invoke_without_command=True, description='units/storage-KiB-gb-desc')
+    del mib
+
+    @KiB.command(aliases=['gigabit', 'gigabits'], invoke_without_command=True, description='units/storage-KiB-gb-desc')
     async def gb(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024) / 1e9)
+        try:
+            await ctx.send(amount * (8 * 1024) / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KiB.command(invoke_without_command=True, description='units/storage-KiB-gib-desc')
+    del gb
+
+    @KiB.command(aliases=['gibibit', 'gibibits'], invoke_without_command=True, description='units/storage-KiB-gib-desc')
     async def gib(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024) / (1024**3))
+        try:
+            await ctx.send(amount * (8 * 1024) / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KiB.command(invoke_without_command=True, description='units/storage-KiB-tb-desc')
+    del gib
+
+    @KiB.command(aliases=['terabit', 'terabits'], invoke_without_command=True, description='units/storage-KiB-tb-desc')
     async def tb(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024) / 1e12)
+        try:
+            await ctx.send(amount * (8 * 1024) / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KiB.command(invoke_without_command=True, description='units/storage-KiB-tib-desc')
+    del tb
+
+    @KiB.command(aliases=['tebibit', 'tebibits'], invoke_without_command=True, description='units/storage-KiB-tib-desc')
     async def tib(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024) / (1024**4))
+        try:
+            await ctx.send(amount * (8 * 1024) / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KiB.command(invoke_without_command=True, description='units/storage-KiB-pb-desc')
+    del tib
+
+    @KiB.command(aliases=['petabit', 'petabits'], invoke_without_command=True, description='units/storage-KiB-pb-desc')
     async def pb(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024) / 1e15)
+        try:
+            await ctx.send(amount * (8 * 1024) / 1e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KiB.command(invoke_without_command=True, description='units/storage-KiB-pib-desc')
+    del pb
+
+    @KiB.command(aliases=['pebibit', 'pebibits'], invoke_without_command=True, description='units/storage-KiB-pib-desc')
     async def pib(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024) / (1024**5))
+        try:
+            await ctx.send(amount * (8 * 1024) / (1024**5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KiB.command(invoke_without_command=True, description='units/storage-KiB-B-desc')
+    del pib
+
+    @KiB.command(aliases=['byte', 'bytes'], invoke_without_command=True, description='units/storage-KiB-B-desc')
     async def B(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024) / 8)
+        try:
+            await ctx.send(amount * (8 * 1024) / 8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KiB.command(invoke_without_command=True, description='units/storage-KiB-KB-desc')
+    del B
+
+    @KiB.command(aliases=['kilobyte', 'kilobytes'], invoke_without_command=True, description='units/storage-KiB-KB-desc')
     async def KB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024) / 8e3)
+        try:
+            await ctx.send(amount * (8 * 1024) / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KiB.command(invoke_without_command=True, description='units/storage-KiB-MB-desc')
+    del KB
+
+    @KiB.command(aliases=['megabyte', 'megabytes'], invoke_without_command=True, description='units/storage-KiB-MB-desc')
     async def MB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024) / 8e6)
+        try:
+            await ctx.send(amount * (8 * 1024) / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KiB.command(invoke_without_command=True, description='units/storage-KiB-MiB-desc')
+    del MB
+
+    @KiB.command(aliases=['mebibyte', 'mebibytes'], invoke_without_command=True, description='units/storage-KiB-MiB-desc')
     async def MiB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024) / (8 * 1024 ** 2))
+        try:
+            await ctx.send(amount * (8 * 1024) / (8 * 1024 ** 2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KiB.command(invoke_without_command=True, description='units/storage-KiB-GB-desc')
+    del MiB
+
+    @KiB.command(aliases=['gigabyte', 'gigabytes'], invoke_without_command=True, description='units/storage-KiB-GB-desc')
     async def GB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024) / 8e9)
+        try:
+            await ctx.send(amount * (8 * 1024) / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KiB.command(invoke_without_command=True, description='units/storage-KiB-GiB-desc')
+    del GB
+
+    @KiB.command(aliases=['gibibyte', 'gibibytes'], invoke_without_command=True, description='units/storage-KiB-GiB-desc')
     async def GiB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024) / (8 * 1024 ** 3))
+        try:
+            await ctx.send(amount * (8 * 1024) / (8 * 1024 ** 3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KiB.command(invoke_without_command=True, description='units/storage-KiB-TB-desc')
+    del GiB
+
+    @KiB.command(aliases=['terabyte', 'terabytes'], invoke_without_command=True, description='units/storage-KiB-TB-desc')
     async def TB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024) / 8e12)
+        try:
+            await ctx.send(amount * (8 * 1024) / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KiB.command(invoke_without_command=True, description='units/storage-KiB-TiB-desc')
+    del TB
+
+    @KiB.command(aliases=['tebibyte', 'tebibytes'], invoke_without_command=True, description='units/storage-KiB-TiB-desc')
     async def TiB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024) / (8 * 1024 ** 4))
+        try:
+            await ctx.send(amount * (8 * 1024) / (8 * 1024 ** 4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KiB.command(invoke_without_command=True, description='units/storage-KiB-PB-desc')
+    del TiB
+
+    @KiB.command(aliases=['petabyte', 'petabytes'], invoke_without_command=True, description='units/storage-KiB-PB-desc')
     async def PB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024) / 8e15)
+        try:
+            await ctx.send(amount * (8 * 1024) / 8e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @KiB.command(invoke_without_command=True, description='units/storage-KiB-PiB-desc')
+    del PB
+
+    @KiB.command(aliases=['pebibyte', 'pebibytes'], invoke_without_command=True, description='units/storage-KiB-PiB-desc')
     async def PiB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024) / (8 * 1024 ** 5))
+        try:
+            await ctx.send(amount * (8 * 1024) / (8 * 1024 ** 5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @storage.group(invoke_without_command=True, description='units/storage-MB-desc')
+    del PiB
+
+    @storage.group(aliases=['megabyte', 'megabytes'], invoke_without_command=True, description='units/storage-MB-desc')
     @lone_group(True)
-    async def MB(ctx):
+    async def MB(self, ctx):
         pass
 
 
-    @MB.command(invoke_without_command=True, description='units/storage-MB-b-desc')
+    @MB.command(aliases=['bit', 'bits'], invoke_without_command=True, description='units/storage-MB-b-desc')
     async def b(ctx, amount: float):
-        await ctx.send(amount * 8e6 / 1)
+        try:
+            await ctx.send(amount * 8e6 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MB.command(invoke_without_command=True, description='units/storage-MB-kb-desc')
+    del b
+
+    @MB.command(aliases=['kilobit', 'kilobits'], invoke_without_command=True, description='units/storage-MB-kb-desc')
     async def kb(ctx, amount: float):
-        await ctx.send(amount * 8e6 / 1e3)
+        try:
+            await ctx.send(amount * 8e6 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MB.command(invoke_without_command=True, description='units/storage-MB-kib-desc')
+    del kb
+
+    @MB.command(aliases=['kibibit', 'kibibits'], invoke_without_command=True, description='units/storage-MB-kib-desc')
     async def kib(ctx, amount: float):
-        await ctx.send(amount * 8e6 / 1024)
+        try:
+            await ctx.send(amount * 8e6 / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MB.command(invoke_without_command=True, description='units/storage-MB-mb-desc')
+    del kib
+
+    @MB.command(aliases=['megabit', 'megabits'], invoke_without_command=True, description='units/storage-MB-mb-desc')
     async def mb(ctx, amount: float):
-        await ctx.send(amount * 8e6 / 1e6)
+        try:
+            await ctx.send(amount * 8e6 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MB.command(invoke_without_command=True, description='units/storage-MB-mib-desc')
+    del mb
+
+    @MB.command(aliases=['mebibit', 'mebibits'], invoke_without_command=True, description='units/storage-MB-mib-desc')
     async def mib(ctx, amount: float):
-        await ctx.send(amount * 8e6 / (1024**2))
+        try:
+            await ctx.send(amount * 8e6 / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MB.command(invoke_without_command=True, description='units/storage-MB-gb-desc')
+    del mib
+
+    @MB.command(aliases=['gigabit', 'gigabits'], invoke_without_command=True, description='units/storage-MB-gb-desc')
     async def gb(ctx, amount: float):
-        await ctx.send(amount * 8e6 / 1e9)
+        try:
+            await ctx.send(amount * 8e6 / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MB.command(invoke_without_command=True, description='units/storage-MB-gib-desc')
+    del gb
+
+    @MB.command(aliases=['gibibit', 'gibibits'], invoke_without_command=True, description='units/storage-MB-gib-desc')
     async def gib(ctx, amount: float):
-        await ctx.send(amount * 8e6 / (1024**3))
+        try:
+            await ctx.send(amount * 8e6 / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MB.command(invoke_without_command=True, description='units/storage-MB-tb-desc')
+    del gib
+
+    @MB.command(aliases=['terabit', 'terabits'], invoke_without_command=True, description='units/storage-MB-tb-desc')
     async def tb(ctx, amount: float):
-        await ctx.send(amount * 8e6 / 1e12)
+        try:
+            await ctx.send(amount * 8e6 / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MB.command(invoke_without_command=True, description='units/storage-MB-tib-desc')
+    del tb
+
+    @MB.command(aliases=['tebibit', 'tebibits'], invoke_without_command=True, description='units/storage-MB-tib-desc')
     async def tib(ctx, amount: float):
-        await ctx.send(amount * 8e6 / (1024**4))
+        try:
+            await ctx.send(amount * 8e6 / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MB.command(invoke_without_command=True, description='units/storage-MB-pb-desc')
+    del tib
+
+    @MB.command(aliases=['petabit', 'petabits'], invoke_without_command=True, description='units/storage-MB-pb-desc')
     async def pb(ctx, amount: float):
-        await ctx.send(amount * 8e6 / 1e15)
+        try:
+            await ctx.send(amount * 8e6 / 1e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MB.command(invoke_without_command=True, description='units/storage-MB-pib-desc')
+    del pb
+
+    @MB.command(aliases=['pebibit', 'pebibits'], invoke_without_command=True, description='units/storage-MB-pib-desc')
     async def pib(ctx, amount: float):
-        await ctx.send(amount * 8e6 / (1024**5))
+        try:
+            await ctx.send(amount * 8e6 / (1024**5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MB.command(invoke_without_command=True, description='units/storage-MB-B-desc')
+    del pib
+
+    @MB.command(aliases=['byte', 'bytes'], invoke_without_command=True, description='units/storage-MB-B-desc')
     async def B(ctx, amount: float):
-        await ctx.send(amount * 8e6 / 8)
+        try:
+            await ctx.send(amount * 8e6 / 8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MB.command(invoke_without_command=True, description='units/storage-MB-KB-desc')
+    del B
+
+    @MB.command(aliases=['kilobyte', 'kilobytes'], invoke_without_command=True, description='units/storage-MB-KB-desc')
     async def KB(ctx, amount: float):
-        await ctx.send(amount * 8e6 / 8e3)
+        try:
+            await ctx.send(amount * 8e6 / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MB.command(invoke_without_command=True, description='units/storage-MB-KiB-desc')
+    del KB
+
+    @MB.command(aliases=['kibibyte', 'kibibytes'], invoke_without_command=True, description='units/storage-MB-KiB-desc')
     async def KiB(ctx, amount: float):
-        await ctx.send(amount * 8e6 / (8 * 1024))
+        try:
+            await ctx.send(amount * 8e6 / (8 * 1024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MB.command(invoke_without_command=True, description='units/storage-MB-MiB-desc')
+    del KiB
+
+    @MB.command(aliases=['mebibyte', 'mebibytes'], invoke_without_command=True, description='units/storage-MB-MiB-desc')
     async def MiB(ctx, amount: float):
-        await ctx.send(amount * 8e6 / (8 * 1024 ** 2))
+        try:
+            await ctx.send(amount * 8e6 / (8 * 1024 ** 2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MB.command(invoke_without_command=True, description='units/storage-MB-GB-desc')
+    del MiB
+
+    @MB.command(aliases=['gigabyte', 'gigabytes'], invoke_without_command=True, description='units/storage-MB-GB-desc')
     async def GB(ctx, amount: float):
-        await ctx.send(amount * 8e6 / 8e9)
+        try:
+            await ctx.send(amount * 8e6 / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MB.command(invoke_without_command=True, description='units/storage-MB-GiB-desc')
+    del GB
+
+    @MB.command(aliases=['gibibyte', 'gibibytes'], invoke_without_command=True, description='units/storage-MB-GiB-desc')
     async def GiB(ctx, amount: float):
-        await ctx.send(amount * 8e6 / (8 * 1024 ** 3))
+        try:
+            await ctx.send(amount * 8e6 / (8 * 1024 ** 3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MB.command(invoke_without_command=True, description='units/storage-MB-TB-desc')
+    del GiB
+
+    @MB.command(aliases=['terabyte', 'terabytes'], invoke_without_command=True, description='units/storage-MB-TB-desc')
     async def TB(ctx, amount: float):
-        await ctx.send(amount * 8e6 / 8e12)
+        try:
+            await ctx.send(amount * 8e6 / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MB.command(invoke_without_command=True, description='units/storage-MB-TiB-desc')
+    del TB
+
+    @MB.command(aliases=['tebibyte', 'tebibytes'], invoke_without_command=True, description='units/storage-MB-TiB-desc')
     async def TiB(ctx, amount: float):
-        await ctx.send(amount * 8e6 / (8 * 1024 ** 4))
+        try:
+            await ctx.send(amount * 8e6 / (8 * 1024 ** 4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MB.command(invoke_without_command=True, description='units/storage-MB-PB-desc')
+    del TiB
+
+    @MB.command(aliases=['petabyte', 'petabytes'], invoke_without_command=True, description='units/storage-MB-PB-desc')
     async def PB(ctx, amount: float):
-        await ctx.send(amount * 8e6 / 8e15)
+        try:
+            await ctx.send(amount * 8e6 / 8e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MB.command(invoke_without_command=True, description='units/storage-MB-PiB-desc')
+    del PB
+
+    @MB.command(aliases=['pebibyte', 'pebibytes'], invoke_without_command=True, description='units/storage-MB-PiB-desc')
     async def PiB(ctx, amount: float):
-        await ctx.send(amount * 8e6 / (8 * 1024 ** 5))
+        try:
+            await ctx.send(amount * 8e6 / (8 * 1024 ** 5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @storage.group(invoke_without_command=True, description='units/storage-MiB-desc')
+    del PiB
+
+    @storage.group(aliases=['mebibyte', 'mebibytes'], invoke_without_command=True, description='units/storage-MiB-desc')
     @lone_group(True)
-    async def MiB(ctx):
+    async def MiB(self, ctx):
         pass
 
 
-    @MiB.command(invoke_without_command=True, description='units/storage-MiB-b-desc')
+    @MiB.command(aliases=['bit', 'bits'], invoke_without_command=True, description='units/storage-MiB-b-desc')
     async def b(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 2) / 1)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 2) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MiB.command(invoke_without_command=True, description='units/storage-MiB-kb-desc')
+    del b
+
+    @MiB.command(aliases=['kilobit', 'kilobits'], invoke_without_command=True, description='units/storage-MiB-kb-desc')
     async def kb(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 2) / 1e3)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 2) / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MiB.command(invoke_without_command=True, description='units/storage-MiB-kib-desc')
+    del kb
+
+    @MiB.command(aliases=['kibibit', 'kibibits'], invoke_without_command=True, description='units/storage-MiB-kib-desc')
     async def kib(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 2) / 1024)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 2) / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MiB.command(invoke_without_command=True, description='units/storage-MiB-mb-desc')
+    del kib
+
+    @MiB.command(aliases=['megabit', 'megabits'], invoke_without_command=True, description='units/storage-MiB-mb-desc')
     async def mb(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 2) / 1e6)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 2) / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MiB.command(invoke_without_command=True, description='units/storage-MiB-mib-desc')
+    del mb
+
+    @MiB.command(aliases=['mebibit', 'mebibits'], invoke_without_command=True, description='units/storage-MiB-mib-desc')
     async def mib(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 2) / (1024**2))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 2) / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MiB.command(invoke_without_command=True, description='units/storage-MiB-gb-desc')
+    del mib
+
+    @MiB.command(aliases=['gigabit', 'gigabits'], invoke_without_command=True, description='units/storage-MiB-gb-desc')
     async def gb(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 2) / 1e9)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 2) / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MiB.command(invoke_without_command=True, description='units/storage-MiB-gib-desc')
+    del gb
+
+    @MiB.command(aliases=['gibibit', 'gibibits'], invoke_without_command=True, description='units/storage-MiB-gib-desc')
     async def gib(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 2) / (1024**3))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 2) / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MiB.command(invoke_without_command=True, description='units/storage-MiB-tb-desc')
+    del gib
+
+    @MiB.command(aliases=['terabit', 'terabits'], invoke_without_command=True, description='units/storage-MiB-tb-desc')
     async def tb(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 2) / 1e12)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 2) / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MiB.command(invoke_without_command=True, description='units/storage-MiB-tib-desc')
+    del tb
+
+    @MiB.command(aliases=['tebibit', 'tebibits'], invoke_without_command=True, description='units/storage-MiB-tib-desc')
     async def tib(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 2) / (1024**4))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 2) / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MiB.command(invoke_without_command=True, description='units/storage-MiB-pb-desc')
+    del tib
+
+    @MiB.command(aliases=['petabit', 'petabits'], invoke_without_command=True, description='units/storage-MiB-pb-desc')
     async def pb(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 2) / 1e15)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 2) / 1e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MiB.command(invoke_without_command=True, description='units/storage-MiB-pib-desc')
+    del pb
+
+    @MiB.command(aliases=['pebibit', 'pebibits'], invoke_without_command=True, description='units/storage-MiB-pib-desc')
     async def pib(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 2) / (1024**5))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 2) / (1024**5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MiB.command(invoke_without_command=True, description='units/storage-MiB-B-desc')
+    del pib
+
+    @MiB.command(aliases=['byte', 'bytes'], invoke_without_command=True, description='units/storage-MiB-B-desc')
     async def B(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 2) / 8)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 2) / 8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MiB.command(invoke_without_command=True, description='units/storage-MiB-KB-desc')
+    del B
+
+    @MiB.command(aliases=['kilobyte', 'kilobytes'], invoke_without_command=True, description='units/storage-MiB-KB-desc')
     async def KB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 2) / 8e3)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 2) / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MiB.command(invoke_without_command=True, description='units/storage-MiB-KiB-desc')
+    del KB
+
+    @MiB.command(aliases=['kibibyte', 'kibibytes'], invoke_without_command=True, description='units/storage-MiB-KiB-desc')
     async def KiB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 2) / (8 * 1024))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 2) / (8 * 1024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MiB.command(invoke_without_command=True, description='units/storage-MiB-MB-desc')
+    del KiB
+
+    @MiB.command(aliases=['megabyte', 'megabytes'], invoke_without_command=True, description='units/storage-MiB-MB-desc')
     async def MB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 2) / 8e6)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 2) / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MiB.command(invoke_without_command=True, description='units/storage-MiB-GB-desc')
+    del MB
+
+    @MiB.command(aliases=['gigabyte', 'gigabytes'], invoke_without_command=True, description='units/storage-MiB-GB-desc')
     async def GB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 2) / 8e9)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 2) / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MiB.command(invoke_without_command=True, description='units/storage-MiB-GiB-desc')
+    del GB
+
+    @MiB.command(aliases=['gibibyte', 'gibibytes'], invoke_without_command=True, description='units/storage-MiB-GiB-desc')
     async def GiB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 2) / (8 * 1024 ** 3))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 2) / (8 * 1024 ** 3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MiB.command(invoke_without_command=True, description='units/storage-MiB-TB-desc')
+    del GiB
+
+    @MiB.command(aliases=['terabyte', 'terabytes'], invoke_without_command=True, description='units/storage-MiB-TB-desc')
     async def TB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 2) / 8e12)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 2) / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MiB.command(invoke_without_command=True, description='units/storage-MiB-TiB-desc')
+    del TB
+
+    @MiB.command(aliases=['tebibyte', 'tebibytes'], invoke_without_command=True, description='units/storage-MiB-TiB-desc')
     async def TiB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 2) / (8 * 1024 ** 4))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 2) / (8 * 1024 ** 4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MiB.command(invoke_without_command=True, description='units/storage-MiB-PB-desc')
+    del TiB
+
+    @MiB.command(aliases=['petabyte', 'petabytes'], invoke_without_command=True, description='units/storage-MiB-PB-desc')
     async def PB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 2) / 8e15)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 2) / 8e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @MiB.command(invoke_without_command=True, description='units/storage-MiB-PiB-desc')
+    del PB
+
+    @MiB.command(aliases=['pebibyte', 'pebibytes'], invoke_without_command=True, description='units/storage-MiB-PiB-desc')
     async def PiB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 2) / (8 * 1024 ** 5))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 2) / (8 * 1024 ** 5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @storage.group(invoke_without_command=True, description='units/storage-GB-desc')
+    del PiB
+
+    @storage.group(aliases=['gigabyte', 'gigabytes'], invoke_without_command=True, description='units/storage-GB-desc')
     @lone_group(True)
-    async def GB(ctx):
+    async def GB(self, ctx):
         pass
 
 
-    @GB.command(invoke_without_command=True, description='units/storage-GB-b-desc')
+    @GB.command(aliases=['bit', 'bits'], invoke_without_command=True, description='units/storage-GB-b-desc')
     async def b(ctx, amount: float):
-        await ctx.send(amount * 8e9 / 1)
+        try:
+            await ctx.send(amount * 8e9 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GB.command(invoke_without_command=True, description='units/storage-GB-kb-desc')
+    del b
+
+    @GB.command(aliases=['kilobit', 'kilobits'], invoke_without_command=True, description='units/storage-GB-kb-desc')
     async def kb(ctx, amount: float):
-        await ctx.send(amount * 8e9 / 1e3)
+        try:
+            await ctx.send(amount * 8e9 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GB.command(invoke_without_command=True, description='units/storage-GB-kib-desc')
+    del kb
+
+    @GB.command(aliases=['kibibit', 'kibibits'], invoke_without_command=True, description='units/storage-GB-kib-desc')
     async def kib(ctx, amount: float):
-        await ctx.send(amount * 8e9 / 1024)
+        try:
+            await ctx.send(amount * 8e9 / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GB.command(invoke_without_command=True, description='units/storage-GB-mb-desc')
+    del kib
+
+    @GB.command(aliases=['megabit', 'megabits'], invoke_without_command=True, description='units/storage-GB-mb-desc')
     async def mb(ctx, amount: float):
-        await ctx.send(amount * 8e9 / 1e6)
+        try:
+            await ctx.send(amount * 8e9 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GB.command(invoke_without_command=True, description='units/storage-GB-mib-desc')
+    del mb
+
+    @GB.command(aliases=['mebibit', 'mebibits'], invoke_without_command=True, description='units/storage-GB-mib-desc')
     async def mib(ctx, amount: float):
-        await ctx.send(amount * 8e9 / (1024**2))
+        try:
+            await ctx.send(amount * 8e9 / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GB.command(invoke_without_command=True, description='units/storage-GB-gb-desc')
+    del mib
+
+    @GB.command(aliases=['gigabit', 'gigabits'], invoke_without_command=True, description='units/storage-GB-gb-desc')
     async def gb(ctx, amount: float):
-        await ctx.send(amount * 8e9 / 1e9)
+        try:
+            await ctx.send(amount * 8e9 / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GB.command(invoke_without_command=True, description='units/storage-GB-gib-desc')
+    del gb
+
+    @GB.command(aliases=['gibibit', 'gibibits'], invoke_without_command=True, description='units/storage-GB-gib-desc')
     async def gib(ctx, amount: float):
-        await ctx.send(amount * 8e9 / (1024**3))
+        try:
+            await ctx.send(amount * 8e9 / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GB.command(invoke_without_command=True, description='units/storage-GB-tb-desc')
+    del gib
+
+    @GB.command(aliases=['terabit', 'terabits'], invoke_without_command=True, description='units/storage-GB-tb-desc')
     async def tb(ctx, amount: float):
-        await ctx.send(amount * 8e9 / 1e12)
+        try:
+            await ctx.send(amount * 8e9 / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GB.command(invoke_without_command=True, description='units/storage-GB-tib-desc')
+    del tb
+
+    @GB.command(aliases=['tebibit', 'tebibits'], invoke_without_command=True, description='units/storage-GB-tib-desc')
     async def tib(ctx, amount: float):
-        await ctx.send(amount * 8e9 / (1024**4))
+        try:
+            await ctx.send(amount * 8e9 / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GB.command(invoke_without_command=True, description='units/storage-GB-pb-desc')
+    del tib
+
+    @GB.command(aliases=['petabit', 'petabits'], invoke_without_command=True, description='units/storage-GB-pb-desc')
     async def pb(ctx, amount: float):
-        await ctx.send(amount * 8e9 / 1e15)
+        try:
+            await ctx.send(amount * 8e9 / 1e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GB.command(invoke_without_command=True, description='units/storage-GB-pib-desc')
+    del pb
+
+    @GB.command(aliases=['pebibit', 'pebibits'], invoke_without_command=True, description='units/storage-GB-pib-desc')
     async def pib(ctx, amount: float):
-        await ctx.send(amount * 8e9 / (1024**5))
+        try:
+            await ctx.send(amount * 8e9 / (1024**5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GB.command(invoke_without_command=True, description='units/storage-GB-B-desc')
+    del pib
+
+    @GB.command(aliases=['byte', 'bytes'], invoke_without_command=True, description='units/storage-GB-B-desc')
     async def B(ctx, amount: float):
-        await ctx.send(amount * 8e9 / 8)
+        try:
+            await ctx.send(amount * 8e9 / 8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GB.command(invoke_without_command=True, description='units/storage-GB-KB-desc')
+    del B
+
+    @GB.command(aliases=['kilobyte', 'kilobytes'], invoke_without_command=True, description='units/storage-GB-KB-desc')
     async def KB(ctx, amount: float):
-        await ctx.send(amount * 8e9 / 8e3)
+        try:
+            await ctx.send(amount * 8e9 / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GB.command(invoke_without_command=True, description='units/storage-GB-KiB-desc')
+    del KB
+
+    @GB.command(aliases=['kibibyte', 'kibibytes'], invoke_without_command=True, description='units/storage-GB-KiB-desc')
     async def KiB(ctx, amount: float):
-        await ctx.send(amount * 8e9 / (8 * 1024))
+        try:
+            await ctx.send(amount * 8e9 / (8 * 1024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GB.command(invoke_without_command=True, description='units/storage-GB-MB-desc')
+    del KiB
+
+    @GB.command(aliases=['megabyte', 'megabytes'], invoke_without_command=True, description='units/storage-GB-MB-desc')
     async def MB(ctx, amount: float):
-        await ctx.send(amount * 8e9 / 8e6)
+        try:
+            await ctx.send(amount * 8e9 / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GB.command(invoke_without_command=True, description='units/storage-GB-MiB-desc')
+    del MB
+
+    @GB.command(aliases=['mebibyte', 'mebibytes'], invoke_without_command=True, description='units/storage-GB-MiB-desc')
     async def MiB(ctx, amount: float):
-        await ctx.send(amount * 8e9 / (8 * 1024 ** 2))
+        try:
+            await ctx.send(amount * 8e9 / (8 * 1024 ** 2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GB.command(invoke_without_command=True, description='units/storage-GB-GiB-desc')
+    del MiB
+
+    @GB.command(aliases=['gibibyte', 'gibibytes'], invoke_without_command=True, description='units/storage-GB-GiB-desc')
     async def GiB(ctx, amount: float):
-        await ctx.send(amount * 8e9 / (8 * 1024 ** 3))
+        try:
+            await ctx.send(amount * 8e9 / (8 * 1024 ** 3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GB.command(invoke_without_command=True, description='units/storage-GB-TB-desc')
+    del GiB
+
+    @GB.command(aliases=['terabyte', 'terabytes'], invoke_without_command=True, description='units/storage-GB-TB-desc')
     async def TB(ctx, amount: float):
-        await ctx.send(amount * 8e9 / 8e12)
+        try:
+            await ctx.send(amount * 8e9 / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GB.command(invoke_without_command=True, description='units/storage-GB-TiB-desc')
+    del TB
+
+    @GB.command(aliases=['tebibyte', 'tebibytes'], invoke_without_command=True, description='units/storage-GB-TiB-desc')
     async def TiB(ctx, amount: float):
-        await ctx.send(amount * 8e9 / (8 * 1024 ** 4))
+        try:
+            await ctx.send(amount * 8e9 / (8 * 1024 ** 4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GB.command(invoke_without_command=True, description='units/storage-GB-PB-desc')
+    del TiB
+
+    @GB.command(aliases=['petabyte', 'petabytes'], invoke_without_command=True, description='units/storage-GB-PB-desc')
     async def PB(ctx, amount: float):
-        await ctx.send(amount * 8e9 / 8e15)
+        try:
+            await ctx.send(amount * 8e9 / 8e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GB.command(invoke_without_command=True, description='units/storage-GB-PiB-desc')
+    del PB
+
+    @GB.command(aliases=['pebibyte', 'pebibytes'], invoke_without_command=True, description='units/storage-GB-PiB-desc')
     async def PiB(ctx, amount: float):
-        await ctx.send(amount * 8e9 / (8 * 1024 ** 5))
+        try:
+            await ctx.send(amount * 8e9 / (8 * 1024 ** 5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @storage.group(invoke_without_command=True, description='units/storage-GiB-desc')
+    del PiB
+
+    @storage.group(aliases=['gibibyte', 'gibibytes'], invoke_without_command=True, description='units/storage-GiB-desc')
     @lone_group(True)
-    async def GiB(ctx):
+    async def GiB(self, ctx):
         pass
 
 
-    @GiB.command(invoke_without_command=True, description='units/storage-GiB-b-desc')
+    @GiB.command(aliases=['bit', 'bits'], invoke_without_command=True, description='units/storage-GiB-b-desc')
     async def b(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 3) / 1)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 3) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GiB.command(invoke_without_command=True, description='units/storage-GiB-kb-desc')
+    del b
+
+    @GiB.command(aliases=['kilobit', 'kilobits'], invoke_without_command=True, description='units/storage-GiB-kb-desc')
     async def kb(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 3) / 1e3)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 3) / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GiB.command(invoke_without_command=True, description='units/storage-GiB-kib-desc')
+    del kb
+
+    @GiB.command(aliases=['kibibit', 'kibibits'], invoke_without_command=True, description='units/storage-GiB-kib-desc')
     async def kib(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 3) / 1024)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 3) / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GiB.command(invoke_without_command=True, description='units/storage-GiB-mb-desc')
+    del kib
+
+    @GiB.command(aliases=['megabit', 'megabits'], invoke_without_command=True, description='units/storage-GiB-mb-desc')
     async def mb(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 3) / 1e6)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 3) / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GiB.command(invoke_without_command=True, description='units/storage-GiB-mib-desc')
+    del mb
+
+    @GiB.command(aliases=['mebibit', 'mebibits'], invoke_without_command=True, description='units/storage-GiB-mib-desc')
     async def mib(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 3) / (1024**2))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 3) / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GiB.command(invoke_without_command=True, description='units/storage-GiB-gb-desc')
+    del mib
+
+    @GiB.command(aliases=['gigabit', 'gigabits'], invoke_without_command=True, description='units/storage-GiB-gb-desc')
     async def gb(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 3) / 1e9)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 3) / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GiB.command(invoke_without_command=True, description='units/storage-GiB-gib-desc')
+    del gb
+
+    @GiB.command(aliases=['gibibit', 'gibibits'], invoke_without_command=True, description='units/storage-GiB-gib-desc')
     async def gib(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 3) / (1024**3))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 3) / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GiB.command(invoke_without_command=True, description='units/storage-GiB-tb-desc')
+    del gib
+
+    @GiB.command(aliases=['terabit', 'terabits'], invoke_without_command=True, description='units/storage-GiB-tb-desc')
     async def tb(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 3) / 1e12)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 3) / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GiB.command(invoke_without_command=True, description='units/storage-GiB-tib-desc')
+    del tb
+
+    @GiB.command(aliases=['tebibit', 'tebibits'], invoke_without_command=True, description='units/storage-GiB-tib-desc')
     async def tib(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 3) / (1024**4))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 3) / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GiB.command(invoke_without_command=True, description='units/storage-GiB-pb-desc')
+    del tib
+
+    @GiB.command(aliases=['petabit', 'petabits'], invoke_without_command=True, description='units/storage-GiB-pb-desc')
     async def pb(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 3) / 1e15)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 3) / 1e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GiB.command(invoke_without_command=True, description='units/storage-GiB-pib-desc')
+    del pb
+
+    @GiB.command(aliases=['pebibit', 'pebibits'], invoke_without_command=True, description='units/storage-GiB-pib-desc')
     async def pib(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 3) / (1024**5))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 3) / (1024**5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GiB.command(invoke_without_command=True, description='units/storage-GiB-B-desc')
+    del pib
+
+    @GiB.command(aliases=['byte', 'bytes'], invoke_without_command=True, description='units/storage-GiB-B-desc')
     async def B(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 3) / 8)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 3) / 8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GiB.command(invoke_without_command=True, description='units/storage-GiB-KB-desc')
+    del B
+
+    @GiB.command(aliases=['kilobyte', 'kilobytes'], invoke_without_command=True, description='units/storage-GiB-KB-desc')
     async def KB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 3) / 8e3)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 3) / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GiB.command(invoke_without_command=True, description='units/storage-GiB-KiB-desc')
+    del KB
+
+    @GiB.command(aliases=['kibibyte', 'kibibytes'], invoke_without_command=True, description='units/storage-GiB-KiB-desc')
     async def KiB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 3) / (8 * 1024))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 3) / (8 * 1024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GiB.command(invoke_without_command=True, description='units/storage-GiB-MB-desc')
+    del KiB
+
+    @GiB.command(aliases=['megabyte', 'megabytes'], invoke_without_command=True, description='units/storage-GiB-MB-desc')
     async def MB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 3) / 8e6)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 3) / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GiB.command(invoke_without_command=True, description='units/storage-GiB-MiB-desc')
+    del MB
+
+    @GiB.command(aliases=['mebibyte', 'mebibytes'], invoke_without_command=True, description='units/storage-GiB-MiB-desc')
     async def MiB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 3) / (8 * 1024 ** 2))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 3) / (8 * 1024 ** 2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GiB.command(invoke_without_command=True, description='units/storage-GiB-GB-desc')
+    del MiB
+
+    @GiB.command(aliases=['gigabyte', 'gigabytes'], invoke_without_command=True, description='units/storage-GiB-GB-desc')
     async def GB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 3) / 8e9)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 3) / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GiB.command(invoke_without_command=True, description='units/storage-GiB-TB-desc')
+    del GB
+
+    @GiB.command(aliases=['terabyte', 'terabytes'], invoke_without_command=True, description='units/storage-GiB-TB-desc')
     async def TB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 3) / 8e12)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 3) / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GiB.command(invoke_without_command=True, description='units/storage-GiB-TiB-desc')
+    del TB
+
+    @GiB.command(aliases=['tebibyte', 'tebibytes'], invoke_without_command=True, description='units/storage-GiB-TiB-desc')
     async def TiB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 3) / (8 * 1024 ** 4))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 3) / (8 * 1024 ** 4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GiB.command(invoke_without_command=True, description='units/storage-GiB-PB-desc')
+    del TiB
+
+    @GiB.command(aliases=['petabyte', 'petabytes'], invoke_without_command=True, description='units/storage-GiB-PB-desc')
     async def PB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 3) / 8e15)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 3) / 8e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @GiB.command(invoke_without_command=True, description='units/storage-GiB-PiB-desc')
+    del PB
+
+    @GiB.command(aliases=['pebibyte', 'pebibytes'], invoke_without_command=True, description='units/storage-GiB-PiB-desc')
     async def PiB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 3) / (8 * 1024 ** 5))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 3) / (8 * 1024 ** 5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @storage.group(invoke_without_command=True, description='units/storage-TB-desc')
+    del PiB
+
+    @storage.group(aliases=['terabyte', 'terabytes'], invoke_without_command=True, description='units/storage-TB-desc')
     @lone_group(True)
-    async def TB(ctx):
+    async def TB(self, ctx):
         pass
 
 
-    @TB.command(invoke_without_command=True, description='units/storage-TB-b-desc')
+    @TB.command(aliases=['bit', 'bits'], invoke_without_command=True, description='units/storage-TB-b-desc')
     async def b(ctx, amount: float):
-        await ctx.send(amount * 8e12 / 1)
+        try:
+            await ctx.send(amount * 8e12 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TB.command(invoke_without_command=True, description='units/storage-TB-kb-desc')
+    del b
+
+    @TB.command(aliases=['kilobit', 'kilobits'], invoke_without_command=True, description='units/storage-TB-kb-desc')
     async def kb(ctx, amount: float):
-        await ctx.send(amount * 8e12 / 1e3)
+        try:
+            await ctx.send(amount * 8e12 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TB.command(invoke_without_command=True, description='units/storage-TB-kib-desc')
+    del kb
+
+    @TB.command(aliases=['kibibit', 'kibibits'], invoke_without_command=True, description='units/storage-TB-kib-desc')
     async def kib(ctx, amount: float):
-        await ctx.send(amount * 8e12 / 1024)
+        try:
+            await ctx.send(amount * 8e12 / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TB.command(invoke_without_command=True, description='units/storage-TB-mb-desc')
+    del kib
+
+    @TB.command(aliases=['megabit', 'megabits'], invoke_without_command=True, description='units/storage-TB-mb-desc')
     async def mb(ctx, amount: float):
-        await ctx.send(amount * 8e12 / 1e6)
+        try:
+            await ctx.send(amount * 8e12 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TB.command(invoke_without_command=True, description='units/storage-TB-mib-desc')
+    del mb
+
+    @TB.command(aliases=['mebibit', 'mebibits'], invoke_without_command=True, description='units/storage-TB-mib-desc')
     async def mib(ctx, amount: float):
-        await ctx.send(amount * 8e12 / (1024**2))
+        try:
+            await ctx.send(amount * 8e12 / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TB.command(invoke_without_command=True, description='units/storage-TB-gb-desc')
+    del mib
+
+    @TB.command(aliases=['gigabit', 'gigabits'], invoke_without_command=True, description='units/storage-TB-gb-desc')
     async def gb(ctx, amount: float):
-        await ctx.send(amount * 8e12 / 1e9)
+        try:
+            await ctx.send(amount * 8e12 / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TB.command(invoke_without_command=True, description='units/storage-TB-gib-desc')
+    del gb
+
+    @TB.command(aliases=['gibibit', 'gibibits'], invoke_without_command=True, description='units/storage-TB-gib-desc')
     async def gib(ctx, amount: float):
-        await ctx.send(amount * 8e12 / (1024**3))
+        try:
+            await ctx.send(amount * 8e12 / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TB.command(invoke_without_command=True, description='units/storage-TB-tb-desc')
+    del gib
+
+    @TB.command(aliases=['terabit', 'terabits'], invoke_without_command=True, description='units/storage-TB-tb-desc')
     async def tb(ctx, amount: float):
-        await ctx.send(amount * 8e12 / 1e12)
+        try:
+            await ctx.send(amount * 8e12 / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TB.command(invoke_without_command=True, description='units/storage-TB-tib-desc')
+    del tb
+
+    @TB.command(aliases=['tebibit', 'tebibits'], invoke_without_command=True, description='units/storage-TB-tib-desc')
     async def tib(ctx, amount: float):
-        await ctx.send(amount * 8e12 / (1024**4))
+        try:
+            await ctx.send(amount * 8e12 / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TB.command(invoke_without_command=True, description='units/storage-TB-pb-desc')
+    del tib
+
+    @TB.command(aliases=['petabit', 'petabits'], invoke_without_command=True, description='units/storage-TB-pb-desc')
     async def pb(ctx, amount: float):
-        await ctx.send(amount * 8e12 / 1e15)
+        try:
+            await ctx.send(amount * 8e12 / 1e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TB.command(invoke_without_command=True, description='units/storage-TB-pib-desc')
+    del pb
+
+    @TB.command(aliases=['pebibit', 'pebibits'], invoke_without_command=True, description='units/storage-TB-pib-desc')
     async def pib(ctx, amount: float):
-        await ctx.send(amount * 8e12 / (1024**5))
+        try:
+            await ctx.send(amount * 8e12 / (1024**5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TB.command(invoke_without_command=True, description='units/storage-TB-B-desc')
+    del pib
+
+    @TB.command(aliases=['byte', 'bytes'], invoke_without_command=True, description='units/storage-TB-B-desc')
     async def B(ctx, amount: float):
-        await ctx.send(amount * 8e12 / 8)
+        try:
+            await ctx.send(amount * 8e12 / 8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TB.command(invoke_without_command=True, description='units/storage-TB-KB-desc')
+    del B
+
+    @TB.command(aliases=['kilobyte', 'kilobytes'], invoke_without_command=True, description='units/storage-TB-KB-desc')
     async def KB(ctx, amount: float):
-        await ctx.send(amount * 8e12 / 8e3)
+        try:
+            await ctx.send(amount * 8e12 / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TB.command(invoke_without_command=True, description='units/storage-TB-KiB-desc')
+    del KB
+
+    @TB.command(aliases=['kibibyte', 'kibibytes'], invoke_without_command=True, description='units/storage-TB-KiB-desc')
     async def KiB(ctx, amount: float):
-        await ctx.send(amount * 8e12 / (8 * 1024))
+        try:
+            await ctx.send(amount * 8e12 / (8 * 1024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TB.command(invoke_without_command=True, description='units/storage-TB-MB-desc')
+    del KiB
+
+    @TB.command(aliases=['megabyte', 'megabytes'], invoke_without_command=True, description='units/storage-TB-MB-desc')
     async def MB(ctx, amount: float):
-        await ctx.send(amount * 8e12 / 8e6)
+        try:
+            await ctx.send(amount * 8e12 / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TB.command(invoke_without_command=True, description='units/storage-TB-MiB-desc')
+    del MB
+
+    @TB.command(aliases=['mebibyte', 'mebibytes'], invoke_without_command=True, description='units/storage-TB-MiB-desc')
     async def MiB(ctx, amount: float):
-        await ctx.send(amount * 8e12 / (8 * 1024 ** 2))
+        try:
+            await ctx.send(amount * 8e12 / (8 * 1024 ** 2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TB.command(invoke_without_command=True, description='units/storage-TB-GB-desc')
+    del MiB
+
+    @TB.command(aliases=['gigabyte', 'gigabytes'], invoke_without_command=True, description='units/storage-TB-GB-desc')
     async def GB(ctx, amount: float):
-        await ctx.send(amount * 8e12 / 8e9)
+        try:
+            await ctx.send(amount * 8e12 / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TB.command(invoke_without_command=True, description='units/storage-TB-GiB-desc')
+    del GB
+
+    @TB.command(aliases=['gibibyte', 'gibibytes'], invoke_without_command=True, description='units/storage-TB-GiB-desc')
     async def GiB(ctx, amount: float):
-        await ctx.send(amount * 8e12 / (8 * 1024 ** 3))
+        try:
+            await ctx.send(amount * 8e12 / (8 * 1024 ** 3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TB.command(invoke_without_command=True, description='units/storage-TB-TiB-desc')
+    del GiB
+
+    @TB.command(aliases=['tebibyte', 'tebibytes'], invoke_without_command=True, description='units/storage-TB-TiB-desc')
     async def TiB(ctx, amount: float):
-        await ctx.send(amount * 8e12 / (8 * 1024 ** 4))
+        try:
+            await ctx.send(amount * 8e12 / (8 * 1024 ** 4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TB.command(invoke_without_command=True, description='units/storage-TB-PB-desc')
+    del TiB
+
+    @TB.command(aliases=['petabyte', 'petabytes'], invoke_without_command=True, description='units/storage-TB-PB-desc')
     async def PB(ctx, amount: float):
-        await ctx.send(amount * 8e12 / 8e15)
+        try:
+            await ctx.send(amount * 8e12 / 8e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TB.command(invoke_without_command=True, description='units/storage-TB-PiB-desc')
+    del PB
+
+    @TB.command(aliases=['pebibyte', 'pebibytes'], invoke_without_command=True, description='units/storage-TB-PiB-desc')
     async def PiB(ctx, amount: float):
-        await ctx.send(amount * 8e12 / (8 * 1024 ** 5))
+        try:
+            await ctx.send(amount * 8e12 / (8 * 1024 ** 5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @storage.group(invoke_without_command=True, description='units/storage-TiB-desc')
+    del PiB
+
+    @storage.group(aliases=['tebibyte', 'tebibytes'], invoke_without_command=True, description='units/storage-TiB-desc')
     @lone_group(True)
-    async def TiB(ctx):
+    async def TiB(self, ctx):
         pass
 
 
-    @TiB.command(invoke_without_command=True, description='units/storage-TiB-b-desc')
+    @TiB.command(aliases=['bit', 'bits'], invoke_without_command=True, description='units/storage-TiB-b-desc')
     async def b(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 4) / 1)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 4) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TiB.command(invoke_without_command=True, description='units/storage-TiB-kb-desc')
+    del b
+
+    @TiB.command(aliases=['kilobit', 'kilobits'], invoke_without_command=True, description='units/storage-TiB-kb-desc')
     async def kb(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 4) / 1e3)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 4) / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TiB.command(invoke_without_command=True, description='units/storage-TiB-kib-desc')
+    del kb
+
+    @TiB.command(aliases=['kibibit', 'kibibits'], invoke_without_command=True, description='units/storage-TiB-kib-desc')
     async def kib(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 4) / 1024)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 4) / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TiB.command(invoke_without_command=True, description='units/storage-TiB-mb-desc')
+    del kib
+
+    @TiB.command(aliases=['megabit', 'megabits'], invoke_without_command=True, description='units/storage-TiB-mb-desc')
     async def mb(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 4) / 1e6)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 4) / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TiB.command(invoke_without_command=True, description='units/storage-TiB-mib-desc')
+    del mb
+
+    @TiB.command(aliases=['mebibit', 'mebibits'], invoke_without_command=True, description='units/storage-TiB-mib-desc')
     async def mib(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 4) / (1024**2))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 4) / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TiB.command(invoke_without_command=True, description='units/storage-TiB-gb-desc')
+    del mib
+
+    @TiB.command(aliases=['gigabit', 'gigabits'], invoke_without_command=True, description='units/storage-TiB-gb-desc')
     async def gb(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 4) / 1e9)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 4) / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TiB.command(invoke_without_command=True, description='units/storage-TiB-gib-desc')
+    del gb
+
+    @TiB.command(aliases=['gibibit', 'gibibits'], invoke_without_command=True, description='units/storage-TiB-gib-desc')
     async def gib(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 4) / (1024**3))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 4) / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TiB.command(invoke_without_command=True, description='units/storage-TiB-tb-desc')
+    del gib
+
+    @TiB.command(aliases=['terabit', 'terabits'], invoke_without_command=True, description='units/storage-TiB-tb-desc')
     async def tb(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 4) / 1e12)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 4) / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TiB.command(invoke_without_command=True, description='units/storage-TiB-tib-desc')
+    del tb
+
+    @TiB.command(aliases=['tebibit', 'tebibits'], invoke_without_command=True, description='units/storage-TiB-tib-desc')
     async def tib(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 4) / (1024**4))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 4) / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TiB.command(invoke_without_command=True, description='units/storage-TiB-pb-desc')
+    del tib
+
+    @TiB.command(aliases=['petabit', 'petabits'], invoke_without_command=True, description='units/storage-TiB-pb-desc')
     async def pb(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 4) / 1e15)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 4) / 1e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TiB.command(invoke_without_command=True, description='units/storage-TiB-pib-desc')
+    del pb
+
+    @TiB.command(aliases=['pebibit', 'pebibits'], invoke_without_command=True, description='units/storage-TiB-pib-desc')
     async def pib(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 4) / (1024**5))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 4) / (1024**5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TiB.command(invoke_without_command=True, description='units/storage-TiB-B-desc')
+    del pib
+
+    @TiB.command(aliases=['byte', 'bytes'], invoke_without_command=True, description='units/storage-TiB-B-desc')
     async def B(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 4) / 8)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 4) / 8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TiB.command(invoke_without_command=True, description='units/storage-TiB-KB-desc')
+    del B
+
+    @TiB.command(aliases=['kilobyte', 'kilobytes'], invoke_without_command=True, description='units/storage-TiB-KB-desc')
     async def KB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 4) / 8e3)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 4) / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TiB.command(invoke_without_command=True, description='units/storage-TiB-KiB-desc')
+    del KB
+
+    @TiB.command(aliases=['kibibyte', 'kibibytes'], invoke_without_command=True, description='units/storage-TiB-KiB-desc')
     async def KiB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 4) / (8 * 1024))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 4) / (8 * 1024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TiB.command(invoke_without_command=True, description='units/storage-TiB-MB-desc')
+    del KiB
+
+    @TiB.command(aliases=['megabyte', 'megabytes'], invoke_without_command=True, description='units/storage-TiB-MB-desc')
     async def MB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 4) / 8e6)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 4) / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TiB.command(invoke_without_command=True, description='units/storage-TiB-MiB-desc')
+    del MB
+
+    @TiB.command(aliases=['mebibyte', 'mebibytes'], invoke_without_command=True, description='units/storage-TiB-MiB-desc')
     async def MiB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 4) / (8 * 1024 ** 2))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 4) / (8 * 1024 ** 2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TiB.command(invoke_without_command=True, description='units/storage-TiB-GB-desc')
+    del MiB
+
+    @TiB.command(aliases=['gigabyte', 'gigabytes'], invoke_without_command=True, description='units/storage-TiB-GB-desc')
     async def GB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 4) / 8e9)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 4) / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TiB.command(invoke_without_command=True, description='units/storage-TiB-GiB-desc')
+    del GB
+
+    @TiB.command(aliases=['gibibyte', 'gibibytes'], invoke_without_command=True, description='units/storage-TiB-GiB-desc')
     async def GiB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 4) / (8 * 1024 ** 3))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 4) / (8 * 1024 ** 3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TiB.command(invoke_without_command=True, description='units/storage-TiB-TB-desc')
+    del GiB
+
+    @TiB.command(aliases=['terabyte', 'terabytes'], invoke_without_command=True, description='units/storage-TiB-TB-desc')
     async def TB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 4) / 8e12)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 4) / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TiB.command(invoke_without_command=True, description='units/storage-TiB-PB-desc')
+    del TB
+
+    @TiB.command(aliases=['petabyte', 'petabytes'], invoke_without_command=True, description='units/storage-TiB-PB-desc')
     async def PB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 4) / 8e15)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 4) / 8e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @TiB.command(invoke_without_command=True, description='units/storage-TiB-PiB-desc')
+    del PB
+
+    @TiB.command(aliases=['pebibyte', 'pebibytes'], invoke_without_command=True, description='units/storage-TiB-PiB-desc')
     async def PiB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 4) / (8 * 1024 ** 5))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 4) / (8 * 1024 ** 5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @storage.group(invoke_without_command=True, description='units/storage-PB-desc')
+    del PiB
+
+    @storage.group(aliases=['petabyte', 'petabytes'], invoke_without_command=True, description='units/storage-PB-desc')
     @lone_group(True)
-    async def PB(ctx):
+    async def PB(self, ctx):
         pass
 
 
-    @PB.command(invoke_without_command=True, description='units/storage-PB-b-desc')
+    @PB.command(aliases=['bit', 'bits'], invoke_without_command=True, description='units/storage-PB-b-desc')
     async def b(ctx, amount: float):
-        await ctx.send(amount * 8e15 / 1)
+        try:
+            await ctx.send(amount * 8e15 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PB.command(invoke_without_command=True, description='units/storage-PB-kb-desc')
+    del b
+
+    @PB.command(aliases=['kilobit', 'kilobits'], invoke_without_command=True, description='units/storage-PB-kb-desc')
     async def kb(ctx, amount: float):
-        await ctx.send(amount * 8e15 / 1e3)
+        try:
+            await ctx.send(amount * 8e15 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PB.command(invoke_without_command=True, description='units/storage-PB-kib-desc')
+    del kb
+
+    @PB.command(aliases=['kibibit', 'kibibits'], invoke_without_command=True, description='units/storage-PB-kib-desc')
     async def kib(ctx, amount: float):
-        await ctx.send(amount * 8e15 / 1024)
+        try:
+            await ctx.send(amount * 8e15 / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PB.command(invoke_without_command=True, description='units/storage-PB-mb-desc')
+    del kib
+
+    @PB.command(aliases=['megabit', 'megabits'], invoke_without_command=True, description='units/storage-PB-mb-desc')
     async def mb(ctx, amount: float):
-        await ctx.send(amount * 8e15 / 1e6)
+        try:
+            await ctx.send(amount * 8e15 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PB.command(invoke_without_command=True, description='units/storage-PB-mib-desc')
+    del mb
+
+    @PB.command(aliases=['mebibit', 'mebibits'], invoke_without_command=True, description='units/storage-PB-mib-desc')
     async def mib(ctx, amount: float):
-        await ctx.send(amount * 8e15 / (1024**2))
+        try:
+            await ctx.send(amount * 8e15 / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PB.command(invoke_without_command=True, description='units/storage-PB-gb-desc')
+    del mib
+
+    @PB.command(aliases=['gigabit', 'gigabits'], invoke_without_command=True, description='units/storage-PB-gb-desc')
     async def gb(ctx, amount: float):
-        await ctx.send(amount * 8e15 / 1e9)
+        try:
+            await ctx.send(amount * 8e15 / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PB.command(invoke_without_command=True, description='units/storage-PB-gib-desc')
+    del gb
+
+    @PB.command(aliases=['gibibit', 'gibibits'], invoke_without_command=True, description='units/storage-PB-gib-desc')
     async def gib(ctx, amount: float):
-        await ctx.send(amount * 8e15 / (1024**3))
+        try:
+            await ctx.send(amount * 8e15 / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PB.command(invoke_without_command=True, description='units/storage-PB-tb-desc')
+    del gib
+
+    @PB.command(aliases=['terabit', 'terabits'], invoke_without_command=True, description='units/storage-PB-tb-desc')
     async def tb(ctx, amount: float):
-        await ctx.send(amount * 8e15 / 1e12)
+        try:
+            await ctx.send(amount * 8e15 / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PB.command(invoke_without_command=True, description='units/storage-PB-tib-desc')
+    del tb
+
+    @PB.command(aliases=['tebibit', 'tebibits'], invoke_without_command=True, description='units/storage-PB-tib-desc')
     async def tib(ctx, amount: float):
-        await ctx.send(amount * 8e15 / (1024**4))
+        try:
+            await ctx.send(amount * 8e15 / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PB.command(invoke_without_command=True, description='units/storage-PB-pb-desc')
+    del tib
+
+    @PB.command(aliases=['petabit', 'petabits'], invoke_without_command=True, description='units/storage-PB-pb-desc')
     async def pb(ctx, amount: float):
-        await ctx.send(amount * 8e15 / 1e15)
+        try:
+            await ctx.send(amount * 8e15 / 1e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PB.command(invoke_without_command=True, description='units/storage-PB-pib-desc')
+    del pb
+
+    @PB.command(aliases=['pebibit', 'pebibits'], invoke_without_command=True, description='units/storage-PB-pib-desc')
     async def pib(ctx, amount: float):
-        await ctx.send(amount * 8e15 / (1024**5))
+        try:
+            await ctx.send(amount * 8e15 / (1024**5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PB.command(invoke_without_command=True, description='units/storage-PB-B-desc')
+    del pib
+
+    @PB.command(aliases=['byte', 'bytes'], invoke_without_command=True, description='units/storage-PB-B-desc')
     async def B(ctx, amount: float):
-        await ctx.send(amount * 8e15 / 8)
+        try:
+            await ctx.send(amount * 8e15 / 8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PB.command(invoke_without_command=True, description='units/storage-PB-KB-desc')
+    del B
+
+    @PB.command(aliases=['kilobyte', 'kilobytes'], invoke_without_command=True, description='units/storage-PB-KB-desc')
     async def KB(ctx, amount: float):
-        await ctx.send(amount * 8e15 / 8e3)
+        try:
+            await ctx.send(amount * 8e15 / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PB.command(invoke_without_command=True, description='units/storage-PB-KiB-desc')
+    del KB
+
+    @PB.command(aliases=['kibibyte', 'kibibytes'], invoke_without_command=True, description='units/storage-PB-KiB-desc')
     async def KiB(ctx, amount: float):
-        await ctx.send(amount * 8e15 / (8 * 1024))
+        try:
+            await ctx.send(amount * 8e15 / (8 * 1024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PB.command(invoke_without_command=True, description='units/storage-PB-MB-desc')
+    del KiB
+
+    @PB.command(aliases=['megabyte', 'megabytes'], invoke_without_command=True, description='units/storage-PB-MB-desc')
     async def MB(ctx, amount: float):
-        await ctx.send(amount * 8e15 / 8e6)
+        try:
+            await ctx.send(amount * 8e15 / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PB.command(invoke_without_command=True, description='units/storage-PB-MiB-desc')
+    del MB
+
+    @PB.command(aliases=['mebibyte', 'mebibytes'], invoke_without_command=True, description='units/storage-PB-MiB-desc')
     async def MiB(ctx, amount: float):
-        await ctx.send(amount * 8e15 / (8 * 1024 ** 2))
+        try:
+            await ctx.send(amount * 8e15 / (8 * 1024 ** 2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PB.command(invoke_without_command=True, description='units/storage-PB-GB-desc')
+    del MiB
+
+    @PB.command(aliases=['gigabyte', 'gigabytes'], invoke_without_command=True, description='units/storage-PB-GB-desc')
     async def GB(ctx, amount: float):
-        await ctx.send(amount * 8e15 / 8e9)
+        try:
+            await ctx.send(amount * 8e15 / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PB.command(invoke_without_command=True, description='units/storage-PB-GiB-desc')
+    del GB
+
+    @PB.command(aliases=['gibibyte', 'gibibytes'], invoke_without_command=True, description='units/storage-PB-GiB-desc')
     async def GiB(ctx, amount: float):
-        await ctx.send(amount * 8e15 / (8 * 1024 ** 3))
+        try:
+            await ctx.send(amount * 8e15 / (8 * 1024 ** 3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PB.command(invoke_without_command=True, description='units/storage-PB-TB-desc')
+    del GiB
+
+    @PB.command(aliases=['terabyte', 'terabytes'], invoke_without_command=True, description='units/storage-PB-TB-desc')
     async def TB(ctx, amount: float):
-        await ctx.send(amount * 8e15 / 8e12)
+        try:
+            await ctx.send(amount * 8e15 / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PB.command(invoke_without_command=True, description='units/storage-PB-TiB-desc')
+    del TB
+
+    @PB.command(aliases=['tebibyte', 'tebibytes'], invoke_without_command=True, description='units/storage-PB-TiB-desc')
     async def TiB(ctx, amount: float):
-        await ctx.send(amount * 8e15 / (8 * 1024 ** 4))
+        try:
+            await ctx.send(amount * 8e15 / (8 * 1024 ** 4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PB.command(invoke_without_command=True, description='units/storage-PB-PiB-desc')
+    del TiB
+
+    @PB.command(aliases=['pebibyte', 'pebibytes'], invoke_without_command=True, description='units/storage-PB-PiB-desc')
     async def PiB(ctx, amount: float):
-        await ctx.send(amount * 8e15 / (8 * 1024 ** 5))
+        try:
+            await ctx.send(amount * 8e15 / (8 * 1024 ** 5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @storage.group(invoke_without_command=True, description='units/storage-PiB-desc')
+    del PiB
+
+    @storage.group(aliases=['pebibyte', 'pebibytes'], invoke_without_command=True, description='units/storage-PiB-desc')
     @lone_group(True)
-    async def PiB(ctx):
+    async def PiB(self, ctx):
         pass
 
 
-    @PiB.command(invoke_without_command=True, description='units/storage-PiB-b-desc')
+    @PiB.command(aliases=['bit', 'bits'], invoke_without_command=True, description='units/storage-PiB-b-desc')
     async def b(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 5) / 1)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 5) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PiB.command(invoke_without_command=True, description='units/storage-PiB-kb-desc')
+    del b
+
+    @PiB.command(aliases=['kilobit', 'kilobits'], invoke_without_command=True, description='units/storage-PiB-kb-desc')
     async def kb(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 5) / 1e3)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 5) / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PiB.command(invoke_without_command=True, description='units/storage-PiB-kib-desc')
+    del kb
+
+    @PiB.command(aliases=['kibibit', 'kibibits'], invoke_without_command=True, description='units/storage-PiB-kib-desc')
     async def kib(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 5) / 1024)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 5) / 1024)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PiB.command(invoke_without_command=True, description='units/storage-PiB-mb-desc')
+    del kib
+
+    @PiB.command(aliases=['megabit', 'megabits'], invoke_without_command=True, description='units/storage-PiB-mb-desc')
     async def mb(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 5) / 1e6)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 5) / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PiB.command(invoke_without_command=True, description='units/storage-PiB-mib-desc')
+    del mb
+
+    @PiB.command(aliases=['mebibit', 'mebibits'], invoke_without_command=True, description='units/storage-PiB-mib-desc')
     async def mib(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 5) / (1024**2))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 5) / (1024**2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PiB.command(invoke_without_command=True, description='units/storage-PiB-gb-desc')
+    del mib
+
+    @PiB.command(aliases=['gigabit', 'gigabits'], invoke_without_command=True, description='units/storage-PiB-gb-desc')
     async def gb(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 5) / 1e9)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 5) / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PiB.command(invoke_without_command=True, description='units/storage-PiB-gib-desc')
+    del gb
+
+    @PiB.command(aliases=['gibibit', 'gibibits'], invoke_without_command=True, description='units/storage-PiB-gib-desc')
     async def gib(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 5) / (1024**3))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 5) / (1024**3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PiB.command(invoke_without_command=True, description='units/storage-PiB-tb-desc')
+    del gib
+
+    @PiB.command(aliases=['terabit', 'terabits'], invoke_without_command=True, description='units/storage-PiB-tb-desc')
     async def tb(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 5) / 1e12)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 5) / 1e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PiB.command(invoke_without_command=True, description='units/storage-PiB-tib-desc')
+    del tb
+
+    @PiB.command(aliases=['tebibit', 'tebibits'], invoke_without_command=True, description='units/storage-PiB-tib-desc')
     async def tib(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 5) / (1024**4))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 5) / (1024**4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PiB.command(invoke_without_command=True, description='units/storage-PiB-pb-desc')
+    del tib
+
+    @PiB.command(aliases=['petabit', 'petabits'], invoke_without_command=True, description='units/storage-PiB-pb-desc')
     async def pb(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 5) / 1e15)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 5) / 1e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PiB.command(invoke_without_command=True, description='units/storage-PiB-pib-desc')
+    del pb
+
+    @PiB.command(aliases=['pebibit', 'pebibits'], invoke_without_command=True, description='units/storage-PiB-pib-desc')
     async def pib(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 5) / (1024**5))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 5) / (1024**5))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PiB.command(invoke_without_command=True, description='units/storage-PiB-B-desc')
+    del pib
+
+    @PiB.command(aliases=['byte', 'bytes'], invoke_without_command=True, description='units/storage-PiB-B-desc')
     async def B(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 5) / 8)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 5) / 8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PiB.command(invoke_without_command=True, description='units/storage-PiB-KB-desc')
+    del B
+
+    @PiB.command(aliases=['kilobyte', 'kilobytes'], invoke_without_command=True, description='units/storage-PiB-KB-desc')
     async def KB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 5) / 8e3)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 5) / 8e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PiB.command(invoke_without_command=True, description='units/storage-PiB-KiB-desc')
+    del KB
+
+    @PiB.command(aliases=['kibibyte', 'kibibytes'], invoke_without_command=True, description='units/storage-PiB-KiB-desc')
     async def KiB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 5) / (8 * 1024))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 5) / (8 * 1024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PiB.command(invoke_without_command=True, description='units/storage-PiB-MB-desc')
+    del KiB
+
+    @PiB.command(aliases=['megabyte', 'megabytes'], invoke_without_command=True, description='units/storage-PiB-MB-desc')
     async def MB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 5) / 8e6)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 5) / 8e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PiB.command(invoke_without_command=True, description='units/storage-PiB-MiB-desc')
+    del MB
+
+    @PiB.command(aliases=['mebibyte', 'mebibytes'], invoke_without_command=True, description='units/storage-PiB-MiB-desc')
     async def MiB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 5) / (8 * 1024 ** 2))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 5) / (8 * 1024 ** 2))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PiB.command(invoke_without_command=True, description='units/storage-PiB-GB-desc')
+    del MiB
+
+    @PiB.command(aliases=['gigabyte', 'gigabytes'], invoke_without_command=True, description='units/storage-PiB-GB-desc')
     async def GB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 5) / 8e9)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 5) / 8e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PiB.command(invoke_without_command=True, description='units/storage-PiB-GiB-desc')
+    del GB
+
+    @PiB.command(aliases=['gibibyte', 'gibibytes'], invoke_without_command=True, description='units/storage-PiB-GiB-desc')
     async def GiB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 5) / (8 * 1024 ** 3))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 5) / (8 * 1024 ** 3))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PiB.command(invoke_without_command=True, description='units/storage-PiB-TB-desc')
+    del GiB
+
+    @PiB.command(aliases=['terabyte', 'terabytes'], invoke_without_command=True, description='units/storage-PiB-TB-desc')
     async def TB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 5) / 8e12)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 5) / 8e12)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PiB.command(invoke_without_command=True, description='units/storage-PiB-TiB-desc')
+    del TB
+
+    @PiB.command(aliases=['tebibyte', 'tebibytes'], invoke_without_command=True, description='units/storage-PiB-TiB-desc')
     async def TiB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 5) / (8 * 1024 ** 4))
+        try:
+            await ctx.send(amount * (8 * 1024 ** 5) / (8 * 1024 ** 4))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @PiB.command(invoke_without_command=True, description='units/storage-PiB-PB-desc')
+    del TiB
+
+    @PiB.command(aliases=['petabyte', 'petabytes'], invoke_without_command=True, description='units/storage-PiB-PB-desc')
     async def PB(ctx, amount: float):
-        await ctx.send(amount * (8 * 1024 ** 5) / 8e15)
+        try:
+            await ctx.send(amount * (8 * 1024 ** 5) / 8e15)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del PB
 
 
     @convert.group(aliases=[], invoke_without_command=True, description='units/energy-desc')
@@ -2991,425 +6362,875 @@ class Units(Cog):
         pass
 
 
-    @energy.group(invoke_without_command=True, description='units/energy-joule-desc')
+    @energy.group(aliases=['joule', 'joules'], invoke_without_command=True, description='units/energy-J-desc')
     @lone_group(True)
-    async def joule(ctx):
+    async def J(self, ctx):
         pass
 
 
-    @joule.command(invoke_without_command=True, description='units/energy-joule-kilojoule-desc')
-    async def kilojoule(ctx, amount: float):
-        await ctx.send(amount * 1 / 1000)
+    @J.command(aliases=['kilojoule', 'kilojoules'], invoke_without_command=True, description='units/energy-J-kJ-desc')
+    async def kJ(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1 / 1000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @joule.command(invoke_without_command=True, description='units/energy-joule-calorie-desc')
-    async def calorie(ctx, amount: float):
-        await ctx.send(amount * 1 / 4.184)
+    del kJ
 
-    @joule.command(invoke_without_command=True, description='units/energy-joule-kcal-desc')
+    @J.command(aliases=['calorie', 'calories'], invoke_without_command=True, description='units/energy-J-cal-desc')
+    async def cal(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1 / 4.184)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del cal
+
+    @J.command(aliases=['kilocalorie', 'kilocalories'], invoke_without_command=True, description='units/energy-J-kcal-desc')
     async def kcal(ctx, amount: float):
-        await ctx.send(amount * 1 / 4184)
+        try:
+            await ctx.send(amount * 1 / 4184)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @joule.command(invoke_without_command=True, description='units/energy-joule-watthour-desc')
-    async def watthour(ctx, amount: float):
-        await ctx.send(amount * 1 / 3600)
+    del kcal
 
-    @joule.command(invoke_without_command=True, description='units/energy-joule-kwh-desc')
-    async def kwh(ctx, amount: float):
-        await ctx.send(amount * 1 / 3.6e6)
+    @J.command(aliases=['watt-hour', 'watt-hours'], invoke_without_command=True, description='units/energy-J-Wh-desc')
+    async def Wh(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1 / 3600)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @joule.command(invoke_without_command=True, description='units/energy-joule-ev-desc')
-    async def ev(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/6.242e18))
+    del Wh
 
-    @joule.command(invoke_without_command=True, description='units/energy-joule-btu-desc')
+    @J.command(aliases=['kilowatt-hour', 'kilowatt-hours'], invoke_without_command=True, description='units/energy-J-kWh-desc')
+    async def kWh(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1 / 3.6e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del kWh
+
+    @J.command(aliases=['electronvolt', 'electronvolts'], invoke_without_command=True, description='units/energy-J-eV-desc')
+    async def eV(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1 / (1/6.242e18))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del eV
+
+    @J.command(aliases=['british-thermal-unit', 'british-thermal-units'], invoke_without_command=True, description='units/energy-J-btu-desc')
     async def btu(ctx, amount: float):
-        await ctx.send(amount * 1 / 1055.06)
+        try:
+            await ctx.send(amount * 1 / 1055.06)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @joule.command(invoke_without_command=True, description='units/energy-joule-ust-desc')
+    del btu
+
+    @J.command(aliases=['us-therm', 'us-therms'], invoke_without_command=True, description='units/energy-J-ust-desc')
     async def ust(ctx, amount: float):
-        await ctx.send(amount * 1 / 1.05506e8)
+        try:
+            await ctx.send(amount * 1 / 1.05506e8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @joule.command(invoke_without_command=True, description='units/energy-joule-ftlb-desc')
+    del ust
+
+    @J.command(aliases=['foot-pound', 'foot-pounds'], invoke_without_command=True, description='units/energy-J-ftlb-desc')
     async def ftlb(ctx, amount: float):
-        await ctx.send(amount * 1 / 1.35582)
+        try:
+            await ctx.send(amount * 1 / 1.35582)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @energy.group(invoke_without_command=True, description='units/energy-kilojoule-desc')
+    del ftlb
+
+    @energy.group(aliases=['kilojoule', 'kilojoules'], invoke_without_command=True, description='units/energy-kJ-desc')
     @lone_group(True)
-    async def kilojoule(ctx):
+    async def kJ(self, ctx):
         pass
 
 
-    @kilojoule.command(invoke_without_command=True, description='units/energy-kilojoule-joule-desc')
-    async def joule(ctx, amount: float):
-        await ctx.send(amount * 1000 / 1)
+    @kJ.command(aliases=['joule', 'joules'], invoke_without_command=True, description='units/energy-kJ-J-desc')
+    async def J(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1000 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kilojoule.command(invoke_without_command=True, description='units/energy-kilojoule-calorie-desc')
-    async def calorie(ctx, amount: float):
-        await ctx.send(amount * 1000 / 4.184)
+    del J
 
-    @kilojoule.command(invoke_without_command=True, description='units/energy-kilojoule-kcal-desc')
+    @kJ.command(aliases=['calorie', 'calories'], invoke_without_command=True, description='units/energy-kJ-cal-desc')
+    async def cal(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1000 / 4.184)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del cal
+
+    @kJ.command(aliases=['kilocalorie', 'kilocalories'], invoke_without_command=True, description='units/energy-kJ-kcal-desc')
     async def kcal(ctx, amount: float):
-        await ctx.send(amount * 1000 / 4184)
+        try:
+            await ctx.send(amount * 1000 / 4184)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kilojoule.command(invoke_without_command=True, description='units/energy-kilojoule-watthour-desc')
-    async def watthour(ctx, amount: float):
-        await ctx.send(amount * 1000 / 3600)
+    del kcal
 
-    @kilojoule.command(invoke_without_command=True, description='units/energy-kilojoule-kwh-desc')
-    async def kwh(ctx, amount: float):
-        await ctx.send(amount * 1000 / 3.6e6)
+    @kJ.command(aliases=['watt-hour', 'watt-hours'], invoke_without_command=True, description='units/energy-kJ-Wh-desc')
+    async def Wh(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1000 / 3600)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kilojoule.command(invoke_without_command=True, description='units/energy-kilojoule-ev-desc')
-    async def ev(ctx, amount: float):
-        await ctx.send(amount * 1000 / (1/6.242e18))
+    del Wh
 
-    @kilojoule.command(invoke_without_command=True, description='units/energy-kilojoule-btu-desc')
+    @kJ.command(aliases=['kilowatt-hour', 'kilowatt-hours'], invoke_without_command=True, description='units/energy-kJ-kWh-desc')
+    async def kWh(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1000 / 3.6e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del kWh
+
+    @kJ.command(aliases=['electronvolt', 'electronvolts'], invoke_without_command=True, description='units/energy-kJ-eV-desc')
+    async def eV(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1000 / (1/6.242e18))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del eV
+
+    @kJ.command(aliases=['british-thermal-unit', 'british-thermal-units'], invoke_without_command=True, description='units/energy-kJ-btu-desc')
     async def btu(ctx, amount: float):
-        await ctx.send(amount * 1000 / 1055.06)
+        try:
+            await ctx.send(amount * 1000 / 1055.06)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kilojoule.command(invoke_without_command=True, description='units/energy-kilojoule-ust-desc')
+    del btu
+
+    @kJ.command(aliases=['us-therm', 'us-therms'], invoke_without_command=True, description='units/energy-kJ-ust-desc')
     async def ust(ctx, amount: float):
-        await ctx.send(amount * 1000 / 1.05506e8)
+        try:
+            await ctx.send(amount * 1000 / 1.05506e8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kilojoule.command(invoke_without_command=True, description='units/energy-kilojoule-ftlb-desc')
+    del ust
+
+    @kJ.command(aliases=['foot-pound', 'foot-pounds'], invoke_without_command=True, description='units/energy-kJ-ftlb-desc')
     async def ftlb(ctx, amount: float):
-        await ctx.send(amount * 1000 / 1.35582)
+        try:
+            await ctx.send(amount * 1000 / 1.35582)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @energy.group(invoke_without_command=True, description='units/energy-calorie-desc')
+    del ftlb
+
+    @energy.group(aliases=['calorie', 'calories'], invoke_without_command=True, description='units/energy-cal-desc')
     @lone_group(True)
-    async def calorie(ctx):
+    async def cal(self, ctx):
         pass
 
 
-    @calorie.command(invoke_without_command=True, description='units/energy-calorie-joule-desc')
-    async def joule(ctx, amount: float):
-        await ctx.send(amount * 4.184 / 1)
+    @cal.command(aliases=['joule', 'joules'], invoke_without_command=True, description='units/energy-cal-J-desc')
+    async def J(ctx, amount: float):
+        try:
+            await ctx.send(amount * 4.184 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @calorie.command(invoke_without_command=True, description='units/energy-calorie-kilojoule-desc')
-    async def kilojoule(ctx, amount: float):
-        await ctx.send(amount * 4.184 / 1000)
+    del J
 
-    @calorie.command(invoke_without_command=True, description='units/energy-calorie-kcal-desc')
+    @cal.command(aliases=['kilojoule', 'kilojoules'], invoke_without_command=True, description='units/energy-cal-kJ-desc')
+    async def kJ(ctx, amount: float):
+        try:
+            await ctx.send(amount * 4.184 / 1000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del kJ
+
+    @cal.command(aliases=['kilocalorie', 'kilocalories'], invoke_without_command=True, description='units/energy-cal-kcal-desc')
     async def kcal(ctx, amount: float):
-        await ctx.send(amount * 4.184 / 4184)
+        try:
+            await ctx.send(amount * 4.184 / 4184)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @calorie.command(invoke_without_command=True, description='units/energy-calorie-watthour-desc')
-    async def watthour(ctx, amount: float):
-        await ctx.send(amount * 4.184 / 3600)
+    del kcal
 
-    @calorie.command(invoke_without_command=True, description='units/energy-calorie-kwh-desc')
-    async def kwh(ctx, amount: float):
-        await ctx.send(amount * 4.184 / 3.6e6)
+    @cal.command(aliases=['watt-hour', 'watt-hours'], invoke_without_command=True, description='units/energy-cal-Wh-desc')
+    async def Wh(ctx, amount: float):
+        try:
+            await ctx.send(amount * 4.184 / 3600)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @calorie.command(invoke_without_command=True, description='units/energy-calorie-ev-desc')
-    async def ev(ctx, amount: float):
-        await ctx.send(amount * 4.184 / (1/6.242e18))
+    del Wh
 
-    @calorie.command(invoke_without_command=True, description='units/energy-calorie-btu-desc')
+    @cal.command(aliases=['kilowatt-hour', 'kilowatt-hours'], invoke_without_command=True, description='units/energy-cal-kWh-desc')
+    async def kWh(ctx, amount: float):
+        try:
+            await ctx.send(amount * 4.184 / 3.6e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del kWh
+
+    @cal.command(aliases=['electronvolt', 'electronvolts'], invoke_without_command=True, description='units/energy-cal-eV-desc')
+    async def eV(ctx, amount: float):
+        try:
+            await ctx.send(amount * 4.184 / (1/6.242e18))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del eV
+
+    @cal.command(aliases=['british-thermal-unit', 'british-thermal-units'], invoke_without_command=True, description='units/energy-cal-btu-desc')
     async def btu(ctx, amount: float):
-        await ctx.send(amount * 4.184 / 1055.06)
+        try:
+            await ctx.send(amount * 4.184 / 1055.06)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @calorie.command(invoke_without_command=True, description='units/energy-calorie-ust-desc')
+    del btu
+
+    @cal.command(aliases=['us-therm', 'us-therms'], invoke_without_command=True, description='units/energy-cal-ust-desc')
     async def ust(ctx, amount: float):
-        await ctx.send(amount * 4.184 / 1.05506e8)
+        try:
+            await ctx.send(amount * 4.184 / 1.05506e8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @calorie.command(invoke_without_command=True, description='units/energy-calorie-ftlb-desc')
+    del ust
+
+    @cal.command(aliases=['foot-pound', 'foot-pounds'], invoke_without_command=True, description='units/energy-cal-ftlb-desc')
     async def ftlb(ctx, amount: float):
-        await ctx.send(amount * 4.184 / 1.35582)
+        try:
+            await ctx.send(amount * 4.184 / 1.35582)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @energy.group(invoke_without_command=True, description='units/energy-kcal-desc')
+    del ftlb
+
+    @energy.group(aliases=['kilocalorie', 'kilocalories'], invoke_without_command=True, description='units/energy-kcal-desc')
     @lone_group(True)
-    async def kcal(ctx):
+    async def kcal(self, ctx):
         pass
 
 
-    @kcal.command(invoke_without_command=True, description='units/energy-kcal-joule-desc')
-    async def joule(ctx, amount: float):
-        await ctx.send(amount * 4184 / 1)
+    @kcal.command(aliases=['joule', 'joules'], invoke_without_command=True, description='units/energy-kcal-J-desc')
+    async def J(ctx, amount: float):
+        try:
+            await ctx.send(amount * 4184 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kcal.command(invoke_without_command=True, description='units/energy-kcal-kilojoule-desc')
-    async def kilojoule(ctx, amount: float):
-        await ctx.send(amount * 4184 / 1000)
+    del J
 
-    @kcal.command(invoke_without_command=True, description='units/energy-kcal-calorie-desc')
-    async def calorie(ctx, amount: float):
-        await ctx.send(amount * 4184 / 4.184)
+    @kcal.command(aliases=['kilojoule', 'kilojoules'], invoke_without_command=True, description='units/energy-kcal-kJ-desc')
+    async def kJ(ctx, amount: float):
+        try:
+            await ctx.send(amount * 4184 / 1000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kcal.command(invoke_without_command=True, description='units/energy-kcal-watthour-desc')
-    async def watthour(ctx, amount: float):
-        await ctx.send(amount * 4184 / 3600)
+    del kJ
 
-    @kcal.command(invoke_without_command=True, description='units/energy-kcal-kwh-desc')
-    async def kwh(ctx, amount: float):
-        await ctx.send(amount * 4184 / 3.6e6)
+    @kcal.command(aliases=['calorie', 'calories'], invoke_without_command=True, description='units/energy-kcal-cal-desc')
+    async def cal(ctx, amount: float):
+        try:
+            await ctx.send(amount * 4184 / 4.184)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kcal.command(invoke_without_command=True, description='units/energy-kcal-ev-desc')
-    async def ev(ctx, amount: float):
-        await ctx.send(amount * 4184 / (1/6.242e18))
+    del cal
 
-    @kcal.command(invoke_without_command=True, description='units/energy-kcal-btu-desc')
+    @kcal.command(aliases=['watt-hour', 'watt-hours'], invoke_without_command=True, description='units/energy-kcal-Wh-desc')
+    async def Wh(ctx, amount: float):
+        try:
+            await ctx.send(amount * 4184 / 3600)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del Wh
+
+    @kcal.command(aliases=['kilowatt-hour', 'kilowatt-hours'], invoke_without_command=True, description='units/energy-kcal-kWh-desc')
+    async def kWh(ctx, amount: float):
+        try:
+            await ctx.send(amount * 4184 / 3.6e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del kWh
+
+    @kcal.command(aliases=['electronvolt', 'electronvolts'], invoke_without_command=True, description='units/energy-kcal-eV-desc')
+    async def eV(ctx, amount: float):
+        try:
+            await ctx.send(amount * 4184 / (1/6.242e18))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del eV
+
+    @kcal.command(aliases=['british-thermal-unit', 'british-thermal-units'], invoke_without_command=True, description='units/energy-kcal-btu-desc')
     async def btu(ctx, amount: float):
-        await ctx.send(amount * 4184 / 1055.06)
+        try:
+            await ctx.send(amount * 4184 / 1055.06)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kcal.command(invoke_without_command=True, description='units/energy-kcal-ust-desc')
+    del btu
+
+    @kcal.command(aliases=['us-therm', 'us-therms'], invoke_without_command=True, description='units/energy-kcal-ust-desc')
     async def ust(ctx, amount: float):
-        await ctx.send(amount * 4184 / 1.05506e8)
+        try:
+            await ctx.send(amount * 4184 / 1.05506e8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kcal.command(invoke_without_command=True, description='units/energy-kcal-ftlb-desc')
+    del ust
+
+    @kcal.command(aliases=['foot-pound', 'foot-pounds'], invoke_without_command=True, description='units/energy-kcal-ftlb-desc')
     async def ftlb(ctx, amount: float):
-        await ctx.send(amount * 4184 / 1.35582)
+        try:
+            await ctx.send(amount * 4184 / 1.35582)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @energy.group(invoke_without_command=True, description='units/energy-watthour-desc')
+    del ftlb
+
+    @energy.group(aliases=['watt-hour', 'watt-hours'], invoke_without_command=True, description='units/energy-Wh-desc')
     @lone_group(True)
-    async def watthour(ctx):
+    async def Wh(self, ctx):
         pass
 
 
-    @watthour.command(invoke_without_command=True, description='units/energy-watthour-joule-desc')
-    async def joule(ctx, amount: float):
-        await ctx.send(amount * 3600 / 1)
+    @Wh.command(aliases=['joule', 'joules'], invoke_without_command=True, description='units/energy-Wh-J-desc')
+    async def J(ctx, amount: float):
+        try:
+            await ctx.send(amount * 3600 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @watthour.command(invoke_without_command=True, description='units/energy-watthour-kilojoule-desc')
-    async def kilojoule(ctx, amount: float):
-        await ctx.send(amount * 3600 / 1000)
+    del J
 
-    @watthour.command(invoke_without_command=True, description='units/energy-watthour-calorie-desc')
-    async def calorie(ctx, amount: float):
-        await ctx.send(amount * 3600 / 4.184)
+    @Wh.command(aliases=['kilojoule', 'kilojoules'], invoke_without_command=True, description='units/energy-Wh-kJ-desc')
+    async def kJ(ctx, amount: float):
+        try:
+            await ctx.send(amount * 3600 / 1000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @watthour.command(invoke_without_command=True, description='units/energy-watthour-kcal-desc')
+    del kJ
+
+    @Wh.command(aliases=['calorie', 'calories'], invoke_without_command=True, description='units/energy-Wh-cal-desc')
+    async def cal(ctx, amount: float):
+        try:
+            await ctx.send(amount * 3600 / 4.184)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del cal
+
+    @Wh.command(aliases=['kilocalorie', 'kilocalories'], invoke_without_command=True, description='units/energy-Wh-kcal-desc')
     async def kcal(ctx, amount: float):
-        await ctx.send(amount * 3600 / 4184)
+        try:
+            await ctx.send(amount * 3600 / 4184)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @watthour.command(invoke_without_command=True, description='units/energy-watthour-kwh-desc')
-    async def kwh(ctx, amount: float):
-        await ctx.send(amount * 3600 / 3.6e6)
+    del kcal
 
-    @watthour.command(invoke_without_command=True, description='units/energy-watthour-ev-desc')
-    async def ev(ctx, amount: float):
-        await ctx.send(amount * 3600 / (1/6.242e18))
+    @Wh.command(aliases=['kilowatt-hour', 'kilowatt-hours'], invoke_without_command=True, description='units/energy-Wh-kWh-desc')
+    async def kWh(ctx, amount: float):
+        try:
+            await ctx.send(amount * 3600 / 3.6e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @watthour.command(invoke_without_command=True, description='units/energy-watthour-btu-desc')
+    del kWh
+
+    @Wh.command(aliases=['electronvolt', 'electronvolts'], invoke_without_command=True, description='units/energy-Wh-eV-desc')
+    async def eV(ctx, amount: float):
+        try:
+            await ctx.send(amount * 3600 / (1/6.242e18))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del eV
+
+    @Wh.command(aliases=['british-thermal-unit', 'british-thermal-units'], invoke_without_command=True, description='units/energy-Wh-btu-desc')
     async def btu(ctx, amount: float):
-        await ctx.send(amount * 3600 / 1055.06)
+        try:
+            await ctx.send(amount * 3600 / 1055.06)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @watthour.command(invoke_without_command=True, description='units/energy-watthour-ust-desc')
+    del btu
+
+    @Wh.command(aliases=['us-therm', 'us-therms'], invoke_without_command=True, description='units/energy-Wh-ust-desc')
     async def ust(ctx, amount: float):
-        await ctx.send(amount * 3600 / 1.05506e8)
+        try:
+            await ctx.send(amount * 3600 / 1.05506e8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @watthour.command(invoke_without_command=True, description='units/energy-watthour-ftlb-desc')
+    del ust
+
+    @Wh.command(aliases=['foot-pound', 'foot-pounds'], invoke_without_command=True, description='units/energy-Wh-ftlb-desc')
     async def ftlb(ctx, amount: float):
-        await ctx.send(amount * 3600 / 1.35582)
+        try:
+            await ctx.send(amount * 3600 / 1.35582)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @energy.group(invoke_without_command=True, description='units/energy-kwh-desc')
+    del ftlb
+
+    @energy.group(aliases=['kilowatt-hour', 'kilowatt-hours'], invoke_without_command=True, description='units/energy-kWh-desc')
     @lone_group(True)
-    async def kwh(ctx):
+    async def kWh(self, ctx):
         pass
 
 
-    @kwh.command(invoke_without_command=True, description='units/energy-kwh-joule-desc')
-    async def joule(ctx, amount: float):
-        await ctx.send(amount * 3.6e6 / 1)
+    @kWh.command(aliases=['joule', 'joules'], invoke_without_command=True, description='units/energy-kWh-J-desc')
+    async def J(ctx, amount: float):
+        try:
+            await ctx.send(amount * 3.6e6 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kwh.command(invoke_without_command=True, description='units/energy-kwh-kilojoule-desc')
-    async def kilojoule(ctx, amount: float):
-        await ctx.send(amount * 3.6e6 / 1000)
+    del J
 
-    @kwh.command(invoke_without_command=True, description='units/energy-kwh-calorie-desc')
-    async def calorie(ctx, amount: float):
-        await ctx.send(amount * 3.6e6 / 4.184)
+    @kWh.command(aliases=['kilojoule', 'kilojoules'], invoke_without_command=True, description='units/energy-kWh-kJ-desc')
+    async def kJ(ctx, amount: float):
+        try:
+            await ctx.send(amount * 3.6e6 / 1000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kwh.command(invoke_without_command=True, description='units/energy-kwh-kcal-desc')
+    del kJ
+
+    @kWh.command(aliases=['calorie', 'calories'], invoke_without_command=True, description='units/energy-kWh-cal-desc')
+    async def cal(ctx, amount: float):
+        try:
+            await ctx.send(amount * 3.6e6 / 4.184)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del cal
+
+    @kWh.command(aliases=['kilocalorie', 'kilocalories'], invoke_without_command=True, description='units/energy-kWh-kcal-desc')
     async def kcal(ctx, amount: float):
-        await ctx.send(amount * 3.6e6 / 4184)
+        try:
+            await ctx.send(amount * 3.6e6 / 4184)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kwh.command(invoke_without_command=True, description='units/energy-kwh-watthour-desc')
-    async def watthour(ctx, amount: float):
-        await ctx.send(amount * 3.6e6 / 3600)
+    del kcal
 
-    @kwh.command(invoke_without_command=True, description='units/energy-kwh-ev-desc')
-    async def ev(ctx, amount: float):
-        await ctx.send(amount * 3.6e6 / (1/6.242e18))
+    @kWh.command(aliases=['watt-hour', 'watt-hours'], invoke_without_command=True, description='units/energy-kWh-Wh-desc')
+    async def Wh(ctx, amount: float):
+        try:
+            await ctx.send(amount * 3.6e6 / 3600)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kwh.command(invoke_without_command=True, description='units/energy-kwh-btu-desc')
+    del Wh
+
+    @kWh.command(aliases=['electronvolt', 'electronvolts'], invoke_without_command=True, description='units/energy-kWh-eV-desc')
+    async def eV(ctx, amount: float):
+        try:
+            await ctx.send(amount * 3.6e6 / (1/6.242e18))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del eV
+
+    @kWh.command(aliases=['british-thermal-unit', 'british-thermal-units'], invoke_without_command=True, description='units/energy-kWh-btu-desc')
     async def btu(ctx, amount: float):
-        await ctx.send(amount * 3.6e6 / 1055.06)
+        try:
+            await ctx.send(amount * 3.6e6 / 1055.06)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kwh.command(invoke_without_command=True, description='units/energy-kwh-ust-desc')
+    del btu
+
+    @kWh.command(aliases=['us-therm', 'us-therms'], invoke_without_command=True, description='units/energy-kWh-ust-desc')
     async def ust(ctx, amount: float):
-        await ctx.send(amount * 3.6e6 / 1.05506e8)
+        try:
+            await ctx.send(amount * 3.6e6 / 1.05506e8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kwh.command(invoke_without_command=True, description='units/energy-kwh-ftlb-desc')
+    del ust
+
+    @kWh.command(aliases=['foot-pound', 'foot-pounds'], invoke_without_command=True, description='units/energy-kWh-ftlb-desc')
     async def ftlb(ctx, amount: float):
-        await ctx.send(amount * 3.6e6 / 1.35582)
+        try:
+            await ctx.send(amount * 3.6e6 / 1.35582)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @energy.group(invoke_without_command=True, description='units/energy-ev-desc')
+    del ftlb
+
+    @energy.group(aliases=['electronvolt', 'electronvolts'], invoke_without_command=True, description='units/energy-eV-desc')
     @lone_group(True)
-    async def ev(ctx):
+    async def eV(self, ctx):
         pass
 
 
-    @ev.command(invoke_without_command=True, description='units/energy-ev-joule-desc')
-    async def joule(ctx, amount: float):
-        await ctx.send(amount * (1/6.242e18) / 1)
+    @eV.command(aliases=['joule', 'joules'], invoke_without_command=True, description='units/energy-eV-J-desc')
+    async def J(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/6.242e18) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ev.command(invoke_without_command=True, description='units/energy-ev-kilojoule-desc')
-    async def kilojoule(ctx, amount: float):
-        await ctx.send(amount * (1/6.242e18) / 1000)
+    del J
 
-    @ev.command(invoke_without_command=True, description='units/energy-ev-calorie-desc')
-    async def calorie(ctx, amount: float):
-        await ctx.send(amount * (1/6.242e18) / 4.184)
+    @eV.command(aliases=['kilojoule', 'kilojoules'], invoke_without_command=True, description='units/energy-eV-kJ-desc')
+    async def kJ(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/6.242e18) / 1000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ev.command(invoke_without_command=True, description='units/energy-ev-kcal-desc')
+    del kJ
+
+    @eV.command(aliases=['calorie', 'calories'], invoke_without_command=True, description='units/energy-eV-cal-desc')
+    async def cal(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/6.242e18) / 4.184)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del cal
+
+    @eV.command(aliases=['kilocalorie', 'kilocalories'], invoke_without_command=True, description='units/energy-eV-kcal-desc')
     async def kcal(ctx, amount: float):
-        await ctx.send(amount * (1/6.242e18) / 4184)
+        try:
+            await ctx.send(amount * (1/6.242e18) / 4184)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ev.command(invoke_without_command=True, description='units/energy-ev-watthour-desc')
-    async def watthour(ctx, amount: float):
-        await ctx.send(amount * (1/6.242e18) / 3600)
+    del kcal
 
-    @ev.command(invoke_without_command=True, description='units/energy-ev-kwh-desc')
-    async def kwh(ctx, amount: float):
-        await ctx.send(amount * (1/6.242e18) / 3.6e6)
+    @eV.command(aliases=['watt-hour', 'watt-hours'], invoke_without_command=True, description='units/energy-eV-Wh-desc')
+    async def Wh(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/6.242e18) / 3600)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ev.command(invoke_without_command=True, description='units/energy-ev-btu-desc')
+    del Wh
+
+    @eV.command(aliases=['kilowatt-hour', 'kilowatt-hours'], invoke_without_command=True, description='units/energy-eV-kWh-desc')
+    async def kWh(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/6.242e18) / 3.6e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del kWh
+
+    @eV.command(aliases=['british-thermal-unit', 'british-thermal-units'], invoke_without_command=True, description='units/energy-eV-btu-desc')
     async def btu(ctx, amount: float):
-        await ctx.send(amount * (1/6.242e18) / 1055.06)
+        try:
+            await ctx.send(amount * (1/6.242e18) / 1055.06)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ev.command(invoke_without_command=True, description='units/energy-ev-ust-desc')
+    del btu
+
+    @eV.command(aliases=['us-therm', 'us-therms'], invoke_without_command=True, description='units/energy-eV-ust-desc')
     async def ust(ctx, amount: float):
-        await ctx.send(amount * (1/6.242e18) / 1.05506e8)
+        try:
+            await ctx.send(amount * (1/6.242e18) / 1.05506e8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ev.command(invoke_without_command=True, description='units/energy-ev-ftlb-desc')
+    del ust
+
+    @eV.command(aliases=['foot-pound', 'foot-pounds'], invoke_without_command=True, description='units/energy-eV-ftlb-desc')
     async def ftlb(ctx, amount: float):
-        await ctx.send(amount * (1/6.242e18) / 1.35582)
+        try:
+            await ctx.send(amount * (1/6.242e18) / 1.35582)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @energy.group(invoke_without_command=True, description='units/energy-btu-desc')
+    del ftlb
+
+    @energy.group(aliases=['british-thermal-unit', 'british-thermal-units'], invoke_without_command=True, description='units/energy-btu-desc')
     @lone_group(True)
-    async def btu(ctx):
+    async def btu(self, ctx):
         pass
 
 
-    @btu.command(invoke_without_command=True, description='units/energy-btu-joule-desc')
-    async def joule(ctx, amount: float):
-        await ctx.send(amount * 1055.06 / 1)
+    @btu.command(aliases=['joule', 'joules'], invoke_without_command=True, description='units/energy-btu-J-desc')
+    async def J(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1055.06 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @btu.command(invoke_without_command=True, description='units/energy-btu-kilojoule-desc')
-    async def kilojoule(ctx, amount: float):
-        await ctx.send(amount * 1055.06 / 1000)
+    del J
 
-    @btu.command(invoke_without_command=True, description='units/energy-btu-calorie-desc')
-    async def calorie(ctx, amount: float):
-        await ctx.send(amount * 1055.06 / 4.184)
+    @btu.command(aliases=['kilojoule', 'kilojoules'], invoke_without_command=True, description='units/energy-btu-kJ-desc')
+    async def kJ(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1055.06 / 1000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @btu.command(invoke_without_command=True, description='units/energy-btu-kcal-desc')
+    del kJ
+
+    @btu.command(aliases=['calorie', 'calories'], invoke_without_command=True, description='units/energy-btu-cal-desc')
+    async def cal(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1055.06 / 4.184)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del cal
+
+    @btu.command(aliases=['kilocalorie', 'kilocalories'], invoke_without_command=True, description='units/energy-btu-kcal-desc')
     async def kcal(ctx, amount: float):
-        await ctx.send(amount * 1055.06 / 4184)
+        try:
+            await ctx.send(amount * 1055.06 / 4184)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @btu.command(invoke_without_command=True, description='units/energy-btu-watthour-desc')
-    async def watthour(ctx, amount: float):
-        await ctx.send(amount * 1055.06 / 3600)
+    del kcal
 
-    @btu.command(invoke_without_command=True, description='units/energy-btu-kwh-desc')
-    async def kwh(ctx, amount: float):
-        await ctx.send(amount * 1055.06 / 3.6e6)
+    @btu.command(aliases=['watt-hour', 'watt-hours'], invoke_without_command=True, description='units/energy-btu-Wh-desc')
+    async def Wh(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1055.06 / 3600)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @btu.command(invoke_without_command=True, description='units/energy-btu-ev-desc')
-    async def ev(ctx, amount: float):
-        await ctx.send(amount * 1055.06 / (1/6.242e18))
+    del Wh
 
-    @btu.command(invoke_without_command=True, description='units/energy-btu-ust-desc')
+    @btu.command(aliases=['kilowatt-hour', 'kilowatt-hours'], invoke_without_command=True, description='units/energy-btu-kWh-desc')
+    async def kWh(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1055.06 / 3.6e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del kWh
+
+    @btu.command(aliases=['electronvolt', 'electronvolts'], invoke_without_command=True, description='units/energy-btu-eV-desc')
+    async def eV(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1055.06 / (1/6.242e18))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del eV
+
+    @btu.command(aliases=['us-therm', 'us-therms'], invoke_without_command=True, description='units/energy-btu-ust-desc')
     async def ust(ctx, amount: float):
-        await ctx.send(amount * 1055.06 / 1.05506e8)
+        try:
+            await ctx.send(amount * 1055.06 / 1.05506e8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @btu.command(invoke_without_command=True, description='units/energy-btu-ftlb-desc')
+    del ust
+
+    @btu.command(aliases=['foot-pound', 'foot-pounds'], invoke_without_command=True, description='units/energy-btu-ftlb-desc')
     async def ftlb(ctx, amount: float):
-        await ctx.send(amount * 1055.06 / 1.35582)
+        try:
+            await ctx.send(amount * 1055.06 / 1.35582)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @energy.group(invoke_without_command=True, description='units/energy-ust-desc')
+    del ftlb
+
+    @energy.group(aliases=['us-therm', 'us-therms'], invoke_without_command=True, description='units/energy-ust-desc')
     @lone_group(True)
-    async def ust(ctx):
+    async def ust(self, ctx):
         pass
 
 
-    @ust.command(invoke_without_command=True, description='units/energy-ust-joule-desc')
-    async def joule(ctx, amount: float):
-        await ctx.send(amount * 1.05506e8 / 1)
+    @ust.command(aliases=['joule', 'joules'], invoke_without_command=True, description='units/energy-ust-J-desc')
+    async def J(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1.05506e8 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ust.command(invoke_without_command=True, description='units/energy-ust-kilojoule-desc')
-    async def kilojoule(ctx, amount: float):
-        await ctx.send(amount * 1.05506e8 / 1000)
+    del J
 
-    @ust.command(invoke_without_command=True, description='units/energy-ust-calorie-desc')
-    async def calorie(ctx, amount: float):
-        await ctx.send(amount * 1.05506e8 / 4.184)
+    @ust.command(aliases=['kilojoule', 'kilojoules'], invoke_without_command=True, description='units/energy-ust-kJ-desc')
+    async def kJ(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1.05506e8 / 1000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ust.command(invoke_without_command=True, description='units/energy-ust-kcal-desc')
+    del kJ
+
+    @ust.command(aliases=['calorie', 'calories'], invoke_without_command=True, description='units/energy-ust-cal-desc')
+    async def cal(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1.05506e8 / 4.184)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del cal
+
+    @ust.command(aliases=['kilocalorie', 'kilocalories'], invoke_without_command=True, description='units/energy-ust-kcal-desc')
     async def kcal(ctx, amount: float):
-        await ctx.send(amount * 1.05506e8 / 4184)
+        try:
+            await ctx.send(amount * 1.05506e8 / 4184)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ust.command(invoke_without_command=True, description='units/energy-ust-watthour-desc')
-    async def watthour(ctx, amount: float):
-        await ctx.send(amount * 1.05506e8 / 3600)
+    del kcal
 
-    @ust.command(invoke_without_command=True, description='units/energy-ust-kwh-desc')
-    async def kwh(ctx, amount: float):
-        await ctx.send(amount * 1.05506e8 / 3.6e6)
+    @ust.command(aliases=['watt-hour', 'watt-hours'], invoke_without_command=True, description='units/energy-ust-Wh-desc')
+    async def Wh(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1.05506e8 / 3600)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ust.command(invoke_without_command=True, description='units/energy-ust-ev-desc')
-    async def ev(ctx, amount: float):
-        await ctx.send(amount * 1.05506e8 / (1/6.242e18))
+    del Wh
 
-    @ust.command(invoke_without_command=True, description='units/energy-ust-btu-desc')
+    @ust.command(aliases=['kilowatt-hour', 'kilowatt-hours'], invoke_without_command=True, description='units/energy-ust-kWh-desc')
+    async def kWh(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1.05506e8 / 3.6e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del kWh
+
+    @ust.command(aliases=['electronvolt', 'electronvolts'], invoke_without_command=True, description='units/energy-ust-eV-desc')
+    async def eV(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1.05506e8 / (1/6.242e18))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del eV
+
+    @ust.command(aliases=['british-thermal-unit', 'british-thermal-units'], invoke_without_command=True, description='units/energy-ust-btu-desc')
     async def btu(ctx, amount: float):
-        await ctx.send(amount * 1.05506e8 / 1055.06)
+        try:
+            await ctx.send(amount * 1.05506e8 / 1055.06)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ust.command(invoke_without_command=True, description='units/energy-ust-ftlb-desc')
+    del btu
+
+    @ust.command(aliases=['foot-pound', 'foot-pounds'], invoke_without_command=True, description='units/energy-ust-ftlb-desc')
     async def ftlb(ctx, amount: float):
-        await ctx.send(amount * 1.05506e8 / 1.35582)
+        try:
+            await ctx.send(amount * 1.05506e8 / 1.35582)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @energy.group(invoke_without_command=True, description='units/energy-ftlb-desc')
+    del ftlb
+
+    @energy.group(aliases=['foot-pound', 'foot-pounds'], invoke_without_command=True, description='units/energy-ftlb-desc')
     @lone_group(True)
-    async def ftlb(ctx):
+    async def ftlb(self, ctx):
         pass
 
 
-    @ftlb.command(invoke_without_command=True, description='units/energy-ftlb-joule-desc')
-    async def joule(ctx, amount: float):
-        await ctx.send(amount * 1.35582 / 1)
+    @ftlb.command(aliases=['joule', 'joules'], invoke_without_command=True, description='units/energy-ftlb-J-desc')
+    async def J(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1.35582 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ftlb.command(invoke_without_command=True, description='units/energy-ftlb-kilojoule-desc')
-    async def kilojoule(ctx, amount: float):
-        await ctx.send(amount * 1.35582 / 1000)
+    del J
 
-    @ftlb.command(invoke_without_command=True, description='units/energy-ftlb-calorie-desc')
-    async def calorie(ctx, amount: float):
-        await ctx.send(amount * 1.35582 / 4.184)
+    @ftlb.command(aliases=['kilojoule', 'kilojoules'], invoke_without_command=True, description='units/energy-ftlb-kJ-desc')
+    async def kJ(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1.35582 / 1000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ftlb.command(invoke_without_command=True, description='units/energy-ftlb-kcal-desc')
+    del kJ
+
+    @ftlb.command(aliases=['calorie', 'calories'], invoke_without_command=True, description='units/energy-ftlb-cal-desc')
+    async def cal(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1.35582 / 4.184)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del cal
+
+    @ftlb.command(aliases=['kilocalorie', 'kilocalories'], invoke_without_command=True, description='units/energy-ftlb-kcal-desc')
     async def kcal(ctx, amount: float):
-        await ctx.send(amount * 1.35582 / 4184)
+        try:
+            await ctx.send(amount * 1.35582 / 4184)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ftlb.command(invoke_without_command=True, description='units/energy-ftlb-watthour-desc')
-    async def watthour(ctx, amount: float):
-        await ctx.send(amount * 1.35582 / 3600)
+    del kcal
 
-    @ftlb.command(invoke_without_command=True, description='units/energy-ftlb-kwh-desc')
-    async def kwh(ctx, amount: float):
-        await ctx.send(amount * 1.35582 / 3.6e6)
+    @ftlb.command(aliases=['watt-hour', 'watt-hours'], invoke_without_command=True, description='units/energy-ftlb-Wh-desc')
+    async def Wh(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1.35582 / 3600)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ftlb.command(invoke_without_command=True, description='units/energy-ftlb-ev-desc')
-    async def ev(ctx, amount: float):
-        await ctx.send(amount * 1.35582 / (1/6.242e18))
+    del Wh
 
-    @ftlb.command(invoke_without_command=True, description='units/energy-ftlb-btu-desc')
+    @ftlb.command(aliases=['kilowatt-hour', 'kilowatt-hours'], invoke_without_command=True, description='units/energy-ftlb-kWh-desc')
+    async def kWh(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1.35582 / 3.6e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del kWh
+
+    @ftlb.command(aliases=['electronvolt', 'electronvolts'], invoke_without_command=True, description='units/energy-ftlb-eV-desc')
+    async def eV(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1.35582 / (1/6.242e18))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del eV
+
+    @ftlb.command(aliases=['british-thermal-unit', 'british-thermal-units'], invoke_without_command=True, description='units/energy-ftlb-btu-desc')
     async def btu(ctx, amount: float):
-        await ctx.send(amount * 1.35582 / 1055.06)
+        try:
+            await ctx.send(amount * 1.35582 / 1055.06)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ftlb.command(invoke_without_command=True, description='units/energy-ftlb-ust-desc')
+    del btu
+
+    @ftlb.command(aliases=['us-therm', 'us-therms'], invoke_without_command=True, description='units/energy-ftlb-ust-desc')
     async def ust(ctx, amount: float):
-        await ctx.send(amount * 1.35582 / 1.05506e8)
+        try:
+            await ctx.send(amount * 1.35582 / 1.05506e8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del ust
 
 
     @convert.group(aliases=['freq'], invoke_without_command=True, description='units/frequency-desc')
@@ -3418,77 +7239,137 @@ class Units(Cog):
         pass
 
 
-    @frequency.group(invoke_without_command=True, description='units/frequency-hz-desc')
+    @frequency.group(aliases=['hertz'], invoke_without_command=True, description='units/frequency-Hz-desc')
     @lone_group(True)
-    async def hz(ctx):
+    async def Hz(self, ctx):
         pass
 
 
-    @hz.command(invoke_without_command=True, description='units/frequency-hz-khz-desc')
-    async def khz(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e3)
+    @Hz.command(aliases=['kilohertz'], invoke_without_command=True, description='units/frequency-Hz-kHz-desc')
+    async def kHz(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @hz.command(invoke_without_command=True, description='units/frequency-hz-mhz-desc')
-    async def mhz(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e6)
+    del kHz
 
-    @hz.command(invoke_without_command=True, description='units/frequency-hz-ghz-desc')
-    async def ghz(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e9)
+    @Hz.command(aliases=['megahertz'], invoke_without_command=True, description='units/frequency-Hz-mHz-desc')
+    async def mHz(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @frequency.group(invoke_without_command=True, description='units/frequency-khz-desc')
+    del mHz
+
+    @Hz.command(aliases=['gigahertz'], invoke_without_command=True, description='units/frequency-Hz-gHz-desc')
+    async def gHz(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1 / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del gHz
+
+    @frequency.group(aliases=['kilohertz'], invoke_without_command=True, description='units/frequency-kHz-desc')
     @lone_group(True)
-    async def khz(ctx):
+    async def kHz(self, ctx):
         pass
 
 
-    @khz.command(invoke_without_command=True, description='units/frequency-khz-hz-desc')
-    async def hz(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 1)
+    @kHz.command(aliases=['hertz'], invoke_without_command=True, description='units/frequency-kHz-Hz-desc')
+    async def Hz(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1e3 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @khz.command(invoke_without_command=True, description='units/frequency-khz-mhz-desc')
-    async def mhz(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 1e6)
+    del Hz
 
-    @khz.command(invoke_without_command=True, description='units/frequency-khz-ghz-desc')
-    async def ghz(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 1e9)
+    @kHz.command(aliases=['megahertz'], invoke_without_command=True, description='units/frequency-kHz-mHz-desc')
+    async def mHz(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1e3 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @frequency.group(invoke_without_command=True, description='units/frequency-mhz-desc')
+    del mHz
+
+    @kHz.command(aliases=['gigahertz'], invoke_without_command=True, description='units/frequency-kHz-gHz-desc')
+    async def gHz(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1e3 / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del gHz
+
+    @frequency.group(aliases=['megahertz'], invoke_without_command=True, description='units/frequency-mHz-desc')
     @lone_group(True)
-    async def mhz(ctx):
+    async def mHz(self, ctx):
         pass
 
 
-    @mhz.command(invoke_without_command=True, description='units/frequency-mhz-hz-desc')
-    async def hz(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 1)
+    @mHz.command(aliases=['hertz'], invoke_without_command=True, description='units/frequency-mHz-Hz-desc')
+    async def Hz(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1e6 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mhz.command(invoke_without_command=True, description='units/frequency-mhz-khz-desc')
-    async def khz(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 1e3)
+    del Hz
 
-    @mhz.command(invoke_without_command=True, description='units/frequency-mhz-ghz-desc')
-    async def ghz(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 1e9)
+    @mHz.command(aliases=['kilohertz'], invoke_without_command=True, description='units/frequency-mHz-kHz-desc')
+    async def kHz(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1e6 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @frequency.group(invoke_without_command=True, description='units/frequency-ghz-desc')
+    del kHz
+
+    @mHz.command(aliases=['gigahertz'], invoke_without_command=True, description='units/frequency-mHz-gHz-desc')
+    async def gHz(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1e6 / 1e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del gHz
+
+    @frequency.group(aliases=['gigahertz'], invoke_without_command=True, description='units/frequency-gHz-desc')
     @lone_group(True)
-    async def ghz(ctx):
+    async def gHz(self, ctx):
         pass
 
 
-    @ghz.command(invoke_without_command=True, description='units/frequency-ghz-hz-desc')
-    async def hz(ctx, amount: float):
-        await ctx.send(amount * 1e9 / 1)
+    @gHz.command(aliases=['hertz'], invoke_without_command=True, description='units/frequency-gHz-Hz-desc')
+    async def Hz(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1e9 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ghz.command(invoke_without_command=True, description='units/frequency-ghz-khz-desc')
-    async def khz(ctx, amount: float):
-        await ctx.send(amount * 1e9 / 1e3)
+    del Hz
 
-    @ghz.command(invoke_without_command=True, description='units/frequency-ghz-mhz-desc')
-    async def mhz(ctx, amount: float):
-        await ctx.send(amount * 1e9 / 1e6)
+    @gHz.command(aliases=['kilohertz'], invoke_without_command=True, description='units/frequency-gHz-kHz-desc')
+    async def kHz(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1e9 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del kHz
+
+    @gHz.command(aliases=['megahertz'], invoke_without_command=True, description='units/frequency-gHz-mHz-desc')
+    async def mHz(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1e9 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del mHz
 
 
     @convert.group(aliases=[], invoke_without_command=True, description='units/fuel-desc')
@@ -3497,77 +7378,137 @@ class Units(Cog):
         pass
 
 
-    @fuel.group(invoke_without_command=True, description='units/fuel-umpg-desc')
+    @fuel.group(aliases=['us-miles-per-gallon', 'us-mile-per-gallon'], invoke_without_command=True, description='units/fuel-umpg-desc')
     @lone_group(True)
-    async def umpg(ctx):
+    async def umpg(self, ctx):
         pass
 
 
-    @umpg.command(invoke_without_command=True, description='units/fuel-umpg-impg-desc')
+    @umpg.command(aliases=['imperial-miles-per-gallon', 'imperial-mile-per-gallon', 'mile-per-gallon', 'miles-per-gallon'], invoke_without_command=True, description='units/fuel-umpg-impg-desc')
     async def impg(ctx, amount: float):
-        await ctx.send(amount * (1/2.352) / (1/2.825))
+        try:
+            await ctx.send(amount * (1/2.352) / (1/2.825))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @umpg.command(invoke_without_command=True, description='units/fuel-umpg-kmpl-desc')
-    async def kmpl(ctx, amount: float):
-        await ctx.send(amount * (1/2.352) / 1)
+    del impg
 
-    @umpg.command(invoke_without_command=True, description='units/fuel-umpg-lphkm-desc')
-    async def lphkm(ctx, amount: float):
-        await ctx.send(amount * (1/2.352) / 100)
+    @umpg.command(aliases=['kilometer-per-liter', 'kilometers-per-liter', 'kilometre-per-litre', 'kilometres-per-litre'], invoke_without_command=True, description='units/fuel-umpg-kmpL-desc')
+    async def kmpL(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/2.352) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @fuel.group(invoke_without_command=True, description='units/fuel-impg-desc')
+    del kmpL
+
+    @umpg.command(aliases=['liters-per-hundred-kilometers', 'liter-per-hundred-kilometers', 'litres-per-hundred-kilometres', 'litre-per-hundred-kilometres'], invoke_without_command=True, description='units/fuel-umpg-Lphkm-desc')
+    async def Lphkm(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/2.352) / 1 * 100 / (amount * amount))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del Lphkm
+
+    @fuel.group(aliases=['imperial-miles-per-gallon', 'imperial-mile-per-gallon', 'mile-per-gallon', 'miles-per-gallon'], invoke_without_command=True, description='units/fuel-impg-desc')
     @lone_group(True)
-    async def impg(ctx):
+    async def impg(self, ctx):
         pass
 
 
-    @impg.command(invoke_without_command=True, description='units/fuel-impg-umpg-desc')
+    @impg.command(aliases=['us-miles-per-gallon', 'us-mile-per-gallon'], invoke_without_command=True, description='units/fuel-impg-umpg-desc')
     async def umpg(ctx, amount: float):
-        await ctx.send(amount * (1/2.825) / (1/2.352))
+        try:
+            await ctx.send(amount * (1/2.825) / (1/2.352))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @impg.command(invoke_without_command=True, description='units/fuel-impg-kmpl-desc')
-    async def kmpl(ctx, amount: float):
-        await ctx.send(amount * (1/2.825) / 1)
+    del umpg
 
-    @impg.command(invoke_without_command=True, description='units/fuel-impg-lphkm-desc')
-    async def lphkm(ctx, amount: float):
-        await ctx.send(amount * (1/2.825) / 100)
+    @impg.command(aliases=['kilometer-per-liter', 'kilometers-per-liter', 'kilometre-per-litre', 'kilometres-per-litre'], invoke_without_command=True, description='units/fuel-impg-kmpL-desc')
+    async def kmpL(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/2.825) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @fuel.group(invoke_without_command=True, description='units/fuel-kmpl-desc')
+    del kmpL
+
+    @impg.command(aliases=['liters-per-hundred-kilometers', 'liter-per-hundred-kilometers', 'litres-per-hundred-kilometres', 'litre-per-hundred-kilometres'], invoke_without_command=True, description='units/fuel-impg-Lphkm-desc')
+    async def Lphkm(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/2.825) / 1 * 100 / (amount * amount))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del Lphkm
+
+    @fuel.group(aliases=['kilometer-per-liter', 'kilometers-per-liter', 'kilometre-per-litre', 'kilometres-per-litre'], invoke_without_command=True, description='units/fuel-kmpL-desc')
     @lone_group(True)
-    async def kmpl(ctx):
+    async def kmpL(self, ctx):
         pass
 
 
-    @kmpl.command(invoke_without_command=True, description='units/fuel-kmpl-umpg-desc')
+    @kmpL.command(aliases=['us-miles-per-gallon', 'us-mile-per-gallon'], invoke_without_command=True, description='units/fuel-kmpL-umpg-desc')
     async def umpg(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/2.352))
+        try:
+            await ctx.send(amount * 1 / (1/2.352))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kmpl.command(invoke_without_command=True, description='units/fuel-kmpl-impg-desc')
+    del umpg
+
+    @kmpL.command(aliases=['imperial-miles-per-gallon', 'imperial-mile-per-gallon', 'mile-per-gallon', 'miles-per-gallon'], invoke_without_command=True, description='units/fuel-kmpL-impg-desc')
     async def impg(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/2.825))
+        try:
+            await ctx.send(amount * 1 / (1/2.825))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kmpl.command(invoke_without_command=True, description='units/fuel-kmpl-lphkm-desc')
-    async def lphkm(ctx, amount: float):
-        await ctx.send(amount * 1 / 100)
+    del impg
 
-    @fuel.group(invoke_without_command=True, description='units/fuel-lphkm-desc')
+    @kmpL.command(aliases=['liters-per-hundred-kilometers', 'liter-per-hundred-kilometers', 'litres-per-hundred-kilometres', 'litre-per-hundred-kilometres'], invoke_without_command=True, description='units/fuel-kmpL-Lphkm-desc')
+    async def Lphkm(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1 / 1 * 100 / (amount * amount))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del Lphkm
+
+    @fuel.group(aliases=['liters-per-hundred-kilometers', 'liter-per-hundred-kilometers', 'litres-per-hundred-kilometres', 'litre-per-hundred-kilometres'], invoke_without_command=True, description='units/fuel-Lphkm-desc')
     @lone_group(True)
-    async def lphkm(ctx):
+    async def Lphkm(self, ctx):
         pass
 
 
-    @lphkm.command(invoke_without_command=True, description='units/fuel-lphkm-umpg-desc')
+    @Lphkm.command(aliases=['us-miles-per-gallon', 'us-mile-per-gallon'], invoke_without_command=True, description='units/fuel-Lphkm-umpg-desc')
     async def umpg(ctx, amount: float):
-        await ctx.send(amount * 100 / (1/2.352))
+        try:
+            await ctx.send(amount * 1 * 100 / (amount * amount) / (1/2.352))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lphkm.command(invoke_without_command=True, description='units/fuel-lphkm-impg-desc')
+    del umpg
+
+    @Lphkm.command(aliases=['imperial-miles-per-gallon', 'imperial-mile-per-gallon', 'mile-per-gallon', 'miles-per-gallon'], invoke_without_command=True, description='units/fuel-Lphkm-impg-desc')
     async def impg(ctx, amount: float):
-        await ctx.send(amount * 100 / (1/2.825))
+        try:
+            await ctx.send(amount * 1 * 100 / (amount * amount) / (1/2.825))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lphkm.command(invoke_without_command=True, description='units/fuel-lphkm-kmpl-desc')
-    async def kmpl(ctx, amount: float):
-        await ctx.send(amount * 100 / 1)
+    del impg
+
+    @Lphkm.command(aliases=['kilometer-per-liter', 'kilometers-per-liter', 'kilometre-per-litre', 'kilometres-per-litre'], invoke_without_command=True, description='units/fuel-Lphkm-kmpL-desc')
+    async def kmpL(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1 * 100 / (amount * amount) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del kmpL
 
 
     @convert.group(aliases=[], invoke_without_command=True, description='units/length-desc')
@@ -3576,511 +7517,1061 @@ class Units(Cog):
         pass
 
 
-    @length.group(invoke_without_command=True, description='units/length-km-desc')
+    @length.group(aliases=['kilometer', 'kilometers', 'kilometre', 'kilometres'], invoke_without_command=True, description='units/length-km-desc')
     @lone_group(True)
-    async def km(ctx):
+    async def km(self, ctx):
         pass
 
 
-    @km.command(invoke_without_command=True, description='units/length-km-m-desc')
+    @km.command(aliases=['meter', 'meters', 'metre', 'metres'], invoke_without_command=True, description='units/length-km-m-desc')
     async def m(ctx, amount: float):
-        await ctx.send(amount * 1000 / 1)
+        try:
+            await ctx.send(amount * 1000 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @km.command(invoke_without_command=True, description='units/length-km-cm-desc')
+    del m
+
+    @km.command(aliases=['centimeter', 'centimeters', 'centimetre', 'centimetres'], invoke_without_command=True, description='units/length-km-cm-desc')
     async def cm(ctx, amount: float):
-        await ctx.send(amount * 1000 / 1e-2)
+        try:
+            await ctx.send(amount * 1000 / 1e-2)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @km.command(invoke_without_command=True, description='units/length-km-mm-desc')
+    del cm
+
+    @km.command(aliases=['millimeter', 'millimeters', 'millimetre', 'millimetres'], invoke_without_command=True, description='units/length-km-mm-desc')
     async def mm(ctx, amount: float):
-        await ctx.send(amount * 1000 / 1e-3)
+        try:
+            await ctx.send(amount * 1000 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @km.command(invoke_without_command=True, description='units/length-km-micron-desc')
+    del mm
+
+    @km.command(aliases=['micrometer', 'micrometers', 'micrometre', 'micrometres'], invoke_without_command=True, description='units/length-km-micron-desc')
     async def micron(ctx, amount: float):
-        await ctx.send(amount * 1000 / 1e-6)
+        try:
+            await ctx.send(amount * 1000 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @km.command(invoke_without_command=True, description='units/length-km-nm-desc')
+    del micron
+
+    @km.command(aliases=['nanometer', 'nanometers', 'nanometre', 'nanometres'], invoke_without_command=True, description='units/length-km-nm-desc')
     async def nm(ctx, amount: float):
-        await ctx.send(amount * 1000 / 1e-9)
+        try:
+            await ctx.send(amount * 1000 / 1e-9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @km.command(invoke_without_command=True, description='units/length-km-mile-desc')
+    del nm
+
+    @km.command(aliases=['miles'], invoke_without_command=True, description='units/length-km-mile-desc')
     async def mile(ctx, amount: float):
-        await ctx.send(amount * 1000 / 1609.344)
+        try:
+            await ctx.send(amount * 1000 / 1609.344)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @km.command(invoke_without_command=True, description='units/length-km-yard-desc')
+    del mile
+
+    @km.command(aliases=['yards'], invoke_without_command=True, description='units/length-km-yard-desc')
     async def yard(ctx, amount: float):
-        await ctx.send(amount * 1000 / (1/1.094))
+        try:
+            await ctx.send(amount * 1000 / (1/1.094))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @km.command(invoke_without_command=True, description='units/length-km-foot-desc')
+    del yard
+
+    @km.command(aliases=['feet'], invoke_without_command=True, description='units/length-km-foot-desc')
     async def foot(ctx, amount: float):
-        await ctx.send(amount * 1000 / (1/3.281))
+        try:
+            await ctx.send(amount * 1000 / (1/3.281))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @km.command(invoke_without_command=True, description='units/length-km-inch-desc')
+    del foot
+
+    @km.command(aliases=['inches'], invoke_without_command=True, description='units/length-km-inch-desc')
     async def inch(ctx, amount: float):
-        await ctx.send(amount * 1000 / 2.54e-2)
+        try:
+            await ctx.send(amount * 1000 / 2.54e-2)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @km.command(invoke_without_command=True, description='units/length-km-nautmil-desc')
+    del inch
+
+    @km.command(aliases=['nautical-mile', 'nautical-miles'], invoke_without_command=True, description='units/length-km-nautmil-desc')
     async def nautmil(ctx, amount: float):
-        await ctx.send(amount * 1000 / 1852)
+        try:
+            await ctx.send(amount * 1000 / 1852)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @length.group(invoke_without_command=True, description='units/length-m-desc')
+    del nautmil
+
+    @length.group(aliases=['meter', 'meters', 'metre', 'metres'], invoke_without_command=True, description='units/length-m-desc')
     @lone_group(True)
-    async def m(ctx):
+    async def m(self, ctx):
         pass
 
 
-    @m.command(invoke_without_command=True, description='units/length-m-km-desc')
+    @m.command(aliases=['kilometer', 'kilometers', 'kilometre', 'kilometres'], invoke_without_command=True, description='units/length-m-km-desc')
     async def km(ctx, amount: float):
-        await ctx.send(amount * 1 / 1000)
+        try:
+            await ctx.send(amount * 1 / 1000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @m.command(invoke_without_command=True, description='units/length-m-cm-desc')
+    del km
+
+    @m.command(aliases=['centimeter', 'centimeters', 'centimetre', 'centimetres'], invoke_without_command=True, description='units/length-m-cm-desc')
     async def cm(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e-2)
+        try:
+            await ctx.send(amount * 1 / 1e-2)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @m.command(invoke_without_command=True, description='units/length-m-mm-desc')
+    del cm
+
+    @m.command(aliases=['millimeter', 'millimeters', 'millimetre', 'millimetres'], invoke_without_command=True, description='units/length-m-mm-desc')
     async def mm(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e-3)
+        try:
+            await ctx.send(amount * 1 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @m.command(invoke_without_command=True, description='units/length-m-micron-desc')
+    del mm
+
+    @m.command(aliases=['micrometer', 'micrometers', 'micrometre', 'micrometres'], invoke_without_command=True, description='units/length-m-micron-desc')
     async def micron(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e-6)
+        try:
+            await ctx.send(amount * 1 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @m.command(invoke_without_command=True, description='units/length-m-nm-desc')
+    del micron
+
+    @m.command(aliases=['nanometer', 'nanometers', 'nanometre', 'nanometres'], invoke_without_command=True, description='units/length-m-nm-desc')
     async def nm(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e-9)
+        try:
+            await ctx.send(amount * 1 / 1e-9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @m.command(invoke_without_command=True, description='units/length-m-mile-desc')
+    del nm
+
+    @m.command(aliases=['miles'], invoke_without_command=True, description='units/length-m-mile-desc')
     async def mile(ctx, amount: float):
-        await ctx.send(amount * 1 / 1609.344)
+        try:
+            await ctx.send(amount * 1 / 1609.344)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @m.command(invoke_without_command=True, description='units/length-m-yard-desc')
+    del mile
+
+    @m.command(aliases=['yards'], invoke_without_command=True, description='units/length-m-yard-desc')
     async def yard(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/1.094))
+        try:
+            await ctx.send(amount * 1 / (1/1.094))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @m.command(invoke_without_command=True, description='units/length-m-foot-desc')
+    del yard
+
+    @m.command(aliases=['feet'], invoke_without_command=True, description='units/length-m-foot-desc')
     async def foot(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/3.281))
+        try:
+            await ctx.send(amount * 1 / (1/3.281))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @m.command(invoke_without_command=True, description='units/length-m-inch-desc')
+    del foot
+
+    @m.command(aliases=['inches'], invoke_without_command=True, description='units/length-m-inch-desc')
     async def inch(ctx, amount: float):
-        await ctx.send(amount * 1 / 2.54e-2)
+        try:
+            await ctx.send(amount * 1 / 2.54e-2)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @m.command(invoke_without_command=True, description='units/length-m-nautmil-desc')
+    del inch
+
+    @m.command(aliases=['nautical-mile', 'nautical-miles'], invoke_without_command=True, description='units/length-m-nautmil-desc')
     async def nautmil(ctx, amount: float):
-        await ctx.send(amount * 1 / 1852)
+        try:
+            await ctx.send(amount * 1 / 1852)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @length.group(invoke_without_command=True, description='units/length-cm-desc')
+    del nautmil
+
+    @length.group(aliases=['centimeter', 'centimeters', 'centimetre', 'centimetres'], invoke_without_command=True, description='units/length-cm-desc')
     @lone_group(True)
-    async def cm(ctx):
+    async def cm(self, ctx):
         pass
 
 
-    @cm.command(invoke_without_command=True, description='units/length-cm-km-desc')
+    @cm.command(aliases=['kilometer', 'kilometers', 'kilometre', 'kilometres'], invoke_without_command=True, description='units/length-cm-km-desc')
     async def km(ctx, amount: float):
-        await ctx.send(amount * 1e-2 / 1000)
+        try:
+            await ctx.send(amount * 1e-2 / 1000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @cm.command(invoke_without_command=True, description='units/length-cm-m-desc')
+    del km
+
+    @cm.command(aliases=['meter', 'meters', 'metre', 'metres'], invoke_without_command=True, description='units/length-cm-m-desc')
     async def m(ctx, amount: float):
-        await ctx.send(amount * 1e-2 / 1)
+        try:
+            await ctx.send(amount * 1e-2 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @cm.command(invoke_without_command=True, description='units/length-cm-mm-desc')
+    del m
+
+    @cm.command(aliases=['millimeter', 'millimeters', 'millimetre', 'millimetres'], invoke_without_command=True, description='units/length-cm-mm-desc')
     async def mm(ctx, amount: float):
-        await ctx.send(amount * 1e-2 / 1e-3)
+        try:
+            await ctx.send(amount * 1e-2 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @cm.command(invoke_without_command=True, description='units/length-cm-micron-desc')
+    del mm
+
+    @cm.command(aliases=['micrometer', 'micrometers', 'micrometre', 'micrometres'], invoke_without_command=True, description='units/length-cm-micron-desc')
     async def micron(ctx, amount: float):
-        await ctx.send(amount * 1e-2 / 1e-6)
+        try:
+            await ctx.send(amount * 1e-2 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @cm.command(invoke_without_command=True, description='units/length-cm-nm-desc')
+    del micron
+
+    @cm.command(aliases=['nanometer', 'nanometers', 'nanometre', 'nanometres'], invoke_without_command=True, description='units/length-cm-nm-desc')
     async def nm(ctx, amount: float):
-        await ctx.send(amount * 1e-2 / 1e-9)
+        try:
+            await ctx.send(amount * 1e-2 / 1e-9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @cm.command(invoke_without_command=True, description='units/length-cm-mile-desc')
+    del nm
+
+    @cm.command(aliases=['miles'], invoke_without_command=True, description='units/length-cm-mile-desc')
     async def mile(ctx, amount: float):
-        await ctx.send(amount * 1e-2 / 1609.344)
+        try:
+            await ctx.send(amount * 1e-2 / 1609.344)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @cm.command(invoke_without_command=True, description='units/length-cm-yard-desc')
+    del mile
+
+    @cm.command(aliases=['yards'], invoke_without_command=True, description='units/length-cm-yard-desc')
     async def yard(ctx, amount: float):
-        await ctx.send(amount * 1e-2 / (1/1.094))
+        try:
+            await ctx.send(amount * 1e-2 / (1/1.094))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @cm.command(invoke_without_command=True, description='units/length-cm-foot-desc')
+    del yard
+
+    @cm.command(aliases=['feet'], invoke_without_command=True, description='units/length-cm-foot-desc')
     async def foot(ctx, amount: float):
-        await ctx.send(amount * 1e-2 / (1/3.281))
+        try:
+            await ctx.send(amount * 1e-2 / (1/3.281))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @cm.command(invoke_without_command=True, description='units/length-cm-inch-desc')
+    del foot
+
+    @cm.command(aliases=['inches'], invoke_without_command=True, description='units/length-cm-inch-desc')
     async def inch(ctx, amount: float):
-        await ctx.send(amount * 1e-2 / 2.54e-2)
+        try:
+            await ctx.send(amount * 1e-2 / 2.54e-2)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @cm.command(invoke_without_command=True, description='units/length-cm-nautmil-desc')
+    del inch
+
+    @cm.command(aliases=['nautical-mile', 'nautical-miles'], invoke_without_command=True, description='units/length-cm-nautmil-desc')
     async def nautmil(ctx, amount: float):
-        await ctx.send(amount * 1e-2 / 1852)
+        try:
+            await ctx.send(amount * 1e-2 / 1852)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @length.group(invoke_without_command=True, description='units/length-mm-desc')
+    del nautmil
+
+    @length.group(aliases=['millimeter', 'millimeters', 'millimetre', 'millimetres'], invoke_without_command=True, description='units/length-mm-desc')
     @lone_group(True)
-    async def mm(ctx):
+    async def mm(self, ctx):
         pass
 
 
-    @mm.command(invoke_without_command=True, description='units/length-mm-km-desc')
+    @mm.command(aliases=['kilometer', 'kilometers', 'kilometre', 'kilometres'], invoke_without_command=True, description='units/length-mm-km-desc')
     async def km(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 1000)
+        try:
+            await ctx.send(amount * 1e-3 / 1000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mm.command(invoke_without_command=True, description='units/length-mm-m-desc')
+    del km
+
+    @mm.command(aliases=['meter', 'meters', 'metre', 'metres'], invoke_without_command=True, description='units/length-mm-m-desc')
     async def m(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 1)
+        try:
+            await ctx.send(amount * 1e-3 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mm.command(invoke_without_command=True, description='units/length-mm-cm-desc')
+    del m
+
+    @mm.command(aliases=['centimeter', 'centimeters', 'centimetre', 'centimetres'], invoke_without_command=True, description='units/length-mm-cm-desc')
     async def cm(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 1e-2)
+        try:
+            await ctx.send(amount * 1e-3 / 1e-2)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mm.command(invoke_without_command=True, description='units/length-mm-micron-desc')
+    del cm
+
+    @mm.command(aliases=['micrometer', 'micrometers', 'micrometre', 'micrometres'], invoke_without_command=True, description='units/length-mm-micron-desc')
     async def micron(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 1e-6)
+        try:
+            await ctx.send(amount * 1e-3 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mm.command(invoke_without_command=True, description='units/length-mm-nm-desc')
+    del micron
+
+    @mm.command(aliases=['nanometer', 'nanometers', 'nanometre', 'nanometres'], invoke_without_command=True, description='units/length-mm-nm-desc')
     async def nm(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 1e-9)
+        try:
+            await ctx.send(amount * 1e-3 / 1e-9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mm.command(invoke_without_command=True, description='units/length-mm-mile-desc')
+    del nm
+
+    @mm.command(aliases=['miles'], invoke_without_command=True, description='units/length-mm-mile-desc')
     async def mile(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 1609.344)
+        try:
+            await ctx.send(amount * 1e-3 / 1609.344)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mm.command(invoke_without_command=True, description='units/length-mm-yard-desc')
+    del mile
+
+    @mm.command(aliases=['yards'], invoke_without_command=True, description='units/length-mm-yard-desc')
     async def yard(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / (1/1.094))
+        try:
+            await ctx.send(amount * 1e-3 / (1/1.094))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mm.command(invoke_without_command=True, description='units/length-mm-foot-desc')
+    del yard
+
+    @mm.command(aliases=['feet'], invoke_without_command=True, description='units/length-mm-foot-desc')
     async def foot(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / (1/3.281))
+        try:
+            await ctx.send(amount * 1e-3 / (1/3.281))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mm.command(invoke_without_command=True, description='units/length-mm-inch-desc')
+    del foot
+
+    @mm.command(aliases=['inches'], invoke_without_command=True, description='units/length-mm-inch-desc')
     async def inch(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 2.54e-2)
+        try:
+            await ctx.send(amount * 1e-3 / 2.54e-2)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mm.command(invoke_without_command=True, description='units/length-mm-nautmil-desc')
+    del inch
+
+    @mm.command(aliases=['nautical-mile', 'nautical-miles'], invoke_without_command=True, description='units/length-mm-nautmil-desc')
     async def nautmil(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 1852)
+        try:
+            await ctx.send(amount * 1e-3 / 1852)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @length.group(invoke_without_command=True, description='units/length-micron-desc')
+    del nautmil
+
+    @length.group(aliases=['micrometer', 'micrometers', 'micrometre', 'micrometres'], invoke_without_command=True, description='units/length-micron-desc')
     @lone_group(True)
-    async def micron(ctx):
+    async def micron(self, ctx):
         pass
 
 
-    @micron.command(invoke_without_command=True, description='units/length-micron-km-desc')
+    @micron.command(aliases=['kilometer', 'kilometers', 'kilometre', 'kilometres'], invoke_without_command=True, description='units/length-micron-km-desc')
     async def km(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 1000)
+        try:
+            await ctx.send(amount * 1e-6 / 1000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @micron.command(invoke_without_command=True, description='units/length-micron-m-desc')
+    del km
+
+    @micron.command(aliases=['meter', 'meters', 'metre', 'metres'], invoke_without_command=True, description='units/length-micron-m-desc')
     async def m(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 1)
+        try:
+            await ctx.send(amount * 1e-6 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @micron.command(invoke_without_command=True, description='units/length-micron-cm-desc')
+    del m
+
+    @micron.command(aliases=['centimeter', 'centimeters', 'centimetre', 'centimetres'], invoke_without_command=True, description='units/length-micron-cm-desc')
     async def cm(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 1e-2)
+        try:
+            await ctx.send(amount * 1e-6 / 1e-2)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @micron.command(invoke_without_command=True, description='units/length-micron-mm-desc')
+    del cm
+
+    @micron.command(aliases=['millimeter', 'millimeters', 'millimetre', 'millimetres'], invoke_without_command=True, description='units/length-micron-mm-desc')
     async def mm(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 1e-3)
+        try:
+            await ctx.send(amount * 1e-6 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @micron.command(invoke_without_command=True, description='units/length-micron-nm-desc')
+    del mm
+
+    @micron.command(aliases=['nanometer', 'nanometers', 'nanometre', 'nanometres'], invoke_without_command=True, description='units/length-micron-nm-desc')
     async def nm(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 1e-9)
+        try:
+            await ctx.send(amount * 1e-6 / 1e-9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @micron.command(invoke_without_command=True, description='units/length-micron-mile-desc')
+    del nm
+
+    @micron.command(aliases=['miles'], invoke_without_command=True, description='units/length-micron-mile-desc')
     async def mile(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 1609.344)
+        try:
+            await ctx.send(amount * 1e-6 / 1609.344)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @micron.command(invoke_without_command=True, description='units/length-micron-yard-desc')
+    del mile
+
+    @micron.command(aliases=['yards'], invoke_without_command=True, description='units/length-micron-yard-desc')
     async def yard(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / (1/1.094))
+        try:
+            await ctx.send(amount * 1e-6 / (1/1.094))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @micron.command(invoke_without_command=True, description='units/length-micron-foot-desc')
+    del yard
+
+    @micron.command(aliases=['feet'], invoke_without_command=True, description='units/length-micron-foot-desc')
     async def foot(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / (1/3.281))
+        try:
+            await ctx.send(amount * 1e-6 / (1/3.281))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @micron.command(invoke_without_command=True, description='units/length-micron-inch-desc')
+    del foot
+
+    @micron.command(aliases=['inches'], invoke_without_command=True, description='units/length-micron-inch-desc')
     async def inch(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 2.54e-2)
+        try:
+            await ctx.send(amount * 1e-6 / 2.54e-2)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @micron.command(invoke_without_command=True, description='units/length-micron-nautmil-desc')
+    del inch
+
+    @micron.command(aliases=['nautical-mile', 'nautical-miles'], invoke_without_command=True, description='units/length-micron-nautmil-desc')
     async def nautmil(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 1852)
+        try:
+            await ctx.send(amount * 1e-6 / 1852)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @length.group(invoke_without_command=True, description='units/length-nm-desc')
+    del nautmil
+
+    @length.group(aliases=['nanometer', 'nanometers', 'nanometre', 'nanometres'], invoke_without_command=True, description='units/length-nm-desc')
     @lone_group(True)
-    async def nm(ctx):
+    async def nm(self, ctx):
         pass
 
 
-    @nm.command(invoke_without_command=True, description='units/length-nm-km-desc')
+    @nm.command(aliases=['kilometer', 'kilometers', 'kilometre', 'kilometres'], invoke_without_command=True, description='units/length-nm-km-desc')
     async def km(ctx, amount: float):
-        await ctx.send(amount * 1e-9 / 1000)
+        try:
+            await ctx.send(amount * 1e-9 / 1000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @nm.command(invoke_without_command=True, description='units/length-nm-m-desc')
+    del km
+
+    @nm.command(aliases=['meter', 'meters', 'metre', 'metres'], invoke_without_command=True, description='units/length-nm-m-desc')
     async def m(ctx, amount: float):
-        await ctx.send(amount * 1e-9 / 1)
+        try:
+            await ctx.send(amount * 1e-9 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @nm.command(invoke_without_command=True, description='units/length-nm-cm-desc')
+    del m
+
+    @nm.command(aliases=['centimeter', 'centimeters', 'centimetre', 'centimetres'], invoke_without_command=True, description='units/length-nm-cm-desc')
     async def cm(ctx, amount: float):
-        await ctx.send(amount * 1e-9 / 1e-2)
+        try:
+            await ctx.send(amount * 1e-9 / 1e-2)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @nm.command(invoke_without_command=True, description='units/length-nm-mm-desc')
+    del cm
+
+    @nm.command(aliases=['millimeter', 'millimeters', 'millimetre', 'millimetres'], invoke_without_command=True, description='units/length-nm-mm-desc')
     async def mm(ctx, amount: float):
-        await ctx.send(amount * 1e-9 / 1e-3)
+        try:
+            await ctx.send(amount * 1e-9 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @nm.command(invoke_without_command=True, description='units/length-nm-micron-desc')
+    del mm
+
+    @nm.command(aliases=['micrometer', 'micrometers', 'micrometre', 'micrometres'], invoke_without_command=True, description='units/length-nm-micron-desc')
     async def micron(ctx, amount: float):
-        await ctx.send(amount * 1e-9 / 1e-6)
+        try:
+            await ctx.send(amount * 1e-9 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @nm.command(invoke_without_command=True, description='units/length-nm-mile-desc')
+    del micron
+
+    @nm.command(aliases=['miles'], invoke_without_command=True, description='units/length-nm-mile-desc')
     async def mile(ctx, amount: float):
-        await ctx.send(amount * 1e-9 / 1609.344)
+        try:
+            await ctx.send(amount * 1e-9 / 1609.344)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @nm.command(invoke_without_command=True, description='units/length-nm-yard-desc')
+    del mile
+
+    @nm.command(aliases=['yards'], invoke_without_command=True, description='units/length-nm-yard-desc')
     async def yard(ctx, amount: float):
-        await ctx.send(amount * 1e-9 / (1/1.094))
+        try:
+            await ctx.send(amount * 1e-9 / (1/1.094))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @nm.command(invoke_without_command=True, description='units/length-nm-foot-desc')
+    del yard
+
+    @nm.command(aliases=['feet'], invoke_without_command=True, description='units/length-nm-foot-desc')
     async def foot(ctx, amount: float):
-        await ctx.send(amount * 1e-9 / (1/3.281))
+        try:
+            await ctx.send(amount * 1e-9 / (1/3.281))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @nm.command(invoke_without_command=True, description='units/length-nm-inch-desc')
+    del foot
+
+    @nm.command(aliases=['inches'], invoke_without_command=True, description='units/length-nm-inch-desc')
     async def inch(ctx, amount: float):
-        await ctx.send(amount * 1e-9 / 2.54e-2)
+        try:
+            await ctx.send(amount * 1e-9 / 2.54e-2)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @nm.command(invoke_without_command=True, description='units/length-nm-nautmil-desc')
+    del inch
+
+    @nm.command(aliases=['nautical-mile', 'nautical-miles'], invoke_without_command=True, description='units/length-nm-nautmil-desc')
     async def nautmil(ctx, amount: float):
-        await ctx.send(amount * 1e-9 / 1852)
+        try:
+            await ctx.send(amount * 1e-9 / 1852)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @length.group(invoke_without_command=True, description='units/length-mile-desc')
+    del nautmil
+
+    @length.group(aliases=['miles'], invoke_without_command=True, description='units/length-mile-desc')
     @lone_group(True)
-    async def mile(ctx):
+    async def mile(self, ctx):
         pass
 
 
-    @mile.command(invoke_without_command=True, description='units/length-mile-km-desc')
+    @mile.command(aliases=['kilometer', 'kilometers', 'kilometre', 'kilometres'], invoke_without_command=True, description='units/length-mile-km-desc')
     async def km(ctx, amount: float):
-        await ctx.send(amount * 1609.344 / 1000)
+        try:
+            await ctx.send(amount * 1609.344 / 1000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mile.command(invoke_without_command=True, description='units/length-mile-m-desc')
+    del km
+
+    @mile.command(aliases=['meter', 'meters', 'metre', 'metres'], invoke_without_command=True, description='units/length-mile-m-desc')
     async def m(ctx, amount: float):
-        await ctx.send(amount * 1609.344 / 1)
+        try:
+            await ctx.send(amount * 1609.344 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mile.command(invoke_without_command=True, description='units/length-mile-cm-desc')
+    del m
+
+    @mile.command(aliases=['centimeter', 'centimeters', 'centimetre', 'centimetres'], invoke_without_command=True, description='units/length-mile-cm-desc')
     async def cm(ctx, amount: float):
-        await ctx.send(amount * 1609.344 / 1e-2)
+        try:
+            await ctx.send(amount * 1609.344 / 1e-2)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mile.command(invoke_without_command=True, description='units/length-mile-mm-desc')
+    del cm
+
+    @mile.command(aliases=['millimeter', 'millimeters', 'millimetre', 'millimetres'], invoke_without_command=True, description='units/length-mile-mm-desc')
     async def mm(ctx, amount: float):
-        await ctx.send(amount * 1609.344 / 1e-3)
+        try:
+            await ctx.send(amount * 1609.344 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mile.command(invoke_without_command=True, description='units/length-mile-micron-desc')
+    del mm
+
+    @mile.command(aliases=['micrometer', 'micrometers', 'micrometre', 'micrometres'], invoke_without_command=True, description='units/length-mile-micron-desc')
     async def micron(ctx, amount: float):
-        await ctx.send(amount * 1609.344 / 1e-6)
+        try:
+            await ctx.send(amount * 1609.344 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mile.command(invoke_without_command=True, description='units/length-mile-nm-desc')
+    del micron
+
+    @mile.command(aliases=['nanometer', 'nanometers', 'nanometre', 'nanometres'], invoke_without_command=True, description='units/length-mile-nm-desc')
     async def nm(ctx, amount: float):
-        await ctx.send(amount * 1609.344 / 1e-9)
+        try:
+            await ctx.send(amount * 1609.344 / 1e-9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mile.command(invoke_without_command=True, description='units/length-mile-yard-desc')
+    del nm
+
+    @mile.command(aliases=['yards'], invoke_without_command=True, description='units/length-mile-yard-desc')
     async def yard(ctx, amount: float):
-        await ctx.send(amount * 1609.344 / (1/1.094))
+        try:
+            await ctx.send(amount * 1609.344 / (1/1.094))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mile.command(invoke_without_command=True, description='units/length-mile-foot-desc')
+    del yard
+
+    @mile.command(aliases=['feet'], invoke_without_command=True, description='units/length-mile-foot-desc')
     async def foot(ctx, amount: float):
-        await ctx.send(amount * 1609.344 / (1/3.281))
+        try:
+            await ctx.send(amount * 1609.344 / (1/3.281))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mile.command(invoke_without_command=True, description='units/length-mile-inch-desc')
+    del foot
+
+    @mile.command(aliases=['inches'], invoke_without_command=True, description='units/length-mile-inch-desc')
     async def inch(ctx, amount: float):
-        await ctx.send(amount * 1609.344 / 2.54e-2)
+        try:
+            await ctx.send(amount * 1609.344 / 2.54e-2)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mile.command(invoke_without_command=True, description='units/length-mile-nautmil-desc')
+    del inch
+
+    @mile.command(aliases=['nautical-mile', 'nautical-miles'], invoke_without_command=True, description='units/length-mile-nautmil-desc')
     async def nautmil(ctx, amount: float):
-        await ctx.send(amount * 1609.344 / 1852)
+        try:
+            await ctx.send(amount * 1609.344 / 1852)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @length.group(invoke_without_command=True, description='units/length-yard-desc')
+    del nautmil
+
+    @length.group(aliases=['yards'], invoke_without_command=True, description='units/length-yard-desc')
     @lone_group(True)
-    async def yard(ctx):
+    async def yard(self, ctx):
         pass
 
 
-    @yard.command(invoke_without_command=True, description='units/length-yard-km-desc')
+    @yard.command(aliases=['kilometer', 'kilometers', 'kilometre', 'kilometres'], invoke_without_command=True, description='units/length-yard-km-desc')
     async def km(ctx, amount: float):
-        await ctx.send(amount * (1/1.094) / 1000)
+        try:
+            await ctx.send(amount * (1/1.094) / 1000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @yard.command(invoke_without_command=True, description='units/length-yard-m-desc')
+    del km
+
+    @yard.command(aliases=['meter', 'meters', 'metre', 'metres'], invoke_without_command=True, description='units/length-yard-m-desc')
     async def m(ctx, amount: float):
-        await ctx.send(amount * (1/1.094) / 1)
+        try:
+            await ctx.send(amount * (1/1.094) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @yard.command(invoke_without_command=True, description='units/length-yard-cm-desc')
+    del m
+
+    @yard.command(aliases=['centimeter', 'centimeters', 'centimetre', 'centimetres'], invoke_without_command=True, description='units/length-yard-cm-desc')
     async def cm(ctx, amount: float):
-        await ctx.send(amount * (1/1.094) / 1e-2)
+        try:
+            await ctx.send(amount * (1/1.094) / 1e-2)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @yard.command(invoke_without_command=True, description='units/length-yard-mm-desc')
+    del cm
+
+    @yard.command(aliases=['millimeter', 'millimeters', 'millimetre', 'millimetres'], invoke_without_command=True, description='units/length-yard-mm-desc')
     async def mm(ctx, amount: float):
-        await ctx.send(amount * (1/1.094) / 1e-3)
+        try:
+            await ctx.send(amount * (1/1.094) / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @yard.command(invoke_without_command=True, description='units/length-yard-micron-desc')
+    del mm
+
+    @yard.command(aliases=['micrometer', 'micrometers', 'micrometre', 'micrometres'], invoke_without_command=True, description='units/length-yard-micron-desc')
     async def micron(ctx, amount: float):
-        await ctx.send(amount * (1/1.094) / 1e-6)
+        try:
+            await ctx.send(amount * (1/1.094) / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @yard.command(invoke_without_command=True, description='units/length-yard-nm-desc')
+    del micron
+
+    @yard.command(aliases=['nanometer', 'nanometers', 'nanometre', 'nanometres'], invoke_without_command=True, description='units/length-yard-nm-desc')
     async def nm(ctx, amount: float):
-        await ctx.send(amount * (1/1.094) / 1e-9)
+        try:
+            await ctx.send(amount * (1/1.094) / 1e-9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @yard.command(invoke_without_command=True, description='units/length-yard-mile-desc')
+    del nm
+
+    @yard.command(aliases=['miles'], invoke_without_command=True, description='units/length-yard-mile-desc')
     async def mile(ctx, amount: float):
-        await ctx.send(amount * (1/1.094) / 1609.344)
+        try:
+            await ctx.send(amount * (1/1.094) / 1609.344)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @yard.command(invoke_without_command=True, description='units/length-yard-foot-desc')
+    del mile
+
+    @yard.command(aliases=['feet'], invoke_without_command=True, description='units/length-yard-foot-desc')
     async def foot(ctx, amount: float):
-        await ctx.send(amount * (1/1.094) / (1/3.281))
+        try:
+            await ctx.send(amount * (1/1.094) / (1/3.281))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @yard.command(invoke_without_command=True, description='units/length-yard-inch-desc')
+    del foot
+
+    @yard.command(aliases=['inches'], invoke_without_command=True, description='units/length-yard-inch-desc')
     async def inch(ctx, amount: float):
-        await ctx.send(amount * (1/1.094) / 2.54e-2)
+        try:
+            await ctx.send(amount * (1/1.094) / 2.54e-2)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @yard.command(invoke_without_command=True, description='units/length-yard-nautmil-desc')
+    del inch
+
+    @yard.command(aliases=['nautical-mile', 'nautical-miles'], invoke_without_command=True, description='units/length-yard-nautmil-desc')
     async def nautmil(ctx, amount: float):
-        await ctx.send(amount * (1/1.094) / 1852)
+        try:
+            await ctx.send(amount * (1/1.094) / 1852)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @length.group(invoke_without_command=True, description='units/length-foot-desc')
+    del nautmil
+
+    @length.group(aliases=['feet'], invoke_without_command=True, description='units/length-foot-desc')
     @lone_group(True)
-    async def foot(ctx):
+    async def foot(self, ctx):
         pass
 
 
-    @foot.command(invoke_without_command=True, description='units/length-foot-km-desc')
+    @foot.command(aliases=['kilometer', 'kilometers', 'kilometre', 'kilometres'], invoke_without_command=True, description='units/length-foot-km-desc')
     async def km(ctx, amount: float):
-        await ctx.send(amount * (1/3.281) / 1000)
+        try:
+            await ctx.send(amount * (1/3.281) / 1000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @foot.command(invoke_without_command=True, description='units/length-foot-m-desc')
+    del km
+
+    @foot.command(aliases=['meter', 'meters', 'metre', 'metres'], invoke_without_command=True, description='units/length-foot-m-desc')
     async def m(ctx, amount: float):
-        await ctx.send(amount * (1/3.281) / 1)
+        try:
+            await ctx.send(amount * (1/3.281) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @foot.command(invoke_without_command=True, description='units/length-foot-cm-desc')
+    del m
+
+    @foot.command(aliases=['centimeter', 'centimeters', 'centimetre', 'centimetres'], invoke_without_command=True, description='units/length-foot-cm-desc')
     async def cm(ctx, amount: float):
-        await ctx.send(amount * (1/3.281) / 1e-2)
+        try:
+            await ctx.send(amount * (1/3.281) / 1e-2)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @foot.command(invoke_without_command=True, description='units/length-foot-mm-desc')
+    del cm
+
+    @foot.command(aliases=['millimeter', 'millimeters', 'millimetre', 'millimetres'], invoke_without_command=True, description='units/length-foot-mm-desc')
     async def mm(ctx, amount: float):
-        await ctx.send(amount * (1/3.281) / 1e-3)
+        try:
+            await ctx.send(amount * (1/3.281) / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @foot.command(invoke_without_command=True, description='units/length-foot-micron-desc')
+    del mm
+
+    @foot.command(aliases=['micrometer', 'micrometers', 'micrometre', 'micrometres'], invoke_without_command=True, description='units/length-foot-micron-desc')
     async def micron(ctx, amount: float):
-        await ctx.send(amount * (1/3.281) / 1e-6)
+        try:
+            await ctx.send(amount * (1/3.281) / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @foot.command(invoke_without_command=True, description='units/length-foot-nm-desc')
+    del micron
+
+    @foot.command(aliases=['nanometer', 'nanometers', 'nanometre', 'nanometres'], invoke_without_command=True, description='units/length-foot-nm-desc')
     async def nm(ctx, amount: float):
-        await ctx.send(amount * (1/3.281) / 1e-9)
+        try:
+            await ctx.send(amount * (1/3.281) / 1e-9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @foot.command(invoke_without_command=True, description='units/length-foot-mile-desc')
+    del nm
+
+    @foot.command(aliases=['miles'], invoke_without_command=True, description='units/length-foot-mile-desc')
     async def mile(ctx, amount: float):
-        await ctx.send(amount * (1/3.281) / 1609.344)
+        try:
+            await ctx.send(amount * (1/3.281) / 1609.344)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @foot.command(invoke_without_command=True, description='units/length-foot-yard-desc')
+    del mile
+
+    @foot.command(aliases=['yards'], invoke_without_command=True, description='units/length-foot-yard-desc')
     async def yard(ctx, amount: float):
-        await ctx.send(amount * (1/3.281) / (1/1.094))
+        try:
+            await ctx.send(amount * (1/3.281) / (1/1.094))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @foot.command(invoke_without_command=True, description='units/length-foot-inch-desc')
+    del yard
+
+    @foot.command(aliases=['inches'], invoke_without_command=True, description='units/length-foot-inch-desc')
     async def inch(ctx, amount: float):
-        await ctx.send(amount * (1/3.281) / 2.54e-2)
+        try:
+            await ctx.send(amount * (1/3.281) / 2.54e-2)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @foot.command(invoke_without_command=True, description='units/length-foot-nautmil-desc')
+    del inch
+
+    @foot.command(aliases=['nautical-mile', 'nautical-miles'], invoke_without_command=True, description='units/length-foot-nautmil-desc')
     async def nautmil(ctx, amount: float):
-        await ctx.send(amount * (1/3.281) / 1852)
+        try:
+            await ctx.send(amount * (1/3.281) / 1852)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @length.group(invoke_without_command=True, description='units/length-inch-desc')
+    del nautmil
+
+    @length.group(aliases=['inches'], invoke_without_command=True, description='units/length-inch-desc')
     @lone_group(True)
-    async def inch(ctx):
+    async def inch(self, ctx):
         pass
 
 
-    @inch.command(invoke_without_command=True, description='units/length-inch-km-desc')
+    @inch.command(aliases=['kilometer', 'kilometers', 'kilometre', 'kilometres'], invoke_without_command=True, description='units/length-inch-km-desc')
     async def km(ctx, amount: float):
-        await ctx.send(amount * 2.54e-2 / 1000)
+        try:
+            await ctx.send(amount * 2.54e-2 / 1000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @inch.command(invoke_without_command=True, description='units/length-inch-m-desc')
+    del km
+
+    @inch.command(aliases=['meter', 'meters', 'metre', 'metres'], invoke_without_command=True, description='units/length-inch-m-desc')
     async def m(ctx, amount: float):
-        await ctx.send(amount * 2.54e-2 / 1)
+        try:
+            await ctx.send(amount * 2.54e-2 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @inch.command(invoke_without_command=True, description='units/length-inch-cm-desc')
+    del m
+
+    @inch.command(aliases=['centimeter', 'centimeters', 'centimetre', 'centimetres'], invoke_without_command=True, description='units/length-inch-cm-desc')
     async def cm(ctx, amount: float):
-        await ctx.send(amount * 2.54e-2 / 1e-2)
+        try:
+            await ctx.send(amount * 2.54e-2 / 1e-2)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @inch.command(invoke_without_command=True, description='units/length-inch-mm-desc')
+    del cm
+
+    @inch.command(aliases=['millimeter', 'millimeters', 'millimetre', 'millimetres'], invoke_without_command=True, description='units/length-inch-mm-desc')
     async def mm(ctx, amount: float):
-        await ctx.send(amount * 2.54e-2 / 1e-3)
+        try:
+            await ctx.send(amount * 2.54e-2 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @inch.command(invoke_without_command=True, description='units/length-inch-micron-desc')
+    del mm
+
+    @inch.command(aliases=['micrometer', 'micrometers', 'micrometre', 'micrometres'], invoke_without_command=True, description='units/length-inch-micron-desc')
     async def micron(ctx, amount: float):
-        await ctx.send(amount * 2.54e-2 / 1e-6)
+        try:
+            await ctx.send(amount * 2.54e-2 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @inch.command(invoke_without_command=True, description='units/length-inch-nm-desc')
+    del micron
+
+    @inch.command(aliases=['nanometer', 'nanometers', 'nanometre', 'nanometres'], invoke_without_command=True, description='units/length-inch-nm-desc')
     async def nm(ctx, amount: float):
-        await ctx.send(amount * 2.54e-2 / 1e-9)
+        try:
+            await ctx.send(amount * 2.54e-2 / 1e-9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @inch.command(invoke_without_command=True, description='units/length-inch-mile-desc')
+    del nm
+
+    @inch.command(aliases=['miles'], invoke_without_command=True, description='units/length-inch-mile-desc')
     async def mile(ctx, amount: float):
-        await ctx.send(amount * 2.54e-2 / 1609.344)
+        try:
+            await ctx.send(amount * 2.54e-2 / 1609.344)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @inch.command(invoke_without_command=True, description='units/length-inch-yard-desc')
+    del mile
+
+    @inch.command(aliases=['yards'], invoke_without_command=True, description='units/length-inch-yard-desc')
     async def yard(ctx, amount: float):
-        await ctx.send(amount * 2.54e-2 / (1/1.094))
+        try:
+            await ctx.send(amount * 2.54e-2 / (1/1.094))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @inch.command(invoke_without_command=True, description='units/length-inch-foot-desc')
+    del yard
+
+    @inch.command(aliases=['feet'], invoke_without_command=True, description='units/length-inch-foot-desc')
     async def foot(ctx, amount: float):
-        await ctx.send(amount * 2.54e-2 / (1/3.281))
+        try:
+            await ctx.send(amount * 2.54e-2 / (1/3.281))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @inch.command(invoke_without_command=True, description='units/length-inch-nautmil-desc')
+    del foot
+
+    @inch.command(aliases=['nautical-mile', 'nautical-miles'], invoke_without_command=True, description='units/length-inch-nautmil-desc')
     async def nautmil(ctx, amount: float):
-        await ctx.send(amount * 2.54e-2 / 1852)
+        try:
+            await ctx.send(amount * 2.54e-2 / 1852)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @length.group(invoke_without_command=True, description='units/length-nautmil-desc')
+    del nautmil
+
+    @length.group(aliases=['nautical-mile', 'nautical-miles'], invoke_without_command=True, description='units/length-nautmil-desc')
     @lone_group(True)
-    async def nautmil(ctx):
+    async def nautmil(self, ctx):
         pass
 
 
-    @nautmil.command(invoke_without_command=True, description='units/length-nautmil-km-desc')
+    @nautmil.command(aliases=['kilometer', 'kilometers', 'kilometre', 'kilometres'], invoke_without_command=True, description='units/length-nautmil-km-desc')
     async def km(ctx, amount: float):
-        await ctx.send(amount * 1852 / 1000)
+        try:
+            await ctx.send(amount * 1852 / 1000)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @nautmil.command(invoke_without_command=True, description='units/length-nautmil-m-desc')
+    del km
+
+    @nautmil.command(aliases=['meter', 'meters', 'metre', 'metres'], invoke_without_command=True, description='units/length-nautmil-m-desc')
     async def m(ctx, amount: float):
-        await ctx.send(amount * 1852 / 1)
+        try:
+            await ctx.send(amount * 1852 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @nautmil.command(invoke_without_command=True, description='units/length-nautmil-cm-desc')
+    del m
+
+    @nautmil.command(aliases=['centimeter', 'centimeters', 'centimetre', 'centimetres'], invoke_without_command=True, description='units/length-nautmil-cm-desc')
     async def cm(ctx, amount: float):
-        await ctx.send(amount * 1852 / 1e-2)
+        try:
+            await ctx.send(amount * 1852 / 1e-2)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @nautmil.command(invoke_without_command=True, description='units/length-nautmil-mm-desc')
+    del cm
+
+    @nautmil.command(aliases=['millimeter', 'millimeters', 'millimetre', 'millimetres'], invoke_without_command=True, description='units/length-nautmil-mm-desc')
     async def mm(ctx, amount: float):
-        await ctx.send(amount * 1852 / 1e-3)
+        try:
+            await ctx.send(amount * 1852 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @nautmil.command(invoke_without_command=True, description='units/length-nautmil-micron-desc')
+    del mm
+
+    @nautmil.command(aliases=['micrometer', 'micrometers', 'micrometre', 'micrometres'], invoke_without_command=True, description='units/length-nautmil-micron-desc')
     async def micron(ctx, amount: float):
-        await ctx.send(amount * 1852 / 1e-6)
+        try:
+            await ctx.send(amount * 1852 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @nautmil.command(invoke_without_command=True, description='units/length-nautmil-nm-desc')
+    del micron
+
+    @nautmil.command(aliases=['nanometer', 'nanometers', 'nanometre', 'nanometres'], invoke_without_command=True, description='units/length-nautmil-nm-desc')
     async def nm(ctx, amount: float):
-        await ctx.send(amount * 1852 / 1e-9)
+        try:
+            await ctx.send(amount * 1852 / 1e-9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @nautmil.command(invoke_without_command=True, description='units/length-nautmil-mile-desc')
+    del nm
+
+    @nautmil.command(aliases=['miles'], invoke_without_command=True, description='units/length-nautmil-mile-desc')
     async def mile(ctx, amount: float):
-        await ctx.send(amount * 1852 / 1609.344)
+        try:
+            await ctx.send(amount * 1852 / 1609.344)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @nautmil.command(invoke_without_command=True, description='units/length-nautmil-yard-desc')
+    del mile
+
+    @nautmil.command(aliases=['yards'], invoke_without_command=True, description='units/length-nautmil-yard-desc')
     async def yard(ctx, amount: float):
-        await ctx.send(amount * 1852 / (1/1.094))
+        try:
+            await ctx.send(amount * 1852 / (1/1.094))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @nautmil.command(invoke_without_command=True, description='units/length-nautmil-foot-desc')
+    del yard
+
+    @nautmil.command(aliases=['feet'], invoke_without_command=True, description='units/length-nautmil-foot-desc')
     async def foot(ctx, amount: float):
-        await ctx.send(amount * 1852 / (1/3.281))
+        try:
+            await ctx.send(amount * 1852 / (1/3.281))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @nautmil.command(invoke_without_command=True, description='units/length-nautmil-inch-desc')
+    del foot
+
+    @nautmil.command(aliases=['inches'], invoke_without_command=True, description='units/length-nautmil-inch-desc')
     async def inch(ctx, amount: float):
-        await ctx.send(amount * 1852 / 2.54e-2)
+        try:
+            await ctx.send(amount * 1852 / 2.54e-2)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del inch
 
 
     @convert.group(aliases=[], invoke_without_command=True, description='units/mass-desc')
@@ -4089,425 +8580,875 @@ class Units(Cog):
         pass
 
 
-    @mass.group(invoke_without_command=True, description='units/mass-tonne-desc')
+    @mass.group(aliases=['Mg', 'tonne', 'tonnes', 'megagram', 'megagrams'], invoke_without_command=True, description='units/mass-t-desc')
     @lone_group(True)
-    async def tonne(ctx):
+    async def t(self, ctx):
         pass
 
 
-    @tonne.command(invoke_without_command=True, description='units/mass-tonne-kg-desc')
+    @t.command(aliases=['kilogram', 'kilograms'], invoke_without_command=True, description='units/mass-t-kg-desc')
     async def kg(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 1e3)
+        try:
+            await ctx.send(amount * 1e6 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tonne.command(invoke_without_command=True, description='units/mass-tonne-g-desc')
+    del kg
+
+    @t.command(aliases=['gram', 'grams'], invoke_without_command=True, description='units/mass-t-g-desc')
     async def g(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 1)
+        try:
+            await ctx.send(amount * 1e6 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tonne.command(invoke_without_command=True, description='units/mass-tonne-mg-desc')
+    del g
+
+    @t.command(aliases=['milligram', 'milligrams'], invoke_without_command=True, description='units/mass-t-mg-desc')
     async def mg(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 1e-3)
+        try:
+            await ctx.send(amount * 1e6 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tonne.command(invoke_without_command=True, description='units/mass-tonne-microg-desc')
+    del mg
+
+    @t.command(aliases=['microgram', 'micrograms'], invoke_without_command=True, description='units/mass-t-microg-desc')
     async def microg(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 1e-6)
+        try:
+            await ctx.send(amount * 1e6 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tonne.command(invoke_without_command=True, description='units/mass-tonne-ton-desc')
+    del microg
+
+    @t.command(aliases=[], invoke_without_command=True, description='units/mass-t-ton-desc')
     async def ton(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 1.016e6)
+        try:
+            await ctx.send(amount * 1e6 / 1.016e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tonne.command(invoke_without_command=True, description='units/mass-tonne-uston-desc')
+    del ton
+
+    @t.command(aliases=['us-ton', 'us-tons'], invoke_without_command=True, description='units/mass-t-uston-desc')
     async def uston(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 907184.74)
+        try:
+            await ctx.send(amount * 1e6 / 907184.74)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tonne.command(invoke_without_command=True, description='units/mass-tonne-stone-desc')
+    del uston
+
+    @t.command(aliases=[], invoke_without_command=True, description='units/mass-t-stone-desc')
     async def stone(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 6350.293)
+        try:
+            await ctx.send(amount * 1e6 / 6350.293)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tonne.command(invoke_without_command=True, description='units/mass-tonne-lb-desc')
+    del stone
+
+    @t.command(aliases=['pound', 'pounds'], invoke_without_command=True, description='units/mass-t-lb-desc')
     async def lb(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 453.592)
+        try:
+            await ctx.send(amount * 1e6 / 453.592)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tonne.command(invoke_without_command=True, description='units/mass-tonne-oz-desc')
+    del lb
+
+    @t.command(aliases=['ounce', 'ounces'], invoke_without_command=True, description='units/mass-t-oz-desc')
     async def oz(ctx, amount: float):
-        await ctx.send(amount * 1e6 / 28.3495)
+        try:
+            await ctx.send(amount * 1e6 / 28.3495)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mass.group(invoke_without_command=True, description='units/mass-kg-desc')
+    del oz
+
+    @mass.group(aliases=['kilogram', 'kilograms'], invoke_without_command=True, description='units/mass-kg-desc')
     @lone_group(True)
-    async def kg(ctx):
+    async def kg(self, ctx):
         pass
 
 
-    @kg.command(invoke_without_command=True, description='units/mass-kg-tonne-desc')
-    async def tonne(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 1e6)
+    @kg.command(aliases=['Mg', 'tonne', 'tonnes', 'megagram', 'megagrams'], invoke_without_command=True, description='units/mass-kg-t-desc')
+    async def t(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1e3 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kg.command(invoke_without_command=True, description='units/mass-kg-g-desc')
+    del t
+
+    @kg.command(aliases=['gram', 'grams'], invoke_without_command=True, description='units/mass-kg-g-desc')
     async def g(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 1)
+        try:
+            await ctx.send(amount * 1e3 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kg.command(invoke_without_command=True, description='units/mass-kg-mg-desc')
+    del g
+
+    @kg.command(aliases=['milligram', 'milligrams'], invoke_without_command=True, description='units/mass-kg-mg-desc')
     async def mg(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 1e-3)
+        try:
+            await ctx.send(amount * 1e3 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kg.command(invoke_without_command=True, description='units/mass-kg-microg-desc')
+    del mg
+
+    @kg.command(aliases=['microgram', 'micrograms'], invoke_without_command=True, description='units/mass-kg-microg-desc')
     async def microg(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 1e-6)
+        try:
+            await ctx.send(amount * 1e3 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kg.command(invoke_without_command=True, description='units/mass-kg-ton-desc')
+    del microg
+
+    @kg.command(aliases=[], invoke_without_command=True, description='units/mass-kg-ton-desc')
     async def ton(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 1.016e6)
+        try:
+            await ctx.send(amount * 1e3 / 1.016e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kg.command(invoke_without_command=True, description='units/mass-kg-uston-desc')
+    del ton
+
+    @kg.command(aliases=['us-ton', 'us-tons'], invoke_without_command=True, description='units/mass-kg-uston-desc')
     async def uston(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 907184.74)
+        try:
+            await ctx.send(amount * 1e3 / 907184.74)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kg.command(invoke_without_command=True, description='units/mass-kg-stone-desc')
+    del uston
+
+    @kg.command(aliases=[], invoke_without_command=True, description='units/mass-kg-stone-desc')
     async def stone(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 6350.293)
+        try:
+            await ctx.send(amount * 1e3 / 6350.293)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kg.command(invoke_without_command=True, description='units/mass-kg-lb-desc')
+    del stone
+
+    @kg.command(aliases=['pound', 'pounds'], invoke_without_command=True, description='units/mass-kg-lb-desc')
     async def lb(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 453.592)
+        try:
+            await ctx.send(amount * 1e3 / 453.592)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kg.command(invoke_without_command=True, description='units/mass-kg-oz-desc')
+    del lb
+
+    @kg.command(aliases=['ounce', 'ounces'], invoke_without_command=True, description='units/mass-kg-oz-desc')
     async def oz(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 28.3495)
+        try:
+            await ctx.send(amount * 1e3 / 28.3495)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mass.group(invoke_without_command=True, description='units/mass-g-desc')
+    del oz
+
+    @mass.group(aliases=['gram', 'grams'], invoke_without_command=True, description='units/mass-g-desc')
     @lone_group(True)
-    async def g(ctx):
+    async def g(self, ctx):
         pass
 
 
-    @g.command(invoke_without_command=True, description='units/mass-g-tonne-desc')
-    async def tonne(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e6)
+    @g.command(aliases=['Mg', 'tonne', 'tonnes', 'megagram', 'megagrams'], invoke_without_command=True, description='units/mass-g-t-desc')
+    async def t(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @g.command(invoke_without_command=True, description='units/mass-g-kg-desc')
+    del t
+
+    @g.command(aliases=['kilogram', 'kilograms'], invoke_without_command=True, description='units/mass-g-kg-desc')
     async def kg(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e3)
+        try:
+            await ctx.send(amount * 1 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @g.command(invoke_without_command=True, description='units/mass-g-mg-desc')
+    del kg
+
+    @g.command(aliases=['milligram', 'milligrams'], invoke_without_command=True, description='units/mass-g-mg-desc')
     async def mg(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e-3)
+        try:
+            await ctx.send(amount * 1 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @g.command(invoke_without_command=True, description='units/mass-g-microg-desc')
+    del mg
+
+    @g.command(aliases=['microgram', 'micrograms'], invoke_without_command=True, description='units/mass-g-microg-desc')
     async def microg(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e-6)
+        try:
+            await ctx.send(amount * 1 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @g.command(invoke_without_command=True, description='units/mass-g-ton-desc')
+    del microg
+
+    @g.command(aliases=[], invoke_without_command=True, description='units/mass-g-ton-desc')
     async def ton(ctx, amount: float):
-        await ctx.send(amount * 1 / 1.016e6)
+        try:
+            await ctx.send(amount * 1 / 1.016e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @g.command(invoke_without_command=True, description='units/mass-g-uston-desc')
+    del ton
+
+    @g.command(aliases=['us-ton', 'us-tons'], invoke_without_command=True, description='units/mass-g-uston-desc')
     async def uston(ctx, amount: float):
-        await ctx.send(amount * 1 / 907184.74)
+        try:
+            await ctx.send(amount * 1 / 907184.74)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @g.command(invoke_without_command=True, description='units/mass-g-stone-desc')
+    del uston
+
+    @g.command(aliases=[], invoke_without_command=True, description='units/mass-g-stone-desc')
     async def stone(ctx, amount: float):
-        await ctx.send(amount * 1 / 6350.293)
+        try:
+            await ctx.send(amount * 1 / 6350.293)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @g.command(invoke_without_command=True, description='units/mass-g-lb-desc')
+    del stone
+
+    @g.command(aliases=['pound', 'pounds'], invoke_without_command=True, description='units/mass-g-lb-desc')
     async def lb(ctx, amount: float):
-        await ctx.send(amount * 1 / 453.592)
+        try:
+            await ctx.send(amount * 1 / 453.592)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @g.command(invoke_without_command=True, description='units/mass-g-oz-desc')
+    del lb
+
+    @g.command(aliases=['ounce', 'ounces'], invoke_without_command=True, description='units/mass-g-oz-desc')
     async def oz(ctx, amount: float):
-        await ctx.send(amount * 1 / 28.3495)
+        try:
+            await ctx.send(amount * 1 / 28.3495)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mass.group(invoke_without_command=True, description='units/mass-mg-desc')
+    del oz
+
+    @mass.group(aliases=['milligram', 'milligrams'], invoke_without_command=True, description='units/mass-mg-desc')
     @lone_group(True)
-    async def mg(ctx):
+    async def mg(self, ctx):
         pass
 
 
-    @mg.command(invoke_without_command=True, description='units/mass-mg-tonne-desc')
-    async def tonne(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 1e6)
+    @mg.command(aliases=['Mg', 'tonne', 'tonnes', 'megagram', 'megagrams'], invoke_without_command=True, description='units/mass-mg-t-desc')
+    async def t(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1e-3 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mg.command(invoke_without_command=True, description='units/mass-mg-kg-desc')
+    del t
+
+    @mg.command(aliases=['kilogram', 'kilograms'], invoke_without_command=True, description='units/mass-mg-kg-desc')
     async def kg(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 1e3)
+        try:
+            await ctx.send(amount * 1e-3 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mg.command(invoke_without_command=True, description='units/mass-mg-g-desc')
+    del kg
+
+    @mg.command(aliases=['gram', 'grams'], invoke_without_command=True, description='units/mass-mg-g-desc')
     async def g(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 1)
+        try:
+            await ctx.send(amount * 1e-3 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mg.command(invoke_without_command=True, description='units/mass-mg-microg-desc')
+    del g
+
+    @mg.command(aliases=['microgram', 'micrograms'], invoke_without_command=True, description='units/mass-mg-microg-desc')
     async def microg(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 1e-6)
+        try:
+            await ctx.send(amount * 1e-3 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mg.command(invoke_without_command=True, description='units/mass-mg-ton-desc')
+    del microg
+
+    @mg.command(aliases=[], invoke_without_command=True, description='units/mass-mg-ton-desc')
     async def ton(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 1.016e6)
+        try:
+            await ctx.send(amount * 1e-3 / 1.016e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mg.command(invoke_without_command=True, description='units/mass-mg-uston-desc')
+    del ton
+
+    @mg.command(aliases=['us-ton', 'us-tons'], invoke_without_command=True, description='units/mass-mg-uston-desc')
     async def uston(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 907184.74)
+        try:
+            await ctx.send(amount * 1e-3 / 907184.74)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mg.command(invoke_without_command=True, description='units/mass-mg-stone-desc')
+    del uston
+
+    @mg.command(aliases=[], invoke_without_command=True, description='units/mass-mg-stone-desc')
     async def stone(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 6350.293)
+        try:
+            await ctx.send(amount * 1e-3 / 6350.293)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mg.command(invoke_without_command=True, description='units/mass-mg-lb-desc')
+    del stone
+
+    @mg.command(aliases=['pound', 'pounds'], invoke_without_command=True, description='units/mass-mg-lb-desc')
     async def lb(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 453.592)
+        try:
+            await ctx.send(amount * 1e-3 / 453.592)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mg.command(invoke_without_command=True, description='units/mass-mg-oz-desc')
+    del lb
+
+    @mg.command(aliases=['ounce', 'ounces'], invoke_without_command=True, description='units/mass-mg-oz-desc')
     async def oz(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 28.3495)
+        try:
+            await ctx.send(amount * 1e-3 / 28.3495)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mass.group(invoke_without_command=True, description='units/mass-microg-desc')
+    del oz
+
+    @mass.group(aliases=['microgram', 'micrograms'], invoke_without_command=True, description='units/mass-microg-desc')
     @lone_group(True)
-    async def microg(ctx):
+    async def microg(self, ctx):
         pass
 
 
-    @microg.command(invoke_without_command=True, description='units/mass-microg-tonne-desc')
-    async def tonne(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 1e6)
+    @microg.command(aliases=['Mg', 'tonne', 'tonnes', 'megagram', 'megagrams'], invoke_without_command=True, description='units/mass-microg-t-desc')
+    async def t(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1e-6 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @microg.command(invoke_without_command=True, description='units/mass-microg-kg-desc')
+    del t
+
+    @microg.command(aliases=['kilogram', 'kilograms'], invoke_without_command=True, description='units/mass-microg-kg-desc')
     async def kg(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 1e3)
+        try:
+            await ctx.send(amount * 1e-6 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @microg.command(invoke_without_command=True, description='units/mass-microg-g-desc')
+    del kg
+
+    @microg.command(aliases=['gram', 'grams'], invoke_without_command=True, description='units/mass-microg-g-desc')
     async def g(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 1)
+        try:
+            await ctx.send(amount * 1e-6 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @microg.command(invoke_without_command=True, description='units/mass-microg-mg-desc')
+    del g
+
+    @microg.command(aliases=['milligram', 'milligrams'], invoke_without_command=True, description='units/mass-microg-mg-desc')
     async def mg(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 1e-3)
+        try:
+            await ctx.send(amount * 1e-6 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @microg.command(invoke_without_command=True, description='units/mass-microg-ton-desc')
+    del mg
+
+    @microg.command(aliases=[], invoke_without_command=True, description='units/mass-microg-ton-desc')
     async def ton(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 1.016e6)
+        try:
+            await ctx.send(amount * 1e-6 / 1.016e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @microg.command(invoke_without_command=True, description='units/mass-microg-uston-desc')
+    del ton
+
+    @microg.command(aliases=['us-ton', 'us-tons'], invoke_without_command=True, description='units/mass-microg-uston-desc')
     async def uston(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 907184.74)
+        try:
+            await ctx.send(amount * 1e-6 / 907184.74)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @microg.command(invoke_without_command=True, description='units/mass-microg-stone-desc')
+    del uston
+
+    @microg.command(aliases=[], invoke_without_command=True, description='units/mass-microg-stone-desc')
     async def stone(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 6350.293)
+        try:
+            await ctx.send(amount * 1e-6 / 6350.293)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @microg.command(invoke_without_command=True, description='units/mass-microg-lb-desc')
+    del stone
+
+    @microg.command(aliases=['pound', 'pounds'], invoke_without_command=True, description='units/mass-microg-lb-desc')
     async def lb(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 453.592)
+        try:
+            await ctx.send(amount * 1e-6 / 453.592)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @microg.command(invoke_without_command=True, description='units/mass-microg-oz-desc')
+    del lb
+
+    @microg.command(aliases=['ounce', 'ounces'], invoke_without_command=True, description='units/mass-microg-oz-desc')
     async def oz(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 28.3495)
+        try:
+            await ctx.send(amount * 1e-6 / 28.3495)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mass.group(invoke_without_command=True, description='units/mass-ton-desc')
+    del oz
+
+    @mass.group(aliases=[], invoke_without_command=True, description='units/mass-ton-desc')
     @lone_group(True)
-    async def ton(ctx):
+    async def ton(self, ctx):
         pass
 
 
-    @ton.command(invoke_without_command=True, description='units/mass-ton-tonne-desc')
-    async def tonne(ctx, amount: float):
-        await ctx.send(amount * 1.016e6 / 1e6)
+    @ton.command(aliases=['Mg', 'tonne', 'tonnes', 'megagram', 'megagrams'], invoke_without_command=True, description='units/mass-ton-t-desc')
+    async def t(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1.016e6 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ton.command(invoke_without_command=True, description='units/mass-ton-kg-desc')
+    del t
+
+    @ton.command(aliases=['kilogram', 'kilograms'], invoke_without_command=True, description='units/mass-ton-kg-desc')
     async def kg(ctx, amount: float):
-        await ctx.send(amount * 1.016e6 / 1e3)
+        try:
+            await ctx.send(amount * 1.016e6 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ton.command(invoke_without_command=True, description='units/mass-ton-g-desc')
+    del kg
+
+    @ton.command(aliases=['gram', 'grams'], invoke_without_command=True, description='units/mass-ton-g-desc')
     async def g(ctx, amount: float):
-        await ctx.send(amount * 1.016e6 / 1)
+        try:
+            await ctx.send(amount * 1.016e6 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ton.command(invoke_without_command=True, description='units/mass-ton-mg-desc')
+    del g
+
+    @ton.command(aliases=['milligram', 'milligrams'], invoke_without_command=True, description='units/mass-ton-mg-desc')
     async def mg(ctx, amount: float):
-        await ctx.send(amount * 1.016e6 / 1e-3)
+        try:
+            await ctx.send(amount * 1.016e6 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ton.command(invoke_without_command=True, description='units/mass-ton-microg-desc')
+    del mg
+
+    @ton.command(aliases=['microgram', 'micrograms'], invoke_without_command=True, description='units/mass-ton-microg-desc')
     async def microg(ctx, amount: float):
-        await ctx.send(amount * 1.016e6 / 1e-6)
+        try:
+            await ctx.send(amount * 1.016e6 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ton.command(invoke_without_command=True, description='units/mass-ton-uston-desc')
+    del microg
+
+    @ton.command(aliases=['us-ton', 'us-tons'], invoke_without_command=True, description='units/mass-ton-uston-desc')
     async def uston(ctx, amount: float):
-        await ctx.send(amount * 1.016e6 / 907184.74)
+        try:
+            await ctx.send(amount * 1.016e6 / 907184.74)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ton.command(invoke_without_command=True, description='units/mass-ton-stone-desc')
+    del uston
+
+    @ton.command(aliases=[], invoke_without_command=True, description='units/mass-ton-stone-desc')
     async def stone(ctx, amount: float):
-        await ctx.send(amount * 1.016e6 / 6350.293)
+        try:
+            await ctx.send(amount * 1.016e6 / 6350.293)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ton.command(invoke_without_command=True, description='units/mass-ton-lb-desc')
+    del stone
+
+    @ton.command(aliases=['pound', 'pounds'], invoke_without_command=True, description='units/mass-ton-lb-desc')
     async def lb(ctx, amount: float):
-        await ctx.send(amount * 1.016e6 / 453.592)
+        try:
+            await ctx.send(amount * 1.016e6 / 453.592)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ton.command(invoke_without_command=True, description='units/mass-ton-oz-desc')
+    del lb
+
+    @ton.command(aliases=['ounce', 'ounces'], invoke_without_command=True, description='units/mass-ton-oz-desc')
     async def oz(ctx, amount: float):
-        await ctx.send(amount * 1.016e6 / 28.3495)
+        try:
+            await ctx.send(amount * 1.016e6 / 28.3495)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mass.group(invoke_without_command=True, description='units/mass-uston-desc')
+    del oz
+
+    @mass.group(aliases=['us-ton', 'us-tons'], invoke_without_command=True, description='units/mass-uston-desc')
     @lone_group(True)
-    async def uston(ctx):
+    async def uston(self, ctx):
         pass
 
 
-    @uston.command(invoke_without_command=True, description='units/mass-uston-tonne-desc')
-    async def tonne(ctx, amount: float):
-        await ctx.send(amount * 907184.74 / 1e6)
+    @uston.command(aliases=['Mg', 'tonne', 'tonnes', 'megagram', 'megagrams'], invoke_without_command=True, description='units/mass-uston-t-desc')
+    async def t(ctx, amount: float):
+        try:
+            await ctx.send(amount * 907184.74 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @uston.command(invoke_without_command=True, description='units/mass-uston-kg-desc')
+    del t
+
+    @uston.command(aliases=['kilogram', 'kilograms'], invoke_without_command=True, description='units/mass-uston-kg-desc')
     async def kg(ctx, amount: float):
-        await ctx.send(amount * 907184.74 / 1e3)
+        try:
+            await ctx.send(amount * 907184.74 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @uston.command(invoke_without_command=True, description='units/mass-uston-g-desc')
+    del kg
+
+    @uston.command(aliases=['gram', 'grams'], invoke_without_command=True, description='units/mass-uston-g-desc')
     async def g(ctx, amount: float):
-        await ctx.send(amount * 907184.74 / 1)
+        try:
+            await ctx.send(amount * 907184.74 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @uston.command(invoke_without_command=True, description='units/mass-uston-mg-desc')
+    del g
+
+    @uston.command(aliases=['milligram', 'milligrams'], invoke_without_command=True, description='units/mass-uston-mg-desc')
     async def mg(ctx, amount: float):
-        await ctx.send(amount * 907184.74 / 1e-3)
+        try:
+            await ctx.send(amount * 907184.74 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @uston.command(invoke_without_command=True, description='units/mass-uston-microg-desc')
+    del mg
+
+    @uston.command(aliases=['microgram', 'micrograms'], invoke_without_command=True, description='units/mass-uston-microg-desc')
     async def microg(ctx, amount: float):
-        await ctx.send(amount * 907184.74 / 1e-6)
+        try:
+            await ctx.send(amount * 907184.74 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @uston.command(invoke_without_command=True, description='units/mass-uston-ton-desc')
+    del microg
+
+    @uston.command(aliases=[], invoke_without_command=True, description='units/mass-uston-ton-desc')
     async def ton(ctx, amount: float):
-        await ctx.send(amount * 907184.74 / 1.016e6)
+        try:
+            await ctx.send(amount * 907184.74 / 1.016e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @uston.command(invoke_without_command=True, description='units/mass-uston-stone-desc')
+    del ton
+
+    @uston.command(aliases=[], invoke_without_command=True, description='units/mass-uston-stone-desc')
     async def stone(ctx, amount: float):
-        await ctx.send(amount * 907184.74 / 6350.293)
+        try:
+            await ctx.send(amount * 907184.74 / 6350.293)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @uston.command(invoke_without_command=True, description='units/mass-uston-lb-desc')
+    del stone
+
+    @uston.command(aliases=['pound', 'pounds'], invoke_without_command=True, description='units/mass-uston-lb-desc')
     async def lb(ctx, amount: float):
-        await ctx.send(amount * 907184.74 / 453.592)
+        try:
+            await ctx.send(amount * 907184.74 / 453.592)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @uston.command(invoke_without_command=True, description='units/mass-uston-oz-desc')
+    del lb
+
+    @uston.command(aliases=['ounce', 'ounces'], invoke_without_command=True, description='units/mass-uston-oz-desc')
     async def oz(ctx, amount: float):
-        await ctx.send(amount * 907184.74 / 28.3495)
+        try:
+            await ctx.send(amount * 907184.74 / 28.3495)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mass.group(invoke_without_command=True, description='units/mass-stone-desc')
+    del oz
+
+    @mass.group(aliases=[], invoke_without_command=True, description='units/mass-stone-desc')
     @lone_group(True)
-    async def stone(ctx):
+    async def stone(self, ctx):
         pass
 
 
-    @stone.command(invoke_without_command=True, description='units/mass-stone-tonne-desc')
-    async def tonne(ctx, amount: float):
-        await ctx.send(amount * 6350.293 / 1e6)
+    @stone.command(aliases=['Mg', 'tonne', 'tonnes', 'megagram', 'megagrams'], invoke_without_command=True, description='units/mass-stone-t-desc')
+    async def t(ctx, amount: float):
+        try:
+            await ctx.send(amount * 6350.293 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @stone.command(invoke_without_command=True, description='units/mass-stone-kg-desc')
+    del t
+
+    @stone.command(aliases=['kilogram', 'kilograms'], invoke_without_command=True, description='units/mass-stone-kg-desc')
     async def kg(ctx, amount: float):
-        await ctx.send(amount * 6350.293 / 1e3)
+        try:
+            await ctx.send(amount * 6350.293 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @stone.command(invoke_without_command=True, description='units/mass-stone-g-desc')
+    del kg
+
+    @stone.command(aliases=['gram', 'grams'], invoke_without_command=True, description='units/mass-stone-g-desc')
     async def g(ctx, amount: float):
-        await ctx.send(amount * 6350.293 / 1)
+        try:
+            await ctx.send(amount * 6350.293 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @stone.command(invoke_without_command=True, description='units/mass-stone-mg-desc')
+    del g
+
+    @stone.command(aliases=['milligram', 'milligrams'], invoke_without_command=True, description='units/mass-stone-mg-desc')
     async def mg(ctx, amount: float):
-        await ctx.send(amount * 6350.293 / 1e-3)
+        try:
+            await ctx.send(amount * 6350.293 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @stone.command(invoke_without_command=True, description='units/mass-stone-microg-desc')
+    del mg
+
+    @stone.command(aliases=['microgram', 'micrograms'], invoke_without_command=True, description='units/mass-stone-microg-desc')
     async def microg(ctx, amount: float):
-        await ctx.send(amount * 6350.293 / 1e-6)
+        try:
+            await ctx.send(amount * 6350.293 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @stone.command(invoke_without_command=True, description='units/mass-stone-ton-desc')
+    del microg
+
+    @stone.command(aliases=[], invoke_without_command=True, description='units/mass-stone-ton-desc')
     async def ton(ctx, amount: float):
-        await ctx.send(amount * 6350.293 / 1.016e6)
+        try:
+            await ctx.send(amount * 6350.293 / 1.016e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @stone.command(invoke_without_command=True, description='units/mass-stone-uston-desc')
+    del ton
+
+    @stone.command(aliases=['us-ton', 'us-tons'], invoke_without_command=True, description='units/mass-stone-uston-desc')
     async def uston(ctx, amount: float):
-        await ctx.send(amount * 6350.293 / 907184.74)
+        try:
+            await ctx.send(amount * 6350.293 / 907184.74)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @stone.command(invoke_without_command=True, description='units/mass-stone-lb-desc')
+    del uston
+
+    @stone.command(aliases=['pound', 'pounds'], invoke_without_command=True, description='units/mass-stone-lb-desc')
     async def lb(ctx, amount: float):
-        await ctx.send(amount * 6350.293 / 453.592)
+        try:
+            await ctx.send(amount * 6350.293 / 453.592)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @stone.command(invoke_without_command=True, description='units/mass-stone-oz-desc')
+    del lb
+
+    @stone.command(aliases=['ounce', 'ounces'], invoke_without_command=True, description='units/mass-stone-oz-desc')
     async def oz(ctx, amount: float):
-        await ctx.send(amount * 6350.293 / 28.3495)
+        try:
+            await ctx.send(amount * 6350.293 / 28.3495)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mass.group(invoke_without_command=True, description='units/mass-lb-desc')
+    del oz
+
+    @mass.group(aliases=['pound', 'pounds'], invoke_without_command=True, description='units/mass-lb-desc')
     @lone_group(True)
-    async def lb(ctx):
+    async def lb(self, ctx):
         pass
 
 
-    @lb.command(invoke_without_command=True, description='units/mass-lb-tonne-desc')
-    async def tonne(ctx, amount: float):
-        await ctx.send(amount * 453.592 / 1e6)
+    @lb.command(aliases=['Mg', 'tonne', 'tonnes', 'megagram', 'megagrams'], invoke_without_command=True, description='units/mass-lb-t-desc')
+    async def t(ctx, amount: float):
+        try:
+            await ctx.send(amount * 453.592 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lb.command(invoke_without_command=True, description='units/mass-lb-kg-desc')
+    del t
+
+    @lb.command(aliases=['kilogram', 'kilograms'], invoke_without_command=True, description='units/mass-lb-kg-desc')
     async def kg(ctx, amount: float):
-        await ctx.send(amount * 453.592 / 1e3)
+        try:
+            await ctx.send(amount * 453.592 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lb.command(invoke_without_command=True, description='units/mass-lb-g-desc')
+    del kg
+
+    @lb.command(aliases=['gram', 'grams'], invoke_without_command=True, description='units/mass-lb-g-desc')
     async def g(ctx, amount: float):
-        await ctx.send(amount * 453.592 / 1)
+        try:
+            await ctx.send(amount * 453.592 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lb.command(invoke_without_command=True, description='units/mass-lb-mg-desc')
+    del g
+
+    @lb.command(aliases=['milligram', 'milligrams'], invoke_without_command=True, description='units/mass-lb-mg-desc')
     async def mg(ctx, amount: float):
-        await ctx.send(amount * 453.592 / 1e-3)
+        try:
+            await ctx.send(amount * 453.592 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lb.command(invoke_without_command=True, description='units/mass-lb-microg-desc')
+    del mg
+
+    @lb.command(aliases=['microgram', 'micrograms'], invoke_without_command=True, description='units/mass-lb-microg-desc')
     async def microg(ctx, amount: float):
-        await ctx.send(amount * 453.592 / 1e-6)
+        try:
+            await ctx.send(amount * 453.592 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lb.command(invoke_without_command=True, description='units/mass-lb-ton-desc')
+    del microg
+
+    @lb.command(aliases=[], invoke_without_command=True, description='units/mass-lb-ton-desc')
     async def ton(ctx, amount: float):
-        await ctx.send(amount * 453.592 / 1.016e6)
+        try:
+            await ctx.send(amount * 453.592 / 1.016e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lb.command(invoke_without_command=True, description='units/mass-lb-uston-desc')
+    del ton
+
+    @lb.command(aliases=['us-ton', 'us-tons'], invoke_without_command=True, description='units/mass-lb-uston-desc')
     async def uston(ctx, amount: float):
-        await ctx.send(amount * 453.592 / 907184.74)
+        try:
+            await ctx.send(amount * 453.592 / 907184.74)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lb.command(invoke_without_command=True, description='units/mass-lb-stone-desc')
+    del uston
+
+    @lb.command(aliases=[], invoke_without_command=True, description='units/mass-lb-stone-desc')
     async def stone(ctx, amount: float):
-        await ctx.send(amount * 453.592 / 6350.293)
+        try:
+            await ctx.send(amount * 453.592 / 6350.293)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lb.command(invoke_without_command=True, description='units/mass-lb-oz-desc')
+    del stone
+
+    @lb.command(aliases=['ounce', 'ounces'], invoke_without_command=True, description='units/mass-lb-oz-desc')
     async def oz(ctx, amount: float):
-        await ctx.send(amount * 453.592 / 28.3495)
+        try:
+            await ctx.send(amount * 453.592 / 28.3495)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mass.group(invoke_without_command=True, description='units/mass-oz-desc')
+    del oz
+
+    @mass.group(aliases=['ounce', 'ounces'], invoke_without_command=True, description='units/mass-oz-desc')
     @lone_group(True)
-    async def oz(ctx):
+    async def oz(self, ctx):
         pass
 
 
-    @oz.command(invoke_without_command=True, description='units/mass-oz-tonne-desc')
-    async def tonne(ctx, amount: float):
-        await ctx.send(amount * 28.3495 / 1e6)
+    @oz.command(aliases=['Mg', 'tonne', 'tonnes', 'megagram', 'megagrams'], invoke_without_command=True, description='units/mass-oz-t-desc')
+    async def t(ctx, amount: float):
+        try:
+            await ctx.send(amount * 28.3495 / 1e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @oz.command(invoke_without_command=True, description='units/mass-oz-kg-desc')
+    del t
+
+    @oz.command(aliases=['kilogram', 'kilograms'], invoke_without_command=True, description='units/mass-oz-kg-desc')
     async def kg(ctx, amount: float):
-        await ctx.send(amount * 28.3495 / 1e3)
+        try:
+            await ctx.send(amount * 28.3495 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @oz.command(invoke_without_command=True, description='units/mass-oz-g-desc')
+    del kg
+
+    @oz.command(aliases=['gram', 'grams'], invoke_without_command=True, description='units/mass-oz-g-desc')
     async def g(ctx, amount: float):
-        await ctx.send(amount * 28.3495 / 1)
+        try:
+            await ctx.send(amount * 28.3495 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @oz.command(invoke_without_command=True, description='units/mass-oz-mg-desc')
+    del g
+
+    @oz.command(aliases=['milligram', 'milligrams'], invoke_without_command=True, description='units/mass-oz-mg-desc')
     async def mg(ctx, amount: float):
-        await ctx.send(amount * 28.3495 / 1e-3)
+        try:
+            await ctx.send(amount * 28.3495 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @oz.command(invoke_without_command=True, description='units/mass-oz-microg-desc')
+    del mg
+
+    @oz.command(aliases=['microgram', 'micrograms'], invoke_without_command=True, description='units/mass-oz-microg-desc')
     async def microg(ctx, amount: float):
-        await ctx.send(amount * 28.3495 / 1e-6)
+        try:
+            await ctx.send(amount * 28.3495 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @oz.command(invoke_without_command=True, description='units/mass-oz-ton-desc')
+    del microg
+
+    @oz.command(aliases=[], invoke_without_command=True, description='units/mass-oz-ton-desc')
     async def ton(ctx, amount: float):
-        await ctx.send(amount * 28.3495 / 1.016e6)
+        try:
+            await ctx.send(amount * 28.3495 / 1.016e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @oz.command(invoke_without_command=True, description='units/mass-oz-uston-desc')
+    del ton
+
+    @oz.command(aliases=['us-ton', 'us-tons'], invoke_without_command=True, description='units/mass-oz-uston-desc')
     async def uston(ctx, amount: float):
-        await ctx.send(amount * 28.3495 / 907184.74)
+        try:
+            await ctx.send(amount * 28.3495 / 907184.74)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @oz.command(invoke_without_command=True, description='units/mass-oz-stone-desc')
+    del uston
+
+    @oz.command(aliases=[], invoke_without_command=True, description='units/mass-oz-stone-desc')
     async def stone(ctx, amount: float):
-        await ctx.send(amount * 28.3495 / 6350.293)
+        try:
+            await ctx.send(amount * 28.3495 / 6350.293)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @oz.command(invoke_without_command=True, description='units/mass-oz-lb-desc')
+    del stone
+
+    @oz.command(aliases=['pound', 'pounds'], invoke_without_command=True, description='units/mass-oz-lb-desc')
     async def lb(ctx, amount: float):
-        await ctx.send(amount * 28.3495 / 453.592)
+        try:
+            await ctx.send(amount * 28.3495 / 453.592)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del lb
 
 
     @convert.group(aliases=[], invoke_without_command=True, description='units/angle-desc')
@@ -4516,161 +9457,311 @@ class Units(Cog):
         pass
 
 
-    @angle.group(invoke_without_command=True, description='units/angle-deg-desc')
+    @angle.group(aliases=['degree', 'degrees'], invoke_without_command=True, description='units/angle-deg-desc')
     @lone_group(True)
-    async def deg(ctx):
+    async def deg(self, ctx):
         pass
 
 
-    @deg.command(invoke_without_command=True, description='units/angle-deg-grad-desc')
+    @deg.command(aliases=['gradian', 'gradians'], invoke_without_command=True, description='units/angle-deg-grad-desc')
     async def grad(ctx, amount: float):
-        await ctx.send(amount * 1 / 0.9)
+        try:
+            await ctx.send(amount * 1 / 0.9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @deg.command(invoke_without_command=True, description='units/angle-deg-mrad-desc')
+    del grad
+
+    @deg.command(aliases=['milliradian', 'milliradians'], invoke_without_command=True, description='units/angle-deg-mrad-desc')
     async def mrad(ctx, amount: float):
-        await ctx.send(amount * 1 / (180/(1000 * math.pi)))
+        try:
+            await ctx.send(amount * 1 / (180/(1000 * pi)))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @deg.command(invoke_without_command=True, description='units/angle-deg-arcmin-desc')
+    del mrad
+
+    @deg.command(aliases=['arc-minute', 'arc-minutes'], invoke_without_command=True, description='units/angle-deg-arcmin-desc')
     async def arcmin(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/60))
+        try:
+            await ctx.send(amount * 1 / (1/60))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @deg.command(invoke_without_command=True, description='units/angle-deg-rad-desc')
+    del arcmin
+
+    @deg.command(aliases=['radian', 'radians'], invoke_without_command=True, description='units/angle-deg-rad-desc')
     async def rad(ctx, amount: float):
-        await ctx.send(amount * 1 / (180/math.pi))
+        try:
+            await ctx.send(amount * 1 / (180/pi))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @deg.command(invoke_without_command=True, description='units/angle-deg-arcsec-desc')
+    del rad
+
+    @deg.command(aliases=['arc-second', 'arc-seconds'], invoke_without_command=True, description='units/angle-deg-arcsec-desc')
     async def arcsec(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/3600))
+        try:
+            await ctx.send(amount * 1 / (1/3600))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @angle.group(invoke_without_command=True, description='units/angle-grad-desc')
+    del arcsec
+
+    @angle.group(aliases=['gradian', 'gradians'], invoke_without_command=True, description='units/angle-grad-desc')
     @lone_group(True)
-    async def grad(ctx):
+    async def grad(self, ctx):
         pass
 
 
-    @grad.command(invoke_without_command=True, description='units/angle-grad-deg-desc')
+    @grad.command(aliases=['degree', 'degrees'], invoke_without_command=True, description='units/angle-grad-deg-desc')
     async def deg(ctx, amount: float):
-        await ctx.send(amount * 0.9 / 1)
+        try:
+            await ctx.send(amount * 0.9 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @grad.command(invoke_without_command=True, description='units/angle-grad-mrad-desc')
+    del deg
+
+    @grad.command(aliases=['milliradian', 'milliradians'], invoke_without_command=True, description='units/angle-grad-mrad-desc')
     async def mrad(ctx, amount: float):
-        await ctx.send(amount * 0.9 / (180/(1000 * math.pi)))
+        try:
+            await ctx.send(amount * 0.9 / (180/(1000 * pi)))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @grad.command(invoke_without_command=True, description='units/angle-grad-arcmin-desc')
+    del mrad
+
+    @grad.command(aliases=['arc-minute', 'arc-minutes'], invoke_without_command=True, description='units/angle-grad-arcmin-desc')
     async def arcmin(ctx, amount: float):
-        await ctx.send(amount * 0.9 / (1/60))
+        try:
+            await ctx.send(amount * 0.9 / (1/60))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @grad.command(invoke_without_command=True, description='units/angle-grad-rad-desc')
+    del arcmin
+
+    @grad.command(aliases=['radian', 'radians'], invoke_without_command=True, description='units/angle-grad-rad-desc')
     async def rad(ctx, amount: float):
-        await ctx.send(amount * 0.9 / (180/math.pi))
+        try:
+            await ctx.send(amount * 0.9 / (180/pi))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @grad.command(invoke_without_command=True, description='units/angle-grad-arcsec-desc')
+    del rad
+
+    @grad.command(aliases=['arc-second', 'arc-seconds'], invoke_without_command=True, description='units/angle-grad-arcsec-desc')
     async def arcsec(ctx, amount: float):
-        await ctx.send(amount * 0.9 / (1/3600))
+        try:
+            await ctx.send(amount * 0.9 / (1/3600))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @angle.group(invoke_without_command=True, description='units/angle-mrad-desc')
+    del arcsec
+
+    @angle.group(aliases=['milliradian', 'milliradians'], invoke_without_command=True, description='units/angle-mrad-desc')
     @lone_group(True)
-    async def mrad(ctx):
+    async def mrad(self, ctx):
         pass
 
 
-    @mrad.command(invoke_without_command=True, description='units/angle-mrad-deg-desc')
+    @mrad.command(aliases=['degree', 'degrees'], invoke_without_command=True, description='units/angle-mrad-deg-desc')
     async def deg(ctx, amount: float):
-        await ctx.send(amount * (180/(1000 * math.pi)) / 1)
+        try:
+            await ctx.send(amount * (180/(1000 * pi)) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mrad.command(invoke_without_command=True, description='units/angle-mrad-grad-desc')
+    del deg
+
+    @mrad.command(aliases=['gradian', 'gradians'], invoke_without_command=True, description='units/angle-mrad-grad-desc')
     async def grad(ctx, amount: float):
-        await ctx.send(amount * (180/(1000 * math.pi)) / 0.9)
+        try:
+            await ctx.send(amount * (180/(1000 * pi)) / 0.9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mrad.command(invoke_without_command=True, description='units/angle-mrad-arcmin-desc')
+    del grad
+
+    @mrad.command(aliases=['arc-minute', 'arc-minutes'], invoke_without_command=True, description='units/angle-mrad-arcmin-desc')
     async def arcmin(ctx, amount: float):
-        await ctx.send(amount * (180/(1000 * math.pi)) / (1/60))
+        try:
+            await ctx.send(amount * (180/(1000 * pi)) / (1/60))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mrad.command(invoke_without_command=True, description='units/angle-mrad-rad-desc')
+    del arcmin
+
+    @mrad.command(aliases=['radian', 'radians'], invoke_without_command=True, description='units/angle-mrad-rad-desc')
     async def rad(ctx, amount: float):
-        await ctx.send(amount * (180/(1000 * math.pi)) / (180/math.pi))
+        try:
+            await ctx.send(amount * (180/(1000 * pi)) / (180/pi))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mrad.command(invoke_without_command=True, description='units/angle-mrad-arcsec-desc')
+    del rad
+
+    @mrad.command(aliases=['arc-second', 'arc-seconds'], invoke_without_command=True, description='units/angle-mrad-arcsec-desc')
     async def arcsec(ctx, amount: float):
-        await ctx.send(amount * (180/(1000 * math.pi)) / (1/3600))
+        try:
+            await ctx.send(amount * (180/(1000 * pi)) / (1/3600))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @angle.group(invoke_without_command=True, description='units/angle-arcmin-desc')
+    del arcsec
+
+    @angle.group(aliases=['arc-minute', 'arc-minutes'], invoke_without_command=True, description='units/angle-arcmin-desc')
     @lone_group(True)
-    async def arcmin(ctx):
+    async def arcmin(self, ctx):
         pass
 
 
-    @arcmin.command(invoke_without_command=True, description='units/angle-arcmin-deg-desc')
+    @arcmin.command(aliases=['degree', 'degrees'], invoke_without_command=True, description='units/angle-arcmin-deg-desc')
     async def deg(ctx, amount: float):
-        await ctx.send(amount * (1/60) / 1)
+        try:
+            await ctx.send(amount * (1/60) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @arcmin.command(invoke_without_command=True, description='units/angle-arcmin-grad-desc')
+    del deg
+
+    @arcmin.command(aliases=['gradian', 'gradians'], invoke_without_command=True, description='units/angle-arcmin-grad-desc')
     async def grad(ctx, amount: float):
-        await ctx.send(amount * (1/60) / 0.9)
+        try:
+            await ctx.send(amount * (1/60) / 0.9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @arcmin.command(invoke_without_command=True, description='units/angle-arcmin-mrad-desc')
+    del grad
+
+    @arcmin.command(aliases=['milliradian', 'milliradians'], invoke_without_command=True, description='units/angle-arcmin-mrad-desc')
     async def mrad(ctx, amount: float):
-        await ctx.send(amount * (1/60) / (180/(1000 * math.pi)))
+        try:
+            await ctx.send(amount * (1/60) / (180/(1000 * pi)))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @arcmin.command(invoke_without_command=True, description='units/angle-arcmin-rad-desc')
+    del mrad
+
+    @arcmin.command(aliases=['radian', 'radians'], invoke_without_command=True, description='units/angle-arcmin-rad-desc')
     async def rad(ctx, amount: float):
-        await ctx.send(amount * (1/60) / (180/math.pi))
+        try:
+            await ctx.send(amount * (1/60) / (180/pi))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @arcmin.command(invoke_without_command=True, description='units/angle-arcmin-arcsec-desc')
+    del rad
+
+    @arcmin.command(aliases=['arc-second', 'arc-seconds'], invoke_without_command=True, description='units/angle-arcmin-arcsec-desc')
     async def arcsec(ctx, amount: float):
-        await ctx.send(amount * (1/60) / (1/3600))
+        try:
+            await ctx.send(amount * (1/60) / (1/3600))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @angle.group(invoke_without_command=True, description='units/angle-rad-desc')
+    del arcsec
+
+    @angle.group(aliases=['radian', 'radians'], invoke_without_command=True, description='units/angle-rad-desc')
     @lone_group(True)
-    async def rad(ctx):
+    async def rad(self, ctx):
         pass
 
 
-    @rad.command(invoke_without_command=True, description='units/angle-rad-deg-desc')
+    @rad.command(aliases=['degree', 'degrees'], invoke_without_command=True, description='units/angle-rad-deg-desc')
     async def deg(ctx, amount: float):
-        await ctx.send(amount * (180/math.pi) / 1)
+        try:
+            await ctx.send(amount * (180/pi) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @rad.command(invoke_without_command=True, description='units/angle-rad-grad-desc')
+    del deg
+
+    @rad.command(aliases=['gradian', 'gradians'], invoke_without_command=True, description='units/angle-rad-grad-desc')
     async def grad(ctx, amount: float):
-        await ctx.send(amount * (180/math.pi) / 0.9)
+        try:
+            await ctx.send(amount * (180/pi) / 0.9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @rad.command(invoke_without_command=True, description='units/angle-rad-mrad-desc')
+    del grad
+
+    @rad.command(aliases=['milliradian', 'milliradians'], invoke_without_command=True, description='units/angle-rad-mrad-desc')
     async def mrad(ctx, amount: float):
-        await ctx.send(amount * (180/math.pi) / (180/(1000 * math.pi)))
+        try:
+            await ctx.send(amount * (180/pi) / (180/(1000 * pi)))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @rad.command(invoke_without_command=True, description='units/angle-rad-arcmin-desc')
+    del mrad
+
+    @rad.command(aliases=['arc-minute', 'arc-minutes'], invoke_without_command=True, description='units/angle-rad-arcmin-desc')
     async def arcmin(ctx, amount: float):
-        await ctx.send(amount * (180/math.pi) / (1/60))
+        try:
+            await ctx.send(amount * (180/pi) / (1/60))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @rad.command(invoke_without_command=True, description='units/angle-rad-arcsec-desc')
+    del arcmin
+
+    @rad.command(aliases=['arc-second', 'arc-seconds'], invoke_without_command=True, description='units/angle-rad-arcsec-desc')
     async def arcsec(ctx, amount: float):
-        await ctx.send(amount * (180/math.pi) / (1/3600))
+        try:
+            await ctx.send(amount * (180/pi) / (1/3600))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @angle.group(invoke_without_command=True, description='units/angle-arcsec-desc')
+    del arcsec
+
+    @angle.group(aliases=['arc-second', 'arc-seconds'], invoke_without_command=True, description='units/angle-arcsec-desc')
     @lone_group(True)
-    async def arcsec(ctx):
+    async def arcsec(self, ctx):
         pass
 
 
-    @arcsec.command(invoke_without_command=True, description='units/angle-arcsec-deg-desc')
+    @arcsec.command(aliases=['degree', 'degrees'], invoke_without_command=True, description='units/angle-arcsec-deg-desc')
     async def deg(ctx, amount: float):
-        await ctx.send(amount * (1/3600) / 1)
+        try:
+            await ctx.send(amount * (1/3600) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @arcsec.command(invoke_without_command=True, description='units/angle-arcsec-grad-desc')
+    del deg
+
+    @arcsec.command(aliases=['gradian', 'gradians'], invoke_without_command=True, description='units/angle-arcsec-grad-desc')
     async def grad(ctx, amount: float):
-        await ctx.send(amount * (1/3600) / 0.9)
+        try:
+            await ctx.send(amount * (1/3600) / 0.9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @arcsec.command(invoke_without_command=True, description='units/angle-arcsec-mrad-desc')
+    del grad
+
+    @arcsec.command(aliases=['milliradian', 'milliradians'], invoke_without_command=True, description='units/angle-arcsec-mrad-desc')
     async def mrad(ctx, amount: float):
-        await ctx.send(amount * (1/3600) / (180/(1000 * math.pi)))
+        try:
+            await ctx.send(amount * (1/3600) / (180/(1000 * pi)))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @arcsec.command(invoke_without_command=True, description='units/angle-arcsec-arcmin-desc')
+    del mrad
+
+    @arcsec.command(aliases=['arc-minute', 'arc-minutes'], invoke_without_command=True, description='units/angle-arcsec-arcmin-desc')
     async def arcmin(ctx, amount: float):
-        await ctx.send(amount * (1/3600) / (1/60))
+        try:
+            await ctx.send(amount * (1/3600) / (1/60))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @arcsec.command(invoke_without_command=True, description='units/angle-arcsec-rad-desc')
+    del arcmin
+
+    @arcsec.command(aliases=['radian', 'radians'], invoke_without_command=True, description='units/angle-arcsec-rad-desc')
     async def rad(ctx, amount: float):
-        await ctx.send(amount * (1/3600) / (180/math.pi))
+        try:
+            await ctx.send(amount * (1/3600) / (180/pi))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del rad
 
 
     @convert.group(aliases=[], invoke_without_command=True, description='units/pressure-desc')
@@ -4679,115 +9770,215 @@ class Units(Cog):
         pass
 
 
-    @pressure.group(invoke_without_command=True, description='units/pressure-atm-desc')
+    @pressure.group(aliases=['atmosphere', 'atmospheres'], invoke_without_command=True, description='units/pressure-atm-desc')
     @lone_group(True)
-    async def atm(ctx):
+    async def atm(self, ctx):
         pass
 
 
-    @atm.command(invoke_without_command=True, description='units/pressure-atm-bar-desc')
+    @atm.command(aliases=[], invoke_without_command=True, description='units/pressure-atm-bar-desc')
     async def bar(ctx, amount: float):
-        await ctx.send(amount * 101325 / 1e5)
+        try:
+            await ctx.send(amount * 101325 / 1e5)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @atm.command(invoke_without_command=True, description='units/pressure-atm-pa-desc')
-    async def pa(ctx, amount: float):
-        await ctx.send(amount * 101325 / 1)
+    del bar
 
-    @atm.command(invoke_without_command=True, description='units/pressure-atm-psi-desc')
+    @atm.command(aliases=['pascal', 'pascals'], invoke_without_command=True, description='units/pressure-atm-Pa-desc')
+    async def Pa(ctx, amount: float):
+        try:
+            await ctx.send(amount * 101325 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del Pa
+
+    @atm.command(aliases=['pound-per-square-inch', 'pounds-per-square-inch'], invoke_without_command=True, description='units/pressure-atm-psi-desc')
     async def psi(ctx, amount: float):
-        await ctx.send(amount * 101325 / 6894.757)
+        try:
+            await ctx.send(amount * 101325 / 6894.757)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @atm.command(invoke_without_command=True, description='units/pressure-atm-torr-desc')
+    del psi
+
+    @atm.command(aliases=[], invoke_without_command=True, description='units/pressure-atm-torr-desc')
     async def torr(ctx, amount: float):
-        await ctx.send(amount * 101325 / 133.322)
+        try:
+            await ctx.send(amount * 101325 / 133.322)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pressure.group(invoke_without_command=True, description='units/pressure-bar-desc')
+    del torr
+
+    @pressure.group(aliases=[], invoke_without_command=True, description='units/pressure-bar-desc')
     @lone_group(True)
-    async def bar(ctx):
+    async def bar(self, ctx):
         pass
 
 
-    @bar.command(invoke_without_command=True, description='units/pressure-bar-atm-desc')
+    @bar.command(aliases=['atmosphere', 'atmospheres'], invoke_without_command=True, description='units/pressure-bar-atm-desc')
     async def atm(ctx, amount: float):
-        await ctx.send(amount * 1e5 / 101325)
+        try:
+            await ctx.send(amount * 1e5 / 101325)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @bar.command(invoke_without_command=True, description='units/pressure-bar-pa-desc')
-    async def pa(ctx, amount: float):
-        await ctx.send(amount * 1e5 / 1)
+    del atm
 
-    @bar.command(invoke_without_command=True, description='units/pressure-bar-psi-desc')
+    @bar.command(aliases=['pascal', 'pascals'], invoke_without_command=True, description='units/pressure-bar-Pa-desc')
+    async def Pa(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1e5 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del Pa
+
+    @bar.command(aliases=['pound-per-square-inch', 'pounds-per-square-inch'], invoke_without_command=True, description='units/pressure-bar-psi-desc')
     async def psi(ctx, amount: float):
-        await ctx.send(amount * 1e5 / 6894.757)
+        try:
+            await ctx.send(amount * 1e5 / 6894.757)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @bar.command(invoke_without_command=True, description='units/pressure-bar-torr-desc')
+    del psi
+
+    @bar.command(aliases=[], invoke_without_command=True, description='units/pressure-bar-torr-desc')
     async def torr(ctx, amount: float):
-        await ctx.send(amount * 1e5 / 133.322)
+        try:
+            await ctx.send(amount * 1e5 / 133.322)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pressure.group(invoke_without_command=True, description='units/pressure-pa-desc')
+    del torr
+
+    @pressure.group(aliases=['pascal', 'pascals'], invoke_without_command=True, description='units/pressure-Pa-desc')
     @lone_group(True)
-    async def pa(ctx):
+    async def Pa(self, ctx):
         pass
 
 
-    @pa.command(invoke_without_command=True, description='units/pressure-pa-atm-desc')
+    @Pa.command(aliases=['atmosphere', 'atmospheres'], invoke_without_command=True, description='units/pressure-Pa-atm-desc')
     async def atm(ctx, amount: float):
-        await ctx.send(amount * 1 / 101325)
+        try:
+            await ctx.send(amount * 1 / 101325)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pa.command(invoke_without_command=True, description='units/pressure-pa-bar-desc')
+    del atm
+
+    @Pa.command(aliases=[], invoke_without_command=True, description='units/pressure-Pa-bar-desc')
     async def bar(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e5)
+        try:
+            await ctx.send(amount * 1 / 1e5)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pa.command(invoke_without_command=True, description='units/pressure-pa-psi-desc')
+    del bar
+
+    @Pa.command(aliases=['pound-per-square-inch', 'pounds-per-square-inch'], invoke_without_command=True, description='units/pressure-Pa-psi-desc')
     async def psi(ctx, amount: float):
-        await ctx.send(amount * 1 / 6894.757)
+        try:
+            await ctx.send(amount * 1 / 6894.757)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pa.command(invoke_without_command=True, description='units/pressure-pa-torr-desc')
+    del psi
+
+    @Pa.command(aliases=[], invoke_without_command=True, description='units/pressure-Pa-torr-desc')
     async def torr(ctx, amount: float):
-        await ctx.send(amount * 1 / 133.322)
+        try:
+            await ctx.send(amount * 1 / 133.322)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pressure.group(invoke_without_command=True, description='units/pressure-psi-desc')
+    del torr
+
+    @pressure.group(aliases=['pound-per-square-inch', 'pounds-per-square-inch'], invoke_without_command=True, description='units/pressure-psi-desc')
     @lone_group(True)
-    async def psi(ctx):
+    async def psi(self, ctx):
         pass
 
 
-    @psi.command(invoke_without_command=True, description='units/pressure-psi-atm-desc')
+    @psi.command(aliases=['atmosphere', 'atmospheres'], invoke_without_command=True, description='units/pressure-psi-atm-desc')
     async def atm(ctx, amount: float):
-        await ctx.send(amount * 6894.757 / 101325)
+        try:
+            await ctx.send(amount * 6894.757 / 101325)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @psi.command(invoke_without_command=True, description='units/pressure-psi-bar-desc')
+    del atm
+
+    @psi.command(aliases=[], invoke_without_command=True, description='units/pressure-psi-bar-desc')
     async def bar(ctx, amount: float):
-        await ctx.send(amount * 6894.757 / 1e5)
+        try:
+            await ctx.send(amount * 6894.757 / 1e5)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @psi.command(invoke_without_command=True, description='units/pressure-psi-pa-desc')
-    async def pa(ctx, amount: float):
-        await ctx.send(amount * 6894.757 / 1)
+    del bar
 
-    @psi.command(invoke_without_command=True, description='units/pressure-psi-torr-desc')
+    @psi.command(aliases=['pascal', 'pascals'], invoke_without_command=True, description='units/pressure-psi-Pa-desc')
+    async def Pa(ctx, amount: float):
+        try:
+            await ctx.send(amount * 6894.757 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del Pa
+
+    @psi.command(aliases=[], invoke_without_command=True, description='units/pressure-psi-torr-desc')
     async def torr(ctx, amount: float):
-        await ctx.send(amount * 6894.757 / 133.322)
+        try:
+            await ctx.send(amount * 6894.757 / 133.322)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pressure.group(invoke_without_command=True, description='units/pressure-torr-desc')
+    del torr
+
+    @pressure.group(aliases=[], invoke_without_command=True, description='units/pressure-torr-desc')
     @lone_group(True)
-    async def torr(ctx):
+    async def torr(self, ctx):
         pass
 
 
-    @torr.command(invoke_without_command=True, description='units/pressure-torr-atm-desc')
+    @torr.command(aliases=['atmosphere', 'atmospheres'], invoke_without_command=True, description='units/pressure-torr-atm-desc')
     async def atm(ctx, amount: float):
-        await ctx.send(amount * 133.322 / 101325)
+        try:
+            await ctx.send(amount * 133.322 / 101325)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @torr.command(invoke_without_command=True, description='units/pressure-torr-bar-desc')
+    del atm
+
+    @torr.command(aliases=[], invoke_without_command=True, description='units/pressure-torr-bar-desc')
     async def bar(ctx, amount: float):
-        await ctx.send(amount * 133.322 / 1e5)
+        try:
+            await ctx.send(amount * 133.322 / 1e5)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @torr.command(invoke_without_command=True, description='units/pressure-torr-pa-desc')
-    async def pa(ctx, amount: float):
-        await ctx.send(amount * 133.322 / 1)
+    del bar
 
-    @torr.command(invoke_without_command=True, description='units/pressure-torr-psi-desc')
+    @torr.command(aliases=['pascal', 'pascals'], invoke_without_command=True, description='units/pressure-torr-Pa-desc')
+    async def Pa(ctx, amount: float):
+        try:
+            await ctx.send(amount * 133.322 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del Pa
+
+    @torr.command(aliases=['pound-per-square-inch', 'pounds-per-square-inch'], invoke_without_command=True, description='units/pressure-torr-psi-desc')
     async def psi(ctx, amount: float):
-        await ctx.send(amount * 133.322 / 6894.757)
+        try:
+            await ctx.send(amount * 133.322 / 6894.757)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del psi
 
 
     @convert.group(aliases=[], invoke_without_command=True, description='units/speed-desc')
@@ -4796,115 +9987,215 @@ class Units(Cog):
         pass
 
 
-    @speed.group(invoke_without_command=True, description='units/speed-mph-desc')
+    @speed.group(aliases=['mile-per-hour', 'miles-per-hour'], invoke_without_command=True, description='units/speed-mph-desc')
     @lone_group(True)
-    async def mph(ctx):
+    async def mph(self, ctx):
         pass
 
 
-    @mph.command(invoke_without_command=True, description='units/speed-mph-fps-desc')
+    @mph.command(aliases=['foot-per-second', 'feet-per-second'], invoke_without_command=True, description='units/speed-mph-fps-desc')
     async def fps(ctx, amount: float):
-        await ctx.send(amount * (1/2.237) / (1/3.281))
+        try:
+            await ctx.send(amount * (1/2.237) / (1/3.281))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mph.command(invoke_without_command=True, description='units/speed-mph-mps-desc')
+    del fps
+
+    @mph.command(aliases=['meter-per-second', 'meters-per-second', 'metre-per-second', 'metres-per-second'], invoke_without_command=True, description='units/speed-mph-mps-desc')
     async def mps(ctx, amount: float):
-        await ctx.send(amount * (1/2.237) / 1)
+        try:
+            await ctx.send(amount * (1/2.237) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mph.command(invoke_without_command=True, description='units/speed-mph-kmph-desc')
+    del mps
+
+    @mph.command(aliases=['kilometer-per-hour', 'kilometers-per-hour', 'kilometre-per-hour', 'kilometres-per-hour'], invoke_without_command=True, description='units/speed-mph-kmph-desc')
     async def kmph(ctx, amount: float):
-        await ctx.send(amount * (1/2.237) / (1/3.6))
+        try:
+            await ctx.send(amount * (1/2.237) / (1/3.6))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mph.command(invoke_without_command=True, description='units/speed-mph-knot-desc')
+    del kmph
+
+    @mph.command(aliases=['knots'], invoke_without_command=True, description='units/speed-mph-knot-desc')
     async def knot(ctx, amount: float):
-        await ctx.send(amount * (1/2.237) / (1/1.944))
+        try:
+            await ctx.send(amount * (1/2.237) / (1/1.944))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @speed.group(invoke_without_command=True, description='units/speed-fps-desc')
+    del knot
+
+    @speed.group(aliases=['foot-per-second', 'feet-per-second'], invoke_without_command=True, description='units/speed-fps-desc')
     @lone_group(True)
-    async def fps(ctx):
+    async def fps(self, ctx):
         pass
 
 
-    @fps.command(invoke_without_command=True, description='units/speed-fps-mph-desc')
+    @fps.command(aliases=['mile-per-hour', 'miles-per-hour'], invoke_without_command=True, description='units/speed-fps-mph-desc')
     async def mph(ctx, amount: float):
-        await ctx.send(amount * (1/3.281) / (1/2.237))
+        try:
+            await ctx.send(amount * (1/3.281) / (1/2.237))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @fps.command(invoke_without_command=True, description='units/speed-fps-mps-desc')
+    del mph
+
+    @fps.command(aliases=['meter-per-second', 'meters-per-second', 'metre-per-second', 'metres-per-second'], invoke_without_command=True, description='units/speed-fps-mps-desc')
     async def mps(ctx, amount: float):
-        await ctx.send(amount * (1/3.281) / 1)
+        try:
+            await ctx.send(amount * (1/3.281) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @fps.command(invoke_without_command=True, description='units/speed-fps-kmph-desc')
+    del mps
+
+    @fps.command(aliases=['kilometer-per-hour', 'kilometers-per-hour', 'kilometre-per-hour', 'kilometres-per-hour'], invoke_without_command=True, description='units/speed-fps-kmph-desc')
     async def kmph(ctx, amount: float):
-        await ctx.send(amount * (1/3.281) / (1/3.6))
+        try:
+            await ctx.send(amount * (1/3.281) / (1/3.6))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @fps.command(invoke_without_command=True, description='units/speed-fps-knot-desc')
+    del kmph
+
+    @fps.command(aliases=['knots'], invoke_without_command=True, description='units/speed-fps-knot-desc')
     async def knot(ctx, amount: float):
-        await ctx.send(amount * (1/3.281) / (1/1.944))
+        try:
+            await ctx.send(amount * (1/3.281) / (1/1.944))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @speed.group(invoke_without_command=True, description='units/speed-mps-desc')
+    del knot
+
+    @speed.group(aliases=['meter-per-second', 'meters-per-second', 'metre-per-second', 'metres-per-second'], invoke_without_command=True, description='units/speed-mps-desc')
     @lone_group(True)
-    async def mps(ctx):
+    async def mps(self, ctx):
         pass
 
 
-    @mps.command(invoke_without_command=True, description='units/speed-mps-mph-desc')
+    @mps.command(aliases=['mile-per-hour', 'miles-per-hour'], invoke_without_command=True, description='units/speed-mps-mph-desc')
     async def mph(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/2.237))
+        try:
+            await ctx.send(amount * 1 / (1/2.237))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mps.command(invoke_without_command=True, description='units/speed-mps-fps-desc')
+    del mph
+
+    @mps.command(aliases=['foot-per-second', 'feet-per-second'], invoke_without_command=True, description='units/speed-mps-fps-desc')
     async def fps(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/3.281))
+        try:
+            await ctx.send(amount * 1 / (1/3.281))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mps.command(invoke_without_command=True, description='units/speed-mps-kmph-desc')
+    del fps
+
+    @mps.command(aliases=['kilometer-per-hour', 'kilometers-per-hour', 'kilometre-per-hour', 'kilometres-per-hour'], invoke_without_command=True, description='units/speed-mps-kmph-desc')
     async def kmph(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/3.6))
+        try:
+            await ctx.send(amount * 1 / (1/3.6))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @mps.command(invoke_without_command=True, description='units/speed-mps-knot-desc')
+    del kmph
+
+    @mps.command(aliases=['knots'], invoke_without_command=True, description='units/speed-mps-knot-desc')
     async def knot(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/1.944))
+        try:
+            await ctx.send(amount * 1 / (1/1.944))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @speed.group(invoke_without_command=True, description='units/speed-kmph-desc')
+    del knot
+
+    @speed.group(aliases=['kilometer-per-hour', 'kilometers-per-hour', 'kilometre-per-hour', 'kilometres-per-hour'], invoke_without_command=True, description='units/speed-kmph-desc')
     @lone_group(True)
-    async def kmph(ctx):
+    async def kmph(self, ctx):
         pass
 
 
-    @kmph.command(invoke_without_command=True, description='units/speed-kmph-mph-desc')
+    @kmph.command(aliases=['mile-per-hour', 'miles-per-hour'], invoke_without_command=True, description='units/speed-kmph-mph-desc')
     async def mph(ctx, amount: float):
-        await ctx.send(amount * (1/3.6) / (1/2.237))
+        try:
+            await ctx.send(amount * (1/3.6) / (1/2.237))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kmph.command(invoke_without_command=True, description='units/speed-kmph-fps-desc')
+    del mph
+
+    @kmph.command(aliases=['foot-per-second', 'feet-per-second'], invoke_without_command=True, description='units/speed-kmph-fps-desc')
     async def fps(ctx, amount: float):
-        await ctx.send(amount * (1/3.6) / (1/3.281))
+        try:
+            await ctx.send(amount * (1/3.6) / (1/3.281))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kmph.command(invoke_without_command=True, description='units/speed-kmph-mps-desc')
+    del fps
+
+    @kmph.command(aliases=['meter-per-second', 'meters-per-second', 'metre-per-second', 'metres-per-second'], invoke_without_command=True, description='units/speed-kmph-mps-desc')
     async def mps(ctx, amount: float):
-        await ctx.send(amount * (1/3.6) / 1)
+        try:
+            await ctx.send(amount * (1/3.6) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @kmph.command(invoke_without_command=True, description='units/speed-kmph-knot-desc')
+    del mps
+
+    @kmph.command(aliases=['knots'], invoke_without_command=True, description='units/speed-kmph-knot-desc')
     async def knot(ctx, amount: float):
-        await ctx.send(amount * (1/3.6) / (1/1.944))
+        try:
+            await ctx.send(amount * (1/3.6) / (1/1.944))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @speed.group(invoke_without_command=True, description='units/speed-knot-desc')
+    del knot
+
+    @speed.group(aliases=['knots'], invoke_without_command=True, description='units/speed-knot-desc')
     @lone_group(True)
-    async def knot(ctx):
+    async def knot(self, ctx):
         pass
 
 
-    @knot.command(invoke_without_command=True, description='units/speed-knot-mph-desc')
+    @knot.command(aliases=['mile-per-hour', 'miles-per-hour'], invoke_without_command=True, description='units/speed-knot-mph-desc')
     async def mph(ctx, amount: float):
-        await ctx.send(amount * (1/1.944) / (1/2.237))
+        try:
+            await ctx.send(amount * (1/1.944) / (1/2.237))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @knot.command(invoke_without_command=True, description='units/speed-knot-fps-desc')
+    del mph
+
+    @knot.command(aliases=['foot-per-second', 'feet-per-second'], invoke_without_command=True, description='units/speed-knot-fps-desc')
     async def fps(ctx, amount: float):
-        await ctx.send(amount * (1/1.944) / (1/3.281))
+        try:
+            await ctx.send(amount * (1/1.944) / (1/3.281))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @knot.command(invoke_without_command=True, description='units/speed-knot-mps-desc')
+    del fps
+
+    @knot.command(aliases=['meter-per-second', 'meters-per-second', 'metre-per-second', 'metres-per-second'], invoke_without_command=True, description='units/speed-knot-mps-desc')
     async def mps(ctx, amount: float):
-        await ctx.send(amount * (1/1.944) / 1)
+        try:
+            await ctx.send(amount * (1/1.944) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @knot.command(invoke_without_command=True, description='units/speed-knot-kmph-desc')
+    del mps
+
+    @knot.command(aliases=['kilometer-per-hour', 'kilometers-per-hour', 'kilometre-per-hour', 'kilometres-per-hour'], invoke_without_command=True, description='units/speed-knot-kmph-desc')
     async def kmph(ctx, amount: float):
-        await ctx.send(amount * (1/1.944) / (1/3.6))
+        try:
+            await ctx.send(amount * (1/1.944) / (1/3.6))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del kmph
 
 
     @convert.group(aliases=['temp'], invoke_without_command=True, description='units/temperature-desc')
@@ -4913,48 +10204,59 @@ class Units(Cog):
         pass
 
 
-    @temperature.group(invoke_without_command=True, description='units/temperature-C-desc')
+    @temperature.group(aliases=['Celsius'], invoke_without_command=True, description='units/temperature-C-desc')
     @lone_group(True)
-    async def C(ctx):
+    async def C(self, ctx):
         pass
 
 
-    @C.command(invoke_without_command=True, description='units/temperature-C-F-desc')
+    @C.command(aliases=['Farenheit'], invoke_without_command=True, description='units/temperature-C-F-desc')
     async def F(ctx, amount: float):
-        await ctx.send((amount * 9 / 5) + 32)
+        await ctx.send(amount * 9 / 5 + 32)
 
-    @C.command(invoke_without_command=True, description='units/temperature-C-K-desc')
+    del F
+
+    @C.command(aliases=['Kelvin'], invoke_without_command=True, description='units/temperature-C-K-desc')
     async def K(ctx, amount: float):
         await ctx.send(amount + 273.15)
 
-    @temperature.group(invoke_without_command=True, description='units/temperature-F-desc')
+    del K
+
+    @temperature.group(aliases=['Farenheit'], invoke_without_command=True, description='units/temperature-F-desc')
     @lone_group(True)
-    async def F(ctx):
+    async def F(self, ctx):
         pass
 
 
-    @F.command(invoke_without_command=True, description='units/temperature-F-C-desc')
+    @F.command(aliases=['Celsius'], invoke_without_command=True, description='units/temperature-F-C-desc')
     async def C(ctx, amount: float):
         await ctx.send((amount - 32) * 5 / 9)
 
-    @F.command(invoke_without_command=True, description='units/temperature-F-K-desc')
+    del C
+
+    @F.command(aliases=['Kelvin'], invoke_without_command=True, description='units/temperature-F-K-desc')
     async def K(ctx, amount: float):
         await ctx.send((amount - 32) * 5 / 9 + 273.15)
 
-    @temperature.group(invoke_without_command=True, description='units/temperature-K-desc')
+    del K
+
+    @temperature.group(aliases=['Kelvin'], invoke_without_command=True, description='units/temperature-K-desc')
     @lone_group(True)
-    async def K(ctx):
+    async def K(self, ctx):
         pass
 
 
-    @K.command(invoke_without_command=True, description='units/temperature-K-C-desc')
+    @K.command(aliases=['Celsius'], invoke_without_command=True, description='units/temperature-K-C-desc')
     async def C(ctx, amount: float):
-        await ctx.send(amount - 273.15)
+        await ctx.send((amount - 273.15))
 
-    @K.command(invoke_without_command=True, description='units/temperature-K-F-desc')
+    del C
+
+    @K.command(aliases=['Farenheit'], invoke_without_command=True, description='units/temperature-K-F-desc')
     async def F(ctx, amount: float):
         await ctx.send((amount - 273.15) * 9 / 5 + 32)
 
+    del F
 
 
     @convert.group(aliases=[], invoke_without_command=True, description='units/time-desc')
@@ -4963,605 +10265,1265 @@ class Units(Cog):
         pass
 
 
-    @time.group(invoke_without_command=True, description='units/time-ns-desc')
+    @time.group(aliases=['nanosecond', 'nanoseconds'], invoke_without_command=True, description='units/time-ns-desc')
     @lone_group(True)
-    async def ns(ctx):
+    async def ns(self, ctx):
         pass
 
 
-    @ns.command(invoke_without_command=True, description='units/time-ns-micros-desc')
+    @ns.command(aliases=['microsecond', 'microseconds'], invoke_without_command=True, description='units/time-ns-micros-desc')
     async def micros(ctx, amount: float):
-        await ctx.send(amount * 1e-9 / 1e-6)
+        try:
+            await ctx.send(amount * 1e-9 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ns.command(invoke_without_command=True, description='units/time-ns-ms-desc')
+    del micros
+
+    @ns.command(aliases=['millisecond', 'milliseconds'], invoke_without_command=True, description='units/time-ns-ms-desc')
     async def ms(ctx, amount: float):
-        await ctx.send(amount * 1e-9 / 1e-3)
+        try:
+            await ctx.send(amount * 1e-9 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ns.command(invoke_without_command=True, description='units/time-ns-s-desc')
+    del ms
+
+    @ns.command(aliases=['second', 'seconds'], invoke_without_command=True, description='units/time-ns-s-desc')
     async def s(ctx, amount: float):
-        await ctx.send(amount * 1e-9 / 1)
+        try:
+            await ctx.send(amount * 1e-9 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ns.command(invoke_without_command=True, description='units/time-ns-min-desc')
+    del s
+
+    @ns.command(aliases=['minute', 'minutes'], invoke_without_command=True, description='units/time-ns-min-desc')
     async def min(ctx, amount: float):
-        await ctx.send(amount * 1e-9 / 60)
+        try:
+            await ctx.send(amount * 1e-9 / 60)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ns.command(invoke_without_command=True, description='units/time-ns-h-desc')
+    del min
+
+    @ns.command(aliases=['hour', 'hours'], invoke_without_command=True, description='units/time-ns-h-desc')
     async def h(ctx, amount: float):
-        await ctx.send(amount * 1e-9 / 3600)
+        try:
+            await ctx.send(amount * 1e-9 / 3600)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ns.command(invoke_without_command=True, description='units/time-ns-day-desc')
+    del h
+
+    @ns.command(aliases=['days'], invoke_without_command=True, description='units/time-ns-day-desc')
     async def day(ctx, amount: float):
-        await ctx.send(amount * 1e-9 / 86400)
+        try:
+            await ctx.send(amount * 1e-9 / 86400)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ns.command(invoke_without_command=True, description='units/time-ns-week-desc')
+    del day
+
+    @ns.command(aliases=['weeks'], invoke_without_command=True, description='units/time-ns-week-desc')
     async def week(ctx, amount: float):
-        await ctx.send(amount * 1e-9 / 604800)
+        try:
+            await ctx.send(amount * 1e-9 / 604800)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ns.command(invoke_without_command=True, description='units/time-ns-month-desc')
+    del week
+
+    @ns.command(aliases=['months'], invoke_without_command=True, description='units/time-ns-month-desc')
     async def month(ctx, amount: float):
-        await ctx.send(amount * 1e-9 / 2.628e6)
+        try:
+            await ctx.send(amount * 1e-9 / 2.628e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ns.command(invoke_without_command=True, description='units/time-ns-year-desc')
+    del month
+
+    @ns.command(aliases=['years'], invoke_without_command=True, description='units/time-ns-year-desc')
     async def year(ctx, amount: float):
-        await ctx.send(amount * 1e-9 / 3.154e7)
+        try:
+            await ctx.send(amount * 1e-9 / 3.154e7)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ns.command(invoke_without_command=True, description='units/time-ns-decade-desc')
+    del year
+
+    @ns.command(aliases=['decades'], invoke_without_command=True, description='units/time-ns-decade-desc')
     async def decade(ctx, amount: float):
-        await ctx.send(amount * 1e-9 / 3.154e8)
+        try:
+            await ctx.send(amount * 1e-9 / 3.154e8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ns.command(invoke_without_command=True, description='units/time-ns-century-desc')
+    del decade
+
+    @ns.command(aliases=['centuries'], invoke_without_command=True, description='units/time-ns-century-desc')
     async def century(ctx, amount: float):
-        await ctx.send(amount * 1e-9 / 3.154e9)
+        try:
+            await ctx.send(amount * 1e-9 / 3.154e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @time.group(invoke_without_command=True, description='units/time-micros-desc')
+    del century
+
+    @time.group(aliases=['microsecond', 'microseconds'], invoke_without_command=True, description='units/time-micros-desc')
     @lone_group(True)
-    async def micros(ctx):
+    async def micros(self, ctx):
         pass
 
 
-    @micros.command(invoke_without_command=True, description='units/time-micros-ns-desc')
+    @micros.command(aliases=['nanosecond', 'nanoseconds'], invoke_without_command=True, description='units/time-micros-ns-desc')
     async def ns(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 1e-9)
+        try:
+            await ctx.send(amount * 1e-6 / 1e-9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @micros.command(invoke_without_command=True, description='units/time-micros-ms-desc')
+    del ns
+
+    @micros.command(aliases=['millisecond', 'milliseconds'], invoke_without_command=True, description='units/time-micros-ms-desc')
     async def ms(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 1e-3)
+        try:
+            await ctx.send(amount * 1e-6 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @micros.command(invoke_without_command=True, description='units/time-micros-s-desc')
+    del ms
+
+    @micros.command(aliases=['second', 'seconds'], invoke_without_command=True, description='units/time-micros-s-desc')
     async def s(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 1)
+        try:
+            await ctx.send(amount * 1e-6 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @micros.command(invoke_without_command=True, description='units/time-micros-min-desc')
+    del s
+
+    @micros.command(aliases=['minute', 'minutes'], invoke_without_command=True, description='units/time-micros-min-desc')
     async def min(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 60)
+        try:
+            await ctx.send(amount * 1e-6 / 60)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @micros.command(invoke_without_command=True, description='units/time-micros-h-desc')
+    del min
+
+    @micros.command(aliases=['hour', 'hours'], invoke_without_command=True, description='units/time-micros-h-desc')
     async def h(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 3600)
+        try:
+            await ctx.send(amount * 1e-6 / 3600)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @micros.command(invoke_without_command=True, description='units/time-micros-day-desc')
+    del h
+
+    @micros.command(aliases=['days'], invoke_without_command=True, description='units/time-micros-day-desc')
     async def day(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 86400)
+        try:
+            await ctx.send(amount * 1e-6 / 86400)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @micros.command(invoke_without_command=True, description='units/time-micros-week-desc')
+    del day
+
+    @micros.command(aliases=['weeks'], invoke_without_command=True, description='units/time-micros-week-desc')
     async def week(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 604800)
+        try:
+            await ctx.send(amount * 1e-6 / 604800)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @micros.command(invoke_without_command=True, description='units/time-micros-month-desc')
+    del week
+
+    @micros.command(aliases=['months'], invoke_without_command=True, description='units/time-micros-month-desc')
     async def month(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 2.628e6)
+        try:
+            await ctx.send(amount * 1e-6 / 2.628e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @micros.command(invoke_without_command=True, description='units/time-micros-year-desc')
+    del month
+
+    @micros.command(aliases=['years'], invoke_without_command=True, description='units/time-micros-year-desc')
     async def year(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 3.154e7)
+        try:
+            await ctx.send(amount * 1e-6 / 3.154e7)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @micros.command(invoke_without_command=True, description='units/time-micros-decade-desc')
+    del year
+
+    @micros.command(aliases=['decades'], invoke_without_command=True, description='units/time-micros-decade-desc')
     async def decade(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 3.154e8)
+        try:
+            await ctx.send(amount * 1e-6 / 3.154e8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @micros.command(invoke_without_command=True, description='units/time-micros-century-desc')
+    del decade
+
+    @micros.command(aliases=['centuries'], invoke_without_command=True, description='units/time-micros-century-desc')
     async def century(ctx, amount: float):
-        await ctx.send(amount * 1e-6 / 3.154e9)
+        try:
+            await ctx.send(amount * 1e-6 / 3.154e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @time.group(invoke_without_command=True, description='units/time-ms-desc')
+    del century
+
+    @time.group(aliases=['millisecond', 'milliseconds'], invoke_without_command=True, description='units/time-ms-desc')
     @lone_group(True)
-    async def ms(ctx):
+    async def ms(self, ctx):
         pass
 
 
-    @ms.command(invoke_without_command=True, description='units/time-ms-ns-desc')
+    @ms.command(aliases=['nanosecond', 'nanoseconds'], invoke_without_command=True, description='units/time-ms-ns-desc')
     async def ns(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 1e-9)
+        try:
+            await ctx.send(amount * 1e-3 / 1e-9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ms.command(invoke_without_command=True, description='units/time-ms-micros-desc')
+    del ns
+
+    @ms.command(aliases=['microsecond', 'microseconds'], invoke_without_command=True, description='units/time-ms-micros-desc')
     async def micros(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 1e-6)
+        try:
+            await ctx.send(amount * 1e-3 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ms.command(invoke_without_command=True, description='units/time-ms-s-desc')
+    del micros
+
+    @ms.command(aliases=['second', 'seconds'], invoke_without_command=True, description='units/time-ms-s-desc')
     async def s(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 1)
+        try:
+            await ctx.send(amount * 1e-3 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ms.command(invoke_without_command=True, description='units/time-ms-min-desc')
+    del s
+
+    @ms.command(aliases=['minute', 'minutes'], invoke_without_command=True, description='units/time-ms-min-desc')
     async def min(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 60)
+        try:
+            await ctx.send(amount * 1e-3 / 60)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ms.command(invoke_without_command=True, description='units/time-ms-h-desc')
+    del min
+
+    @ms.command(aliases=['hour', 'hours'], invoke_without_command=True, description='units/time-ms-h-desc')
     async def h(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 3600)
+        try:
+            await ctx.send(amount * 1e-3 / 3600)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ms.command(invoke_without_command=True, description='units/time-ms-day-desc')
+    del h
+
+    @ms.command(aliases=['days'], invoke_without_command=True, description='units/time-ms-day-desc')
     async def day(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 86400)
+        try:
+            await ctx.send(amount * 1e-3 / 86400)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ms.command(invoke_without_command=True, description='units/time-ms-week-desc')
+    del day
+
+    @ms.command(aliases=['weeks'], invoke_without_command=True, description='units/time-ms-week-desc')
     async def week(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 604800)
+        try:
+            await ctx.send(amount * 1e-3 / 604800)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ms.command(invoke_without_command=True, description='units/time-ms-month-desc')
+    del week
+
+    @ms.command(aliases=['months'], invoke_without_command=True, description='units/time-ms-month-desc')
     async def month(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 2.628e6)
+        try:
+            await ctx.send(amount * 1e-3 / 2.628e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ms.command(invoke_without_command=True, description='units/time-ms-year-desc')
+    del month
+
+    @ms.command(aliases=['years'], invoke_without_command=True, description='units/time-ms-year-desc')
     async def year(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 3.154e7)
+        try:
+            await ctx.send(amount * 1e-3 / 3.154e7)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ms.command(invoke_without_command=True, description='units/time-ms-decade-desc')
+    del year
+
+    @ms.command(aliases=['decades'], invoke_without_command=True, description='units/time-ms-decade-desc')
     async def decade(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 3.154e8)
+        try:
+            await ctx.send(amount * 1e-3 / 3.154e8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ms.command(invoke_without_command=True, description='units/time-ms-century-desc')
+    del decade
+
+    @ms.command(aliases=['centuries'], invoke_without_command=True, description='units/time-ms-century-desc')
     async def century(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 3.154e9)
+        try:
+            await ctx.send(amount * 1e-3 / 3.154e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @time.group(invoke_without_command=True, description='units/time-s-desc')
+    del century
+
+    @time.group(aliases=['second', 'seconds'], invoke_without_command=True, description='units/time-s-desc')
     @lone_group(True)
-    async def s(ctx):
+    async def s(self, ctx):
         pass
 
 
-    @s.command(invoke_without_command=True, description='units/time-s-ns-desc')
+    @s.command(aliases=['nanosecond', 'nanoseconds'], invoke_without_command=True, description='units/time-s-ns-desc')
     async def ns(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e-9)
+        try:
+            await ctx.send(amount * 1 / 1e-9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @s.command(invoke_without_command=True, description='units/time-s-micros-desc')
+    del ns
+
+    @s.command(aliases=['microsecond', 'microseconds'], invoke_without_command=True, description='units/time-s-micros-desc')
     async def micros(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e-6)
+        try:
+            await ctx.send(amount * 1 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @s.command(invoke_without_command=True, description='units/time-s-ms-desc')
+    del micros
+
+    @s.command(aliases=['millisecond', 'milliseconds'], invoke_without_command=True, description='units/time-s-ms-desc')
     async def ms(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e-3)
+        try:
+            await ctx.send(amount * 1 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @s.command(invoke_without_command=True, description='units/time-s-min-desc')
+    del ms
+
+    @s.command(aliases=['minute', 'minutes'], invoke_without_command=True, description='units/time-s-min-desc')
     async def min(ctx, amount: float):
-        await ctx.send(amount * 1 / 60)
+        try:
+            await ctx.send(amount * 1 / 60)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @s.command(invoke_without_command=True, description='units/time-s-h-desc')
+    del min
+
+    @s.command(aliases=['hour', 'hours'], invoke_without_command=True, description='units/time-s-h-desc')
     async def h(ctx, amount: float):
-        await ctx.send(amount * 1 / 3600)
+        try:
+            await ctx.send(amount * 1 / 3600)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @s.command(invoke_without_command=True, description='units/time-s-day-desc')
+    del h
+
+    @s.command(aliases=['days'], invoke_without_command=True, description='units/time-s-day-desc')
     async def day(ctx, amount: float):
-        await ctx.send(amount * 1 / 86400)
+        try:
+            await ctx.send(amount * 1 / 86400)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @s.command(invoke_without_command=True, description='units/time-s-week-desc')
+    del day
+
+    @s.command(aliases=['weeks'], invoke_without_command=True, description='units/time-s-week-desc')
     async def week(ctx, amount: float):
-        await ctx.send(amount * 1 / 604800)
+        try:
+            await ctx.send(amount * 1 / 604800)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @s.command(invoke_without_command=True, description='units/time-s-month-desc')
+    del week
+
+    @s.command(aliases=['months'], invoke_without_command=True, description='units/time-s-month-desc')
     async def month(ctx, amount: float):
-        await ctx.send(amount * 1 / 2.628e6)
+        try:
+            await ctx.send(amount * 1 / 2.628e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @s.command(invoke_without_command=True, description='units/time-s-year-desc')
+    del month
+
+    @s.command(aliases=['years'], invoke_without_command=True, description='units/time-s-year-desc')
     async def year(ctx, amount: float):
-        await ctx.send(amount * 1 / 3.154e7)
+        try:
+            await ctx.send(amount * 1 / 3.154e7)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @s.command(invoke_without_command=True, description='units/time-s-decade-desc')
+    del year
+
+    @s.command(aliases=['decades'], invoke_without_command=True, description='units/time-s-decade-desc')
     async def decade(ctx, amount: float):
-        await ctx.send(amount * 1 / 3.154e8)
+        try:
+            await ctx.send(amount * 1 / 3.154e8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @s.command(invoke_without_command=True, description='units/time-s-century-desc')
+    del decade
+
+    @s.command(aliases=['centuries'], invoke_without_command=True, description='units/time-s-century-desc')
     async def century(ctx, amount: float):
-        await ctx.send(amount * 1 / 3.154e9)
+        try:
+            await ctx.send(amount * 1 / 3.154e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @time.group(invoke_without_command=True, description='units/time-min-desc')
+    del century
+
+    @time.group(aliases=['minute', 'minutes'], invoke_without_command=True, description='units/time-min-desc')
     @lone_group(True)
-    async def min(ctx):
+    async def min(self, ctx):
         pass
 
 
-    @min.command(invoke_without_command=True, description='units/time-min-ns-desc')
+    @min.command(aliases=['nanosecond', 'nanoseconds'], invoke_without_command=True, description='units/time-min-ns-desc')
     async def ns(ctx, amount: float):
-        await ctx.send(amount * 60 / 1e-9)
+        try:
+            await ctx.send(amount * 60 / 1e-9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @min.command(invoke_without_command=True, description='units/time-min-micros-desc')
+    del ns
+
+    @min.command(aliases=['microsecond', 'microseconds'], invoke_without_command=True, description='units/time-min-micros-desc')
     async def micros(ctx, amount: float):
-        await ctx.send(amount * 60 / 1e-6)
+        try:
+            await ctx.send(amount * 60 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @min.command(invoke_without_command=True, description='units/time-min-ms-desc')
+    del micros
+
+    @min.command(aliases=['millisecond', 'milliseconds'], invoke_without_command=True, description='units/time-min-ms-desc')
     async def ms(ctx, amount: float):
-        await ctx.send(amount * 60 / 1e-3)
+        try:
+            await ctx.send(amount * 60 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @min.command(invoke_without_command=True, description='units/time-min-s-desc')
+    del ms
+
+    @min.command(aliases=['second', 'seconds'], invoke_without_command=True, description='units/time-min-s-desc')
     async def s(ctx, amount: float):
-        await ctx.send(amount * 60 / 1)
+        try:
+            await ctx.send(amount * 60 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @min.command(invoke_without_command=True, description='units/time-min-h-desc')
+    del s
+
+    @min.command(aliases=['hour', 'hours'], invoke_without_command=True, description='units/time-min-h-desc')
     async def h(ctx, amount: float):
-        await ctx.send(amount * 60 / 3600)
+        try:
+            await ctx.send(amount * 60 / 3600)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @min.command(invoke_without_command=True, description='units/time-min-day-desc')
+    del h
+
+    @min.command(aliases=['days'], invoke_without_command=True, description='units/time-min-day-desc')
     async def day(ctx, amount: float):
-        await ctx.send(amount * 60 / 86400)
+        try:
+            await ctx.send(amount * 60 / 86400)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @min.command(invoke_without_command=True, description='units/time-min-week-desc')
+    del day
+
+    @min.command(aliases=['weeks'], invoke_without_command=True, description='units/time-min-week-desc')
     async def week(ctx, amount: float):
-        await ctx.send(amount * 60 / 604800)
+        try:
+            await ctx.send(amount * 60 / 604800)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @min.command(invoke_without_command=True, description='units/time-min-month-desc')
+    del week
+
+    @min.command(aliases=['months'], invoke_without_command=True, description='units/time-min-month-desc')
     async def month(ctx, amount: float):
-        await ctx.send(amount * 60 / 2.628e6)
+        try:
+            await ctx.send(amount * 60 / 2.628e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @min.command(invoke_without_command=True, description='units/time-min-year-desc')
+    del month
+
+    @min.command(aliases=['years'], invoke_without_command=True, description='units/time-min-year-desc')
     async def year(ctx, amount: float):
-        await ctx.send(amount * 60 / 3.154e7)
+        try:
+            await ctx.send(amount * 60 / 3.154e7)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @min.command(invoke_without_command=True, description='units/time-min-decade-desc')
+    del year
+
+    @min.command(aliases=['decades'], invoke_without_command=True, description='units/time-min-decade-desc')
     async def decade(ctx, amount: float):
-        await ctx.send(amount * 60 / 3.154e8)
+        try:
+            await ctx.send(amount * 60 / 3.154e8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @min.command(invoke_without_command=True, description='units/time-min-century-desc')
+    del decade
+
+    @min.command(aliases=['centuries'], invoke_without_command=True, description='units/time-min-century-desc')
     async def century(ctx, amount: float):
-        await ctx.send(amount * 60 / 3.154e9)
+        try:
+            await ctx.send(amount * 60 / 3.154e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @time.group(invoke_without_command=True, description='units/time-h-desc')
+    del century
+
+    @time.group(aliases=['hour', 'hours'], invoke_without_command=True, description='units/time-h-desc')
     @lone_group(True)
-    async def h(ctx):
+    async def h(self, ctx):
         pass
 
 
-    @h.command(invoke_without_command=True, description='units/time-h-ns-desc')
+    @h.command(aliases=['nanosecond', 'nanoseconds'], invoke_without_command=True, description='units/time-h-ns-desc')
     async def ns(ctx, amount: float):
-        await ctx.send(amount * 3600 / 1e-9)
+        try:
+            await ctx.send(amount * 3600 / 1e-9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @h.command(invoke_without_command=True, description='units/time-h-micros-desc')
+    del ns
+
+    @h.command(aliases=['microsecond', 'microseconds'], invoke_without_command=True, description='units/time-h-micros-desc')
     async def micros(ctx, amount: float):
-        await ctx.send(amount * 3600 / 1e-6)
+        try:
+            await ctx.send(amount * 3600 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @h.command(invoke_without_command=True, description='units/time-h-ms-desc')
+    del micros
+
+    @h.command(aliases=['millisecond', 'milliseconds'], invoke_without_command=True, description='units/time-h-ms-desc')
     async def ms(ctx, amount: float):
-        await ctx.send(amount * 3600 / 1e-3)
+        try:
+            await ctx.send(amount * 3600 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @h.command(invoke_without_command=True, description='units/time-h-s-desc')
+    del ms
+
+    @h.command(aliases=['second', 'seconds'], invoke_without_command=True, description='units/time-h-s-desc')
     async def s(ctx, amount: float):
-        await ctx.send(amount * 3600 / 1)
+        try:
+            await ctx.send(amount * 3600 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @h.command(invoke_without_command=True, description='units/time-h-min-desc')
+    del s
+
+    @h.command(aliases=['minute', 'minutes'], invoke_without_command=True, description='units/time-h-min-desc')
     async def min(ctx, amount: float):
-        await ctx.send(amount * 3600 / 60)
+        try:
+            await ctx.send(amount * 3600 / 60)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @h.command(invoke_without_command=True, description='units/time-h-day-desc')
+    del min
+
+    @h.command(aliases=['days'], invoke_without_command=True, description='units/time-h-day-desc')
     async def day(ctx, amount: float):
-        await ctx.send(amount * 3600 / 86400)
+        try:
+            await ctx.send(amount * 3600 / 86400)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @h.command(invoke_without_command=True, description='units/time-h-week-desc')
+    del day
+
+    @h.command(aliases=['weeks'], invoke_without_command=True, description='units/time-h-week-desc')
     async def week(ctx, amount: float):
-        await ctx.send(amount * 3600 / 604800)
+        try:
+            await ctx.send(amount * 3600 / 604800)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @h.command(invoke_without_command=True, description='units/time-h-month-desc')
+    del week
+
+    @h.command(aliases=['months'], invoke_without_command=True, description='units/time-h-month-desc')
     async def month(ctx, amount: float):
-        await ctx.send(amount * 3600 / 2.628e6)
+        try:
+            await ctx.send(amount * 3600 / 2.628e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @h.command(invoke_without_command=True, description='units/time-h-year-desc')
+    del month
+
+    @h.command(aliases=['years'], invoke_without_command=True, description='units/time-h-year-desc')
     async def year(ctx, amount: float):
-        await ctx.send(amount * 3600 / 3.154e7)
+        try:
+            await ctx.send(amount * 3600 / 3.154e7)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @h.command(invoke_without_command=True, description='units/time-h-decade-desc')
+    del year
+
+    @h.command(aliases=['decades'], invoke_without_command=True, description='units/time-h-decade-desc')
     async def decade(ctx, amount: float):
-        await ctx.send(amount * 3600 / 3.154e8)
+        try:
+            await ctx.send(amount * 3600 / 3.154e8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @h.command(invoke_without_command=True, description='units/time-h-century-desc')
+    del decade
+
+    @h.command(aliases=['centuries'], invoke_without_command=True, description='units/time-h-century-desc')
     async def century(ctx, amount: float):
-        await ctx.send(amount * 3600 / 3.154e9)
+        try:
+            await ctx.send(amount * 3600 / 3.154e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @time.group(invoke_without_command=True, description='units/time-day-desc')
+    del century
+
+    @time.group(aliases=['days'], invoke_without_command=True, description='units/time-day-desc')
     @lone_group(True)
-    async def day(ctx):
+    async def day(self, ctx):
         pass
 
 
-    @day.command(invoke_without_command=True, description='units/time-day-ns-desc')
+    @day.command(aliases=['nanosecond', 'nanoseconds'], invoke_without_command=True, description='units/time-day-ns-desc')
     async def ns(ctx, amount: float):
-        await ctx.send(amount * 86400 / 1e-9)
+        try:
+            await ctx.send(amount * 86400 / 1e-9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @day.command(invoke_without_command=True, description='units/time-day-micros-desc')
+    del ns
+
+    @day.command(aliases=['microsecond', 'microseconds'], invoke_without_command=True, description='units/time-day-micros-desc')
     async def micros(ctx, amount: float):
-        await ctx.send(amount * 86400 / 1e-6)
+        try:
+            await ctx.send(amount * 86400 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @day.command(invoke_without_command=True, description='units/time-day-ms-desc')
+    del micros
+
+    @day.command(aliases=['millisecond', 'milliseconds'], invoke_without_command=True, description='units/time-day-ms-desc')
     async def ms(ctx, amount: float):
-        await ctx.send(amount * 86400 / 1e-3)
+        try:
+            await ctx.send(amount * 86400 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @day.command(invoke_without_command=True, description='units/time-day-s-desc')
+    del ms
+
+    @day.command(aliases=['second', 'seconds'], invoke_without_command=True, description='units/time-day-s-desc')
     async def s(ctx, amount: float):
-        await ctx.send(amount * 86400 / 1)
+        try:
+            await ctx.send(amount * 86400 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @day.command(invoke_without_command=True, description='units/time-day-min-desc')
+    del s
+
+    @day.command(aliases=['minute', 'minutes'], invoke_without_command=True, description='units/time-day-min-desc')
     async def min(ctx, amount: float):
-        await ctx.send(amount * 86400 / 60)
+        try:
+            await ctx.send(amount * 86400 / 60)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @day.command(invoke_without_command=True, description='units/time-day-h-desc')
+    del min
+
+    @day.command(aliases=['hour', 'hours'], invoke_without_command=True, description='units/time-day-h-desc')
     async def h(ctx, amount: float):
-        await ctx.send(amount * 86400 / 3600)
+        try:
+            await ctx.send(amount * 86400 / 3600)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @day.command(invoke_without_command=True, description='units/time-day-week-desc')
+    del h
+
+    @day.command(aliases=['weeks'], invoke_without_command=True, description='units/time-day-week-desc')
     async def week(ctx, amount: float):
-        await ctx.send(amount * 86400 / 604800)
+        try:
+            await ctx.send(amount * 86400 / 604800)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @day.command(invoke_without_command=True, description='units/time-day-month-desc')
+    del week
+
+    @day.command(aliases=['months'], invoke_without_command=True, description='units/time-day-month-desc')
     async def month(ctx, amount: float):
-        await ctx.send(amount * 86400 / 2.628e6)
+        try:
+            await ctx.send(amount * 86400 / 2.628e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @day.command(invoke_without_command=True, description='units/time-day-year-desc')
+    del month
+
+    @day.command(aliases=['years'], invoke_without_command=True, description='units/time-day-year-desc')
     async def year(ctx, amount: float):
-        await ctx.send(amount * 86400 / 3.154e7)
+        try:
+            await ctx.send(amount * 86400 / 3.154e7)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @day.command(invoke_without_command=True, description='units/time-day-decade-desc')
+    del year
+
+    @day.command(aliases=['decades'], invoke_without_command=True, description='units/time-day-decade-desc')
     async def decade(ctx, amount: float):
-        await ctx.send(amount * 86400 / 3.154e8)
+        try:
+            await ctx.send(amount * 86400 / 3.154e8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @day.command(invoke_without_command=True, description='units/time-day-century-desc')
+    del decade
+
+    @day.command(aliases=['centuries'], invoke_without_command=True, description='units/time-day-century-desc')
     async def century(ctx, amount: float):
-        await ctx.send(amount * 86400 / 3.154e9)
+        try:
+            await ctx.send(amount * 86400 / 3.154e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @time.group(invoke_without_command=True, description='units/time-week-desc')
+    del century
+
+    @time.group(aliases=['weeks'], invoke_without_command=True, description='units/time-week-desc')
     @lone_group(True)
-    async def week(ctx):
+    async def week(self, ctx):
         pass
 
 
-    @week.command(invoke_without_command=True, description='units/time-week-ns-desc')
+    @week.command(aliases=['nanosecond', 'nanoseconds'], invoke_without_command=True, description='units/time-week-ns-desc')
     async def ns(ctx, amount: float):
-        await ctx.send(amount * 604800 / 1e-9)
+        try:
+            await ctx.send(amount * 604800 / 1e-9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @week.command(invoke_without_command=True, description='units/time-week-micros-desc')
+    del ns
+
+    @week.command(aliases=['microsecond', 'microseconds'], invoke_without_command=True, description='units/time-week-micros-desc')
     async def micros(ctx, amount: float):
-        await ctx.send(amount * 604800 / 1e-6)
+        try:
+            await ctx.send(amount * 604800 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @week.command(invoke_without_command=True, description='units/time-week-ms-desc')
+    del micros
+
+    @week.command(aliases=['millisecond', 'milliseconds'], invoke_without_command=True, description='units/time-week-ms-desc')
     async def ms(ctx, amount: float):
-        await ctx.send(amount * 604800 / 1e-3)
+        try:
+            await ctx.send(amount * 604800 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @week.command(invoke_without_command=True, description='units/time-week-s-desc')
+    del ms
+
+    @week.command(aliases=['second', 'seconds'], invoke_without_command=True, description='units/time-week-s-desc')
     async def s(ctx, amount: float):
-        await ctx.send(amount * 604800 / 1)
+        try:
+            await ctx.send(amount * 604800 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @week.command(invoke_without_command=True, description='units/time-week-min-desc')
+    del s
+
+    @week.command(aliases=['minute', 'minutes'], invoke_without_command=True, description='units/time-week-min-desc')
     async def min(ctx, amount: float):
-        await ctx.send(amount * 604800 / 60)
+        try:
+            await ctx.send(amount * 604800 / 60)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @week.command(invoke_without_command=True, description='units/time-week-h-desc')
+    del min
+
+    @week.command(aliases=['hour', 'hours'], invoke_without_command=True, description='units/time-week-h-desc')
     async def h(ctx, amount: float):
-        await ctx.send(amount * 604800 / 3600)
+        try:
+            await ctx.send(amount * 604800 / 3600)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @week.command(invoke_without_command=True, description='units/time-week-day-desc')
+    del h
+
+    @week.command(aliases=['days'], invoke_without_command=True, description='units/time-week-day-desc')
     async def day(ctx, amount: float):
-        await ctx.send(amount * 604800 / 86400)
+        try:
+            await ctx.send(amount * 604800 / 86400)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @week.command(invoke_without_command=True, description='units/time-week-month-desc')
+    del day
+
+    @week.command(aliases=['months'], invoke_without_command=True, description='units/time-week-month-desc')
     async def month(ctx, amount: float):
-        await ctx.send(amount * 604800 / 2.628e6)
+        try:
+            await ctx.send(amount * 604800 / 2.628e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @week.command(invoke_without_command=True, description='units/time-week-year-desc')
+    del month
+
+    @week.command(aliases=['years'], invoke_without_command=True, description='units/time-week-year-desc')
     async def year(ctx, amount: float):
-        await ctx.send(amount * 604800 / 3.154e7)
+        try:
+            await ctx.send(amount * 604800 / 3.154e7)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @week.command(invoke_without_command=True, description='units/time-week-decade-desc')
+    del year
+
+    @week.command(aliases=['decades'], invoke_without_command=True, description='units/time-week-decade-desc')
     async def decade(ctx, amount: float):
-        await ctx.send(amount * 604800 / 3.154e8)
+        try:
+            await ctx.send(amount * 604800 / 3.154e8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @week.command(invoke_without_command=True, description='units/time-week-century-desc')
+    del decade
+
+    @week.command(aliases=['centuries'], invoke_without_command=True, description='units/time-week-century-desc')
     async def century(ctx, amount: float):
-        await ctx.send(amount * 604800 / 3.154e9)
+        try:
+            await ctx.send(amount * 604800 / 3.154e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @time.group(invoke_without_command=True, description='units/time-month-desc')
+    del century
+
+    @time.group(aliases=['months'], invoke_without_command=True, description='units/time-month-desc')
     @lone_group(True)
-    async def month(ctx):
+    async def month(self, ctx):
         pass
 
 
-    @month.command(invoke_without_command=True, description='units/time-month-ns-desc')
+    @month.command(aliases=['nanosecond', 'nanoseconds'], invoke_without_command=True, description='units/time-month-ns-desc')
     async def ns(ctx, amount: float):
-        await ctx.send(amount * 2.628e6 / 1e-9)
+        try:
+            await ctx.send(amount * 2.628e6 / 1e-9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @month.command(invoke_without_command=True, description='units/time-month-micros-desc')
+    del ns
+
+    @month.command(aliases=['microsecond', 'microseconds'], invoke_without_command=True, description='units/time-month-micros-desc')
     async def micros(ctx, amount: float):
-        await ctx.send(amount * 2.628e6 / 1e-6)
+        try:
+            await ctx.send(amount * 2.628e6 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @month.command(invoke_without_command=True, description='units/time-month-ms-desc')
+    del micros
+
+    @month.command(aliases=['millisecond', 'milliseconds'], invoke_without_command=True, description='units/time-month-ms-desc')
     async def ms(ctx, amount: float):
-        await ctx.send(amount * 2.628e6 / 1e-3)
+        try:
+            await ctx.send(amount * 2.628e6 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @month.command(invoke_without_command=True, description='units/time-month-s-desc')
+    del ms
+
+    @month.command(aliases=['second', 'seconds'], invoke_without_command=True, description='units/time-month-s-desc')
     async def s(ctx, amount: float):
-        await ctx.send(amount * 2.628e6 / 1)
+        try:
+            await ctx.send(amount * 2.628e6 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @month.command(invoke_without_command=True, description='units/time-month-min-desc')
+    del s
+
+    @month.command(aliases=['minute', 'minutes'], invoke_without_command=True, description='units/time-month-min-desc')
     async def min(ctx, amount: float):
-        await ctx.send(amount * 2.628e6 / 60)
+        try:
+            await ctx.send(amount * 2.628e6 / 60)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @month.command(invoke_without_command=True, description='units/time-month-h-desc')
+    del min
+
+    @month.command(aliases=['hour', 'hours'], invoke_without_command=True, description='units/time-month-h-desc')
     async def h(ctx, amount: float):
-        await ctx.send(amount * 2.628e6 / 3600)
+        try:
+            await ctx.send(amount * 2.628e6 / 3600)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @month.command(invoke_without_command=True, description='units/time-month-day-desc')
+    del h
+
+    @month.command(aliases=['days'], invoke_without_command=True, description='units/time-month-day-desc')
     async def day(ctx, amount: float):
-        await ctx.send(amount * 2.628e6 / 86400)
+        try:
+            await ctx.send(amount * 2.628e6 / 86400)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @month.command(invoke_without_command=True, description='units/time-month-week-desc')
+    del day
+
+    @month.command(aliases=['weeks'], invoke_without_command=True, description='units/time-month-week-desc')
     async def week(ctx, amount: float):
-        await ctx.send(amount * 2.628e6 / 604800)
+        try:
+            await ctx.send(amount * 2.628e6 / 604800)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @month.command(invoke_without_command=True, description='units/time-month-year-desc')
+    del week
+
+    @month.command(aliases=['years'], invoke_without_command=True, description='units/time-month-year-desc')
     async def year(ctx, amount: float):
-        await ctx.send(amount * 2.628e6 / 3.154e7)
+        try:
+            await ctx.send(amount * 2.628e6 / 3.154e7)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @month.command(invoke_without_command=True, description='units/time-month-decade-desc')
+    del year
+
+    @month.command(aliases=['decades'], invoke_without_command=True, description='units/time-month-decade-desc')
     async def decade(ctx, amount: float):
-        await ctx.send(amount * 2.628e6 / 3.154e8)
+        try:
+            await ctx.send(amount * 2.628e6 / 3.154e8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @month.command(invoke_without_command=True, description='units/time-month-century-desc')
+    del decade
+
+    @month.command(aliases=['centuries'], invoke_without_command=True, description='units/time-month-century-desc')
     async def century(ctx, amount: float):
-        await ctx.send(amount * 2.628e6 / 3.154e9)
+        try:
+            await ctx.send(amount * 2.628e6 / 3.154e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @time.group(invoke_without_command=True, description='units/time-year-desc')
+    del century
+
+    @time.group(aliases=['years'], invoke_without_command=True, description='units/time-year-desc')
     @lone_group(True)
-    async def year(ctx):
+    async def year(self, ctx):
         pass
 
 
-    @year.command(invoke_without_command=True, description='units/time-year-ns-desc')
+    @year.command(aliases=['nanosecond', 'nanoseconds'], invoke_without_command=True, description='units/time-year-ns-desc')
     async def ns(ctx, amount: float):
-        await ctx.send(amount * 3.154e7 / 1e-9)
+        try:
+            await ctx.send(amount * 3.154e7 / 1e-9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @year.command(invoke_without_command=True, description='units/time-year-micros-desc')
+    del ns
+
+    @year.command(aliases=['microsecond', 'microseconds'], invoke_without_command=True, description='units/time-year-micros-desc')
     async def micros(ctx, amount: float):
-        await ctx.send(amount * 3.154e7 / 1e-6)
+        try:
+            await ctx.send(amount * 3.154e7 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @year.command(invoke_without_command=True, description='units/time-year-ms-desc')
+    del micros
+
+    @year.command(aliases=['millisecond', 'milliseconds'], invoke_without_command=True, description='units/time-year-ms-desc')
     async def ms(ctx, amount: float):
-        await ctx.send(amount * 3.154e7 / 1e-3)
+        try:
+            await ctx.send(amount * 3.154e7 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @year.command(invoke_without_command=True, description='units/time-year-s-desc')
+    del ms
+
+    @year.command(aliases=['second', 'seconds'], invoke_without_command=True, description='units/time-year-s-desc')
     async def s(ctx, amount: float):
-        await ctx.send(amount * 3.154e7 / 1)
+        try:
+            await ctx.send(amount * 3.154e7 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @year.command(invoke_without_command=True, description='units/time-year-min-desc')
+    del s
+
+    @year.command(aliases=['minute', 'minutes'], invoke_without_command=True, description='units/time-year-min-desc')
     async def min(ctx, amount: float):
-        await ctx.send(amount * 3.154e7 / 60)
+        try:
+            await ctx.send(amount * 3.154e7 / 60)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @year.command(invoke_without_command=True, description='units/time-year-h-desc')
+    del min
+
+    @year.command(aliases=['hour', 'hours'], invoke_without_command=True, description='units/time-year-h-desc')
     async def h(ctx, amount: float):
-        await ctx.send(amount * 3.154e7 / 3600)
+        try:
+            await ctx.send(amount * 3.154e7 / 3600)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @year.command(invoke_without_command=True, description='units/time-year-day-desc')
+    del h
+
+    @year.command(aliases=['days'], invoke_without_command=True, description='units/time-year-day-desc')
     async def day(ctx, amount: float):
-        await ctx.send(amount * 3.154e7 / 86400)
+        try:
+            await ctx.send(amount * 3.154e7 / 86400)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @year.command(invoke_without_command=True, description='units/time-year-week-desc')
+    del day
+
+    @year.command(aliases=['weeks'], invoke_without_command=True, description='units/time-year-week-desc')
     async def week(ctx, amount: float):
-        await ctx.send(amount * 3.154e7 / 604800)
+        try:
+            await ctx.send(amount * 3.154e7 / 604800)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @year.command(invoke_without_command=True, description='units/time-year-month-desc')
+    del week
+
+    @year.command(aliases=['months'], invoke_without_command=True, description='units/time-year-month-desc')
     async def month(ctx, amount: float):
-        await ctx.send(amount * 3.154e7 / 2.628e6)
+        try:
+            await ctx.send(amount * 3.154e7 / 2.628e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @year.command(invoke_without_command=True, description='units/time-year-decade-desc')
+    del month
+
+    @year.command(aliases=['decades'], invoke_without_command=True, description='units/time-year-decade-desc')
     async def decade(ctx, amount: float):
-        await ctx.send(amount * 3.154e7 / 3.154e8)
+        try:
+            await ctx.send(amount * 3.154e7 / 3.154e8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @year.command(invoke_without_command=True, description='units/time-year-century-desc')
+    del decade
+
+    @year.command(aliases=['centuries'], invoke_without_command=True, description='units/time-year-century-desc')
     async def century(ctx, amount: float):
-        await ctx.send(amount * 3.154e7 / 3.154e9)
+        try:
+            await ctx.send(amount * 3.154e7 / 3.154e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @time.group(invoke_without_command=True, description='units/time-decade-desc')
+    del century
+
+    @time.group(aliases=['decades'], invoke_without_command=True, description='units/time-decade-desc')
     @lone_group(True)
-    async def decade(ctx):
+    async def decade(self, ctx):
         pass
 
 
-    @decade.command(invoke_without_command=True, description='units/time-decade-ns-desc')
+    @decade.command(aliases=['nanosecond', 'nanoseconds'], invoke_without_command=True, description='units/time-decade-ns-desc')
     async def ns(ctx, amount: float):
-        await ctx.send(amount * 3.154e8 / 1e-9)
+        try:
+            await ctx.send(amount * 3.154e8 / 1e-9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @decade.command(invoke_without_command=True, description='units/time-decade-micros-desc')
+    del ns
+
+    @decade.command(aliases=['microsecond', 'microseconds'], invoke_without_command=True, description='units/time-decade-micros-desc')
     async def micros(ctx, amount: float):
-        await ctx.send(amount * 3.154e8 / 1e-6)
+        try:
+            await ctx.send(amount * 3.154e8 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @decade.command(invoke_without_command=True, description='units/time-decade-ms-desc')
+    del micros
+
+    @decade.command(aliases=['millisecond', 'milliseconds'], invoke_without_command=True, description='units/time-decade-ms-desc')
     async def ms(ctx, amount: float):
-        await ctx.send(amount * 3.154e8 / 1e-3)
+        try:
+            await ctx.send(amount * 3.154e8 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @decade.command(invoke_without_command=True, description='units/time-decade-s-desc')
+    del ms
+
+    @decade.command(aliases=['second', 'seconds'], invoke_without_command=True, description='units/time-decade-s-desc')
     async def s(ctx, amount: float):
-        await ctx.send(amount * 3.154e8 / 1)
+        try:
+            await ctx.send(amount * 3.154e8 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @decade.command(invoke_without_command=True, description='units/time-decade-min-desc')
+    del s
+
+    @decade.command(aliases=['minute', 'minutes'], invoke_without_command=True, description='units/time-decade-min-desc')
     async def min(ctx, amount: float):
-        await ctx.send(amount * 3.154e8 / 60)
+        try:
+            await ctx.send(amount * 3.154e8 / 60)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @decade.command(invoke_without_command=True, description='units/time-decade-h-desc')
+    del min
+
+    @decade.command(aliases=['hour', 'hours'], invoke_without_command=True, description='units/time-decade-h-desc')
     async def h(ctx, amount: float):
-        await ctx.send(amount * 3.154e8 / 3600)
+        try:
+            await ctx.send(amount * 3.154e8 / 3600)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @decade.command(invoke_without_command=True, description='units/time-decade-day-desc')
+    del h
+
+    @decade.command(aliases=['days'], invoke_without_command=True, description='units/time-decade-day-desc')
     async def day(ctx, amount: float):
-        await ctx.send(amount * 3.154e8 / 86400)
+        try:
+            await ctx.send(amount * 3.154e8 / 86400)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @decade.command(invoke_without_command=True, description='units/time-decade-week-desc')
+    del day
+
+    @decade.command(aliases=['weeks'], invoke_without_command=True, description='units/time-decade-week-desc')
     async def week(ctx, amount: float):
-        await ctx.send(amount * 3.154e8 / 604800)
+        try:
+            await ctx.send(amount * 3.154e8 / 604800)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @decade.command(invoke_without_command=True, description='units/time-decade-month-desc')
+    del week
+
+    @decade.command(aliases=['months'], invoke_without_command=True, description='units/time-decade-month-desc')
     async def month(ctx, amount: float):
-        await ctx.send(amount * 3.154e8 / 2.628e6)
+        try:
+            await ctx.send(amount * 3.154e8 / 2.628e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @decade.command(invoke_without_command=True, description='units/time-decade-year-desc')
+    del month
+
+    @decade.command(aliases=['years'], invoke_without_command=True, description='units/time-decade-year-desc')
     async def year(ctx, amount: float):
-        await ctx.send(amount * 3.154e8 / 3.154e7)
+        try:
+            await ctx.send(amount * 3.154e8 / 3.154e7)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @decade.command(invoke_without_command=True, description='units/time-decade-century-desc')
+    del year
+
+    @decade.command(aliases=['centuries'], invoke_without_command=True, description='units/time-decade-century-desc')
     async def century(ctx, amount: float):
-        await ctx.send(amount * 3.154e8 / 3.154e9)
+        try:
+            await ctx.send(amount * 3.154e8 / 3.154e9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @time.group(invoke_without_command=True, description='units/time-century-desc')
+    del century
+
+    @time.group(aliases=['centuries'], invoke_without_command=True, description='units/time-century-desc')
     @lone_group(True)
-    async def century(ctx):
+    async def century(self, ctx):
         pass
 
 
-    @century.command(invoke_without_command=True, description='units/time-century-ns-desc')
+    @century.command(aliases=['nanosecond', 'nanoseconds'], invoke_without_command=True, description='units/time-century-ns-desc')
     async def ns(ctx, amount: float):
-        await ctx.send(amount * 3.154e9 / 1e-9)
+        try:
+            await ctx.send(amount * 3.154e9 / 1e-9)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @century.command(invoke_without_command=True, description='units/time-century-micros-desc')
+    del ns
+
+    @century.command(aliases=['microsecond', 'microseconds'], invoke_without_command=True, description='units/time-century-micros-desc')
     async def micros(ctx, amount: float):
-        await ctx.send(amount * 3.154e9 / 1e-6)
+        try:
+            await ctx.send(amount * 3.154e9 / 1e-6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @century.command(invoke_without_command=True, description='units/time-century-ms-desc')
+    del micros
+
+    @century.command(aliases=['millisecond', 'milliseconds'], invoke_without_command=True, description='units/time-century-ms-desc')
     async def ms(ctx, amount: float):
-        await ctx.send(amount * 3.154e9 / 1e-3)
+        try:
+            await ctx.send(amount * 3.154e9 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @century.command(invoke_without_command=True, description='units/time-century-s-desc')
+    del ms
+
+    @century.command(aliases=['second', 'seconds'], invoke_without_command=True, description='units/time-century-s-desc')
     async def s(ctx, amount: float):
-        await ctx.send(amount * 3.154e9 / 1)
+        try:
+            await ctx.send(amount * 3.154e9 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @century.command(invoke_without_command=True, description='units/time-century-min-desc')
+    del s
+
+    @century.command(aliases=['minute', 'minutes'], invoke_without_command=True, description='units/time-century-min-desc')
     async def min(ctx, amount: float):
-        await ctx.send(amount * 3.154e9 / 60)
+        try:
+            await ctx.send(amount * 3.154e9 / 60)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @century.command(invoke_without_command=True, description='units/time-century-h-desc')
+    del min
+
+    @century.command(aliases=['hour', 'hours'], invoke_without_command=True, description='units/time-century-h-desc')
     async def h(ctx, amount: float):
-        await ctx.send(amount * 3.154e9 / 3600)
+        try:
+            await ctx.send(amount * 3.154e9 / 3600)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @century.command(invoke_without_command=True, description='units/time-century-day-desc')
+    del h
+
+    @century.command(aliases=['days'], invoke_without_command=True, description='units/time-century-day-desc')
     async def day(ctx, amount: float):
-        await ctx.send(amount * 3.154e9 / 86400)
+        try:
+            await ctx.send(amount * 3.154e9 / 86400)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @century.command(invoke_without_command=True, description='units/time-century-week-desc')
+    del day
+
+    @century.command(aliases=['weeks'], invoke_without_command=True, description='units/time-century-week-desc')
     async def week(ctx, amount: float):
-        await ctx.send(amount * 3.154e9 / 604800)
+        try:
+            await ctx.send(amount * 3.154e9 / 604800)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @century.command(invoke_without_command=True, description='units/time-century-month-desc')
+    del week
+
+    @century.command(aliases=['months'], invoke_without_command=True, description='units/time-century-month-desc')
     async def month(ctx, amount: float):
-        await ctx.send(amount * 3.154e9 / 2.628e6)
+        try:
+            await ctx.send(amount * 3.154e9 / 2.628e6)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @century.command(invoke_without_command=True, description='units/time-century-year-desc')
+    del month
+
+    @century.command(aliases=['years'], invoke_without_command=True, description='units/time-century-year-desc')
     async def year(ctx, amount: float):
-        await ctx.send(amount * 3.154e9 / 3.154e7)
+        try:
+            await ctx.send(amount * 3.154e9 / 3.154e7)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @century.command(invoke_without_command=True, description='units/time-century-decade-desc')
+    del year
+
+    @century.command(aliases=['decades'], invoke_without_command=True, description='units/time-century-decade-desc')
     async def decade(ctx, amount: float):
-        await ctx.send(amount * 3.154e9 / 3.154e8)
+        try:
+            await ctx.send(amount * 3.154e9 / 3.154e8)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del decade
 
 
     @convert.group(aliases=[], invoke_without_command=True, description='units/volume-desc')
@@ -5570,1484 +11532,3195 @@ class Units(Cog):
         pass
 
 
-    @volume.group(invoke_without_command=True, description='units/volume-lgallon-desc')
+    @volume.group(aliases=['us-liquid-gallon', 'us-liquid-gallons'], invoke_without_command=True, description='units/volume-lgallon-desc')
     @lone_group(True)
-    async def lgallon(ctx):
+    async def lgallon(self, ctx):
         pass
 
 
-    @lgallon.command(invoke_without_command=True, description='units/volume-lgallon-lquart-desc')
+    @lgallon.command(aliases=['us-liquid-quart', 'us-liquid-quarts'], invoke_without_command=True, description='units/volume-lgallon-lquart-desc')
     async def lquart(ctx, amount: float):
-        await ctx.send(amount * 3.78541 / (1/1.057))
+        try:
+            await ctx.send(amount * 3.78541 / (1/1.057))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lgallon.command(invoke_without_command=True, description='units/volume-lgallon-lpint-desc')
+    del lquart
+
+    @lgallon.command(aliases=['us-liquid-pint', 'us-liquid-pints'], invoke_without_command=True, description='units/volume-lgallon-lpint-desc')
     async def lpint(ctx, amount: float):
-        await ctx.send(amount * 3.78541 / (1/4.167))
+        try:
+            await ctx.send(amount * 3.78541 / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lgallon.command(invoke_without_command=True, description='units/volume-lgallon-uscup-desc')
+    del lpint
+
+    @lgallon.command(aliases=['us-legal-cup', 'us-legal-cups'], invoke_without_command=True, description='units/volume-lgallon-uscup-desc')
     async def uscup(ctx, amount: float):
-        await ctx.send(amount * 3.78541 / (1/4.167))
+        try:
+            await ctx.send(amount * 3.78541 / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lgallon.command(invoke_without_command=True, description='units/volume-lgallon-usfloz-desc')
+    del uscup
+
+    @lgallon.command(aliases=['us-fluid-ounce', 'us-fluid-ounces'], invoke_without_command=True, description='units/volume-lgallon-usfloz-desc')
     async def usfloz(ctx, amount: float):
-        await ctx.send(amount * 3.78541 / (1/33.814))
+        try:
+            await ctx.send(amount * 3.78541 / (1/33.814))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lgallon.command(invoke_without_command=True, description='units/volume-lgallon-ustbsp-desc')
+    del usfloz
+
+    @lgallon.command(aliases=['us-tablespoon', 'us-tablespoons'], invoke_without_command=True, description='units/volume-lgallon-ustbsp-desc')
     async def ustbsp(ctx, amount: float):
-        await ctx.send(amount * 3.78541 / (1/67.628))
+        try:
+            await ctx.send(amount * 3.78541 / (1/67.628))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lgallon.command(invoke_without_command=True, description='units/volume-lgallon-ustsp-desc')
+    del ustbsp
+
+    @lgallon.command(aliases=['us-teaspoon', 'us-teaspoons'], invoke_without_command=True, description='units/volume-lgallon-ustsp-desc')
     async def ustsp(ctx, amount: float):
-        await ctx.send(amount * 3.78541 / (1/202.884))
+        try:
+            await ctx.send(amount * 3.78541 / (1/202.884))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lgallon.command(invoke_without_command=True, description='units/volume-lgallon-m3-desc')
+    del ustsp
+
+    @lgallon.command(aliases=['cubic-meter', 'cubic-meters', 'cubic-metre', 'cubic-metres'], invoke_without_command=True, description='units/volume-lgallon-m3-desc')
     async def m3(ctx, amount: float):
-        await ctx.send(amount * 3.78541 / 1e3)
+        try:
+            await ctx.send(amount * 3.78541 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lgallon.command(invoke_without_command=True, description='units/volume-lgallon-l-desc')
-    async def l(ctx, amount: float):
-        await ctx.send(amount * 3.78541 / 1)
+    del m3
 
-    @lgallon.command(invoke_without_command=True, description='units/volume-lgallon-ml-desc')
-    async def ml(ctx, amount: float):
-        await ctx.send(amount * 3.78541 / 1e-3)
+    @lgallon.command(aliases=['liter', 'liters', 'litre', 'litres'], invoke_without_command=True, description='units/volume-lgallon-L-desc')
+    async def L(ctx, amount: float):
+        try:
+            await ctx.send(amount * 3.78541 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lgallon.command(invoke_without_command=True, description='units/volume-lgallon-gallon-desc')
+    del L
+
+    @lgallon.command(aliases=['milliliter', 'milliliters', 'millilitre', 'millilitres'], invoke_without_command=True, description='units/volume-lgallon-mL-desc')
+    async def mL(ctx, amount: float):
+        try:
+            await ctx.send(amount * 3.78541 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del mL
+
+    @lgallon.command(aliases=['gallons'], invoke_without_command=True, description='units/volume-lgallon-gallon-desc')
     async def gallon(ctx, amount: float):
-        await ctx.send(amount * 3.78541 / 4.546)
+        try:
+            await ctx.send(amount * 3.78541 / 4.546)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lgallon.command(invoke_without_command=True, description='units/volume-lgallon-quart-desc')
+    del gallon
+
+    @lgallon.command(aliases=['quarts'], invoke_without_command=True, description='units/volume-lgallon-quart-desc')
     async def quart(ctx, amount: float):
-        await ctx.send(amount * 3.78541 / 1.3652)
+        try:
+            await ctx.send(amount * 3.78541 / 1.3652)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lgallon.command(invoke_without_command=True, description='units/volume-lgallon-pint-desc')
+    del quart
+
+    @lgallon.command(aliases=['pints'], invoke_without_command=True, description='units/volume-lgallon-pint-desc')
     async def pint(ctx, amount: float):
-        await ctx.send(amount * 3.78541 / (1/1.76))
+        try:
+            await ctx.send(amount * 3.78541 / (1/1.76))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lgallon.command(invoke_without_command=True, description='units/volume-lgallon-cup-desc')
+    del pint
+
+    @lgallon.command(aliases=['cups'], invoke_without_command=True, description='units/volume-lgallon-cup-desc')
     async def cup(ctx, amount: float):
-        await ctx.send(amount * 3.78541 / (1/3.52))
+        try:
+            await ctx.send(amount * 3.78541 / (1/3.52))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lgallon.command(invoke_without_command=True, description='units/volume-lgallon-floz-desc')
+    del cup
+
+    @lgallon.command(aliases=['fluid-ounce', 'fluid-ounces'], invoke_without_command=True, description='units/volume-lgallon-floz-desc')
     async def floz(ctx, amount: float):
-        await ctx.send(amount * 3.78541 / (1/35.195))
+        try:
+            await ctx.send(amount * 3.78541 / (1/35.195))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lgallon.command(invoke_without_command=True, description='units/volume-lgallon-tbsp-desc')
+    del floz
+
+    @lgallon.command(aliases=['tablespoon', 'tablespoons'], invoke_without_command=True, description='units/volume-lgallon-tbsp-desc')
     async def tbsp(ctx, amount: float):
-        await ctx.send(amount * 3.78541 / (1/56.312))
+        try:
+            await ctx.send(amount * 3.78541 / (1/56.312))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lgallon.command(invoke_without_command=True, description='units/volume-lgallon-tsp-desc')
+    del tbsp
+
+    @lgallon.command(aliases=['teaspoon', 'teaspoons'], invoke_without_command=True, description='units/volume-lgallon-tsp-desc')
     async def tsp(ctx, amount: float):
-        await ctx.send(amount * 3.78541 / (1/168.936))
+        try:
+            await ctx.send(amount * 3.78541 / (1/168.936))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lgallon.command(invoke_without_command=True, description='units/volume-lgallon-ft3-desc')
+    del tsp
+
+    @lgallon.command(aliases=['cubic-foot', 'cubic-feet'], invoke_without_command=True, description='units/volume-lgallon-ft3-desc')
     async def ft3(ctx, amount: float):
-        await ctx.send(amount * 3.78541 / (1/28.317))
+        try:
+            await ctx.send(amount * 3.78541 / (1/28.317))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lgallon.command(invoke_without_command=True, description='units/volume-lgallon-in3-desc')
+    del ft3
+
+    @lgallon.command(aliases=['cubic-inch', 'cubic-inches'], invoke_without_command=True, description='units/volume-lgallon-in3-desc')
     async def in3(ctx, amount: float):
-        await ctx.send(amount * 3.78541 / (1/61.024))
+        try:
+            await ctx.send(amount * 3.78541 / (1/61.024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @volume.group(invoke_without_command=True, description='units/volume-lquart-desc')
+    del in3
+
+    @volume.group(aliases=['us-liquid-quart', 'us-liquid-quarts'], invoke_without_command=True, description='units/volume-lquart-desc')
     @lone_group(True)
-    async def lquart(ctx):
+    async def lquart(self, ctx):
         pass
 
 
-    @lquart.command(invoke_without_command=True, description='units/volume-lquart-lgallon-desc')
+    @lquart.command(aliases=['us-liquid-gallon', 'us-liquid-gallons'], invoke_without_command=True, description='units/volume-lquart-lgallon-desc')
     async def lgallon(ctx, amount: float):
-        await ctx.send(amount * (1/1.057) / 3.78541)
+        try:
+            await ctx.send(amount * (1/1.057) / 3.78541)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lquart.command(invoke_without_command=True, description='units/volume-lquart-lpint-desc')
+    del lgallon
+
+    @lquart.command(aliases=['us-liquid-pint', 'us-liquid-pints'], invoke_without_command=True, description='units/volume-lquart-lpint-desc')
     async def lpint(ctx, amount: float):
-        await ctx.send(amount * (1/1.057) / (1/4.167))
+        try:
+            await ctx.send(amount * (1/1.057) / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lquart.command(invoke_without_command=True, description='units/volume-lquart-uscup-desc')
+    del lpint
+
+    @lquart.command(aliases=['us-legal-cup', 'us-legal-cups'], invoke_without_command=True, description='units/volume-lquart-uscup-desc')
     async def uscup(ctx, amount: float):
-        await ctx.send(amount * (1/1.057) / (1/4.167))
+        try:
+            await ctx.send(amount * (1/1.057) / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lquart.command(invoke_without_command=True, description='units/volume-lquart-usfloz-desc')
+    del uscup
+
+    @lquart.command(aliases=['us-fluid-ounce', 'us-fluid-ounces'], invoke_without_command=True, description='units/volume-lquart-usfloz-desc')
     async def usfloz(ctx, amount: float):
-        await ctx.send(amount * (1/1.057) / (1/33.814))
+        try:
+            await ctx.send(amount * (1/1.057) / (1/33.814))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lquart.command(invoke_without_command=True, description='units/volume-lquart-ustbsp-desc')
+    del usfloz
+
+    @lquart.command(aliases=['us-tablespoon', 'us-tablespoons'], invoke_without_command=True, description='units/volume-lquart-ustbsp-desc')
     async def ustbsp(ctx, amount: float):
-        await ctx.send(amount * (1/1.057) / (1/67.628))
+        try:
+            await ctx.send(amount * (1/1.057) / (1/67.628))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lquart.command(invoke_without_command=True, description='units/volume-lquart-ustsp-desc')
+    del ustbsp
+
+    @lquart.command(aliases=['us-teaspoon', 'us-teaspoons'], invoke_without_command=True, description='units/volume-lquart-ustsp-desc')
     async def ustsp(ctx, amount: float):
-        await ctx.send(amount * (1/1.057) / (1/202.884))
+        try:
+            await ctx.send(amount * (1/1.057) / (1/202.884))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lquart.command(invoke_without_command=True, description='units/volume-lquart-m3-desc')
+    del ustsp
+
+    @lquart.command(aliases=['cubic-meter', 'cubic-meters', 'cubic-metre', 'cubic-metres'], invoke_without_command=True, description='units/volume-lquart-m3-desc')
     async def m3(ctx, amount: float):
-        await ctx.send(amount * (1/1.057) / 1e3)
+        try:
+            await ctx.send(amount * (1/1.057) / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lquart.command(invoke_without_command=True, description='units/volume-lquart-l-desc')
-    async def l(ctx, amount: float):
-        await ctx.send(amount * (1/1.057) / 1)
+    del m3
 
-    @lquart.command(invoke_without_command=True, description='units/volume-lquart-ml-desc')
-    async def ml(ctx, amount: float):
-        await ctx.send(amount * (1/1.057) / 1e-3)
+    @lquart.command(aliases=['liter', 'liters', 'litre', 'litres'], invoke_without_command=True, description='units/volume-lquart-L-desc')
+    async def L(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/1.057) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lquart.command(invoke_without_command=True, description='units/volume-lquart-gallon-desc')
+    del L
+
+    @lquart.command(aliases=['milliliter', 'milliliters', 'millilitre', 'millilitres'], invoke_without_command=True, description='units/volume-lquart-mL-desc')
+    async def mL(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/1.057) / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del mL
+
+    @lquart.command(aliases=['gallons'], invoke_without_command=True, description='units/volume-lquart-gallon-desc')
     async def gallon(ctx, amount: float):
-        await ctx.send(amount * (1/1.057) / 4.546)
+        try:
+            await ctx.send(amount * (1/1.057) / 4.546)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lquart.command(invoke_without_command=True, description='units/volume-lquart-quart-desc')
+    del gallon
+
+    @lquart.command(aliases=['quarts'], invoke_without_command=True, description='units/volume-lquart-quart-desc')
     async def quart(ctx, amount: float):
-        await ctx.send(amount * (1/1.057) / 1.3652)
+        try:
+            await ctx.send(amount * (1/1.057) / 1.3652)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lquart.command(invoke_without_command=True, description='units/volume-lquart-pint-desc')
+    del quart
+
+    @lquart.command(aliases=['pints'], invoke_without_command=True, description='units/volume-lquart-pint-desc')
     async def pint(ctx, amount: float):
-        await ctx.send(amount * (1/1.057) / (1/1.76))
+        try:
+            await ctx.send(amount * (1/1.057) / (1/1.76))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lquart.command(invoke_without_command=True, description='units/volume-lquart-cup-desc')
+    del pint
+
+    @lquart.command(aliases=['cups'], invoke_without_command=True, description='units/volume-lquart-cup-desc')
     async def cup(ctx, amount: float):
-        await ctx.send(amount * (1/1.057) / (1/3.52))
+        try:
+            await ctx.send(amount * (1/1.057) / (1/3.52))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lquart.command(invoke_without_command=True, description='units/volume-lquart-floz-desc')
+    del cup
+
+    @lquart.command(aliases=['fluid-ounce', 'fluid-ounces'], invoke_without_command=True, description='units/volume-lquart-floz-desc')
     async def floz(ctx, amount: float):
-        await ctx.send(amount * (1/1.057) / (1/35.195))
+        try:
+            await ctx.send(amount * (1/1.057) / (1/35.195))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lquart.command(invoke_without_command=True, description='units/volume-lquart-tbsp-desc')
+    del floz
+
+    @lquart.command(aliases=['tablespoon', 'tablespoons'], invoke_without_command=True, description='units/volume-lquart-tbsp-desc')
     async def tbsp(ctx, amount: float):
-        await ctx.send(amount * (1/1.057) / (1/56.312))
+        try:
+            await ctx.send(amount * (1/1.057) / (1/56.312))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lquart.command(invoke_without_command=True, description='units/volume-lquart-tsp-desc')
+    del tbsp
+
+    @lquart.command(aliases=['teaspoon', 'teaspoons'], invoke_without_command=True, description='units/volume-lquart-tsp-desc')
     async def tsp(ctx, amount: float):
-        await ctx.send(amount * (1/1.057) / (1/168.936))
+        try:
+            await ctx.send(amount * (1/1.057) / (1/168.936))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lquart.command(invoke_without_command=True, description='units/volume-lquart-ft3-desc')
+    del tsp
+
+    @lquart.command(aliases=['cubic-foot', 'cubic-feet'], invoke_without_command=True, description='units/volume-lquart-ft3-desc')
     async def ft3(ctx, amount: float):
-        await ctx.send(amount * (1/1.057) / (1/28.317))
+        try:
+            await ctx.send(amount * (1/1.057) / (1/28.317))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lquart.command(invoke_without_command=True, description='units/volume-lquart-in3-desc')
+    del ft3
+
+    @lquart.command(aliases=['cubic-inch', 'cubic-inches'], invoke_without_command=True, description='units/volume-lquart-in3-desc')
     async def in3(ctx, amount: float):
-        await ctx.send(amount * (1/1.057) / (1/61.024))
+        try:
+            await ctx.send(amount * (1/1.057) / (1/61.024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @volume.group(invoke_without_command=True, description='units/volume-lpint-desc')
+    del in3
+
+    @volume.group(aliases=['us-liquid-pint', 'us-liquid-pints'], invoke_without_command=True, description='units/volume-lpint-desc')
     @lone_group(True)
-    async def lpint(ctx):
+    async def lpint(self, ctx):
         pass
 
 
-    @lpint.command(invoke_without_command=True, description='units/volume-lpint-lgallon-desc')
+    @lpint.command(aliases=['us-liquid-gallon', 'us-liquid-gallons'], invoke_without_command=True, description='units/volume-lpint-lgallon-desc')
     async def lgallon(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / 3.78541)
+        try:
+            await ctx.send(amount * (1/4.167) / 3.78541)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lpint.command(invoke_without_command=True, description='units/volume-lpint-lquart-desc')
+    del lgallon
+
+    @lpint.command(aliases=['us-liquid-quart', 'us-liquid-quarts'], invoke_without_command=True, description='units/volume-lpint-lquart-desc')
     async def lquart(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / (1/1.057))
+        try:
+            await ctx.send(amount * (1/4.167) / (1/1.057))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lpint.command(invoke_without_command=True, description='units/volume-lpint-uscup-desc')
+    del lquart
+
+    @lpint.command(aliases=['us-legal-cup', 'us-legal-cups'], invoke_without_command=True, description='units/volume-lpint-uscup-desc')
     async def uscup(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / (1/4.167))
+        try:
+            await ctx.send(amount * (1/4.167) / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lpint.command(invoke_without_command=True, description='units/volume-lpint-usfloz-desc')
+    del uscup
+
+    @lpint.command(aliases=['us-fluid-ounce', 'us-fluid-ounces'], invoke_without_command=True, description='units/volume-lpint-usfloz-desc')
     async def usfloz(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / (1/33.814))
+        try:
+            await ctx.send(amount * (1/4.167) / (1/33.814))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lpint.command(invoke_without_command=True, description='units/volume-lpint-ustbsp-desc')
+    del usfloz
+
+    @lpint.command(aliases=['us-tablespoon', 'us-tablespoons'], invoke_without_command=True, description='units/volume-lpint-ustbsp-desc')
     async def ustbsp(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / (1/67.628))
+        try:
+            await ctx.send(amount * (1/4.167) / (1/67.628))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lpint.command(invoke_without_command=True, description='units/volume-lpint-ustsp-desc')
+    del ustbsp
+
+    @lpint.command(aliases=['us-teaspoon', 'us-teaspoons'], invoke_without_command=True, description='units/volume-lpint-ustsp-desc')
     async def ustsp(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / (1/202.884))
+        try:
+            await ctx.send(amount * (1/4.167) / (1/202.884))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lpint.command(invoke_without_command=True, description='units/volume-lpint-m3-desc')
+    del ustsp
+
+    @lpint.command(aliases=['cubic-meter', 'cubic-meters', 'cubic-metre', 'cubic-metres'], invoke_without_command=True, description='units/volume-lpint-m3-desc')
     async def m3(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / 1e3)
+        try:
+            await ctx.send(amount * (1/4.167) / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lpint.command(invoke_without_command=True, description='units/volume-lpint-l-desc')
-    async def l(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / 1)
+    del m3
 
-    @lpint.command(invoke_without_command=True, description='units/volume-lpint-ml-desc')
-    async def ml(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / 1e-3)
+    @lpint.command(aliases=['liter', 'liters', 'litre', 'litres'], invoke_without_command=True, description='units/volume-lpint-L-desc')
+    async def L(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/4.167) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lpint.command(invoke_without_command=True, description='units/volume-lpint-gallon-desc')
+    del L
+
+    @lpint.command(aliases=['milliliter', 'milliliters', 'millilitre', 'millilitres'], invoke_without_command=True, description='units/volume-lpint-mL-desc')
+    async def mL(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/4.167) / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del mL
+
+    @lpint.command(aliases=['gallons'], invoke_without_command=True, description='units/volume-lpint-gallon-desc')
     async def gallon(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / 4.546)
+        try:
+            await ctx.send(amount * (1/4.167) / 4.546)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lpint.command(invoke_without_command=True, description='units/volume-lpint-quart-desc')
+    del gallon
+
+    @lpint.command(aliases=['quarts'], invoke_without_command=True, description='units/volume-lpint-quart-desc')
     async def quart(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / 1.3652)
+        try:
+            await ctx.send(amount * (1/4.167) / 1.3652)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lpint.command(invoke_without_command=True, description='units/volume-lpint-pint-desc')
+    del quart
+
+    @lpint.command(aliases=['pints'], invoke_without_command=True, description='units/volume-lpint-pint-desc')
     async def pint(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / (1/1.76))
+        try:
+            await ctx.send(amount * (1/4.167) / (1/1.76))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lpint.command(invoke_without_command=True, description='units/volume-lpint-cup-desc')
+    del pint
+
+    @lpint.command(aliases=['cups'], invoke_without_command=True, description='units/volume-lpint-cup-desc')
     async def cup(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / (1/3.52))
+        try:
+            await ctx.send(amount * (1/4.167) / (1/3.52))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lpint.command(invoke_without_command=True, description='units/volume-lpint-floz-desc')
+    del cup
+
+    @lpint.command(aliases=['fluid-ounce', 'fluid-ounces'], invoke_without_command=True, description='units/volume-lpint-floz-desc')
     async def floz(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / (1/35.195))
+        try:
+            await ctx.send(amount * (1/4.167) / (1/35.195))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lpint.command(invoke_without_command=True, description='units/volume-lpint-tbsp-desc')
+    del floz
+
+    @lpint.command(aliases=['tablespoon', 'tablespoons'], invoke_without_command=True, description='units/volume-lpint-tbsp-desc')
     async def tbsp(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / (1/56.312))
+        try:
+            await ctx.send(amount * (1/4.167) / (1/56.312))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lpint.command(invoke_without_command=True, description='units/volume-lpint-tsp-desc')
+    del tbsp
+
+    @lpint.command(aliases=['teaspoon', 'teaspoons'], invoke_without_command=True, description='units/volume-lpint-tsp-desc')
     async def tsp(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / (1/168.936))
+        try:
+            await ctx.send(amount * (1/4.167) / (1/168.936))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lpint.command(invoke_without_command=True, description='units/volume-lpint-ft3-desc')
+    del tsp
+
+    @lpint.command(aliases=['cubic-foot', 'cubic-feet'], invoke_without_command=True, description='units/volume-lpint-ft3-desc')
     async def ft3(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / (1/28.317))
+        try:
+            await ctx.send(amount * (1/4.167) / (1/28.317))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @lpint.command(invoke_without_command=True, description='units/volume-lpint-in3-desc')
+    del ft3
+
+    @lpint.command(aliases=['cubic-inch', 'cubic-inches'], invoke_without_command=True, description='units/volume-lpint-in3-desc')
     async def in3(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / (1/61.024))
+        try:
+            await ctx.send(amount * (1/4.167) / (1/61.024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @volume.group(invoke_without_command=True, description='units/volume-uscup-desc')
+    del in3
+
+    @volume.group(aliases=['us-legal-cup', 'us-legal-cups'], invoke_without_command=True, description='units/volume-uscup-desc')
     @lone_group(True)
-    async def uscup(ctx):
+    async def uscup(self, ctx):
         pass
 
 
-    @uscup.command(invoke_without_command=True, description='units/volume-uscup-lgallon-desc')
+    @uscup.command(aliases=['us-liquid-gallon', 'us-liquid-gallons'], invoke_without_command=True, description='units/volume-uscup-lgallon-desc')
     async def lgallon(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / 3.78541)
+        try:
+            await ctx.send(amount * (1/4.167) / 3.78541)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @uscup.command(invoke_without_command=True, description='units/volume-uscup-lquart-desc')
+    del lgallon
+
+    @uscup.command(aliases=['us-liquid-quart', 'us-liquid-quarts'], invoke_without_command=True, description='units/volume-uscup-lquart-desc')
     async def lquart(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / (1/1.057))
+        try:
+            await ctx.send(amount * (1/4.167) / (1/1.057))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @uscup.command(invoke_without_command=True, description='units/volume-uscup-lpint-desc')
+    del lquart
+
+    @uscup.command(aliases=['us-liquid-pint', 'us-liquid-pints'], invoke_without_command=True, description='units/volume-uscup-lpint-desc')
     async def lpint(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / (1/4.167))
+        try:
+            await ctx.send(amount * (1/4.167) / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @uscup.command(invoke_without_command=True, description='units/volume-uscup-usfloz-desc')
+    del lpint
+
+    @uscup.command(aliases=['us-fluid-ounce', 'us-fluid-ounces'], invoke_without_command=True, description='units/volume-uscup-usfloz-desc')
     async def usfloz(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / (1/33.814))
+        try:
+            await ctx.send(amount * (1/4.167) / (1/33.814))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @uscup.command(invoke_without_command=True, description='units/volume-uscup-ustbsp-desc')
+    del usfloz
+
+    @uscup.command(aliases=['us-tablespoon', 'us-tablespoons'], invoke_without_command=True, description='units/volume-uscup-ustbsp-desc')
     async def ustbsp(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / (1/67.628))
+        try:
+            await ctx.send(amount * (1/4.167) / (1/67.628))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @uscup.command(invoke_without_command=True, description='units/volume-uscup-ustsp-desc')
+    del ustbsp
+
+    @uscup.command(aliases=['us-teaspoon', 'us-teaspoons'], invoke_without_command=True, description='units/volume-uscup-ustsp-desc')
     async def ustsp(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / (1/202.884))
+        try:
+            await ctx.send(amount * (1/4.167) / (1/202.884))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @uscup.command(invoke_without_command=True, description='units/volume-uscup-m3-desc')
+    del ustsp
+
+    @uscup.command(aliases=['cubic-meter', 'cubic-meters', 'cubic-metre', 'cubic-metres'], invoke_without_command=True, description='units/volume-uscup-m3-desc')
     async def m3(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / 1e3)
+        try:
+            await ctx.send(amount * (1/4.167) / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @uscup.command(invoke_without_command=True, description='units/volume-uscup-l-desc')
-    async def l(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / 1)
+    del m3
 
-    @uscup.command(invoke_without_command=True, description='units/volume-uscup-ml-desc')
-    async def ml(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / 1e-3)
+    @uscup.command(aliases=['liter', 'liters', 'litre', 'litres'], invoke_without_command=True, description='units/volume-uscup-L-desc')
+    async def L(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/4.167) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @uscup.command(invoke_without_command=True, description='units/volume-uscup-gallon-desc')
+    del L
+
+    @uscup.command(aliases=['milliliter', 'milliliters', 'millilitre', 'millilitres'], invoke_without_command=True, description='units/volume-uscup-mL-desc')
+    async def mL(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/4.167) / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del mL
+
+    @uscup.command(aliases=['gallons'], invoke_without_command=True, description='units/volume-uscup-gallon-desc')
     async def gallon(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / 4.546)
+        try:
+            await ctx.send(amount * (1/4.167) / 4.546)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @uscup.command(invoke_without_command=True, description='units/volume-uscup-quart-desc')
+    del gallon
+
+    @uscup.command(aliases=['quarts'], invoke_without_command=True, description='units/volume-uscup-quart-desc')
     async def quart(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / 1.3652)
+        try:
+            await ctx.send(amount * (1/4.167) / 1.3652)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @uscup.command(invoke_without_command=True, description='units/volume-uscup-pint-desc')
+    del quart
+
+    @uscup.command(aliases=['pints'], invoke_without_command=True, description='units/volume-uscup-pint-desc')
     async def pint(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / (1/1.76))
+        try:
+            await ctx.send(amount * (1/4.167) / (1/1.76))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @uscup.command(invoke_without_command=True, description='units/volume-uscup-cup-desc')
+    del pint
+
+    @uscup.command(aliases=['cups'], invoke_without_command=True, description='units/volume-uscup-cup-desc')
     async def cup(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / (1/3.52))
+        try:
+            await ctx.send(amount * (1/4.167) / (1/3.52))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @uscup.command(invoke_without_command=True, description='units/volume-uscup-floz-desc')
+    del cup
+
+    @uscup.command(aliases=['fluid-ounce', 'fluid-ounces'], invoke_without_command=True, description='units/volume-uscup-floz-desc')
     async def floz(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / (1/35.195))
+        try:
+            await ctx.send(amount * (1/4.167) / (1/35.195))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @uscup.command(invoke_without_command=True, description='units/volume-uscup-tbsp-desc')
+    del floz
+
+    @uscup.command(aliases=['tablespoon', 'tablespoons'], invoke_without_command=True, description='units/volume-uscup-tbsp-desc')
     async def tbsp(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / (1/56.312))
+        try:
+            await ctx.send(amount * (1/4.167) / (1/56.312))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @uscup.command(invoke_without_command=True, description='units/volume-uscup-tsp-desc')
+    del tbsp
+
+    @uscup.command(aliases=['teaspoon', 'teaspoons'], invoke_without_command=True, description='units/volume-uscup-tsp-desc')
     async def tsp(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / (1/168.936))
+        try:
+            await ctx.send(amount * (1/4.167) / (1/168.936))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @uscup.command(invoke_without_command=True, description='units/volume-uscup-ft3-desc')
+    del tsp
+
+    @uscup.command(aliases=['cubic-foot', 'cubic-feet'], invoke_without_command=True, description='units/volume-uscup-ft3-desc')
     async def ft3(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / (1/28.317))
+        try:
+            await ctx.send(amount * (1/4.167) / (1/28.317))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @uscup.command(invoke_without_command=True, description='units/volume-uscup-in3-desc')
+    del ft3
+
+    @uscup.command(aliases=['cubic-inch', 'cubic-inches'], invoke_without_command=True, description='units/volume-uscup-in3-desc')
     async def in3(ctx, amount: float):
-        await ctx.send(amount * (1/4.167) / (1/61.024))
+        try:
+            await ctx.send(amount * (1/4.167) / (1/61.024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @volume.group(invoke_without_command=True, description='units/volume-usfloz-desc')
+    del in3
+
+    @volume.group(aliases=['us-fluid-ounce', 'us-fluid-ounces'], invoke_without_command=True, description='units/volume-usfloz-desc')
     @lone_group(True)
-    async def usfloz(ctx):
+    async def usfloz(self, ctx):
         pass
 
 
-    @usfloz.command(invoke_without_command=True, description='units/volume-usfloz-lgallon-desc')
+    @usfloz.command(aliases=['us-liquid-gallon', 'us-liquid-gallons'], invoke_without_command=True, description='units/volume-usfloz-lgallon-desc')
     async def lgallon(ctx, amount: float):
-        await ctx.send(amount * (1/33.814) / 3.78541)
+        try:
+            await ctx.send(amount * (1/33.814) / 3.78541)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @usfloz.command(invoke_without_command=True, description='units/volume-usfloz-lquart-desc')
+    del lgallon
+
+    @usfloz.command(aliases=['us-liquid-quart', 'us-liquid-quarts'], invoke_without_command=True, description='units/volume-usfloz-lquart-desc')
     async def lquart(ctx, amount: float):
-        await ctx.send(amount * (1/33.814) / (1/1.057))
+        try:
+            await ctx.send(amount * (1/33.814) / (1/1.057))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @usfloz.command(invoke_without_command=True, description='units/volume-usfloz-lpint-desc')
+    del lquart
+
+    @usfloz.command(aliases=['us-liquid-pint', 'us-liquid-pints'], invoke_without_command=True, description='units/volume-usfloz-lpint-desc')
     async def lpint(ctx, amount: float):
-        await ctx.send(amount * (1/33.814) / (1/4.167))
+        try:
+            await ctx.send(amount * (1/33.814) / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @usfloz.command(invoke_without_command=True, description='units/volume-usfloz-uscup-desc')
+    del lpint
+
+    @usfloz.command(aliases=['us-legal-cup', 'us-legal-cups'], invoke_without_command=True, description='units/volume-usfloz-uscup-desc')
     async def uscup(ctx, amount: float):
-        await ctx.send(amount * (1/33.814) / (1/4.167))
+        try:
+            await ctx.send(amount * (1/33.814) / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @usfloz.command(invoke_without_command=True, description='units/volume-usfloz-ustbsp-desc')
+    del uscup
+
+    @usfloz.command(aliases=['us-tablespoon', 'us-tablespoons'], invoke_without_command=True, description='units/volume-usfloz-ustbsp-desc')
     async def ustbsp(ctx, amount: float):
-        await ctx.send(amount * (1/33.814) / (1/67.628))
+        try:
+            await ctx.send(amount * (1/33.814) / (1/67.628))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @usfloz.command(invoke_without_command=True, description='units/volume-usfloz-ustsp-desc')
+    del ustbsp
+
+    @usfloz.command(aliases=['us-teaspoon', 'us-teaspoons'], invoke_without_command=True, description='units/volume-usfloz-ustsp-desc')
     async def ustsp(ctx, amount: float):
-        await ctx.send(amount * (1/33.814) / (1/202.884))
+        try:
+            await ctx.send(amount * (1/33.814) / (1/202.884))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @usfloz.command(invoke_without_command=True, description='units/volume-usfloz-m3-desc')
+    del ustsp
+
+    @usfloz.command(aliases=['cubic-meter', 'cubic-meters', 'cubic-metre', 'cubic-metres'], invoke_without_command=True, description='units/volume-usfloz-m3-desc')
     async def m3(ctx, amount: float):
-        await ctx.send(amount * (1/33.814) / 1e3)
+        try:
+            await ctx.send(amount * (1/33.814) / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @usfloz.command(invoke_without_command=True, description='units/volume-usfloz-l-desc')
-    async def l(ctx, amount: float):
-        await ctx.send(amount * (1/33.814) / 1)
+    del m3
 
-    @usfloz.command(invoke_without_command=True, description='units/volume-usfloz-ml-desc')
-    async def ml(ctx, amount: float):
-        await ctx.send(amount * (1/33.814) / 1e-3)
+    @usfloz.command(aliases=['liter', 'liters', 'litre', 'litres'], invoke_without_command=True, description='units/volume-usfloz-L-desc')
+    async def L(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/33.814) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @usfloz.command(invoke_without_command=True, description='units/volume-usfloz-gallon-desc')
+    del L
+
+    @usfloz.command(aliases=['milliliter', 'milliliters', 'millilitre', 'millilitres'], invoke_without_command=True, description='units/volume-usfloz-mL-desc')
+    async def mL(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/33.814) / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del mL
+
+    @usfloz.command(aliases=['gallons'], invoke_without_command=True, description='units/volume-usfloz-gallon-desc')
     async def gallon(ctx, amount: float):
-        await ctx.send(amount * (1/33.814) / 4.546)
+        try:
+            await ctx.send(amount * (1/33.814) / 4.546)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @usfloz.command(invoke_without_command=True, description='units/volume-usfloz-quart-desc')
+    del gallon
+
+    @usfloz.command(aliases=['quarts'], invoke_without_command=True, description='units/volume-usfloz-quart-desc')
     async def quart(ctx, amount: float):
-        await ctx.send(amount * (1/33.814) / 1.3652)
+        try:
+            await ctx.send(amount * (1/33.814) / 1.3652)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @usfloz.command(invoke_without_command=True, description='units/volume-usfloz-pint-desc')
+    del quart
+
+    @usfloz.command(aliases=['pints'], invoke_without_command=True, description='units/volume-usfloz-pint-desc')
     async def pint(ctx, amount: float):
-        await ctx.send(amount * (1/33.814) / (1/1.76))
+        try:
+            await ctx.send(amount * (1/33.814) / (1/1.76))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @usfloz.command(invoke_without_command=True, description='units/volume-usfloz-cup-desc')
+    del pint
+
+    @usfloz.command(aliases=['cups'], invoke_without_command=True, description='units/volume-usfloz-cup-desc')
     async def cup(ctx, amount: float):
-        await ctx.send(amount * (1/33.814) / (1/3.52))
+        try:
+            await ctx.send(amount * (1/33.814) / (1/3.52))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @usfloz.command(invoke_without_command=True, description='units/volume-usfloz-floz-desc')
+    del cup
+
+    @usfloz.command(aliases=['fluid-ounce', 'fluid-ounces'], invoke_without_command=True, description='units/volume-usfloz-floz-desc')
     async def floz(ctx, amount: float):
-        await ctx.send(amount * (1/33.814) / (1/35.195))
+        try:
+            await ctx.send(amount * (1/33.814) / (1/35.195))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @usfloz.command(invoke_without_command=True, description='units/volume-usfloz-tbsp-desc')
+    del floz
+
+    @usfloz.command(aliases=['tablespoon', 'tablespoons'], invoke_without_command=True, description='units/volume-usfloz-tbsp-desc')
     async def tbsp(ctx, amount: float):
-        await ctx.send(amount * (1/33.814) / (1/56.312))
+        try:
+            await ctx.send(amount * (1/33.814) / (1/56.312))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @usfloz.command(invoke_without_command=True, description='units/volume-usfloz-tsp-desc')
+    del tbsp
+
+    @usfloz.command(aliases=['teaspoon', 'teaspoons'], invoke_without_command=True, description='units/volume-usfloz-tsp-desc')
     async def tsp(ctx, amount: float):
-        await ctx.send(amount * (1/33.814) / (1/168.936))
+        try:
+            await ctx.send(amount * (1/33.814) / (1/168.936))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @usfloz.command(invoke_without_command=True, description='units/volume-usfloz-ft3-desc')
+    del tsp
+
+    @usfloz.command(aliases=['cubic-foot', 'cubic-feet'], invoke_without_command=True, description='units/volume-usfloz-ft3-desc')
     async def ft3(ctx, amount: float):
-        await ctx.send(amount * (1/33.814) / (1/28.317))
+        try:
+            await ctx.send(amount * (1/33.814) / (1/28.317))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @usfloz.command(invoke_without_command=True, description='units/volume-usfloz-in3-desc')
+    del ft3
+
+    @usfloz.command(aliases=['cubic-inch', 'cubic-inches'], invoke_without_command=True, description='units/volume-usfloz-in3-desc')
     async def in3(ctx, amount: float):
-        await ctx.send(amount * (1/33.814) / (1/61.024))
+        try:
+            await ctx.send(amount * (1/33.814) / (1/61.024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @volume.group(invoke_without_command=True, description='units/volume-ustbsp-desc')
+    del in3
+
+    @volume.group(aliases=['us-tablespoon', 'us-tablespoons'], invoke_without_command=True, description='units/volume-ustbsp-desc')
     @lone_group(True)
-    async def ustbsp(ctx):
+    async def ustbsp(self, ctx):
         pass
 
 
-    @ustbsp.command(invoke_without_command=True, description='units/volume-ustbsp-lgallon-desc')
+    @ustbsp.command(aliases=['us-liquid-gallon', 'us-liquid-gallons'], invoke_without_command=True, description='units/volume-ustbsp-lgallon-desc')
     async def lgallon(ctx, amount: float):
-        await ctx.send(amount * (1/67.628) / 3.78541)
+        try:
+            await ctx.send(amount * (1/67.628) / 3.78541)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustbsp.command(invoke_without_command=True, description='units/volume-ustbsp-lquart-desc')
+    del lgallon
+
+    @ustbsp.command(aliases=['us-liquid-quart', 'us-liquid-quarts'], invoke_without_command=True, description='units/volume-ustbsp-lquart-desc')
     async def lquart(ctx, amount: float):
-        await ctx.send(amount * (1/67.628) / (1/1.057))
+        try:
+            await ctx.send(amount * (1/67.628) / (1/1.057))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustbsp.command(invoke_without_command=True, description='units/volume-ustbsp-lpint-desc')
+    del lquart
+
+    @ustbsp.command(aliases=['us-liquid-pint', 'us-liquid-pints'], invoke_without_command=True, description='units/volume-ustbsp-lpint-desc')
     async def lpint(ctx, amount: float):
-        await ctx.send(amount * (1/67.628) / (1/4.167))
+        try:
+            await ctx.send(amount * (1/67.628) / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustbsp.command(invoke_without_command=True, description='units/volume-ustbsp-uscup-desc')
+    del lpint
+
+    @ustbsp.command(aliases=['us-legal-cup', 'us-legal-cups'], invoke_without_command=True, description='units/volume-ustbsp-uscup-desc')
     async def uscup(ctx, amount: float):
-        await ctx.send(amount * (1/67.628) / (1/4.167))
+        try:
+            await ctx.send(amount * (1/67.628) / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustbsp.command(invoke_without_command=True, description='units/volume-ustbsp-usfloz-desc')
+    del uscup
+
+    @ustbsp.command(aliases=['us-fluid-ounce', 'us-fluid-ounces'], invoke_without_command=True, description='units/volume-ustbsp-usfloz-desc')
     async def usfloz(ctx, amount: float):
-        await ctx.send(amount * (1/67.628) / (1/33.814))
+        try:
+            await ctx.send(amount * (1/67.628) / (1/33.814))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustbsp.command(invoke_without_command=True, description='units/volume-ustbsp-ustsp-desc')
+    del usfloz
+
+    @ustbsp.command(aliases=['us-teaspoon', 'us-teaspoons'], invoke_without_command=True, description='units/volume-ustbsp-ustsp-desc')
     async def ustsp(ctx, amount: float):
-        await ctx.send(amount * (1/67.628) / (1/202.884))
+        try:
+            await ctx.send(amount * (1/67.628) / (1/202.884))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustbsp.command(invoke_without_command=True, description='units/volume-ustbsp-m3-desc')
+    del ustsp
+
+    @ustbsp.command(aliases=['cubic-meter', 'cubic-meters', 'cubic-metre', 'cubic-metres'], invoke_without_command=True, description='units/volume-ustbsp-m3-desc')
     async def m3(ctx, amount: float):
-        await ctx.send(amount * (1/67.628) / 1e3)
+        try:
+            await ctx.send(amount * (1/67.628) / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustbsp.command(invoke_without_command=True, description='units/volume-ustbsp-l-desc')
-    async def l(ctx, amount: float):
-        await ctx.send(amount * (1/67.628) / 1)
+    del m3
 
-    @ustbsp.command(invoke_without_command=True, description='units/volume-ustbsp-ml-desc')
-    async def ml(ctx, amount: float):
-        await ctx.send(amount * (1/67.628) / 1e-3)
+    @ustbsp.command(aliases=['liter', 'liters', 'litre', 'litres'], invoke_without_command=True, description='units/volume-ustbsp-L-desc')
+    async def L(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/67.628) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustbsp.command(invoke_without_command=True, description='units/volume-ustbsp-gallon-desc')
+    del L
+
+    @ustbsp.command(aliases=['milliliter', 'milliliters', 'millilitre', 'millilitres'], invoke_without_command=True, description='units/volume-ustbsp-mL-desc')
+    async def mL(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/67.628) / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del mL
+
+    @ustbsp.command(aliases=['gallons'], invoke_without_command=True, description='units/volume-ustbsp-gallon-desc')
     async def gallon(ctx, amount: float):
-        await ctx.send(amount * (1/67.628) / 4.546)
+        try:
+            await ctx.send(amount * (1/67.628) / 4.546)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustbsp.command(invoke_without_command=True, description='units/volume-ustbsp-quart-desc')
+    del gallon
+
+    @ustbsp.command(aliases=['quarts'], invoke_without_command=True, description='units/volume-ustbsp-quart-desc')
     async def quart(ctx, amount: float):
-        await ctx.send(amount * (1/67.628) / 1.3652)
+        try:
+            await ctx.send(amount * (1/67.628) / 1.3652)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustbsp.command(invoke_without_command=True, description='units/volume-ustbsp-pint-desc')
+    del quart
+
+    @ustbsp.command(aliases=['pints'], invoke_without_command=True, description='units/volume-ustbsp-pint-desc')
     async def pint(ctx, amount: float):
-        await ctx.send(amount * (1/67.628) / (1/1.76))
+        try:
+            await ctx.send(amount * (1/67.628) / (1/1.76))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustbsp.command(invoke_without_command=True, description='units/volume-ustbsp-cup-desc')
+    del pint
+
+    @ustbsp.command(aliases=['cups'], invoke_without_command=True, description='units/volume-ustbsp-cup-desc')
     async def cup(ctx, amount: float):
-        await ctx.send(amount * (1/67.628) / (1/3.52))
+        try:
+            await ctx.send(amount * (1/67.628) / (1/3.52))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustbsp.command(invoke_without_command=True, description='units/volume-ustbsp-floz-desc')
+    del cup
+
+    @ustbsp.command(aliases=['fluid-ounce', 'fluid-ounces'], invoke_without_command=True, description='units/volume-ustbsp-floz-desc')
     async def floz(ctx, amount: float):
-        await ctx.send(amount * (1/67.628) / (1/35.195))
+        try:
+            await ctx.send(amount * (1/67.628) / (1/35.195))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustbsp.command(invoke_without_command=True, description='units/volume-ustbsp-tbsp-desc')
+    del floz
+
+    @ustbsp.command(aliases=['tablespoon', 'tablespoons'], invoke_without_command=True, description='units/volume-ustbsp-tbsp-desc')
     async def tbsp(ctx, amount: float):
-        await ctx.send(amount * (1/67.628) / (1/56.312))
+        try:
+            await ctx.send(amount * (1/67.628) / (1/56.312))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustbsp.command(invoke_without_command=True, description='units/volume-ustbsp-tsp-desc')
+    del tbsp
+
+    @ustbsp.command(aliases=['teaspoon', 'teaspoons'], invoke_without_command=True, description='units/volume-ustbsp-tsp-desc')
     async def tsp(ctx, amount: float):
-        await ctx.send(amount * (1/67.628) / (1/168.936))
+        try:
+            await ctx.send(amount * (1/67.628) / (1/168.936))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustbsp.command(invoke_without_command=True, description='units/volume-ustbsp-ft3-desc')
+    del tsp
+
+    @ustbsp.command(aliases=['cubic-foot', 'cubic-feet'], invoke_without_command=True, description='units/volume-ustbsp-ft3-desc')
     async def ft3(ctx, amount: float):
-        await ctx.send(amount * (1/67.628) / (1/28.317))
+        try:
+            await ctx.send(amount * (1/67.628) / (1/28.317))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustbsp.command(invoke_without_command=True, description='units/volume-ustbsp-in3-desc')
+    del ft3
+
+    @ustbsp.command(aliases=['cubic-inch', 'cubic-inches'], invoke_without_command=True, description='units/volume-ustbsp-in3-desc')
     async def in3(ctx, amount: float):
-        await ctx.send(amount * (1/67.628) / (1/61.024))
+        try:
+            await ctx.send(amount * (1/67.628) / (1/61.024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @volume.group(invoke_without_command=True, description='units/volume-ustsp-desc')
+    del in3
+
+    @volume.group(aliases=['us-teaspoon', 'us-teaspoons'], invoke_without_command=True, description='units/volume-ustsp-desc')
     @lone_group(True)
-    async def ustsp(ctx):
+    async def ustsp(self, ctx):
         pass
 
 
-    @ustsp.command(invoke_without_command=True, description='units/volume-ustsp-lgallon-desc')
+    @ustsp.command(aliases=['us-liquid-gallon', 'us-liquid-gallons'], invoke_without_command=True, description='units/volume-ustsp-lgallon-desc')
     async def lgallon(ctx, amount: float):
-        await ctx.send(amount * (1/202.884) / 3.78541)
+        try:
+            await ctx.send(amount * (1/202.884) / 3.78541)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustsp.command(invoke_without_command=True, description='units/volume-ustsp-lquart-desc')
+    del lgallon
+
+    @ustsp.command(aliases=['us-liquid-quart', 'us-liquid-quarts'], invoke_without_command=True, description='units/volume-ustsp-lquart-desc')
     async def lquart(ctx, amount: float):
-        await ctx.send(amount * (1/202.884) / (1/1.057))
+        try:
+            await ctx.send(amount * (1/202.884) / (1/1.057))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustsp.command(invoke_without_command=True, description='units/volume-ustsp-lpint-desc')
+    del lquart
+
+    @ustsp.command(aliases=['us-liquid-pint', 'us-liquid-pints'], invoke_without_command=True, description='units/volume-ustsp-lpint-desc')
     async def lpint(ctx, amount: float):
-        await ctx.send(amount * (1/202.884) / (1/4.167))
+        try:
+            await ctx.send(amount * (1/202.884) / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustsp.command(invoke_without_command=True, description='units/volume-ustsp-uscup-desc')
+    del lpint
+
+    @ustsp.command(aliases=['us-legal-cup', 'us-legal-cups'], invoke_without_command=True, description='units/volume-ustsp-uscup-desc')
     async def uscup(ctx, amount: float):
-        await ctx.send(amount * (1/202.884) / (1/4.167))
+        try:
+            await ctx.send(amount * (1/202.884) / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustsp.command(invoke_without_command=True, description='units/volume-ustsp-usfloz-desc')
+    del uscup
+
+    @ustsp.command(aliases=['us-fluid-ounce', 'us-fluid-ounces'], invoke_without_command=True, description='units/volume-ustsp-usfloz-desc')
     async def usfloz(ctx, amount: float):
-        await ctx.send(amount * (1/202.884) / (1/33.814))
+        try:
+            await ctx.send(amount * (1/202.884) / (1/33.814))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustsp.command(invoke_without_command=True, description='units/volume-ustsp-ustbsp-desc')
+    del usfloz
+
+    @ustsp.command(aliases=['us-tablespoon', 'us-tablespoons'], invoke_without_command=True, description='units/volume-ustsp-ustbsp-desc')
     async def ustbsp(ctx, amount: float):
-        await ctx.send(amount * (1/202.884) / (1/67.628))
+        try:
+            await ctx.send(amount * (1/202.884) / (1/67.628))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustsp.command(invoke_without_command=True, description='units/volume-ustsp-m3-desc')
+    del ustbsp
+
+    @ustsp.command(aliases=['cubic-meter', 'cubic-meters', 'cubic-metre', 'cubic-metres'], invoke_without_command=True, description='units/volume-ustsp-m3-desc')
     async def m3(ctx, amount: float):
-        await ctx.send(amount * (1/202.884) / 1e3)
+        try:
+            await ctx.send(amount * (1/202.884) / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustsp.command(invoke_without_command=True, description='units/volume-ustsp-l-desc')
-    async def l(ctx, amount: float):
-        await ctx.send(amount * (1/202.884) / 1)
+    del m3
 
-    @ustsp.command(invoke_without_command=True, description='units/volume-ustsp-ml-desc')
-    async def ml(ctx, amount: float):
-        await ctx.send(amount * (1/202.884) / 1e-3)
+    @ustsp.command(aliases=['liter', 'liters', 'litre', 'litres'], invoke_without_command=True, description='units/volume-ustsp-L-desc')
+    async def L(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/202.884) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustsp.command(invoke_without_command=True, description='units/volume-ustsp-gallon-desc')
+    del L
+
+    @ustsp.command(aliases=['milliliter', 'milliliters', 'millilitre', 'millilitres'], invoke_without_command=True, description='units/volume-ustsp-mL-desc')
+    async def mL(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/202.884) / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del mL
+
+    @ustsp.command(aliases=['gallons'], invoke_without_command=True, description='units/volume-ustsp-gallon-desc')
     async def gallon(ctx, amount: float):
-        await ctx.send(amount * (1/202.884) / 4.546)
+        try:
+            await ctx.send(amount * (1/202.884) / 4.546)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustsp.command(invoke_without_command=True, description='units/volume-ustsp-quart-desc')
+    del gallon
+
+    @ustsp.command(aliases=['quarts'], invoke_without_command=True, description='units/volume-ustsp-quart-desc')
     async def quart(ctx, amount: float):
-        await ctx.send(amount * (1/202.884) / 1.3652)
+        try:
+            await ctx.send(amount * (1/202.884) / 1.3652)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustsp.command(invoke_without_command=True, description='units/volume-ustsp-pint-desc')
+    del quart
+
+    @ustsp.command(aliases=['pints'], invoke_without_command=True, description='units/volume-ustsp-pint-desc')
     async def pint(ctx, amount: float):
-        await ctx.send(amount * (1/202.884) / (1/1.76))
+        try:
+            await ctx.send(amount * (1/202.884) / (1/1.76))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustsp.command(invoke_without_command=True, description='units/volume-ustsp-cup-desc')
+    del pint
+
+    @ustsp.command(aliases=['cups'], invoke_without_command=True, description='units/volume-ustsp-cup-desc')
     async def cup(ctx, amount: float):
-        await ctx.send(amount * (1/202.884) / (1/3.52))
+        try:
+            await ctx.send(amount * (1/202.884) / (1/3.52))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustsp.command(invoke_without_command=True, description='units/volume-ustsp-floz-desc')
+    del cup
+
+    @ustsp.command(aliases=['fluid-ounce', 'fluid-ounces'], invoke_without_command=True, description='units/volume-ustsp-floz-desc')
     async def floz(ctx, amount: float):
-        await ctx.send(amount * (1/202.884) / (1/35.195))
+        try:
+            await ctx.send(amount * (1/202.884) / (1/35.195))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustsp.command(invoke_without_command=True, description='units/volume-ustsp-tbsp-desc')
+    del floz
+
+    @ustsp.command(aliases=['tablespoon', 'tablespoons'], invoke_without_command=True, description='units/volume-ustsp-tbsp-desc')
     async def tbsp(ctx, amount: float):
-        await ctx.send(amount * (1/202.884) / (1/56.312))
+        try:
+            await ctx.send(amount * (1/202.884) / (1/56.312))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustsp.command(invoke_without_command=True, description='units/volume-ustsp-tsp-desc')
+    del tbsp
+
+    @ustsp.command(aliases=['teaspoon', 'teaspoons'], invoke_without_command=True, description='units/volume-ustsp-tsp-desc')
     async def tsp(ctx, amount: float):
-        await ctx.send(amount * (1/202.884) / (1/168.936))
+        try:
+            await ctx.send(amount * (1/202.884) / (1/168.936))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustsp.command(invoke_without_command=True, description='units/volume-ustsp-ft3-desc')
+    del tsp
+
+    @ustsp.command(aliases=['cubic-foot', 'cubic-feet'], invoke_without_command=True, description='units/volume-ustsp-ft3-desc')
     async def ft3(ctx, amount: float):
-        await ctx.send(amount * (1/202.884) / (1/28.317))
+        try:
+            await ctx.send(amount * (1/202.884) / (1/28.317))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ustsp.command(invoke_without_command=True, description='units/volume-ustsp-in3-desc')
+    del ft3
+
+    @ustsp.command(aliases=['cubic-inch', 'cubic-inches'], invoke_without_command=True, description='units/volume-ustsp-in3-desc')
     async def in3(ctx, amount: float):
-        await ctx.send(amount * (1/202.884) / (1/61.024))
+        try:
+            await ctx.send(amount * (1/202.884) / (1/61.024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @volume.group(invoke_without_command=True, description='units/volume-m3-desc')
+    del in3
+
+    @volume.group(aliases=['cubic-meter', 'cubic-meters', 'cubic-metre', 'cubic-metres'], invoke_without_command=True, description='units/volume-m3-desc')
     @lone_group(True)
-    async def m3(ctx):
+    async def m3(self, ctx):
         pass
 
 
-    @m3.command(invoke_without_command=True, description='units/volume-m3-lgallon-desc')
+    @m3.command(aliases=['us-liquid-gallon', 'us-liquid-gallons'], invoke_without_command=True, description='units/volume-m3-lgallon-desc')
     async def lgallon(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 3.78541)
+        try:
+            await ctx.send(amount * 1e3 / 3.78541)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @m3.command(invoke_without_command=True, description='units/volume-m3-lquart-desc')
+    del lgallon
+
+    @m3.command(aliases=['us-liquid-quart', 'us-liquid-quarts'], invoke_without_command=True, description='units/volume-m3-lquart-desc')
     async def lquart(ctx, amount: float):
-        await ctx.send(amount * 1e3 / (1/1.057))
+        try:
+            await ctx.send(amount * 1e3 / (1/1.057))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @m3.command(invoke_without_command=True, description='units/volume-m3-lpint-desc')
+    del lquart
+
+    @m3.command(aliases=['us-liquid-pint', 'us-liquid-pints'], invoke_without_command=True, description='units/volume-m3-lpint-desc')
     async def lpint(ctx, amount: float):
-        await ctx.send(amount * 1e3 / (1/4.167))
+        try:
+            await ctx.send(amount * 1e3 / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @m3.command(invoke_without_command=True, description='units/volume-m3-uscup-desc')
+    del lpint
+
+    @m3.command(aliases=['us-legal-cup', 'us-legal-cups'], invoke_without_command=True, description='units/volume-m3-uscup-desc')
     async def uscup(ctx, amount: float):
-        await ctx.send(amount * 1e3 / (1/4.167))
+        try:
+            await ctx.send(amount * 1e3 / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @m3.command(invoke_without_command=True, description='units/volume-m3-usfloz-desc')
+    del uscup
+
+    @m3.command(aliases=['us-fluid-ounce', 'us-fluid-ounces'], invoke_without_command=True, description='units/volume-m3-usfloz-desc')
     async def usfloz(ctx, amount: float):
-        await ctx.send(amount * 1e3 / (1/33.814))
+        try:
+            await ctx.send(amount * 1e3 / (1/33.814))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @m3.command(invoke_without_command=True, description='units/volume-m3-ustbsp-desc')
+    del usfloz
+
+    @m3.command(aliases=['us-tablespoon', 'us-tablespoons'], invoke_without_command=True, description='units/volume-m3-ustbsp-desc')
     async def ustbsp(ctx, amount: float):
-        await ctx.send(amount * 1e3 / (1/67.628))
+        try:
+            await ctx.send(amount * 1e3 / (1/67.628))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @m3.command(invoke_without_command=True, description='units/volume-m3-ustsp-desc')
+    del ustbsp
+
+    @m3.command(aliases=['us-teaspoon', 'us-teaspoons'], invoke_without_command=True, description='units/volume-m3-ustsp-desc')
     async def ustsp(ctx, amount: float):
-        await ctx.send(amount * 1e3 / (1/202.884))
+        try:
+            await ctx.send(amount * 1e3 / (1/202.884))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @m3.command(invoke_without_command=True, description='units/volume-m3-l-desc')
-    async def l(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 1)
+    del ustsp
 
-    @m3.command(invoke_without_command=True, description='units/volume-m3-ml-desc')
-    async def ml(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 1e-3)
+    @m3.command(aliases=['liter', 'liters', 'litre', 'litres'], invoke_without_command=True, description='units/volume-m3-L-desc')
+    async def L(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1e3 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @m3.command(invoke_without_command=True, description='units/volume-m3-gallon-desc')
+    del L
+
+    @m3.command(aliases=['milliliter', 'milliliters', 'millilitre', 'millilitres'], invoke_without_command=True, description='units/volume-m3-mL-desc')
+    async def mL(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1e3 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del mL
+
+    @m3.command(aliases=['gallons'], invoke_without_command=True, description='units/volume-m3-gallon-desc')
     async def gallon(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 4.546)
+        try:
+            await ctx.send(amount * 1e3 / 4.546)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @m3.command(invoke_without_command=True, description='units/volume-m3-quart-desc')
+    del gallon
+
+    @m3.command(aliases=['quarts'], invoke_without_command=True, description='units/volume-m3-quart-desc')
     async def quart(ctx, amount: float):
-        await ctx.send(amount * 1e3 / 1.3652)
+        try:
+            await ctx.send(amount * 1e3 / 1.3652)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @m3.command(invoke_without_command=True, description='units/volume-m3-pint-desc')
+    del quart
+
+    @m3.command(aliases=['pints'], invoke_without_command=True, description='units/volume-m3-pint-desc')
     async def pint(ctx, amount: float):
-        await ctx.send(amount * 1e3 / (1/1.76))
+        try:
+            await ctx.send(amount * 1e3 / (1/1.76))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @m3.command(invoke_without_command=True, description='units/volume-m3-cup-desc')
+    del pint
+
+    @m3.command(aliases=['cups'], invoke_without_command=True, description='units/volume-m3-cup-desc')
     async def cup(ctx, amount: float):
-        await ctx.send(amount * 1e3 / (1/3.52))
+        try:
+            await ctx.send(amount * 1e3 / (1/3.52))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @m3.command(invoke_without_command=True, description='units/volume-m3-floz-desc')
+    del cup
+
+    @m3.command(aliases=['fluid-ounce', 'fluid-ounces'], invoke_without_command=True, description='units/volume-m3-floz-desc')
     async def floz(ctx, amount: float):
-        await ctx.send(amount * 1e3 / (1/35.195))
+        try:
+            await ctx.send(amount * 1e3 / (1/35.195))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @m3.command(invoke_without_command=True, description='units/volume-m3-tbsp-desc')
+    del floz
+
+    @m3.command(aliases=['tablespoon', 'tablespoons'], invoke_without_command=True, description='units/volume-m3-tbsp-desc')
     async def tbsp(ctx, amount: float):
-        await ctx.send(amount * 1e3 / (1/56.312))
+        try:
+            await ctx.send(amount * 1e3 / (1/56.312))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @m3.command(invoke_without_command=True, description='units/volume-m3-tsp-desc')
+    del tbsp
+
+    @m3.command(aliases=['teaspoon', 'teaspoons'], invoke_without_command=True, description='units/volume-m3-tsp-desc')
     async def tsp(ctx, amount: float):
-        await ctx.send(amount * 1e3 / (1/168.936))
+        try:
+            await ctx.send(amount * 1e3 / (1/168.936))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @m3.command(invoke_without_command=True, description='units/volume-m3-ft3-desc')
+    del tsp
+
+    @m3.command(aliases=['cubic-foot', 'cubic-feet'], invoke_without_command=True, description='units/volume-m3-ft3-desc')
     async def ft3(ctx, amount: float):
-        await ctx.send(amount * 1e3 / (1/28.317))
+        try:
+            await ctx.send(amount * 1e3 / (1/28.317))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @m3.command(invoke_without_command=True, description='units/volume-m3-in3-desc')
+    del ft3
+
+    @m3.command(aliases=['cubic-inch', 'cubic-inches'], invoke_without_command=True, description='units/volume-m3-in3-desc')
     async def in3(ctx, amount: float):
-        await ctx.send(amount * 1e3 / (1/61.024))
+        try:
+            await ctx.send(amount * 1e3 / (1/61.024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @volume.group(invoke_without_command=True, description='units/volume-l-desc')
+    del in3
+
+    @volume.group(aliases=['liter', 'liters', 'litre', 'litres'], invoke_without_command=True, description='units/volume-L-desc')
     @lone_group(True)
-    async def l(ctx):
+    async def L(self, ctx):
         pass
 
 
-    @l.command(invoke_without_command=True, description='units/volume-l-lgallon-desc')
+    @L.command(aliases=['us-liquid-gallon', 'us-liquid-gallons'], invoke_without_command=True, description='units/volume-L-lgallon-desc')
     async def lgallon(ctx, amount: float):
-        await ctx.send(amount * 1 / 3.78541)
+        try:
+            await ctx.send(amount * 1 / 3.78541)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @l.command(invoke_without_command=True, description='units/volume-l-lquart-desc')
+    del lgallon
+
+    @L.command(aliases=['us-liquid-quart', 'us-liquid-quarts'], invoke_without_command=True, description='units/volume-L-lquart-desc')
     async def lquart(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/1.057))
+        try:
+            await ctx.send(amount * 1 / (1/1.057))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @l.command(invoke_without_command=True, description='units/volume-l-lpint-desc')
+    del lquart
+
+    @L.command(aliases=['us-liquid-pint', 'us-liquid-pints'], invoke_without_command=True, description='units/volume-L-lpint-desc')
     async def lpint(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/4.167))
+        try:
+            await ctx.send(amount * 1 / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @l.command(invoke_without_command=True, description='units/volume-l-uscup-desc')
+    del lpint
+
+    @L.command(aliases=['us-legal-cup', 'us-legal-cups'], invoke_without_command=True, description='units/volume-L-uscup-desc')
     async def uscup(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/4.167))
+        try:
+            await ctx.send(amount * 1 / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @l.command(invoke_without_command=True, description='units/volume-l-usfloz-desc')
+    del uscup
+
+    @L.command(aliases=['us-fluid-ounce', 'us-fluid-ounces'], invoke_without_command=True, description='units/volume-L-usfloz-desc')
     async def usfloz(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/33.814))
+        try:
+            await ctx.send(amount * 1 / (1/33.814))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @l.command(invoke_without_command=True, description='units/volume-l-ustbsp-desc')
+    del usfloz
+
+    @L.command(aliases=['us-tablespoon', 'us-tablespoons'], invoke_without_command=True, description='units/volume-L-ustbsp-desc')
     async def ustbsp(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/67.628))
+        try:
+            await ctx.send(amount * 1 / (1/67.628))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @l.command(invoke_without_command=True, description='units/volume-l-ustsp-desc')
+    del ustbsp
+
+    @L.command(aliases=['us-teaspoon', 'us-teaspoons'], invoke_without_command=True, description='units/volume-L-ustsp-desc')
     async def ustsp(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/202.884))
+        try:
+            await ctx.send(amount * 1 / (1/202.884))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @l.command(invoke_without_command=True, description='units/volume-l-m3-desc')
+    del ustsp
+
+    @L.command(aliases=['cubic-meter', 'cubic-meters', 'cubic-metre', 'cubic-metres'], invoke_without_command=True, description='units/volume-L-m3-desc')
     async def m3(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e3)
+        try:
+            await ctx.send(amount * 1 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @l.command(invoke_without_command=True, description='units/volume-l-ml-desc')
-    async def ml(ctx, amount: float):
-        await ctx.send(amount * 1 / 1e-3)
+    del m3
 
-    @l.command(invoke_without_command=True, description='units/volume-l-gallon-desc')
+    @L.command(aliases=['milliliter', 'milliliters', 'millilitre', 'millilitres'], invoke_without_command=True, description='units/volume-L-mL-desc')
+    async def mL(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del mL
+
+    @L.command(aliases=['gallons'], invoke_without_command=True, description='units/volume-L-gallon-desc')
     async def gallon(ctx, amount: float):
-        await ctx.send(amount * 1 / 4.546)
+        try:
+            await ctx.send(amount * 1 / 4.546)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @l.command(invoke_without_command=True, description='units/volume-l-quart-desc')
+    del gallon
+
+    @L.command(aliases=['quarts'], invoke_without_command=True, description='units/volume-L-quart-desc')
     async def quart(ctx, amount: float):
-        await ctx.send(amount * 1 / 1.3652)
+        try:
+            await ctx.send(amount * 1 / 1.3652)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @l.command(invoke_without_command=True, description='units/volume-l-pint-desc')
+    del quart
+
+    @L.command(aliases=['pints'], invoke_without_command=True, description='units/volume-L-pint-desc')
     async def pint(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/1.76))
+        try:
+            await ctx.send(amount * 1 / (1/1.76))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @l.command(invoke_without_command=True, description='units/volume-l-cup-desc')
+    del pint
+
+    @L.command(aliases=['cups'], invoke_without_command=True, description='units/volume-L-cup-desc')
     async def cup(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/3.52))
+        try:
+            await ctx.send(amount * 1 / (1/3.52))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @l.command(invoke_without_command=True, description='units/volume-l-floz-desc')
+    del cup
+
+    @L.command(aliases=['fluid-ounce', 'fluid-ounces'], invoke_without_command=True, description='units/volume-L-floz-desc')
     async def floz(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/35.195))
+        try:
+            await ctx.send(amount * 1 / (1/35.195))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @l.command(invoke_without_command=True, description='units/volume-l-tbsp-desc')
+    del floz
+
+    @L.command(aliases=['tablespoon', 'tablespoons'], invoke_without_command=True, description='units/volume-L-tbsp-desc')
     async def tbsp(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/56.312))
+        try:
+            await ctx.send(amount * 1 / (1/56.312))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @l.command(invoke_without_command=True, description='units/volume-l-tsp-desc')
+    del tbsp
+
+    @L.command(aliases=['teaspoon', 'teaspoons'], invoke_without_command=True, description='units/volume-L-tsp-desc')
     async def tsp(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/168.936))
+        try:
+            await ctx.send(amount * 1 / (1/168.936))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @l.command(invoke_without_command=True, description='units/volume-l-ft3-desc')
+    del tsp
+
+    @L.command(aliases=['cubic-foot', 'cubic-feet'], invoke_without_command=True, description='units/volume-L-ft3-desc')
     async def ft3(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/28.317))
+        try:
+            await ctx.send(amount * 1 / (1/28.317))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @l.command(invoke_without_command=True, description='units/volume-l-in3-desc')
+    del ft3
+
+    @L.command(aliases=['cubic-inch', 'cubic-inches'], invoke_without_command=True, description='units/volume-L-in3-desc')
     async def in3(ctx, amount: float):
-        await ctx.send(amount * 1 / (1/61.024))
+        try:
+            await ctx.send(amount * 1 / (1/61.024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @volume.group(invoke_without_command=True, description='units/volume-ml-desc')
+    del in3
+
+    @volume.group(aliases=['milliliter', 'milliliters', 'millilitre', 'millilitres'], invoke_without_command=True, description='units/volume-mL-desc')
     @lone_group(True)
-    async def ml(ctx):
+    async def mL(self, ctx):
         pass
 
 
-    @ml.command(invoke_without_command=True, description='units/volume-ml-lgallon-desc')
+    @mL.command(aliases=['us-liquid-gallon', 'us-liquid-gallons'], invoke_without_command=True, description='units/volume-mL-lgallon-desc')
     async def lgallon(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 3.78541)
+        try:
+            await ctx.send(amount * 1e-3 / 3.78541)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ml.command(invoke_without_command=True, description='units/volume-ml-lquart-desc')
+    del lgallon
+
+    @mL.command(aliases=['us-liquid-quart', 'us-liquid-quarts'], invoke_without_command=True, description='units/volume-mL-lquart-desc')
     async def lquart(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / (1/1.057))
+        try:
+            await ctx.send(amount * 1e-3 / (1/1.057))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ml.command(invoke_without_command=True, description='units/volume-ml-lpint-desc')
+    del lquart
+
+    @mL.command(aliases=['us-liquid-pint', 'us-liquid-pints'], invoke_without_command=True, description='units/volume-mL-lpint-desc')
     async def lpint(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / (1/4.167))
+        try:
+            await ctx.send(amount * 1e-3 / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ml.command(invoke_without_command=True, description='units/volume-ml-uscup-desc')
+    del lpint
+
+    @mL.command(aliases=['us-legal-cup', 'us-legal-cups'], invoke_without_command=True, description='units/volume-mL-uscup-desc')
     async def uscup(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / (1/4.167))
+        try:
+            await ctx.send(amount * 1e-3 / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ml.command(invoke_without_command=True, description='units/volume-ml-usfloz-desc')
+    del uscup
+
+    @mL.command(aliases=['us-fluid-ounce', 'us-fluid-ounces'], invoke_without_command=True, description='units/volume-mL-usfloz-desc')
     async def usfloz(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / (1/33.814))
+        try:
+            await ctx.send(amount * 1e-3 / (1/33.814))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ml.command(invoke_without_command=True, description='units/volume-ml-ustbsp-desc')
+    del usfloz
+
+    @mL.command(aliases=['us-tablespoon', 'us-tablespoons'], invoke_without_command=True, description='units/volume-mL-ustbsp-desc')
     async def ustbsp(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / (1/67.628))
+        try:
+            await ctx.send(amount * 1e-3 / (1/67.628))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ml.command(invoke_without_command=True, description='units/volume-ml-ustsp-desc')
+    del ustbsp
+
+    @mL.command(aliases=['us-teaspoon', 'us-teaspoons'], invoke_without_command=True, description='units/volume-mL-ustsp-desc')
     async def ustsp(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / (1/202.884))
+        try:
+            await ctx.send(amount * 1e-3 / (1/202.884))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ml.command(invoke_without_command=True, description='units/volume-ml-m3-desc')
+    del ustsp
+
+    @mL.command(aliases=['cubic-meter', 'cubic-meters', 'cubic-metre', 'cubic-metres'], invoke_without_command=True, description='units/volume-mL-m3-desc')
     async def m3(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 1e3)
+        try:
+            await ctx.send(amount * 1e-3 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ml.command(invoke_without_command=True, description='units/volume-ml-l-desc')
-    async def l(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 1)
+    del m3
 
-    @ml.command(invoke_without_command=True, description='units/volume-ml-gallon-desc')
+    @mL.command(aliases=['liter', 'liters', 'litre', 'litres'], invoke_without_command=True, description='units/volume-mL-L-desc')
+    async def L(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1e-3 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del L
+
+    @mL.command(aliases=['gallons'], invoke_without_command=True, description='units/volume-mL-gallon-desc')
     async def gallon(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 4.546)
+        try:
+            await ctx.send(amount * 1e-3 / 4.546)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ml.command(invoke_without_command=True, description='units/volume-ml-quart-desc')
+    del gallon
+
+    @mL.command(aliases=['quarts'], invoke_without_command=True, description='units/volume-mL-quart-desc')
     async def quart(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / 1.3652)
+        try:
+            await ctx.send(amount * 1e-3 / 1.3652)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ml.command(invoke_without_command=True, description='units/volume-ml-pint-desc')
+    del quart
+
+    @mL.command(aliases=['pints'], invoke_without_command=True, description='units/volume-mL-pint-desc')
     async def pint(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / (1/1.76))
+        try:
+            await ctx.send(amount * 1e-3 / (1/1.76))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ml.command(invoke_without_command=True, description='units/volume-ml-cup-desc')
+    del pint
+
+    @mL.command(aliases=['cups'], invoke_without_command=True, description='units/volume-mL-cup-desc')
     async def cup(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / (1/3.52))
+        try:
+            await ctx.send(amount * 1e-3 / (1/3.52))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ml.command(invoke_without_command=True, description='units/volume-ml-floz-desc')
+    del cup
+
+    @mL.command(aliases=['fluid-ounce', 'fluid-ounces'], invoke_without_command=True, description='units/volume-mL-floz-desc')
     async def floz(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / (1/35.195))
+        try:
+            await ctx.send(amount * 1e-3 / (1/35.195))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ml.command(invoke_without_command=True, description='units/volume-ml-tbsp-desc')
+    del floz
+
+    @mL.command(aliases=['tablespoon', 'tablespoons'], invoke_without_command=True, description='units/volume-mL-tbsp-desc')
     async def tbsp(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / (1/56.312))
+        try:
+            await ctx.send(amount * 1e-3 / (1/56.312))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ml.command(invoke_without_command=True, description='units/volume-ml-tsp-desc')
+    del tbsp
+
+    @mL.command(aliases=['teaspoon', 'teaspoons'], invoke_without_command=True, description='units/volume-mL-tsp-desc')
     async def tsp(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / (1/168.936))
+        try:
+            await ctx.send(amount * 1e-3 / (1/168.936))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ml.command(invoke_without_command=True, description='units/volume-ml-ft3-desc')
+    del tsp
+
+    @mL.command(aliases=['cubic-foot', 'cubic-feet'], invoke_without_command=True, description='units/volume-mL-ft3-desc')
     async def ft3(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / (1/28.317))
+        try:
+            await ctx.send(amount * 1e-3 / (1/28.317))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ml.command(invoke_without_command=True, description='units/volume-ml-in3-desc')
+    del ft3
+
+    @mL.command(aliases=['cubic-inch', 'cubic-inches'], invoke_without_command=True, description='units/volume-mL-in3-desc')
     async def in3(ctx, amount: float):
-        await ctx.send(amount * 1e-3 / (1/61.024))
+        try:
+            await ctx.send(amount * 1e-3 / (1/61.024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @volume.group(invoke_without_command=True, description='units/volume-gallon-desc')
+    del in3
+
+    @volume.group(aliases=['gallons'], invoke_without_command=True, description='units/volume-gallon-desc')
     @lone_group(True)
-    async def gallon(ctx):
+    async def gallon(self, ctx):
         pass
 
 
-    @gallon.command(invoke_without_command=True, description='units/volume-gallon-lgallon-desc')
+    @gallon.command(aliases=['us-liquid-gallon', 'us-liquid-gallons'], invoke_without_command=True, description='units/volume-gallon-lgallon-desc')
     async def lgallon(ctx, amount: float):
-        await ctx.send(amount * 4.546 / 3.78541)
+        try:
+            await ctx.send(amount * 4.546 / 3.78541)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gallon.command(invoke_without_command=True, description='units/volume-gallon-lquart-desc')
+    del lgallon
+
+    @gallon.command(aliases=['us-liquid-quart', 'us-liquid-quarts'], invoke_without_command=True, description='units/volume-gallon-lquart-desc')
     async def lquart(ctx, amount: float):
-        await ctx.send(amount * 4.546 / (1/1.057))
+        try:
+            await ctx.send(amount * 4.546 / (1/1.057))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gallon.command(invoke_without_command=True, description='units/volume-gallon-lpint-desc')
+    del lquart
+
+    @gallon.command(aliases=['us-liquid-pint', 'us-liquid-pints'], invoke_without_command=True, description='units/volume-gallon-lpint-desc')
     async def lpint(ctx, amount: float):
-        await ctx.send(amount * 4.546 / (1/4.167))
+        try:
+            await ctx.send(amount * 4.546 / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gallon.command(invoke_without_command=True, description='units/volume-gallon-uscup-desc')
+    del lpint
+
+    @gallon.command(aliases=['us-legal-cup', 'us-legal-cups'], invoke_without_command=True, description='units/volume-gallon-uscup-desc')
     async def uscup(ctx, amount: float):
-        await ctx.send(amount * 4.546 / (1/4.167))
+        try:
+            await ctx.send(amount * 4.546 / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gallon.command(invoke_without_command=True, description='units/volume-gallon-usfloz-desc')
+    del uscup
+
+    @gallon.command(aliases=['us-fluid-ounce', 'us-fluid-ounces'], invoke_without_command=True, description='units/volume-gallon-usfloz-desc')
     async def usfloz(ctx, amount: float):
-        await ctx.send(amount * 4.546 / (1/33.814))
+        try:
+            await ctx.send(amount * 4.546 / (1/33.814))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gallon.command(invoke_without_command=True, description='units/volume-gallon-ustbsp-desc')
+    del usfloz
+
+    @gallon.command(aliases=['us-tablespoon', 'us-tablespoons'], invoke_without_command=True, description='units/volume-gallon-ustbsp-desc')
     async def ustbsp(ctx, amount: float):
-        await ctx.send(amount * 4.546 / (1/67.628))
+        try:
+            await ctx.send(amount * 4.546 / (1/67.628))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gallon.command(invoke_without_command=True, description='units/volume-gallon-ustsp-desc')
+    del ustbsp
+
+    @gallon.command(aliases=['us-teaspoon', 'us-teaspoons'], invoke_without_command=True, description='units/volume-gallon-ustsp-desc')
     async def ustsp(ctx, amount: float):
-        await ctx.send(amount * 4.546 / (1/202.884))
+        try:
+            await ctx.send(amount * 4.546 / (1/202.884))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gallon.command(invoke_without_command=True, description='units/volume-gallon-m3-desc')
+    del ustsp
+
+    @gallon.command(aliases=['cubic-meter', 'cubic-meters', 'cubic-metre', 'cubic-metres'], invoke_without_command=True, description='units/volume-gallon-m3-desc')
     async def m3(ctx, amount: float):
-        await ctx.send(amount * 4.546 / 1e3)
+        try:
+            await ctx.send(amount * 4.546 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gallon.command(invoke_without_command=True, description='units/volume-gallon-l-desc')
-    async def l(ctx, amount: float):
-        await ctx.send(amount * 4.546 / 1)
+    del m3
 
-    @gallon.command(invoke_without_command=True, description='units/volume-gallon-ml-desc')
-    async def ml(ctx, amount: float):
-        await ctx.send(amount * 4.546 / 1e-3)
+    @gallon.command(aliases=['liter', 'liters', 'litre', 'litres'], invoke_without_command=True, description='units/volume-gallon-L-desc')
+    async def L(ctx, amount: float):
+        try:
+            await ctx.send(amount * 4.546 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gallon.command(invoke_without_command=True, description='units/volume-gallon-quart-desc')
+    del L
+
+    @gallon.command(aliases=['milliliter', 'milliliters', 'millilitre', 'millilitres'], invoke_without_command=True, description='units/volume-gallon-mL-desc')
+    async def mL(ctx, amount: float):
+        try:
+            await ctx.send(amount * 4.546 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del mL
+
+    @gallon.command(aliases=['quarts'], invoke_without_command=True, description='units/volume-gallon-quart-desc')
     async def quart(ctx, amount: float):
-        await ctx.send(amount * 4.546 / 1.3652)
+        try:
+            await ctx.send(amount * 4.546 / 1.3652)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gallon.command(invoke_without_command=True, description='units/volume-gallon-pint-desc')
+    del quart
+
+    @gallon.command(aliases=['pints'], invoke_without_command=True, description='units/volume-gallon-pint-desc')
     async def pint(ctx, amount: float):
-        await ctx.send(amount * 4.546 / (1/1.76))
+        try:
+            await ctx.send(amount * 4.546 / (1/1.76))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gallon.command(invoke_without_command=True, description='units/volume-gallon-cup-desc')
+    del pint
+
+    @gallon.command(aliases=['cups'], invoke_without_command=True, description='units/volume-gallon-cup-desc')
     async def cup(ctx, amount: float):
-        await ctx.send(amount * 4.546 / (1/3.52))
+        try:
+            await ctx.send(amount * 4.546 / (1/3.52))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gallon.command(invoke_without_command=True, description='units/volume-gallon-floz-desc')
+    del cup
+
+    @gallon.command(aliases=['fluid-ounce', 'fluid-ounces'], invoke_without_command=True, description='units/volume-gallon-floz-desc')
     async def floz(ctx, amount: float):
-        await ctx.send(amount * 4.546 / (1/35.195))
+        try:
+            await ctx.send(amount * 4.546 / (1/35.195))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gallon.command(invoke_without_command=True, description='units/volume-gallon-tbsp-desc')
+    del floz
+
+    @gallon.command(aliases=['tablespoon', 'tablespoons'], invoke_without_command=True, description='units/volume-gallon-tbsp-desc')
     async def tbsp(ctx, amount: float):
-        await ctx.send(amount * 4.546 / (1/56.312))
+        try:
+            await ctx.send(amount * 4.546 / (1/56.312))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gallon.command(invoke_without_command=True, description='units/volume-gallon-tsp-desc')
+    del tbsp
+
+    @gallon.command(aliases=['teaspoon', 'teaspoons'], invoke_without_command=True, description='units/volume-gallon-tsp-desc')
     async def tsp(ctx, amount: float):
-        await ctx.send(amount * 4.546 / (1/168.936))
+        try:
+            await ctx.send(amount * 4.546 / (1/168.936))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gallon.command(invoke_without_command=True, description='units/volume-gallon-ft3-desc')
+    del tsp
+
+    @gallon.command(aliases=['cubic-foot', 'cubic-feet'], invoke_without_command=True, description='units/volume-gallon-ft3-desc')
     async def ft3(ctx, amount: float):
-        await ctx.send(amount * 4.546 / (1/28.317))
+        try:
+            await ctx.send(amount * 4.546 / (1/28.317))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @gallon.command(invoke_without_command=True, description='units/volume-gallon-in3-desc')
+    del ft3
+
+    @gallon.command(aliases=['cubic-inch', 'cubic-inches'], invoke_without_command=True, description='units/volume-gallon-in3-desc')
     async def in3(ctx, amount: float):
-        await ctx.send(amount * 4.546 / (1/61.024))
+        try:
+            await ctx.send(amount * 4.546 / (1/61.024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @volume.group(invoke_without_command=True, description='units/volume-quart-desc')
+    del in3
+
+    @volume.group(aliases=['quarts'], invoke_without_command=True, description='units/volume-quart-desc')
     @lone_group(True)
-    async def quart(ctx):
+    async def quart(self, ctx):
         pass
 
 
-    @quart.command(invoke_without_command=True, description='units/volume-quart-lgallon-desc')
+    @quart.command(aliases=['us-liquid-gallon', 'us-liquid-gallons'], invoke_without_command=True, description='units/volume-quart-lgallon-desc')
     async def lgallon(ctx, amount: float):
-        await ctx.send(amount * 1.3652 / 3.78541)
+        try:
+            await ctx.send(amount * 1.3652 / 3.78541)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @quart.command(invoke_without_command=True, description='units/volume-quart-lquart-desc')
+    del lgallon
+
+    @quart.command(aliases=['us-liquid-quart', 'us-liquid-quarts'], invoke_without_command=True, description='units/volume-quart-lquart-desc')
     async def lquart(ctx, amount: float):
-        await ctx.send(amount * 1.3652 / (1/1.057))
+        try:
+            await ctx.send(amount * 1.3652 / (1/1.057))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @quart.command(invoke_without_command=True, description='units/volume-quart-lpint-desc')
+    del lquart
+
+    @quart.command(aliases=['us-liquid-pint', 'us-liquid-pints'], invoke_without_command=True, description='units/volume-quart-lpint-desc')
     async def lpint(ctx, amount: float):
-        await ctx.send(amount * 1.3652 / (1/4.167))
+        try:
+            await ctx.send(amount * 1.3652 / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @quart.command(invoke_without_command=True, description='units/volume-quart-uscup-desc')
+    del lpint
+
+    @quart.command(aliases=['us-legal-cup', 'us-legal-cups'], invoke_without_command=True, description='units/volume-quart-uscup-desc')
     async def uscup(ctx, amount: float):
-        await ctx.send(amount * 1.3652 / (1/4.167))
+        try:
+            await ctx.send(amount * 1.3652 / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @quart.command(invoke_without_command=True, description='units/volume-quart-usfloz-desc')
+    del uscup
+
+    @quart.command(aliases=['us-fluid-ounce', 'us-fluid-ounces'], invoke_without_command=True, description='units/volume-quart-usfloz-desc')
     async def usfloz(ctx, amount: float):
-        await ctx.send(amount * 1.3652 / (1/33.814))
+        try:
+            await ctx.send(amount * 1.3652 / (1/33.814))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @quart.command(invoke_without_command=True, description='units/volume-quart-ustbsp-desc')
+    del usfloz
+
+    @quart.command(aliases=['us-tablespoon', 'us-tablespoons'], invoke_without_command=True, description='units/volume-quart-ustbsp-desc')
     async def ustbsp(ctx, amount: float):
-        await ctx.send(amount * 1.3652 / (1/67.628))
+        try:
+            await ctx.send(amount * 1.3652 / (1/67.628))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @quart.command(invoke_without_command=True, description='units/volume-quart-ustsp-desc')
+    del ustbsp
+
+    @quart.command(aliases=['us-teaspoon', 'us-teaspoons'], invoke_without_command=True, description='units/volume-quart-ustsp-desc')
     async def ustsp(ctx, amount: float):
-        await ctx.send(amount * 1.3652 / (1/202.884))
+        try:
+            await ctx.send(amount * 1.3652 / (1/202.884))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @quart.command(invoke_without_command=True, description='units/volume-quart-m3-desc')
+    del ustsp
+
+    @quart.command(aliases=['cubic-meter', 'cubic-meters', 'cubic-metre', 'cubic-metres'], invoke_without_command=True, description='units/volume-quart-m3-desc')
     async def m3(ctx, amount: float):
-        await ctx.send(amount * 1.3652 / 1e3)
+        try:
+            await ctx.send(amount * 1.3652 / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @quart.command(invoke_without_command=True, description='units/volume-quart-l-desc')
-    async def l(ctx, amount: float):
-        await ctx.send(amount * 1.3652 / 1)
+    del m3
 
-    @quart.command(invoke_without_command=True, description='units/volume-quart-ml-desc')
-    async def ml(ctx, amount: float):
-        await ctx.send(amount * 1.3652 / 1e-3)
+    @quart.command(aliases=['liter', 'liters', 'litre', 'litres'], invoke_without_command=True, description='units/volume-quart-L-desc')
+    async def L(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1.3652 / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @quart.command(invoke_without_command=True, description='units/volume-quart-gallon-desc')
+    del L
+
+    @quart.command(aliases=['milliliter', 'milliliters', 'millilitre', 'millilitres'], invoke_without_command=True, description='units/volume-quart-mL-desc')
+    async def mL(ctx, amount: float):
+        try:
+            await ctx.send(amount * 1.3652 / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del mL
+
+    @quart.command(aliases=['gallons'], invoke_without_command=True, description='units/volume-quart-gallon-desc')
     async def gallon(ctx, amount: float):
-        await ctx.send(amount * 1.3652 / 4.546)
+        try:
+            await ctx.send(amount * 1.3652 / 4.546)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @quart.command(invoke_without_command=True, description='units/volume-quart-pint-desc')
+    del gallon
+
+    @quart.command(aliases=['pints'], invoke_without_command=True, description='units/volume-quart-pint-desc')
     async def pint(ctx, amount: float):
-        await ctx.send(amount * 1.3652 / (1/1.76))
+        try:
+            await ctx.send(amount * 1.3652 / (1/1.76))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @quart.command(invoke_without_command=True, description='units/volume-quart-cup-desc')
+    del pint
+
+    @quart.command(aliases=['cups'], invoke_without_command=True, description='units/volume-quart-cup-desc')
     async def cup(ctx, amount: float):
-        await ctx.send(amount * 1.3652 / (1/3.52))
+        try:
+            await ctx.send(amount * 1.3652 / (1/3.52))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @quart.command(invoke_without_command=True, description='units/volume-quart-floz-desc')
+    del cup
+
+    @quart.command(aliases=['fluid-ounce', 'fluid-ounces'], invoke_without_command=True, description='units/volume-quart-floz-desc')
     async def floz(ctx, amount: float):
-        await ctx.send(amount * 1.3652 / (1/35.195))
+        try:
+            await ctx.send(amount * 1.3652 / (1/35.195))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @quart.command(invoke_without_command=True, description='units/volume-quart-tbsp-desc')
+    del floz
+
+    @quart.command(aliases=['tablespoon', 'tablespoons'], invoke_without_command=True, description='units/volume-quart-tbsp-desc')
     async def tbsp(ctx, amount: float):
-        await ctx.send(amount * 1.3652 / (1/56.312))
+        try:
+            await ctx.send(amount * 1.3652 / (1/56.312))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @quart.command(invoke_without_command=True, description='units/volume-quart-tsp-desc')
+    del tbsp
+
+    @quart.command(aliases=['teaspoon', 'teaspoons'], invoke_without_command=True, description='units/volume-quart-tsp-desc')
     async def tsp(ctx, amount: float):
-        await ctx.send(amount * 1.3652 / (1/168.936))
+        try:
+            await ctx.send(amount * 1.3652 / (1/168.936))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @quart.command(invoke_without_command=True, description='units/volume-quart-ft3-desc')
+    del tsp
+
+    @quart.command(aliases=['cubic-foot', 'cubic-feet'], invoke_without_command=True, description='units/volume-quart-ft3-desc')
     async def ft3(ctx, amount: float):
-        await ctx.send(amount * 1.3652 / (1/28.317))
+        try:
+            await ctx.send(amount * 1.3652 / (1/28.317))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @quart.command(invoke_without_command=True, description='units/volume-quart-in3-desc')
+    del ft3
+
+    @quart.command(aliases=['cubic-inch', 'cubic-inches'], invoke_without_command=True, description='units/volume-quart-in3-desc')
     async def in3(ctx, amount: float):
-        await ctx.send(amount * 1.3652 / (1/61.024))
+        try:
+            await ctx.send(amount * 1.3652 / (1/61.024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @volume.group(invoke_without_command=True, description='units/volume-pint-desc')
+    del in3
+
+    @volume.group(aliases=['pints'], invoke_without_command=True, description='units/volume-pint-desc')
     @lone_group(True)
-    async def pint(ctx):
+    async def pint(self, ctx):
         pass
 
 
-    @pint.command(invoke_without_command=True, description='units/volume-pint-lgallon-desc')
+    @pint.command(aliases=['us-liquid-gallon', 'us-liquid-gallons'], invoke_without_command=True, description='units/volume-pint-lgallon-desc')
     async def lgallon(ctx, amount: float):
-        await ctx.send(amount * (1/1.76) / 3.78541)
+        try:
+            await ctx.send(amount * (1/1.76) / 3.78541)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pint.command(invoke_without_command=True, description='units/volume-pint-lquart-desc')
+    del lgallon
+
+    @pint.command(aliases=['us-liquid-quart', 'us-liquid-quarts'], invoke_without_command=True, description='units/volume-pint-lquart-desc')
     async def lquart(ctx, amount: float):
-        await ctx.send(amount * (1/1.76) / (1/1.057))
+        try:
+            await ctx.send(amount * (1/1.76) / (1/1.057))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pint.command(invoke_without_command=True, description='units/volume-pint-lpint-desc')
+    del lquart
+
+    @pint.command(aliases=['us-liquid-pint', 'us-liquid-pints'], invoke_without_command=True, description='units/volume-pint-lpint-desc')
     async def lpint(ctx, amount: float):
-        await ctx.send(amount * (1/1.76) / (1/4.167))
+        try:
+            await ctx.send(amount * (1/1.76) / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pint.command(invoke_without_command=True, description='units/volume-pint-uscup-desc')
+    del lpint
+
+    @pint.command(aliases=['us-legal-cup', 'us-legal-cups'], invoke_without_command=True, description='units/volume-pint-uscup-desc')
     async def uscup(ctx, amount: float):
-        await ctx.send(amount * (1/1.76) / (1/4.167))
+        try:
+            await ctx.send(amount * (1/1.76) / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pint.command(invoke_without_command=True, description='units/volume-pint-usfloz-desc')
+    del uscup
+
+    @pint.command(aliases=['us-fluid-ounce', 'us-fluid-ounces'], invoke_without_command=True, description='units/volume-pint-usfloz-desc')
     async def usfloz(ctx, amount: float):
-        await ctx.send(amount * (1/1.76) / (1/33.814))
+        try:
+            await ctx.send(amount * (1/1.76) / (1/33.814))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pint.command(invoke_without_command=True, description='units/volume-pint-ustbsp-desc')
+    del usfloz
+
+    @pint.command(aliases=['us-tablespoon', 'us-tablespoons'], invoke_without_command=True, description='units/volume-pint-ustbsp-desc')
     async def ustbsp(ctx, amount: float):
-        await ctx.send(amount * (1/1.76) / (1/67.628))
+        try:
+            await ctx.send(amount * (1/1.76) / (1/67.628))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pint.command(invoke_without_command=True, description='units/volume-pint-ustsp-desc')
+    del ustbsp
+
+    @pint.command(aliases=['us-teaspoon', 'us-teaspoons'], invoke_without_command=True, description='units/volume-pint-ustsp-desc')
     async def ustsp(ctx, amount: float):
-        await ctx.send(amount * (1/1.76) / (1/202.884))
+        try:
+            await ctx.send(amount * (1/1.76) / (1/202.884))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pint.command(invoke_without_command=True, description='units/volume-pint-m3-desc')
+    del ustsp
+
+    @pint.command(aliases=['cubic-meter', 'cubic-meters', 'cubic-metre', 'cubic-metres'], invoke_without_command=True, description='units/volume-pint-m3-desc')
     async def m3(ctx, amount: float):
-        await ctx.send(amount * (1/1.76) / 1e3)
+        try:
+            await ctx.send(amount * (1/1.76) / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pint.command(invoke_without_command=True, description='units/volume-pint-l-desc')
-    async def l(ctx, amount: float):
-        await ctx.send(amount * (1/1.76) / 1)
+    del m3
 
-    @pint.command(invoke_without_command=True, description='units/volume-pint-ml-desc')
-    async def ml(ctx, amount: float):
-        await ctx.send(amount * (1/1.76) / 1e-3)
+    @pint.command(aliases=['liter', 'liters', 'litre', 'litres'], invoke_without_command=True, description='units/volume-pint-L-desc')
+    async def L(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/1.76) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pint.command(invoke_without_command=True, description='units/volume-pint-gallon-desc')
+    del L
+
+    @pint.command(aliases=['milliliter', 'milliliters', 'millilitre', 'millilitres'], invoke_without_command=True, description='units/volume-pint-mL-desc')
+    async def mL(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/1.76) / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del mL
+
+    @pint.command(aliases=['gallons'], invoke_without_command=True, description='units/volume-pint-gallon-desc')
     async def gallon(ctx, amount: float):
-        await ctx.send(amount * (1/1.76) / 4.546)
+        try:
+            await ctx.send(amount * (1/1.76) / 4.546)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pint.command(invoke_without_command=True, description='units/volume-pint-quart-desc')
+    del gallon
+
+    @pint.command(aliases=['quarts'], invoke_without_command=True, description='units/volume-pint-quart-desc')
     async def quart(ctx, amount: float):
-        await ctx.send(amount * (1/1.76) / 1.3652)
+        try:
+            await ctx.send(amount * (1/1.76) / 1.3652)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pint.command(invoke_without_command=True, description='units/volume-pint-cup-desc')
+    del quart
+
+    @pint.command(aliases=['cups'], invoke_without_command=True, description='units/volume-pint-cup-desc')
     async def cup(ctx, amount: float):
-        await ctx.send(amount * (1/1.76) / (1/3.52))
+        try:
+            await ctx.send(amount * (1/1.76) / (1/3.52))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pint.command(invoke_without_command=True, description='units/volume-pint-floz-desc')
+    del cup
+
+    @pint.command(aliases=['fluid-ounce', 'fluid-ounces'], invoke_without_command=True, description='units/volume-pint-floz-desc')
     async def floz(ctx, amount: float):
-        await ctx.send(amount * (1/1.76) / (1/35.195))
+        try:
+            await ctx.send(amount * (1/1.76) / (1/35.195))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pint.command(invoke_without_command=True, description='units/volume-pint-tbsp-desc')
+    del floz
+
+    @pint.command(aliases=['tablespoon', 'tablespoons'], invoke_without_command=True, description='units/volume-pint-tbsp-desc')
     async def tbsp(ctx, amount: float):
-        await ctx.send(amount * (1/1.76) / (1/56.312))
+        try:
+            await ctx.send(amount * (1/1.76) / (1/56.312))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pint.command(invoke_without_command=True, description='units/volume-pint-tsp-desc')
+    del tbsp
+
+    @pint.command(aliases=['teaspoon', 'teaspoons'], invoke_without_command=True, description='units/volume-pint-tsp-desc')
     async def tsp(ctx, amount: float):
-        await ctx.send(amount * (1/1.76) / (1/168.936))
+        try:
+            await ctx.send(amount * (1/1.76) / (1/168.936))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pint.command(invoke_without_command=True, description='units/volume-pint-ft3-desc')
+    del tsp
+
+    @pint.command(aliases=['cubic-foot', 'cubic-feet'], invoke_without_command=True, description='units/volume-pint-ft3-desc')
     async def ft3(ctx, amount: float):
-        await ctx.send(amount * (1/1.76) / (1/28.317))
+        try:
+            await ctx.send(amount * (1/1.76) / (1/28.317))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @pint.command(invoke_without_command=True, description='units/volume-pint-in3-desc')
+    del ft3
+
+    @pint.command(aliases=['cubic-inch', 'cubic-inches'], invoke_without_command=True, description='units/volume-pint-in3-desc')
     async def in3(ctx, amount: float):
-        await ctx.send(amount * (1/1.76) / (1/61.024))
+        try:
+            await ctx.send(amount * (1/1.76) / (1/61.024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @volume.group(invoke_without_command=True, description='units/volume-cup-desc')
+    del in3
+
+    @volume.group(aliases=['cups'], invoke_without_command=True, description='units/volume-cup-desc')
     @lone_group(True)
-    async def cup(ctx):
+    async def cup(self, ctx):
         pass
 
 
-    @cup.command(invoke_without_command=True, description='units/volume-cup-lgallon-desc')
+    @cup.command(aliases=['us-liquid-gallon', 'us-liquid-gallons'], invoke_without_command=True, description='units/volume-cup-lgallon-desc')
     async def lgallon(ctx, amount: float):
-        await ctx.send(amount * (1/3.52) / 3.78541)
+        try:
+            await ctx.send(amount * (1/3.52) / 3.78541)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @cup.command(invoke_without_command=True, description='units/volume-cup-lquart-desc')
+    del lgallon
+
+    @cup.command(aliases=['us-liquid-quart', 'us-liquid-quarts'], invoke_without_command=True, description='units/volume-cup-lquart-desc')
     async def lquart(ctx, amount: float):
-        await ctx.send(amount * (1/3.52) / (1/1.057))
+        try:
+            await ctx.send(amount * (1/3.52) / (1/1.057))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @cup.command(invoke_without_command=True, description='units/volume-cup-lpint-desc')
+    del lquart
+
+    @cup.command(aliases=['us-liquid-pint', 'us-liquid-pints'], invoke_without_command=True, description='units/volume-cup-lpint-desc')
     async def lpint(ctx, amount: float):
-        await ctx.send(amount * (1/3.52) / (1/4.167))
+        try:
+            await ctx.send(amount * (1/3.52) / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @cup.command(invoke_without_command=True, description='units/volume-cup-uscup-desc')
+    del lpint
+
+    @cup.command(aliases=['us-legal-cup', 'us-legal-cups'], invoke_without_command=True, description='units/volume-cup-uscup-desc')
     async def uscup(ctx, amount: float):
-        await ctx.send(amount * (1/3.52) / (1/4.167))
+        try:
+            await ctx.send(amount * (1/3.52) / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @cup.command(invoke_without_command=True, description='units/volume-cup-usfloz-desc')
+    del uscup
+
+    @cup.command(aliases=['us-fluid-ounce', 'us-fluid-ounces'], invoke_without_command=True, description='units/volume-cup-usfloz-desc')
     async def usfloz(ctx, amount: float):
-        await ctx.send(amount * (1/3.52) / (1/33.814))
+        try:
+            await ctx.send(amount * (1/3.52) / (1/33.814))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @cup.command(invoke_without_command=True, description='units/volume-cup-ustbsp-desc')
+    del usfloz
+
+    @cup.command(aliases=['us-tablespoon', 'us-tablespoons'], invoke_without_command=True, description='units/volume-cup-ustbsp-desc')
     async def ustbsp(ctx, amount: float):
-        await ctx.send(amount * (1/3.52) / (1/67.628))
+        try:
+            await ctx.send(amount * (1/3.52) / (1/67.628))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @cup.command(invoke_without_command=True, description='units/volume-cup-ustsp-desc')
+    del ustbsp
+
+    @cup.command(aliases=['us-teaspoon', 'us-teaspoons'], invoke_without_command=True, description='units/volume-cup-ustsp-desc')
     async def ustsp(ctx, amount: float):
-        await ctx.send(amount * (1/3.52) / (1/202.884))
+        try:
+            await ctx.send(amount * (1/3.52) / (1/202.884))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @cup.command(invoke_without_command=True, description='units/volume-cup-m3-desc')
+    del ustsp
+
+    @cup.command(aliases=['cubic-meter', 'cubic-meters', 'cubic-metre', 'cubic-metres'], invoke_without_command=True, description='units/volume-cup-m3-desc')
     async def m3(ctx, amount: float):
-        await ctx.send(amount * (1/3.52) / 1e3)
+        try:
+            await ctx.send(amount * (1/3.52) / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @cup.command(invoke_without_command=True, description='units/volume-cup-l-desc')
-    async def l(ctx, amount: float):
-        await ctx.send(amount * (1/3.52) / 1)
+    del m3
 
-    @cup.command(invoke_without_command=True, description='units/volume-cup-ml-desc')
-    async def ml(ctx, amount: float):
-        await ctx.send(amount * (1/3.52) / 1e-3)
+    @cup.command(aliases=['liter', 'liters', 'litre', 'litres'], invoke_without_command=True, description='units/volume-cup-L-desc')
+    async def L(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/3.52) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @cup.command(invoke_without_command=True, description='units/volume-cup-gallon-desc')
+    del L
+
+    @cup.command(aliases=['milliliter', 'milliliters', 'millilitre', 'millilitres'], invoke_without_command=True, description='units/volume-cup-mL-desc')
+    async def mL(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/3.52) / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del mL
+
+    @cup.command(aliases=['gallons'], invoke_without_command=True, description='units/volume-cup-gallon-desc')
     async def gallon(ctx, amount: float):
-        await ctx.send(amount * (1/3.52) / 4.546)
+        try:
+            await ctx.send(amount * (1/3.52) / 4.546)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @cup.command(invoke_without_command=True, description='units/volume-cup-quart-desc')
+    del gallon
+
+    @cup.command(aliases=['quarts'], invoke_without_command=True, description='units/volume-cup-quart-desc')
     async def quart(ctx, amount: float):
-        await ctx.send(amount * (1/3.52) / 1.3652)
+        try:
+            await ctx.send(amount * (1/3.52) / 1.3652)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @cup.command(invoke_without_command=True, description='units/volume-cup-pint-desc')
+    del quart
+
+    @cup.command(aliases=['pints'], invoke_without_command=True, description='units/volume-cup-pint-desc')
     async def pint(ctx, amount: float):
-        await ctx.send(amount * (1/3.52) / (1/1.76))
+        try:
+            await ctx.send(amount * (1/3.52) / (1/1.76))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @cup.command(invoke_without_command=True, description='units/volume-cup-floz-desc')
+    del pint
+
+    @cup.command(aliases=['fluid-ounce', 'fluid-ounces'], invoke_without_command=True, description='units/volume-cup-floz-desc')
     async def floz(ctx, amount: float):
-        await ctx.send(amount * (1/3.52) / (1/35.195))
+        try:
+            await ctx.send(amount * (1/3.52) / (1/35.195))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @cup.command(invoke_without_command=True, description='units/volume-cup-tbsp-desc')
+    del floz
+
+    @cup.command(aliases=['tablespoon', 'tablespoons'], invoke_without_command=True, description='units/volume-cup-tbsp-desc')
     async def tbsp(ctx, amount: float):
-        await ctx.send(amount * (1/3.52) / (1/56.312))
+        try:
+            await ctx.send(amount * (1/3.52) / (1/56.312))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @cup.command(invoke_without_command=True, description='units/volume-cup-tsp-desc')
+    del tbsp
+
+    @cup.command(aliases=['teaspoon', 'teaspoons'], invoke_without_command=True, description='units/volume-cup-tsp-desc')
     async def tsp(ctx, amount: float):
-        await ctx.send(amount * (1/3.52) / (1/168.936))
+        try:
+            await ctx.send(amount * (1/3.52) / (1/168.936))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @cup.command(invoke_without_command=True, description='units/volume-cup-ft3-desc')
+    del tsp
+
+    @cup.command(aliases=['cubic-foot', 'cubic-feet'], invoke_without_command=True, description='units/volume-cup-ft3-desc')
     async def ft3(ctx, amount: float):
-        await ctx.send(amount * (1/3.52) / (1/28.317))
+        try:
+            await ctx.send(amount * (1/3.52) / (1/28.317))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @cup.command(invoke_without_command=True, description='units/volume-cup-in3-desc')
+    del ft3
+
+    @cup.command(aliases=['cubic-inch', 'cubic-inches'], invoke_without_command=True, description='units/volume-cup-in3-desc')
     async def in3(ctx, amount: float):
-        await ctx.send(amount * (1/3.52) / (1/61.024))
+        try:
+            await ctx.send(amount * (1/3.52) / (1/61.024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @volume.group(invoke_without_command=True, description='units/volume-floz-desc')
+    del in3
+
+    @volume.group(aliases=['fluid-ounce', 'fluid-ounces'], invoke_without_command=True, description='units/volume-floz-desc')
     @lone_group(True)
-    async def floz(ctx):
+    async def floz(self, ctx):
         pass
 
 
-    @floz.command(invoke_without_command=True, description='units/volume-floz-lgallon-desc')
+    @floz.command(aliases=['us-liquid-gallon', 'us-liquid-gallons'], invoke_without_command=True, description='units/volume-floz-lgallon-desc')
     async def lgallon(ctx, amount: float):
-        await ctx.send(amount * (1/35.195) / 3.78541)
+        try:
+            await ctx.send(amount * (1/35.195) / 3.78541)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @floz.command(invoke_without_command=True, description='units/volume-floz-lquart-desc')
+    del lgallon
+
+    @floz.command(aliases=['us-liquid-quart', 'us-liquid-quarts'], invoke_without_command=True, description='units/volume-floz-lquart-desc')
     async def lquart(ctx, amount: float):
-        await ctx.send(amount * (1/35.195) / (1/1.057))
+        try:
+            await ctx.send(amount * (1/35.195) / (1/1.057))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @floz.command(invoke_without_command=True, description='units/volume-floz-lpint-desc')
+    del lquart
+
+    @floz.command(aliases=['us-liquid-pint', 'us-liquid-pints'], invoke_without_command=True, description='units/volume-floz-lpint-desc')
     async def lpint(ctx, amount: float):
-        await ctx.send(amount * (1/35.195) / (1/4.167))
+        try:
+            await ctx.send(amount * (1/35.195) / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @floz.command(invoke_without_command=True, description='units/volume-floz-uscup-desc')
+    del lpint
+
+    @floz.command(aliases=['us-legal-cup', 'us-legal-cups'], invoke_without_command=True, description='units/volume-floz-uscup-desc')
     async def uscup(ctx, amount: float):
-        await ctx.send(amount * (1/35.195) / (1/4.167))
+        try:
+            await ctx.send(amount * (1/35.195) / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @floz.command(invoke_without_command=True, description='units/volume-floz-usfloz-desc')
+    del uscup
+
+    @floz.command(aliases=['us-fluid-ounce', 'us-fluid-ounces'], invoke_without_command=True, description='units/volume-floz-usfloz-desc')
     async def usfloz(ctx, amount: float):
-        await ctx.send(amount * (1/35.195) / (1/33.814))
+        try:
+            await ctx.send(amount * (1/35.195) / (1/33.814))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @floz.command(invoke_without_command=True, description='units/volume-floz-ustbsp-desc')
+    del usfloz
+
+    @floz.command(aliases=['us-tablespoon', 'us-tablespoons'], invoke_without_command=True, description='units/volume-floz-ustbsp-desc')
     async def ustbsp(ctx, amount: float):
-        await ctx.send(amount * (1/35.195) / (1/67.628))
+        try:
+            await ctx.send(amount * (1/35.195) / (1/67.628))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @floz.command(invoke_without_command=True, description='units/volume-floz-ustsp-desc')
+    del ustbsp
+
+    @floz.command(aliases=['us-teaspoon', 'us-teaspoons'], invoke_without_command=True, description='units/volume-floz-ustsp-desc')
     async def ustsp(ctx, amount: float):
-        await ctx.send(amount * (1/35.195) / (1/202.884))
+        try:
+            await ctx.send(amount * (1/35.195) / (1/202.884))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @floz.command(invoke_without_command=True, description='units/volume-floz-m3-desc')
+    del ustsp
+
+    @floz.command(aliases=['cubic-meter', 'cubic-meters', 'cubic-metre', 'cubic-metres'], invoke_without_command=True, description='units/volume-floz-m3-desc')
     async def m3(ctx, amount: float):
-        await ctx.send(amount * (1/35.195) / 1e3)
+        try:
+            await ctx.send(amount * (1/35.195) / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @floz.command(invoke_without_command=True, description='units/volume-floz-l-desc')
-    async def l(ctx, amount: float):
-        await ctx.send(amount * (1/35.195) / 1)
+    del m3
 
-    @floz.command(invoke_without_command=True, description='units/volume-floz-ml-desc')
-    async def ml(ctx, amount: float):
-        await ctx.send(amount * (1/35.195) / 1e-3)
+    @floz.command(aliases=['liter', 'liters', 'litre', 'litres'], invoke_without_command=True, description='units/volume-floz-L-desc')
+    async def L(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/35.195) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @floz.command(invoke_without_command=True, description='units/volume-floz-gallon-desc')
+    del L
+
+    @floz.command(aliases=['milliliter', 'milliliters', 'millilitre', 'millilitres'], invoke_without_command=True, description='units/volume-floz-mL-desc')
+    async def mL(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/35.195) / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del mL
+
+    @floz.command(aliases=['gallons'], invoke_without_command=True, description='units/volume-floz-gallon-desc')
     async def gallon(ctx, amount: float):
-        await ctx.send(amount * (1/35.195) / 4.546)
+        try:
+            await ctx.send(amount * (1/35.195) / 4.546)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @floz.command(invoke_without_command=True, description='units/volume-floz-quart-desc')
+    del gallon
+
+    @floz.command(aliases=['quarts'], invoke_without_command=True, description='units/volume-floz-quart-desc')
     async def quart(ctx, amount: float):
-        await ctx.send(amount * (1/35.195) / 1.3652)
+        try:
+            await ctx.send(amount * (1/35.195) / 1.3652)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @floz.command(invoke_without_command=True, description='units/volume-floz-pint-desc')
+    del quart
+
+    @floz.command(aliases=['pints'], invoke_without_command=True, description='units/volume-floz-pint-desc')
     async def pint(ctx, amount: float):
-        await ctx.send(amount * (1/35.195) / (1/1.76))
+        try:
+            await ctx.send(amount * (1/35.195) / (1/1.76))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @floz.command(invoke_without_command=True, description='units/volume-floz-cup-desc')
+    del pint
+
+    @floz.command(aliases=['cups'], invoke_without_command=True, description='units/volume-floz-cup-desc')
     async def cup(ctx, amount: float):
-        await ctx.send(amount * (1/35.195) / (1/3.52))
+        try:
+            await ctx.send(amount * (1/35.195) / (1/3.52))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @floz.command(invoke_without_command=True, description='units/volume-floz-tbsp-desc')
+    del cup
+
+    @floz.command(aliases=['tablespoon', 'tablespoons'], invoke_without_command=True, description='units/volume-floz-tbsp-desc')
     async def tbsp(ctx, amount: float):
-        await ctx.send(amount * (1/35.195) / (1/56.312))
+        try:
+            await ctx.send(amount * (1/35.195) / (1/56.312))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @floz.command(invoke_without_command=True, description='units/volume-floz-tsp-desc')
+    del tbsp
+
+    @floz.command(aliases=['teaspoon', 'teaspoons'], invoke_without_command=True, description='units/volume-floz-tsp-desc')
     async def tsp(ctx, amount: float):
-        await ctx.send(amount * (1/35.195) / (1/168.936))
+        try:
+            await ctx.send(amount * (1/35.195) / (1/168.936))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @floz.command(invoke_without_command=True, description='units/volume-floz-ft3-desc')
+    del tsp
+
+    @floz.command(aliases=['cubic-foot', 'cubic-feet'], invoke_without_command=True, description='units/volume-floz-ft3-desc')
     async def ft3(ctx, amount: float):
-        await ctx.send(amount * (1/35.195) / (1/28.317))
+        try:
+            await ctx.send(amount * (1/35.195) / (1/28.317))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @floz.command(invoke_without_command=True, description='units/volume-floz-in3-desc')
+    del ft3
+
+    @floz.command(aliases=['cubic-inch', 'cubic-inches'], invoke_without_command=True, description='units/volume-floz-in3-desc')
     async def in3(ctx, amount: float):
-        await ctx.send(amount * (1/35.195) / (1/61.024))
+        try:
+            await ctx.send(amount * (1/35.195) / (1/61.024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @volume.group(invoke_without_command=True, description='units/volume-tbsp-desc')
+    del in3
+
+    @volume.group(aliases=['tablespoon', 'tablespoons'], invoke_without_command=True, description='units/volume-tbsp-desc')
     @lone_group(True)
-    async def tbsp(ctx):
+    async def tbsp(self, ctx):
         pass
 
 
-    @tbsp.command(invoke_without_command=True, description='units/volume-tbsp-lgallon-desc')
+    @tbsp.command(aliases=['us-liquid-gallon', 'us-liquid-gallons'], invoke_without_command=True, description='units/volume-tbsp-lgallon-desc')
     async def lgallon(ctx, amount: float):
-        await ctx.send(amount * (1/56.312) / 3.78541)
+        try:
+            await ctx.send(amount * (1/56.312) / 3.78541)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbsp.command(invoke_without_command=True, description='units/volume-tbsp-lquart-desc')
+    del lgallon
+
+    @tbsp.command(aliases=['us-liquid-quart', 'us-liquid-quarts'], invoke_without_command=True, description='units/volume-tbsp-lquart-desc')
     async def lquart(ctx, amount: float):
-        await ctx.send(amount * (1/56.312) / (1/1.057))
+        try:
+            await ctx.send(amount * (1/56.312) / (1/1.057))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbsp.command(invoke_without_command=True, description='units/volume-tbsp-lpint-desc')
+    del lquart
+
+    @tbsp.command(aliases=['us-liquid-pint', 'us-liquid-pints'], invoke_without_command=True, description='units/volume-tbsp-lpint-desc')
     async def lpint(ctx, amount: float):
-        await ctx.send(amount * (1/56.312) / (1/4.167))
+        try:
+            await ctx.send(amount * (1/56.312) / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbsp.command(invoke_without_command=True, description='units/volume-tbsp-uscup-desc')
+    del lpint
+
+    @tbsp.command(aliases=['us-legal-cup', 'us-legal-cups'], invoke_without_command=True, description='units/volume-tbsp-uscup-desc')
     async def uscup(ctx, amount: float):
-        await ctx.send(amount * (1/56.312) / (1/4.167))
+        try:
+            await ctx.send(amount * (1/56.312) / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbsp.command(invoke_without_command=True, description='units/volume-tbsp-usfloz-desc')
+    del uscup
+
+    @tbsp.command(aliases=['us-fluid-ounce', 'us-fluid-ounces'], invoke_without_command=True, description='units/volume-tbsp-usfloz-desc')
     async def usfloz(ctx, amount: float):
-        await ctx.send(amount * (1/56.312) / (1/33.814))
+        try:
+            await ctx.send(amount * (1/56.312) / (1/33.814))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbsp.command(invoke_without_command=True, description='units/volume-tbsp-ustbsp-desc')
+    del usfloz
+
+    @tbsp.command(aliases=['us-tablespoon', 'us-tablespoons'], invoke_without_command=True, description='units/volume-tbsp-ustbsp-desc')
     async def ustbsp(ctx, amount: float):
-        await ctx.send(amount * (1/56.312) / (1/67.628))
+        try:
+            await ctx.send(amount * (1/56.312) / (1/67.628))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbsp.command(invoke_without_command=True, description='units/volume-tbsp-ustsp-desc')
+    del ustbsp
+
+    @tbsp.command(aliases=['us-teaspoon', 'us-teaspoons'], invoke_without_command=True, description='units/volume-tbsp-ustsp-desc')
     async def ustsp(ctx, amount: float):
-        await ctx.send(amount * (1/56.312) / (1/202.884))
+        try:
+            await ctx.send(amount * (1/56.312) / (1/202.884))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbsp.command(invoke_without_command=True, description='units/volume-tbsp-m3-desc')
+    del ustsp
+
+    @tbsp.command(aliases=['cubic-meter', 'cubic-meters', 'cubic-metre', 'cubic-metres'], invoke_without_command=True, description='units/volume-tbsp-m3-desc')
     async def m3(ctx, amount: float):
-        await ctx.send(amount * (1/56.312) / 1e3)
+        try:
+            await ctx.send(amount * (1/56.312) / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbsp.command(invoke_without_command=True, description='units/volume-tbsp-l-desc')
-    async def l(ctx, amount: float):
-        await ctx.send(amount * (1/56.312) / 1)
+    del m3
 
-    @tbsp.command(invoke_without_command=True, description='units/volume-tbsp-ml-desc')
-    async def ml(ctx, amount: float):
-        await ctx.send(amount * (1/56.312) / 1e-3)
+    @tbsp.command(aliases=['liter', 'liters', 'litre', 'litres'], invoke_without_command=True, description='units/volume-tbsp-L-desc')
+    async def L(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/56.312) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbsp.command(invoke_without_command=True, description='units/volume-tbsp-gallon-desc')
+    del L
+
+    @tbsp.command(aliases=['milliliter', 'milliliters', 'millilitre', 'millilitres'], invoke_without_command=True, description='units/volume-tbsp-mL-desc')
+    async def mL(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/56.312) / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del mL
+
+    @tbsp.command(aliases=['gallons'], invoke_without_command=True, description='units/volume-tbsp-gallon-desc')
     async def gallon(ctx, amount: float):
-        await ctx.send(amount * (1/56.312) / 4.546)
+        try:
+            await ctx.send(amount * (1/56.312) / 4.546)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbsp.command(invoke_without_command=True, description='units/volume-tbsp-quart-desc')
+    del gallon
+
+    @tbsp.command(aliases=['quarts'], invoke_without_command=True, description='units/volume-tbsp-quart-desc')
     async def quart(ctx, amount: float):
-        await ctx.send(amount * (1/56.312) / 1.3652)
+        try:
+            await ctx.send(amount * (1/56.312) / 1.3652)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbsp.command(invoke_without_command=True, description='units/volume-tbsp-pint-desc')
+    del quart
+
+    @tbsp.command(aliases=['pints'], invoke_without_command=True, description='units/volume-tbsp-pint-desc')
     async def pint(ctx, amount: float):
-        await ctx.send(amount * (1/56.312) / (1/1.76))
+        try:
+            await ctx.send(amount * (1/56.312) / (1/1.76))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbsp.command(invoke_without_command=True, description='units/volume-tbsp-cup-desc')
+    del pint
+
+    @tbsp.command(aliases=['cups'], invoke_without_command=True, description='units/volume-tbsp-cup-desc')
     async def cup(ctx, amount: float):
-        await ctx.send(amount * (1/56.312) / (1/3.52))
+        try:
+            await ctx.send(amount * (1/56.312) / (1/3.52))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbsp.command(invoke_without_command=True, description='units/volume-tbsp-floz-desc')
+    del cup
+
+    @tbsp.command(aliases=['fluid-ounce', 'fluid-ounces'], invoke_without_command=True, description='units/volume-tbsp-floz-desc')
     async def floz(ctx, amount: float):
-        await ctx.send(amount * (1/56.312) / (1/35.195))
+        try:
+            await ctx.send(amount * (1/56.312) / (1/35.195))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbsp.command(invoke_without_command=True, description='units/volume-tbsp-tsp-desc')
+    del floz
+
+    @tbsp.command(aliases=['teaspoon', 'teaspoons'], invoke_without_command=True, description='units/volume-tbsp-tsp-desc')
     async def tsp(ctx, amount: float):
-        await ctx.send(amount * (1/56.312) / (1/168.936))
+        try:
+            await ctx.send(amount * (1/56.312) / (1/168.936))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbsp.command(invoke_without_command=True, description='units/volume-tbsp-ft3-desc')
+    del tsp
+
+    @tbsp.command(aliases=['cubic-foot', 'cubic-feet'], invoke_without_command=True, description='units/volume-tbsp-ft3-desc')
     async def ft3(ctx, amount: float):
-        await ctx.send(amount * (1/56.312) / (1/28.317))
+        try:
+            await ctx.send(amount * (1/56.312) / (1/28.317))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tbsp.command(invoke_without_command=True, description='units/volume-tbsp-in3-desc')
+    del ft3
+
+    @tbsp.command(aliases=['cubic-inch', 'cubic-inches'], invoke_without_command=True, description='units/volume-tbsp-in3-desc')
     async def in3(ctx, amount: float):
-        await ctx.send(amount * (1/56.312) / (1/61.024))
+        try:
+            await ctx.send(amount * (1/56.312) / (1/61.024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @volume.group(invoke_without_command=True, description='units/volume-tsp-desc')
+    del in3
+
+    @volume.group(aliases=['teaspoon', 'teaspoons'], invoke_without_command=True, description='units/volume-tsp-desc')
     @lone_group(True)
-    async def tsp(ctx):
+    async def tsp(self, ctx):
         pass
 
 
-    @tsp.command(invoke_without_command=True, description='units/volume-tsp-lgallon-desc')
+    @tsp.command(aliases=['us-liquid-gallon', 'us-liquid-gallons'], invoke_without_command=True, description='units/volume-tsp-lgallon-desc')
     async def lgallon(ctx, amount: float):
-        await ctx.send(amount * (1/168.936) / 3.78541)
+        try:
+            await ctx.send(amount * (1/168.936) / 3.78541)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tsp.command(invoke_without_command=True, description='units/volume-tsp-lquart-desc')
+    del lgallon
+
+    @tsp.command(aliases=['us-liquid-quart', 'us-liquid-quarts'], invoke_without_command=True, description='units/volume-tsp-lquart-desc')
     async def lquart(ctx, amount: float):
-        await ctx.send(amount * (1/168.936) / (1/1.057))
+        try:
+            await ctx.send(amount * (1/168.936) / (1/1.057))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tsp.command(invoke_without_command=True, description='units/volume-tsp-lpint-desc')
+    del lquart
+
+    @tsp.command(aliases=['us-liquid-pint', 'us-liquid-pints'], invoke_without_command=True, description='units/volume-tsp-lpint-desc')
     async def lpint(ctx, amount: float):
-        await ctx.send(amount * (1/168.936) / (1/4.167))
+        try:
+            await ctx.send(amount * (1/168.936) / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tsp.command(invoke_without_command=True, description='units/volume-tsp-uscup-desc')
+    del lpint
+
+    @tsp.command(aliases=['us-legal-cup', 'us-legal-cups'], invoke_without_command=True, description='units/volume-tsp-uscup-desc')
     async def uscup(ctx, amount: float):
-        await ctx.send(amount * (1/168.936) / (1/4.167))
+        try:
+            await ctx.send(amount * (1/168.936) / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tsp.command(invoke_without_command=True, description='units/volume-tsp-usfloz-desc')
+    del uscup
+
+    @tsp.command(aliases=['us-fluid-ounce', 'us-fluid-ounces'], invoke_without_command=True, description='units/volume-tsp-usfloz-desc')
     async def usfloz(ctx, amount: float):
-        await ctx.send(amount * (1/168.936) / (1/33.814))
+        try:
+            await ctx.send(amount * (1/168.936) / (1/33.814))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tsp.command(invoke_without_command=True, description='units/volume-tsp-ustbsp-desc')
+    del usfloz
+
+    @tsp.command(aliases=['us-tablespoon', 'us-tablespoons'], invoke_without_command=True, description='units/volume-tsp-ustbsp-desc')
     async def ustbsp(ctx, amount: float):
-        await ctx.send(amount * (1/168.936) / (1/67.628))
+        try:
+            await ctx.send(amount * (1/168.936) / (1/67.628))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tsp.command(invoke_without_command=True, description='units/volume-tsp-ustsp-desc')
+    del ustbsp
+
+    @tsp.command(aliases=['us-teaspoon', 'us-teaspoons'], invoke_without_command=True, description='units/volume-tsp-ustsp-desc')
     async def ustsp(ctx, amount: float):
-        await ctx.send(amount * (1/168.936) / (1/202.884))
+        try:
+            await ctx.send(amount * (1/168.936) / (1/202.884))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tsp.command(invoke_without_command=True, description='units/volume-tsp-m3-desc')
+    del ustsp
+
+    @tsp.command(aliases=['cubic-meter', 'cubic-meters', 'cubic-metre', 'cubic-metres'], invoke_without_command=True, description='units/volume-tsp-m3-desc')
     async def m3(ctx, amount: float):
-        await ctx.send(amount * (1/168.936) / 1e3)
+        try:
+            await ctx.send(amount * (1/168.936) / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tsp.command(invoke_without_command=True, description='units/volume-tsp-l-desc')
-    async def l(ctx, amount: float):
-        await ctx.send(amount * (1/168.936) / 1)
+    del m3
 
-    @tsp.command(invoke_without_command=True, description='units/volume-tsp-ml-desc')
-    async def ml(ctx, amount: float):
-        await ctx.send(amount * (1/168.936) / 1e-3)
+    @tsp.command(aliases=['liter', 'liters', 'litre', 'litres'], invoke_without_command=True, description='units/volume-tsp-L-desc')
+    async def L(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/168.936) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tsp.command(invoke_without_command=True, description='units/volume-tsp-gallon-desc')
+    del L
+
+    @tsp.command(aliases=['milliliter', 'milliliters', 'millilitre', 'millilitres'], invoke_without_command=True, description='units/volume-tsp-mL-desc')
+    async def mL(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/168.936) / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del mL
+
+    @tsp.command(aliases=['gallons'], invoke_without_command=True, description='units/volume-tsp-gallon-desc')
     async def gallon(ctx, amount: float):
-        await ctx.send(amount * (1/168.936) / 4.546)
+        try:
+            await ctx.send(amount * (1/168.936) / 4.546)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tsp.command(invoke_without_command=True, description='units/volume-tsp-quart-desc')
+    del gallon
+
+    @tsp.command(aliases=['quarts'], invoke_without_command=True, description='units/volume-tsp-quart-desc')
     async def quart(ctx, amount: float):
-        await ctx.send(amount * (1/168.936) / 1.3652)
+        try:
+            await ctx.send(amount * (1/168.936) / 1.3652)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tsp.command(invoke_without_command=True, description='units/volume-tsp-pint-desc')
+    del quart
+
+    @tsp.command(aliases=['pints'], invoke_without_command=True, description='units/volume-tsp-pint-desc')
     async def pint(ctx, amount: float):
-        await ctx.send(amount * (1/168.936) / (1/1.76))
+        try:
+            await ctx.send(amount * (1/168.936) / (1/1.76))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tsp.command(invoke_without_command=True, description='units/volume-tsp-cup-desc')
+    del pint
+
+    @tsp.command(aliases=['cups'], invoke_without_command=True, description='units/volume-tsp-cup-desc')
     async def cup(ctx, amount: float):
-        await ctx.send(amount * (1/168.936) / (1/3.52))
+        try:
+            await ctx.send(amount * (1/168.936) / (1/3.52))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tsp.command(invoke_without_command=True, description='units/volume-tsp-floz-desc')
+    del cup
+
+    @tsp.command(aliases=['fluid-ounce', 'fluid-ounces'], invoke_without_command=True, description='units/volume-tsp-floz-desc')
     async def floz(ctx, amount: float):
-        await ctx.send(amount * (1/168.936) / (1/35.195))
+        try:
+            await ctx.send(amount * (1/168.936) / (1/35.195))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tsp.command(invoke_without_command=True, description='units/volume-tsp-tbsp-desc')
+    del floz
+
+    @tsp.command(aliases=['tablespoon', 'tablespoons'], invoke_without_command=True, description='units/volume-tsp-tbsp-desc')
     async def tbsp(ctx, amount: float):
-        await ctx.send(amount * (1/168.936) / (1/56.312))
+        try:
+            await ctx.send(amount * (1/168.936) / (1/56.312))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tsp.command(invoke_without_command=True, description='units/volume-tsp-ft3-desc')
+    del tbsp
+
+    @tsp.command(aliases=['cubic-foot', 'cubic-feet'], invoke_without_command=True, description='units/volume-tsp-ft3-desc')
     async def ft3(ctx, amount: float):
-        await ctx.send(amount * (1/168.936) / (1/28.317))
+        try:
+            await ctx.send(amount * (1/168.936) / (1/28.317))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @tsp.command(invoke_without_command=True, description='units/volume-tsp-in3-desc')
+    del ft3
+
+    @tsp.command(aliases=['cubic-inch', 'cubic-inches'], invoke_without_command=True, description='units/volume-tsp-in3-desc')
     async def in3(ctx, amount: float):
-        await ctx.send(amount * (1/168.936) / (1/61.024))
+        try:
+            await ctx.send(amount * (1/168.936) / (1/61.024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @volume.group(invoke_without_command=True, description='units/volume-ft3-desc')
+    del in3
+
+    @volume.group(aliases=['cubic-foot', 'cubic-feet'], invoke_without_command=True, description='units/volume-ft3-desc')
     @lone_group(True)
-    async def ft3(ctx):
+    async def ft3(self, ctx):
         pass
 
 
-    @ft3.command(invoke_without_command=True, description='units/volume-ft3-lgallon-desc')
+    @ft3.command(aliases=['us-liquid-gallon', 'us-liquid-gallons'], invoke_without_command=True, description='units/volume-ft3-lgallon-desc')
     async def lgallon(ctx, amount: float):
-        await ctx.send(amount * (1/28.317) / 3.78541)
+        try:
+            await ctx.send(amount * (1/28.317) / 3.78541)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ft3.command(invoke_without_command=True, description='units/volume-ft3-lquart-desc')
+    del lgallon
+
+    @ft3.command(aliases=['us-liquid-quart', 'us-liquid-quarts'], invoke_without_command=True, description='units/volume-ft3-lquart-desc')
     async def lquart(ctx, amount: float):
-        await ctx.send(amount * (1/28.317) / (1/1.057))
+        try:
+            await ctx.send(amount * (1/28.317) / (1/1.057))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ft3.command(invoke_without_command=True, description='units/volume-ft3-lpint-desc')
+    del lquart
+
+    @ft3.command(aliases=['us-liquid-pint', 'us-liquid-pints'], invoke_without_command=True, description='units/volume-ft3-lpint-desc')
     async def lpint(ctx, amount: float):
-        await ctx.send(amount * (1/28.317) / (1/4.167))
+        try:
+            await ctx.send(amount * (1/28.317) / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ft3.command(invoke_without_command=True, description='units/volume-ft3-uscup-desc')
+    del lpint
+
+    @ft3.command(aliases=['us-legal-cup', 'us-legal-cups'], invoke_without_command=True, description='units/volume-ft3-uscup-desc')
     async def uscup(ctx, amount: float):
-        await ctx.send(amount * (1/28.317) / (1/4.167))
+        try:
+            await ctx.send(amount * (1/28.317) / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ft3.command(invoke_without_command=True, description='units/volume-ft3-usfloz-desc')
+    del uscup
+
+    @ft3.command(aliases=['us-fluid-ounce', 'us-fluid-ounces'], invoke_without_command=True, description='units/volume-ft3-usfloz-desc')
     async def usfloz(ctx, amount: float):
-        await ctx.send(amount * (1/28.317) / (1/33.814))
+        try:
+            await ctx.send(amount * (1/28.317) / (1/33.814))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ft3.command(invoke_without_command=True, description='units/volume-ft3-ustbsp-desc')
+    del usfloz
+
+    @ft3.command(aliases=['us-tablespoon', 'us-tablespoons'], invoke_without_command=True, description='units/volume-ft3-ustbsp-desc')
     async def ustbsp(ctx, amount: float):
-        await ctx.send(amount * (1/28.317) / (1/67.628))
+        try:
+            await ctx.send(amount * (1/28.317) / (1/67.628))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ft3.command(invoke_without_command=True, description='units/volume-ft3-ustsp-desc')
+    del ustbsp
+
+    @ft3.command(aliases=['us-teaspoon', 'us-teaspoons'], invoke_without_command=True, description='units/volume-ft3-ustsp-desc')
     async def ustsp(ctx, amount: float):
-        await ctx.send(amount * (1/28.317) / (1/202.884))
+        try:
+            await ctx.send(amount * (1/28.317) / (1/202.884))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ft3.command(invoke_without_command=True, description='units/volume-ft3-m3-desc')
+    del ustsp
+
+    @ft3.command(aliases=['cubic-meter', 'cubic-meters', 'cubic-metre', 'cubic-metres'], invoke_without_command=True, description='units/volume-ft3-m3-desc')
     async def m3(ctx, amount: float):
-        await ctx.send(amount * (1/28.317) / 1e3)
+        try:
+            await ctx.send(amount * (1/28.317) / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ft3.command(invoke_without_command=True, description='units/volume-ft3-l-desc')
-    async def l(ctx, amount: float):
-        await ctx.send(amount * (1/28.317) / 1)
+    del m3
 
-    @ft3.command(invoke_without_command=True, description='units/volume-ft3-ml-desc')
-    async def ml(ctx, amount: float):
-        await ctx.send(amount * (1/28.317) / 1e-3)
+    @ft3.command(aliases=['liter', 'liters', 'litre', 'litres'], invoke_without_command=True, description='units/volume-ft3-L-desc')
+    async def L(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/28.317) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ft3.command(invoke_without_command=True, description='units/volume-ft3-gallon-desc')
+    del L
+
+    @ft3.command(aliases=['milliliter', 'milliliters', 'millilitre', 'millilitres'], invoke_without_command=True, description='units/volume-ft3-mL-desc')
+    async def mL(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/28.317) / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del mL
+
+    @ft3.command(aliases=['gallons'], invoke_without_command=True, description='units/volume-ft3-gallon-desc')
     async def gallon(ctx, amount: float):
-        await ctx.send(amount * (1/28.317) / 4.546)
+        try:
+            await ctx.send(amount * (1/28.317) / 4.546)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ft3.command(invoke_without_command=True, description='units/volume-ft3-quart-desc')
+    del gallon
+
+    @ft3.command(aliases=['quarts'], invoke_without_command=True, description='units/volume-ft3-quart-desc')
     async def quart(ctx, amount: float):
-        await ctx.send(amount * (1/28.317) / 1.3652)
+        try:
+            await ctx.send(amount * (1/28.317) / 1.3652)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ft3.command(invoke_without_command=True, description='units/volume-ft3-pint-desc')
+    del quart
+
+    @ft3.command(aliases=['pints'], invoke_without_command=True, description='units/volume-ft3-pint-desc')
     async def pint(ctx, amount: float):
-        await ctx.send(amount * (1/28.317) / (1/1.76))
+        try:
+            await ctx.send(amount * (1/28.317) / (1/1.76))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ft3.command(invoke_without_command=True, description='units/volume-ft3-cup-desc')
+    del pint
+
+    @ft3.command(aliases=['cups'], invoke_without_command=True, description='units/volume-ft3-cup-desc')
     async def cup(ctx, amount: float):
-        await ctx.send(amount * (1/28.317) / (1/3.52))
+        try:
+            await ctx.send(amount * (1/28.317) / (1/3.52))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ft3.command(invoke_without_command=True, description='units/volume-ft3-floz-desc')
+    del cup
+
+    @ft3.command(aliases=['fluid-ounce', 'fluid-ounces'], invoke_without_command=True, description='units/volume-ft3-floz-desc')
     async def floz(ctx, amount: float):
-        await ctx.send(amount * (1/28.317) / (1/35.195))
+        try:
+            await ctx.send(amount * (1/28.317) / (1/35.195))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ft3.command(invoke_without_command=True, description='units/volume-ft3-tbsp-desc')
+    del floz
+
+    @ft3.command(aliases=['tablespoon', 'tablespoons'], invoke_without_command=True, description='units/volume-ft3-tbsp-desc')
     async def tbsp(ctx, amount: float):
-        await ctx.send(amount * (1/28.317) / (1/56.312))
+        try:
+            await ctx.send(amount * (1/28.317) / (1/56.312))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ft3.command(invoke_without_command=True, description='units/volume-ft3-tsp-desc')
+    del tbsp
+
+    @ft3.command(aliases=['teaspoon', 'teaspoons'], invoke_without_command=True, description='units/volume-ft3-tsp-desc')
     async def tsp(ctx, amount: float):
-        await ctx.send(amount * (1/28.317) / (1/168.936))
+        try:
+            await ctx.send(amount * (1/28.317) / (1/168.936))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @ft3.command(invoke_without_command=True, description='units/volume-ft3-in3-desc')
+    del tsp
+
+    @ft3.command(aliases=['cubic-inch', 'cubic-inches'], invoke_without_command=True, description='units/volume-ft3-in3-desc')
     async def in3(ctx, amount: float):
-        await ctx.send(amount * (1/28.317) / (1/61.024))
+        try:
+            await ctx.send(amount * (1/28.317) / (1/61.024))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @volume.group(invoke_without_command=True, description='units/volume-in3-desc')
+    del in3
+
+    @volume.group(aliases=['cubic-inch', 'cubic-inches'], invoke_without_command=True, description='units/volume-in3-desc')
     @lone_group(True)
-    async def in3(ctx):
+    async def in3(self, ctx):
         pass
 
 
-    @in3.command(invoke_without_command=True, description='units/volume-in3-lgallon-desc')
+    @in3.command(aliases=['us-liquid-gallon', 'us-liquid-gallons'], invoke_without_command=True, description='units/volume-in3-lgallon-desc')
     async def lgallon(ctx, amount: float):
-        await ctx.send(amount * (1/61.024) / 3.78541)
+        try:
+            await ctx.send(amount * (1/61.024) / 3.78541)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @in3.command(invoke_without_command=True, description='units/volume-in3-lquart-desc')
+    del lgallon
+
+    @in3.command(aliases=['us-liquid-quart', 'us-liquid-quarts'], invoke_without_command=True, description='units/volume-in3-lquart-desc')
     async def lquart(ctx, amount: float):
-        await ctx.send(amount * (1/61.024) / (1/1.057))
+        try:
+            await ctx.send(amount * (1/61.024) / (1/1.057))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @in3.command(invoke_without_command=True, description='units/volume-in3-lpint-desc')
+    del lquart
+
+    @in3.command(aliases=['us-liquid-pint', 'us-liquid-pints'], invoke_without_command=True, description='units/volume-in3-lpint-desc')
     async def lpint(ctx, amount: float):
-        await ctx.send(amount * (1/61.024) / (1/4.167))
+        try:
+            await ctx.send(amount * (1/61.024) / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @in3.command(invoke_without_command=True, description='units/volume-in3-uscup-desc')
+    del lpint
+
+    @in3.command(aliases=['us-legal-cup', 'us-legal-cups'], invoke_without_command=True, description='units/volume-in3-uscup-desc')
     async def uscup(ctx, amount: float):
-        await ctx.send(amount * (1/61.024) / (1/4.167))
+        try:
+            await ctx.send(amount * (1/61.024) / (1/4.167))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @in3.command(invoke_without_command=True, description='units/volume-in3-usfloz-desc')
+    del uscup
+
+    @in3.command(aliases=['us-fluid-ounce', 'us-fluid-ounces'], invoke_without_command=True, description='units/volume-in3-usfloz-desc')
     async def usfloz(ctx, amount: float):
-        await ctx.send(amount * (1/61.024) / (1/33.814))
+        try:
+            await ctx.send(amount * (1/61.024) / (1/33.814))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @in3.command(invoke_without_command=True, description='units/volume-in3-ustbsp-desc')
+    del usfloz
+
+    @in3.command(aliases=['us-tablespoon', 'us-tablespoons'], invoke_without_command=True, description='units/volume-in3-ustbsp-desc')
     async def ustbsp(ctx, amount: float):
-        await ctx.send(amount * (1/61.024) / (1/67.628))
+        try:
+            await ctx.send(amount * (1/61.024) / (1/67.628))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @in3.command(invoke_without_command=True, description='units/volume-in3-ustsp-desc')
+    del ustbsp
+
+    @in3.command(aliases=['us-teaspoon', 'us-teaspoons'], invoke_without_command=True, description='units/volume-in3-ustsp-desc')
     async def ustsp(ctx, amount: float):
-        await ctx.send(amount * (1/61.024) / (1/202.884))
+        try:
+            await ctx.send(amount * (1/61.024) / (1/202.884))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @in3.command(invoke_without_command=True, description='units/volume-in3-m3-desc')
+    del ustsp
+
+    @in3.command(aliases=['cubic-meter', 'cubic-meters', 'cubic-metre', 'cubic-metres'], invoke_without_command=True, description='units/volume-in3-m3-desc')
     async def m3(ctx, amount: float):
-        await ctx.send(amount * (1/61.024) / 1e3)
+        try:
+            await ctx.send(amount * (1/61.024) / 1e3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @in3.command(invoke_without_command=True, description='units/volume-in3-l-desc')
-    async def l(ctx, amount: float):
-        await ctx.send(amount * (1/61.024) / 1)
+    del m3
 
-    @in3.command(invoke_without_command=True, description='units/volume-in3-ml-desc')
-    async def ml(ctx, amount: float):
-        await ctx.send(amount * (1/61.024) / 1e-3)
+    @in3.command(aliases=['liter', 'liters', 'litre', 'litres'], invoke_without_command=True, description='units/volume-in3-L-desc')
+    async def L(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/61.024) / 1)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @in3.command(invoke_without_command=True, description='units/volume-in3-gallon-desc')
+    del L
+
+    @in3.command(aliases=['milliliter', 'milliliters', 'millilitre', 'millilitres'], invoke_without_command=True, description='units/volume-in3-mL-desc')
+    async def mL(ctx, amount: float):
+        try:
+            await ctx.send(amount * (1/61.024) / 1e-3)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del mL
+
+    @in3.command(aliases=['gallons'], invoke_without_command=True, description='units/volume-in3-gallon-desc')
     async def gallon(ctx, amount: float):
-        await ctx.send(amount * (1/61.024) / 4.546)
+        try:
+            await ctx.send(amount * (1/61.024) / 4.546)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @in3.command(invoke_without_command=True, description='units/volume-in3-quart-desc')
+    del gallon
+
+    @in3.command(aliases=['quarts'], invoke_without_command=True, description='units/volume-in3-quart-desc')
     async def quart(ctx, amount: float):
-        await ctx.send(amount * (1/61.024) / 1.3652)
+        try:
+            await ctx.send(amount * (1/61.024) / 1.3652)
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @in3.command(invoke_without_command=True, description='units/volume-in3-pint-desc')
+    del quart
+
+    @in3.command(aliases=['pints'], invoke_without_command=True, description='units/volume-in3-pint-desc')
     async def pint(ctx, amount: float):
-        await ctx.send(amount * (1/61.024) / (1/1.76))
+        try:
+            await ctx.send(amount * (1/61.024) / (1/1.76))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @in3.command(invoke_without_command=True, description='units/volume-in3-cup-desc')
+    del pint
+
+    @in3.command(aliases=['cups'], invoke_without_command=True, description='units/volume-in3-cup-desc')
     async def cup(ctx, amount: float):
-        await ctx.send(amount * (1/61.024) / (1/3.52))
+        try:
+            await ctx.send(amount * (1/61.024) / (1/3.52))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @in3.command(invoke_without_command=True, description='units/volume-in3-floz-desc')
+    del cup
+
+    @in3.command(aliases=['fluid-ounce', 'fluid-ounces'], invoke_without_command=True, description='units/volume-in3-floz-desc')
     async def floz(ctx, amount: float):
-        await ctx.send(amount * (1/61.024) / (1/35.195))
+        try:
+            await ctx.send(amount * (1/61.024) / (1/35.195))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @in3.command(invoke_without_command=True, description='units/volume-in3-tbsp-desc')
+    del floz
+
+    @in3.command(aliases=['tablespoon', 'tablespoons'], invoke_without_command=True, description='units/volume-in3-tbsp-desc')
     async def tbsp(ctx, amount: float):
-        await ctx.send(amount * (1/61.024) / (1/56.312))
+        try:
+            await ctx.send(amount * (1/61.024) / (1/56.312))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @in3.command(invoke_without_command=True, description='units/volume-in3-tsp-desc')
+    del tbsp
+
+    @in3.command(aliases=['teaspoon', 'teaspoons'], invoke_without_command=True, description='units/volume-in3-tsp-desc')
     async def tsp(ctx, amount: float):
-        await ctx.send(amount * (1/61.024) / (1/168.936))
+        try:
+            await ctx.send(amount * (1/61.024) / (1/168.936))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
 
-    @in3.command(invoke_without_command=True, description='units/volume-in3-ft3-desc')
+    del tsp
+
+    @in3.command(aliases=['cubic-foot', 'cubic-feet'], invoke_without_command=True, description='units/volume-in3-ft3-desc')
     async def ft3(ctx, amount: float):
-        await ctx.send(amount * (1/61.024) / (1/28.317))
+        try:
+            await ctx.send(amount * (1/61.024) / (1/28.317))
+        except ZeroDivisionError:
+            await ctx.send('NaN')
+
+    del ft3
+

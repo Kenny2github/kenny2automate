@@ -149,8 +149,7 @@ async def on_command_error(ctx, exc):
         return
     cog = ctx.cog
     if cog:
-        attr = '_{0.__class__.__name__}__error'.format(cog)
-        if hasattr(cog, attr):
+        if hasattr(cog, 'cog_command_error'):
             return
     if isinstance(exc, (
         commands.BotMissingPermissions,

@@ -1,0 +1,211 @@
+{
+  "*": {
+    "cog-desc": "Convert units between each other.\nRun `{0}help convert` to see unit types.\nRun `{0}help convert <type>` to see units available.\nRun `{0}convert <type> <unit1> <unit2> <amount>` to convert <amount> from `unit1` to `unit2`.",
+    "convert-desc": "Convert units between each other",
+    "kind-desc": "Convert {0}",
+    "kind-unit1-desc": "Convert {0} from {1}",
+    "kind-unit1-unit2-desc": "Convert {0} from {1} to {2}"
+  },
+  "area": {
+    "name": "areas",
+    "units": {
+      "sqkm": "square kilometers",
+      "sqm": "square meters",
+      "sqmil": "square miles",
+      "sqyard": "square yards",
+      "sqft": "square feet",
+      "sqin": "square inches",
+      "hectare": "hectares",
+      "acre": "acres"
+    }
+  },
+  "data": {
+    "name": "data transfer rates",
+    "units": {
+      "bps": "bits per second",
+      "kbps": "kilobits per second",
+      "KBps": "kilobytes per second",
+      "kibps": "kibibits per second",
+      "mbps": "megabits per second",
+      "MBps": "megabytes per second",
+      "mibps": "mebibits per second",
+      "gbps": "gigabits per second",
+      "GBps": "gigabytes per second",
+      "gibps": "gibibits per second",
+      "tbps": "terabits per second",
+      "TBps": "terabytes per second",
+      "tibps": "tebibits per second"
+    }
+  },
+  "storage": {
+    "name": "digital storage units",
+    "units": {
+      "b": "bits",
+      "kb": "kilobits",
+      "kib": "kibibits",
+      "mb": "megabits",
+      "mib": "mebibits",
+      "gb": "gigabits",
+      "gib": "gibibits",
+      "tb": "terabits",
+      "tib": "tebibits",
+      "pb": "petabits",
+      "pib": "pebibits",
+      "B": "bytes",
+      "KB": "kilobytes",
+      "KiB": "kibibytes",
+      "MB": "megabytes",
+      "MiB": "mebibytes",
+      "GB": "gigabytes",
+      "GiB": "gibibytes",
+      "TB": "terabytes",
+      "TiB": "tebibytes",
+      "PB": "petabytes",
+      "PiB": "pebibytes"
+    }
+  },
+  "energy": {
+    "name": "energy units",
+    "units": {
+      "J": "Joules",
+      "kJ": "kilojoules",
+      "cal": "gram calories",
+      "kcal": "kilocalories",
+      "Wh": "watt hours",
+      "kWh": "kilowatt hours",
+      "eV": "electronvolts",
+      "btu": "British thermal units",
+      "ust": "US therms",
+      "ftlb": "foot-pounds"
+    }
+  },
+  "frequency": {
+    "name": "frequencies",
+    "units": {
+      "Hz": "Hertz",
+      "kHz": "kilohertz",
+      "mHz": "megahertz",
+      "gHz": "gigahertz"
+    }
+  },
+  "fuel": {
+    "name": "fuel economy units",
+    "units": {
+      "umpg": "US miles per gallon",
+      "impg": "Imperial miles per gallon",
+      "kmpL": "kilometers per liter",
+      "Lphkm": "liters per 100 kilometers"
+    }
+  },
+  "length": {
+    "name": "lengths",
+    "units": {
+      "km": "kilometers",
+      "m": "meters",
+      "cm": "centimeters",
+      "mm": "milimeters",
+      "micron": "micrometers",
+      "nm": "nanometers",
+      "mile": "miles",
+      "yard": "yards",
+      "foot": "feet",
+      "inch": "inches",
+      "nautmil": "nautical miles"
+    }
+  },
+  "mass": {
+    "name": "masses",
+    "units": {
+      "t": "tonnes",
+      "kg": "kilograms",
+      "g": "grams",
+      "mg": "milligrams",
+      "microg": "micrograms",
+      "ton": "Imperial tons",
+      "uston": "US tons",
+      "stone": "stone",
+      "lb": "pounds",
+      "oz": "ounces"
+    }
+  },
+  "angle": {
+    "name": "plane angles",
+    "units": {
+      "deg": "degrees",
+      "grad": "gradians",
+      "mrad": "milliradians",
+      "arcmin": "minutes of arc",
+      "rad": "radians",
+      "arcsec": "seconds of arc"
+    }
+  },
+  "pressure": {
+    "name": "pressures",
+    "units": {
+      "atm": "atmospheres",
+      "bar": "bars",
+      "Pa": "Pascals",
+      "psi": "pound-force per square inch",
+      "torr": "torrs"
+    }
+  },
+  "speed": {
+    "name": "speeds",
+    "units": {
+      "mph": "miles per hour",
+      "fps": "feet per second",
+      "mps": "meters per second",
+      "kmph": "kilometers per hour",
+      "knot": "knots"
+    }
+  },
+  "temperature": {
+    "name": "temperatures",
+    "units": {
+      "C": "degrees Celsius",
+      "F": "degrees Fahrenheit",
+      "K": "degrees Kelvin"
+    }
+  },
+  "time": {
+    "name": "times",
+    "units": {
+      "ns": "nanoseconds",
+      "micros": "microseconds",
+      "ms": "milliseconds",
+      "s": "seconds",
+      "min": "minutes",
+      "h": "hours",
+      "day": "days",
+      "week": "weeks",
+      "month": "months",
+      "year": "years",
+      "decade": "decades",
+      "century": "centuries"
+    }
+  },
+  "volume": {
+    "name": "volumes",
+    "units": {
+      "lgallon": "US liquid gallons",
+      "lquart": "US liquid quarts",
+      "lpint": "US liquid pints",
+      "uscup": "US legal cups",
+      "usfloz": "US fluid ounces",
+      "ustbsp": "US tablespoons",
+      "ustsp": "US teaspoons",
+      "m3": "cubic meters",
+      "L": "liters (cubic decimeters)",
+      "mL": "milliliters (cubic centimeters)",
+      "gallon": "Imperial gallons",
+      "quart": "Imperial quarts",
+      "pint": "Imperial pints",
+      "cup": "Imperial cups",
+      "floz": "Imperial fluid ounces",
+      "tbsp": "Imperial tablespoons",
+      "tsp": "Imperial teaspoons",
+      "ft3": "cubic feet",
+      "in3": "cubic inches"
+    }
+  }
+}
