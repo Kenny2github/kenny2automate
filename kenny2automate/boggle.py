@@ -39,6 +39,7 @@ class Boggle(Games):
     """boggle/cog-desc"""
 
     name = 'Boggle'
+    coro = 'do_boggle'
     maxim = float('inf')
     minim = 2
     scn = 'boggle start'
@@ -136,7 +137,7 @@ class Boggle(Games):
                     return True
         return False
 
-    async def do_boggle(self, ctxs):
+    async def do_boggle(self, ctxs, specs):
         await self.mass_message(ctxs,
             title=('boggle/get-ready-title',),
             description=('boggle/get-ready', 3),

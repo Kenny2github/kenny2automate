@@ -40,6 +40,7 @@ class Chess(Games):
                            r"|(?P<checkmate>[#\u2021\u2260]))?$") #checkmate
 
     name = 'Chess'
+    coro = '_chess'
     maxim = minim = 2
     jcn = 'chess join'
 
@@ -171,7 +172,7 @@ class Chess(Games):
             return [False, (x1, y1), (x2, y2), promotion]
         return [True, (x1, y1), (x2, y2), promotion]
 
-    async def _chess(self, ctxs):
+    async def _chess(self, ctxs, specs):
         player1, player2 = ctxs[0].author, ctxs[1].author
         board = Board()
         def boardimg(bd, color):

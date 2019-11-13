@@ -20,9 +20,9 @@
   "unjoined-title": "Left",
   "unjoined": "You have left the game of {0}.",
   "joined-owner": "You have joined the game of {0}, now waiting for at least {1} more players to join before you can start the game...",
-  "joined-waiting-you": "You have joined the game of {0}, now waiting for you to start the game...",
   "joined-faux-owner": "You have joined the game of {0}, now waiting for {1} more people to join...",
   "joined-waiting-missing": "You have joined the game of {0}, now waiting for at least {1} more players to join...",
+  "joined-waiting-specs": "You have joined the game of {0}, now waiting for at least {1} more spectators to join or for {2} to start the game...",
   "joined-waiting-minmax": "You have joined the game of {0}, now waiting for {1} more players to join or for {2} to start the game...",
   "joined-waiting-nomax": "You have joined the game of {0}, now waiting for {2} to start the game...",
   "not-enough-players": "There are not enough players to join! At least {0} are required, there are currently {1}.",
@@ -36,5 +36,16 @@
   "players-desc": "Get a list of people playing a game.",
   "no-such-game": "There is no such game as \"{0}\"",
   "possibly-such-game": "There may be such a game, but if so it has no players.",
-  "players-title": "Users waiting to play {0}"
+  "players-title": "Users waiting to play {0}",
+  "rematch": "If you want a rematch, react with \ud83d\udd02; if not, react with \u23f9",
+  "no-rematch-title": "No Rematch",
+  "no-rematch": "You have decided not to rematch.",
+  "player-rematching-title": "Player Rematching",
+  "player-rematching": "{0} is rematching! Choose \ud83d\udd02 to join them.",
+  "no-spectating": "This game does not support spectating.",
+  "already-spectating": "You are already queued to spectate a game of {0}!",
+  "player-spectating-title": "Player Spectating",
+  "player-spectating": "A player is now spectating the game! {0} more players are needed to start. {1} more players can join this game.",
+  "spectating-title": "Spectating {0}",
+  "spectating": "You are queued to spectate this game."
 }

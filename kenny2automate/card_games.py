@@ -143,7 +143,7 @@ class Fish(Games):
 
 	DECK = [Card(i, j) for i in range(4) for j in range(13)]
 
-	async def do_fish(self, ctxs):
+	async def do_fish(self, ctxs, specs):
 		players = [ctx.author for ctx in ctxs]
 		deck = self.DECK[:]
 		random.shuffle(deck)
@@ -471,6 +471,7 @@ class Fish(Games):
 			)))
 
 	name = 'Go Fish'
+	coro = 'do_fish'
 	maxim = 10
 	minim = 2
 	scn = 'fish start'
@@ -510,7 +511,7 @@ class Uno(Games):
 	DECK.extend([SpecialUnoCard(True) for i in range(4)])
 	DECK.extend([SpecialUnoCard(False) for i in range(4)])
 
-	async def do_uno(self, ctxs):
+	async def do_uno(self, ctxs, specs):
 		players = [ctx.author for ctx in ctxs]
 		deck = self.DECK[:]
 		for i in deck[-8:]:
@@ -791,6 +792,7 @@ class Uno(Games):
 			)))
 
 	name = 'Uno'
+	coro = 'do_uno'
 	maxim = float('inf')
 	minim = 2
 	scn = 'uno start'
@@ -828,7 +830,7 @@ class Blackjack(Games):
 
 	DECK = Fish.DECK[:]
 
-	async def do_blackjack(self, ctxs):
+	async def do_blackjack(self, ctxs, specs):
 		players = [ctx.author for ctx in ctxs]
 		timedout = set()
 		deck = self.DECK[:]
@@ -1019,6 +1021,7 @@ class Blackjack(Games):
 			)))
 
 	name = 'Blackjack'
+	coro = 'do_blackjack'
 	minim = 2
 	maxim = float('inf')
 	scn = 'blackjack start'
@@ -1063,7 +1066,7 @@ class SetGame(Games):
 
 	COORD_REGEX = re.compile(r'^([a-c][0-9]+|[0-9]+[a-c])[,\s]+([a-c][0-9]+|[0-9]+[a-c])[,\s]+([a-c][0-9]+|[0-9]+[a-c])$', re.I)
 
-	async def do_setgame(self, ctxs):
+	async def do_setgame(self, ctxs, specs):
 		players = [ctx.author for ctx in ctxs]
 		deck = self.DECK[:]
 		random.shuffle(deck)
@@ -1206,6 +1209,7 @@ class SetGame(Games):
 			)))
 
 	name = 'Set'
+	coro = 'do_setgame'
 	maxim = float('inf')
 	minim = 1 #you can just try to beat your score
 	scn = 'setgame start'

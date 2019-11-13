@@ -1,24 +1,22 @@
 import asyncio
 import discord
-from discord.ext.commands import command
-from discord.ext.commands import bot_has_permissions
+from discord.ext.commands import group
 from .games import Games
 from .i18n import i18n, embed
+from .utils import lone_group, background
 
 BLUE, RED, BLACK, SHAKE, NEIN, DOWN = \
-    '\U0001f535 \U0001f534 \u2b1b \U0001f91d \u274c \u2b07'.split(' ')
+    '\U0001f535\U0001f534\u2b1b\U0001f91d\u274c\u2b07'
 REGA, REGB, REGC, REGD, REGE, REGF, REGG = REGS = \
     '1\u20e3 2\u20e3 3\u20e3 4\u20e3 5\u20e3 6\u20e3 7\u20e3'.split(' ')
 
 class Connect4(Games):
     """connect4/cog-desc"""
-    @command(description='connect4/leave-desc')
-    async def connect4_leave(self, ctx):
-        await self._unjoin_global_game(ctx)
 
-    async def connect4_global(self, ctxs):
+    async def connect4_global(self, ctxs, specs):
         """Global connect4 coroutine!"""
-        ctx1, ctx2 = ctxs
+        _ctx1, _ctx2 = ctxs
+        ctx1, ctx2 = _ctx1.author, _ctx2.author
         regs = REGS[:]
         board = self.genboard()
         redwon, bluewon = False, False
@@ -27,86 +25,99 @@ class Connect4(Games):
 
         boardmsg1 = await ctx1.send('_ _')
         boardmsg2 = await ctx2.send('_ _')
+        boardmsg1 = await ctx1.fetch_message(boardmsg1.id)
+        boardmsg2 = await ctx2.fetch_message(boardmsg2.id)
+        specbds = await asyncio.gather(*(c.author.send('_ _') for c in specs))
         reaction, user = None, None
 
         while not (redwon or bluewon):
             if reaction is None:
-                await boardmsg1.clear_reactions()
                 for reg in regs:
-                    await boardmsg1.add_reaction(reg)
-                await boardmsg1.add_reaction(DOWN)
-                await boardmsg2.clear_reactions()
+                    background(boardmsg1.add_reaction(reg))
+                background(boardmsg1.add_reaction(DOWN))
                 for reg in regs:
-                    await boardmsg2.add_reaction(reg)
-                await boardmsg2.add_reaction(DOWN)
-            else:
-                try:
-                    await boardmsg2.remove_reaction(reaction, user)
-                except discord.NotFound:
-                    pass
-            boardmsgcont1 = constructboard(ctx1, board, (ctx1.author, ctx2.author), 0, True)
-            boardmsgcont2 = constructboard(ctx2, board, (ctx1.author, ctx2.author), 0, True)
-            await boardmsg1.edit(embed=embed(ctx1,
+                    background(boardmsg2.add_reaction(reg))
+                background(boardmsg2.add_reaction(DOWN))
+            boardmsgcont1 = constructboard(_ctx1, board, (ctx1, ctx2), 0)
+            boardmsgcont2 = constructboard(_ctx2, board, (ctx1, ctx2), 0)
+            boardmsgconts = (constructboard(c, board, (ctx1, ctx2), 0)
+                             for c in specs)
+            for m, c, b in zip(specbds, specs, boardmsgconts):
+                background(m.edit(embed=embed(c,
+                    title=('connect4/board-title',),
+                    description=b,
+                    color=0xff0000
+                )))
+            background(boardmsg1.edit(embed=embed(ctx1,
                 title=('connect4/board-title',),
                 description=boardmsgcont1 + i18n(
                     ctx1, 'connect4/board-you-are', RED
                 ),
                 color=0xff0000
-            ))
-            await boardmsg2.edit(embed=embed(ctx2,
+            )))
+            background(boardmsg2.edit(embed=embed(ctx2,
                 title=('connect4/board-title',),
                 description=boardmsgcont2 + i18n(
                     ctx2, 'connect4/board-you-are', BLUE
                 ),
                 color=0xff0000
-            ))
+            )))
             reaction = DOWN
             while str(reaction) == DOWN:
                 try:
                     reaction, user = await self.bot.wait_for(
-                        'reaction_add',
+                        'reaction_remove',
                         check=lambda r, u: (
                             r.message.id == boardmsg1.id
                             and str(r) in regs
                             and str(r) != NEIN
-                            and u.id == ctx1.author.id
+                            and u.id == ctx1.id
                             or r.message.id in (boardmsg1.id, boardmsg2.id)
                             and str(r) == DOWN
-                            and u.id in (ctx1.author.id, ctx2.author.id)
+                            and u.id in (ctx1.id, ctx2.id)
                         ),
                         timeout=600.0
                     )
                 except asyncio.TimeoutError:
-                    await boardmsg1.edit(embed=embed(ctx1,
+                    for r in boardmsg1.reactions:
+                        background(r.remove(self.bot.user))
+                    background(boardmsg1.edit(embed=embed(ctx1,
                         title=('hangman/timeout-title',),
                         description=('connect4/game-timeout', 600),
                         color=0xff0000
-                    ))
-                    await boardmsg1.clear_reactions()
-                    await boardmsg2.edit(embed=embed(ctx2,
+                    )))
+                    for r in boardmsg2.reactions:
+                        background(r.remove(self.bot.user))
+                    background(boardmsg2.edit(embed=embed(ctx2,
                         title=('hangman/timeout-title',),
                         description=('connect4/game-timeout', 600),
                         color=0xff0000
-                    ))
-                    await boardmsg2.clear_reactions()
+                    )))
+                    for c in specs:
+                        background(specbds[i].edit(embed=embed(c,
+                            title=('hangman/timeout-title',),
+                            description=('connect4/game-timeout', 600),
+                            color=0xff0000
+                        )) for i in range(len(specs)))
                     return
                 if str(reaction) == DOWN:
-                    whose = int(ctx2.channel.id == reaction.message.channel.id)
-                    msg = await reaction.message.channel.send(embed=embed(ctxs[whose],
+                    whose = int(ctx2.id == user.id)
+                    msg = await user.send(embed=embed(ctxs[whose],
                         title=('connect4/board-title',),
                         description=(boardmsgcont1, boardmsgcont2)[whose] + i18n(
                             ctxs[whose], 'connect4/board-you-are', (RED, BLUE)[whose]
                         ),
                         color=0xff0000
                     ))
+                    msg = await user.fetch_message(msg.id)
                     for reg in regs:
-                        await msg.add_reaction(reg)
-                    await msg.add_reaction(DOWN)
+                        background(msg.add_reaction(reg))
+                    background(msg.add_reaction(DOWN))
                     if whose:
                         boardmsg2 = msg
                     else:
                         boardmsg1 = msg
-                    await reaction.message.delete()
+                    background(reaction.message.delete())
             idx = regs.index(str(reaction))
             hit = False
             for rown in range(len(board[idx])):
@@ -121,73 +132,86 @@ class Connect4(Games):
             redwon, bluewon = checkwin(board, RED), checkwin(board, BLUE)
             if redwon or bluewon:
                 break
-            boardmsgcont1 = constructboard(ctx1, board, (ctx1.author, ctx2.author), 1, True)
-            boardmsgcont2 = constructboard(ctx2, board, (ctx1.author, ctx2.author), 1, True)
-            await boardmsg1.edit(embed=embed(ctx1,
+            boardmsgcont1 = constructboard(_ctx1, board, (ctx1, ctx2), 1)
+            boardmsgcont2 = constructboard(_ctx2, board, (ctx1, ctx2), 1)
+            boardmsgconts = (constructboard(c, board, (ctx1, ctx2), 1)
+                             for c in specs)
+            for m, c, b in zip(specbds, specs, boardmsgconts):
+                background(m.edit(embed=embed(c,
+                    title=('connect4/board-title',),
+                    description=b,
+                    color=0x55acee
+                )))
+            background(boardmsg1.edit(embed=embed(ctx1,
                 title=('connect4/board-title',),
                 description=boardmsgcont1 + i18n(
                     ctx1, 'connect4/board-you-are', RED
                 ),
                 color=0x55acee
-            ))
-            await boardmsg2.edit(embed=embed(ctx2,
+            )))
+            background(boardmsg2.edit(embed=embed(ctx2,
                 title=('connect4/board-title',),
                 description=boardmsgcont2 + i18n(
                     ctx2, 'connect4/board-you-are', BLUE
                 ),
                 color=0x55acee
-            ))
-            try:
-                await boardmsg1.remove_reaction(reaction, user)
-            except discord.NotFound:
-                pass
+            )))
             reaction = DOWN
             while str(reaction) == DOWN:
                 try:
                     reaction, user = await self.bot.wait_for(
-                        'reaction_add',
+                        'reaction_remove',
                         check=lambda r, u: (
                             r.message.id == boardmsg2.id
                             and str(r) in regs
                             and str(r) != NEIN
-                            and u.id == ctx2.author.id
+                            and u.id == ctx2.id
                             or r.message.id in (boardmsg1.id, boardmsg2.id)
                             and str(r) == DOWN
-                            and u.id in (ctx1.author.id, ctx2.author.id)
+                            and u.id in (ctx1.id, ctx2.id)
                         ),
                         timeout=600.0
                     )
                 except asyncio.TimeoutError:
-                    await boardmsg1.edit(embed=embed(ctx1,
+                    for r in boardmsg1.reactions:
+                        background(r.remove(self.bot.user))
+                    background(boardmsg1.edit(embed=embed(ctx1,
                         title=('hangman/timeout-title',),
                         description=('connect4/game-timeout', 600),
                         color=0xff0000
-                    ))
-                    await boardmsg1.clear_reactions()
-                    await boardmsg2.edit(embed=embed(ctx2,
+                    )))
+                    for r in boardmsg2.reactions:
+                        background(r.remove(self.bot.user))
+                    background(boardmsg2.edit(embed=embed(ctx2,
                         title=('hangman/timeout-title',),
                         description=('connect4/game-timeout', 600),
                         color=0xff0000
-                    ))
-                    await boardmsg2.clear_reactions()
+                    )))
+                    for c in specs:
+                        background(specbds[i].edit(embed=embed(c,
+                            title=('hangman/timeout-title',),
+                            description=('connect4/game-timeout', 600),
+                            color=0xff0000
+                        )) for i in range(len(specs)))
                     return
                 if str(reaction) == DOWN:
-                    whose = int(ctx2.channel.id == reaction.message.channel.id)
-                    msg = await reaction.message.channel.send(embed=embed(ctxs[whose],
+                    whose = int(ctx2.id == user.id)
+                    msg = await user.send(embed=embed(ctxs[whose],
                         title=('connect4/board-title',),
                         description=(boardmsgcont1, boardmsgcont2)[whose] + i18n(
                             ctxs[whose], 'connect4/board-you-are', (RED, BLUE)[whose]
                         ),
                         color=0x55acee
                     ))
+                    msg = await user.fetch_message(msg.id)
                     for reg in regs:
-                        await msg.add_reaction(reg)
-                    await msg.add_reaction(DOWN)
+                        background(msg.add_reaction(reg))
+                    background(msg.add_reaction(DOWN))
                     if whose == 0:
                         boardmsg1 = msg
                     else:
                         boardmsg2 = msg
-                    await reaction.message.delete()
+                    background(reaction.message.delete())
             idx = regs.index(str(reaction))
             hit = False
             for rown in range(len(board[idx])):
@@ -200,16 +224,23 @@ class Connect4(Games):
             if board[idx].count(BLACK) == 0:
                 regs[idx] = NEIN
             redwon, bluewon = checkwin(board, RED), checkwin(board, BLUE)
-        boardmsgcont1 = constructboard(ctx1, board, (ctx1.author, ctx2.author), int(bluewon), True)
-        boardmsgcont2 = constructboard(ctx2, board, (ctx1.author, ctx2.author), int(bluewon), True)
-        await boardmsg1.edit(embed=embed(ctx1,
+        boardmsgcont1 = constructboard(_ctx1, board, (ctx1, ctx2), int(bluewon))
+        boardmsgcont2 = constructboard(_ctx2, board, (ctx1, ctx2), int(bluewon))
+        boardmsgconts = (constructboard(c, board, (ctx1, ctx2), int(bluewon))
+                         for c in specs)
+        for m, c, b in zip(specbds, specs, boardmsgconts):
+            background(m.edit(embed=embed(c,
+                title=('connect4/board-title',),
+                description=b,
+            )))
+        background(boardmsg1.edit(embed=embed(ctx1,
             title=('connect4/board-title',),
             description=boardmsgcont1
-        ))
-        await boardmsg2.edit(embed=embed(ctx2,
+        )))
+        background(boardmsg2.edit(embed=embed(ctx2,
             title=('connect4/board-title',),
             description=boardmsgcont2
-        ))
+        )))
         if redwon and bluewon:
             embed1 = embed(ctx1,
                 title=('connect4/game-over-title',),
@@ -219,21 +250,39 @@ class Connect4(Games):
                 title=('connect4/game-over-title',),
                 description=('connect4/game-over-tied',)
             )
+            embeds = (embed(c.author,
+                title=('connect4/game-over-title',),
+                description=('connect4/game-over-tied',),
+            ) for c in specs)
         else:
             embed1 = embed(ctx1,
                 title=('connect4/game-over-title',),
                 description=('connect4/game-over-description',
-                    RED if redwon else BLUE, '', RED if bluewon else BLUE, ''),
+                    RED if redwon else BLUE, f'({ctx1 if redwon else ctx2})',
+                    RED if bluewon else BLUE, f'({ctx1 if bluewon else ctx2})'),
                 color=0xff0000 if redwon else 0x55acee
             )
             embed2 = embed(ctx2,
                 title=('connect4/game-over-title',),
                 description=('connect4/game-over-description',
-                    RED if redwon else BLUE, '', RED if bluewon else BLUE, ''),
+                    RED if redwon else BLUE, f'({ctx1 if redwon else ctx2})',
+                    RED if bluewon else BLUE, f'({ctx1 if bluewon else ctx2})'),
                 color=0xff0000 if redwon else 0x55acee
             )
-        await ctx1.send(embed=embed1)
-        await ctx2.send(embed=embed2)
+            embeds = (embed(c.author,
+                title=('connect4/game-over-title',),
+                description=('connect4/game-over-description',
+                    RED if redwon else BLUE, f'({ctx1 if redwon else ctx2})',
+                    RED if bluewon else BLUE, f'({ctx1 if bluewon else ctx2})'),
+                color=0xff0000 if redwon else 0x55acee
+            ) for c in specs)
+        embed1.description += '\n' + i18n(ctx1, 'games/rematch')
+        embed2.description += '\n' + i18n(ctx2, 'games/rematch')
+        for c, e in zip(specs, embeds):
+            background(c.author.send(embed=e))
+        msg1 = await ctx1.send(embed=embed1)
+        msg2 = await ctx2.send(embed=embed2)
+        await self._rematch((msg1, msg2), (_ctx1, _ctx2))
 
     @staticmethod
     def genboard():
@@ -271,204 +320,57 @@ class Connect4(Games):
         #all full and no rows
         return True
 
-    @staticmethod
-    def constructboard(ctx, board, players, whose, safe=False):
-        #only add names if not global to avoid inappropriate names x-server
+    def constructboard(self, ctx, board, players, whose):
         boardmsgcont = ''
-        if not safe:
-            boardmsgcont += RED + ' = ' + (players[0].display_name) + '\n'
-            boardmsgcont += BLUE + ' = ' + (players[1].display_name) + '\n'
+        boardmsgcont += RED + ' = ' + str(players[0]) + '\n'
+        boardmsgcont += BLUE + ' = ' + str(players[1]) + '\n'
         boardmsgcont += "".join(REGS) + '\n'
         for row in zip(*board):
             for column in row:
                 boardmsgcont += column
             boardmsgcont += '\n'
         boardmsgcont += i18n(
-            ctx, 'connect4/board-turn', (
-                players[whose].display_name
-                if not safe
-                else (RED, BLUE)[whose]
-            )
+            ctx, (
+                'connect4/board-turn'
+                if ctx.author in players
+                else 'connect4/board-turn-spec'
+            ), (
+                (RED, BLUE)[whose]
+            ), ctx.prefix
         )
         return boardmsgcont
 
     name = 'Connect 4'
-    @property
-    def jcn(self):
-        return 'connect4 ' + self.bot.user.mention
-    scn = None
+    coro = 'connect4_global'
+    jcn = 'connect4 join'
+    scn = 'connect4 start'
     maxim = minim = 2
+    specs = float('inf')
+    spec = True
 
-    @command(description='connect4/connect4-desc')
-    @bot_has_permissions(manage_messages=True, add_reactions=True, read_message_history=True)
-    async def connect4(self, ctx, against: discord.Member = None):
+    @group(aliases=['c4'], invoke_without_command=True, description='connect4/connect4-desc')
+    @lone_group(True)
+    async def connect4(self, ctx):
         """connect4/connect4-help"""
-        if against and against.id == self.bot.user.id:
-            return await self._join_global_game(ctx, self.connect4_global)
-        regs = REGS[:]
-        if against and against.id == ctx.author.id:
-            player1 = player2 = against
-        else:
-            try:
-                player1, player2 = await self._gather_game(ctx, against)
-            except TypeError: #returned None
-                return
-        board = self.genboard()
-        redwon, bluewon = False, False
-        checkwin = self.checkwin
-        constructboard = self.constructboard
+        pass
 
-        boardmsg = await ctx.send('_ _')
-        reaction, user = None, None
+    @connect4.command(description='connect4/join-desc')
+    async def join(self, ctx):
+        await self._join_global_game(ctx)
 
-        while not (redwon or bluewon):
-            if reaction is None:
-                await boardmsg.clear_reactions()
-                for reg in regs:
-                    await boardmsg.add_reaction(reg)
-                await boardmsg.add_reaction(DOWN)
-            else:
-                try:
-                    await boardmsg.remove_reaction(reaction, user)
-                except discord.NotFound:
-                    pass
-            boardmsgcont = constructboard(ctx, board, (player1, player2), 0)
-            await boardmsg.edit(embed=embed(ctx,
-                title=('connect4/board-title',),
-                description=boardmsgcont,
-                color=0xff0000
-            ))
-            reaction = DOWN
-            while str(reaction) == DOWN:
-                try:
-                    reaction, user = await self.bot.wait_for(
-                        'reaction_add',
-                        check=lambda r, u: \
-                            r.message.id == boardmsg.id \
-                            and str(r) in regs \
-                            and str(r) != NEIN \
-                            and u.id == player1.id \
-                            or r.message.id == boardmsg.id \
-                            and str(r) == DOWN \
-                            and u.id in (player1.id, player2.id),
-                        timeout=600.0
-                    )
-                except asyncio.TimeoutError:
-                    await boardmsg.edit(embed=embed(ctx,
-                        title=('hangman/timeout-title',),
-                        description=('connect4/game-timeout', 600),
-                        color=0xff0000
-                    ))
-                    await boardmsg.clear_reactions()
-                    return
-                if str(reaction) == DOWN:
-                    msg = await reaction.message.channel.send(embed=embed(ctx,
-                        title=('connect4/board-title',),
-                        description=boardmsgcont,
-                        color=0xff0000
-                    ))
-                    for reg in regs:
-                        await msg.add_reaction(reg)
-                    await msg.add_reaction(DOWN)
-                    boardmsg = msg
-                    await reaction.message.delete()
-            idx = regs.index(str(reaction))
-            hit = False
-            for rown in range(len(board[idx])):
-                if board[idx][rown] != BLACK:
-                    board[idx][rown-1] = RED
-                    hit = True
-                    break
-            if not hit:
-                board[idx][-1] = RED
-            if board[idx].count(BLACK) == 0:
-                regs[idx] = NEIN
-            redwon, bluewon = checkwin(board, RED), checkwin(board, BLUE)
-            if redwon or bluewon:
-                break
-            boardmsgcont = constructboard(ctx, board, (player1, player2), 1)
-            await boardmsg.edit(embed=embed(ctx,
-                title=('connect4/board-title',),
-                description=boardmsgcont,
-                color=0x55acee
-            ))
-            try:
-                await boardmsg.remove_reaction(reaction, user)
-            except discord.NotFound:
-                pass
-            reaction = DOWN
-            while str(reaction) == DOWN:
-                try:
-                    reaction, user = await self.bot.wait_for(
-                        'reaction_add',
-                        check=lambda r, u: \
-                            r.message.id == boardmsg.id \
-                            and str(r) in regs \
-                            and str(r) != NEIN \
-                            and u.id == player2.id \
-                            or r.message.id == boardmsg.id \
-                            and str(r) == DOWN \
-                            and u.id in (player1.id, player2.id),
-                        timeout=600.0
-                    )
-                except asyncio.TimeoutError:
-                    await boardmsg.edit(embed=embed(ctx,
-                        title=('hangman/timeout-title',),
-                        description=('connect4/game-timeout', 600),
-                        color=0xff0000
-                    ))
-                    await boardmsg.clear_reactions()
-                    return
-                if str(reaction) == DOWN:
-                    msg = await reaction.message.channel.send(embed=embed(ctx,
-                        title=('connect4/board-title',),
-                        description=boardmsgcont,
-                        color=0x55acee
-                    ))
-                    for reg in regs:
-                        await msg.add_reaction(reg)
-                    await msg.add_reaction(DOWN)
-                    boardmsg = msg
-                    await reaction.message.delete()
-            idx = regs.index(str(reaction))
-            hit = False
-            for rown in range(len(board[idx])):
-                if board[idx][rown] != BLACK:
-                    board[idx][rown-1] = BLUE
-                    hit = True
-                    break
-            if not hit:
-                board[idx][-1] = BLUE
-            if board[idx].count(BLACK) == 0:
-                regs[idx] = NEIN
-            redwon, bluewon = checkwin(board, RED), checkwin(board, BLUE)
-        boardmsgcont = constructboard(ctx, board, (player1, player2), int(bluewon))
-        await boardmsg.edit(embed=embed(ctx,
-            title=('connect4/board-title',),
-            description=boardmsgcont,
-        ))
-        if redwon and bluewon:
-            emb = embed(ctx,
-                title=('connect4/game-over-title',),
-                description=('connect4/game-over-tied',)
-            )
-        else:
-            emb = embed(ctx,
-                title=('connect4/game-over-title',),
-                description=('connect4/game-over-description',
-                    RED if redwon else BLUE,
-                    ' (' + (
-                        (player1.display_name)
-                        if redwon
-                        else (player2.display_name)
-                    ) + ')',
-                    RED if bluewon else BLUE,
-                    ' (' + (
-                        (player1.display_name)
-                        if bluewon
-                        else (player2.display_name)
-                    ) + ')'
-                ),
-                color=0xff0000 if redwon else 0x55acee
-            )
-        await ctx.send(embed=emb)
+    @connect4.command(description='connect4/start-desc')
+    async def start(self, ctx):
+        try:
+            await self._start_global_game(ctx)
+        except:
+            import traceback
+            traceback.print_exc()
+            raise
+
+    @connect4.command(aliases=['spec'], description='connect4/spectate-desc')
+    async def spectate(self, ctx):
+        await self._spec_global_game(ctx)
+
+    @connect4.command(description='connect4/leave-desc')
+    async def leave(self, ctx):
+        await self._unjoin_global_game(ctx)
