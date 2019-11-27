@@ -128,8 +128,8 @@ if dbv < LATEST_DBV:
     db.execute('PRAGMA user_version = {}'.format(LATEST_DBV))
 del dbv
 
-def get_command_prefix(bot, msg):
-    if msg is None:
+def get_command_prefix(bot=None, msg=None):
+    if bot is None or msg is None:
         return cmdargs.prefix
     res = db.execute('SELECT prefix FROM users WHERE user_id=?', (msg.author.id,)).fetchone()
     if res is None or res['prefix'] is None:
@@ -145,11 +145,14 @@ client = Bot(
 
 @client.event
 async def on_command_error(ctx, exc):
+    logger.error('Ignoring exception in command {}: {} {}'.format(
+        ctx.command, type(exc).__name__, exc
+    ), extra={'ctx': ctx})
     if hasattr(ctx.command, 'on_error'):
         return
     cog = ctx.cog
     if cog:
-        if hasattr(cog, 'cog_command_error'):
+        if commands.Cog._get_overridden_method(cog.cog_command_error) is not None:
             return
     if isinstance(exc, (
         commands.BotMissingPermissions,
@@ -169,12 +172,9 @@ async def on_command_error(ctx, exc):
         commands.TooManyArguments,
     )):
         return
-    logger.error('Ignoring exception in command {}:\n'.format(ctx.command)
-        + ''.join(traceback.format_exception(
-            type(exc), exc, exc.__traceback__
-        )),
-        extra={'ctx': ctx}
-    )
+    logger.error(''.join(traceback.format_exception(
+        type(exc), exc, exc.__traceback__
+    )), extra={'ctx': ctx})
 
 @client.before_invoke
 async def before_invoke(ctx):
@@ -505,7 +505,7 @@ async def get(ctx):
     background(ctx.send(embed=embed(ctx,
         title=('sentence-got',),
         description=words,
-        color=0xffffff
+        color=0xfffffe
     )))
 
 SENTENCE_REGEX = re.compile('((?!^)[([{><=@#$*]|[\x7f-\U0010ffff\x00-\x1f _|&-]|[],.:;")}?!%](?!$))')
@@ -551,13 +551,13 @@ ORDER BY rowid DESC').fetchone()
             background(i.send(embed=embed(ctx,
                 title=('sentence-finished-title',),
                 description=('sentence-finished', words),
-                color=0xffffff
+                color=0xfffffe
             )))
         db.execute('DELETE FROM sentence_words')
         background(ctx.send(embed=embed(ctx,
             title=('sentence-ended-title',),
             description=('sentence-ended',),
-            color=0xffffff
+            color=0xfffffe
         )))
     else:
         background(ctx.send(embed=embed(ctx,

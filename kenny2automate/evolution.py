@@ -332,7 +332,7 @@ entry_id DESC').fetchone()[0]
     async def profile(self, ctx):
         me = await self.load_player(ctx)
         await ctx.send(embed=embed(ctx,
-            color=0xffffff,
+            color=0xfffffe,
             fields=(
                 (
                     ('evolution/your-genes',),

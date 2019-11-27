@@ -53,7 +53,7 @@ class Boggle(Games):
 
     @boggle.command(description='boggle/join-desc')
     async def join(self, ctx):
-        await self._join_global_game(ctx, self.do_boggle)
+        await self._join_global_game(ctx)
 
     @boggle.command(description='boggle/leave-desc')
     async def leave(self, ctx):
@@ -83,7 +83,7 @@ class Boggle(Games):
             lewords.add(msg.content.strip().upper())
             asyncio.create_task(ctx.author.send(embed=discord.Embed(
                 description=self.board(board),
-                color=0xffffff
+                color=0xfffffe
             )))
 
     @staticmethod
@@ -153,7 +153,7 @@ class Boggle(Games):
         await self.mass_message(ctxs,
             title=('boggle/board-title',),
             description=('boggle/board', self.board(board)),
-            color=0xffffff
+            color=0xfffffe
         )
         await asyncio.sleep(180) # 3 minutes
         for task in tasks:

@@ -400,7 +400,7 @@ class Games(Cog):
 						break
 
 	async def _gather_game(self, ctx, against):
-		SHAKE, QUESTION = '\U0001f91d\u2753'
+		SHAKE, QUESTION, MAG = '\U0001f91d\u2753\U0001f50d'
 		msg = await ctx.send(embed=embed(ctx,
 			title=('games/playing', self.name),
 			description=(
@@ -427,6 +427,8 @@ class Games(Cog):
 				)))
 				return
 		background(msg.add_reaction(SHAKE))
+		if self.specs > 0:
+			background(msg.add_reaction(MAG))
 		if self.help is not None:
 			background(msg.add_reaction(QUESTION))
 			@self.bot.listen()
@@ -510,15 +512,29 @@ class Games(Cog):
 				return
 			player2 = user
 			del reaction, user
+		msg = await ctx.fetch_message(msg.id)
+		specs = await self._spectators(msg, ctx)
 		if not player1.dm_channel:
 			background(player1.create_dm())
 		if not player2.dm_channel:
 			background(player2.create_dm())
 		clear_listener()
-		return (player1, player2)
+		return (player1, player2, specs) if self.specs>0 else (player1, player2)
+
+	async def _spectators(self, msg, ctx):
+		if self.specs > 0:
+			specs = []
+			for r in msg.reactions:
+				if r.emoji == '\U0001f50d':
+					async for u in r.users():
+						if u.id != self.bot.user.id:
+							specs.append(DummyCtx(author=u))
+					break
+			return specs
+		return None
 
 	async def _gather_multigame(self, ctx):
-		SHAKE, CHECK, QUESTION = '\U0001f91d\u2705\u2753'
+		SHAKE, CHECK, QUESTION, MAG = '\U0001f91d\u2705\u2753\U0001f50d'
 		msg = await ctx.send(embed=embed(ctx,
 			title=('games/playing', self.name),
 			description=(
@@ -530,6 +546,8 @@ class Games(Cog):
 		players = [ctx.author]
 		background(msg.add_reaction(SHAKE))
 		background(msg.add_reaction(CHECK))
+		if self.specs > 0:
+			background(msg.add_reaction(MAG))
 		if self.help is not None:
 			background(msg.add_reaction(QUESTION))
 			@self.bot.listen()
@@ -569,20 +587,21 @@ class Games(Cog):
 				return
 		except asyncio.TimeoutError:
 			pass
-		msg = await ctx.get_message(msg.id)
+		msg = await ctx.fetch_message(msg.id)
 		for r in msg.reactions:
 			if r.emoji == SHAKE:
 				async for u in r.users():
 					if u.id != self.bot.user.id:
 						players.append(u)
 				break
+		specs = await self._spectators(msg, ctx)
 		await asyncio.gather(*(
 			player.create_dm()
 			for player in players
 			if not player.dm_channel
 		))
 		clear_listener()
-		return players
+		return (players, specs) if self.specs > 0 else players
 
 	async def _game(self, ctx, against, coro1, coro2, **kwargs):
 		player1, player2 = await self._gather_game(ctx, against)

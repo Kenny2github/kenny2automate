@@ -258,7 +258,7 @@ class Fish(Games):
 						'fish/fish-turn',
 						str(player)
 					),
-					color=0xffffff
+					color=0xfffffe
 				)))
 			await dmx[pid].send(embed=stats(
 				pid, 'fish/fish-m-card'
@@ -485,7 +485,7 @@ class Fish(Games):
 
 	@fish.command(name='join', description='fish/fish-join-desc')
 	async def fish_join(self, ctx):
-		await self._join_global_game(ctx, self.do_fish)
+		await self._join_global_game(ctx)
 
 	@fish.command(name='leave', description='fish/fish-leave-desc')
 	async def fish_leave(self, ctx):
@@ -806,7 +806,7 @@ class Uno(Games):
 
 	@uno.command(name='join', description='uno/uno-join-desc')
 	async def uno_join(self, ctx):
-		await self._join_global_game(ctx, self.do_uno)
+		await self._join_global_game(ctx)
 
 	@uno.command(name='leave', description='uno/uno-leave-desc')
 	async def uno_leave(self, ctx):
@@ -926,7 +926,7 @@ class Blackjack(Games):
 			await asyncio.gather(*(p.send(embed=embed(p,
 				title=('blackjack/starting-cards',),
 				description=msg,
-				color=0xffffff
+				color=0xfffffe
 			)) for i, p in enumerate(players) if i not in timedout))
 			await asyncio.gather(*(
 				foreach(i)
@@ -1035,7 +1035,7 @@ class Blackjack(Games):
 
 	@blackjack.command(description='blackjack/join-desc')
 	async def join(self, ctx):
-		await self._join_global_game(ctx, self.do_blackjack)
+		await self._join_global_game(ctx)
 
 	@blackjack.command(description='blackjack/leave-desc')
 	async def leave(self, ctx):
@@ -1113,7 +1113,7 @@ class SetGame(Games):
 							False
 						),) if hs else None,
 						footer=None if hs else ('setgame/nosets',),
-						color=0xffffff
+						color=0xfffffe
 					).set_image(url='attachment://table.png')
 				))
 			while deck and not hasset(table):
@@ -1133,7 +1133,7 @@ class SetGame(Games):
 								False
 							),) if hs else None,
 							footer=None if hs else ('setgame/nosets',),
-							color=0xffffff
+							color=0xfffffe
 						).set_image(url='attachment://table.png')
 					))
 			if not deck and not hasset(table):
@@ -1223,7 +1223,7 @@ class SetGame(Games):
 
 	@setgame.command(description='setgame/setgame-join-desc')
 	async def join(self, ctx):
-		await self._join_global_game(ctx, self.do_setgame)
+		await self._join_global_game(ctx)
 
 	@setgame.command(description='setgame/setgame-leave-desc')
 	async def leave(self, ctx):

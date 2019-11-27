@@ -186,5 +186,5 @@ class Words(Cog):
                     for i, j in enumerate(defs)
                 ), False)
             ),
-            color=0xffffff
+            color=0xfffffe
         ))

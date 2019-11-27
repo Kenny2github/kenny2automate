@@ -3,7 +3,7 @@ import discord
 from discord.ext.commands import group
 from .games import Games
 from .i18n import i18n, embed
-from .utils import lone_group, background
+from .utils import lone_group, background, DummyCtx
 
 BLUE, RED, BLACK, SHAKE, NEIN, DOWN = \
     '\U0001f535\U0001f534\u2b1b\U0001f91d\u274c\u2b07'
@@ -336,7 +336,7 @@ class Connect4(Games):
                 else 'connect4/board-turn-spec'
             ), (
                 (RED, BLUE)[whose]
-            ), ctx.prefix
+            ), self.bot.command_prefix()
         )
         return boardmsgcont
 
@@ -353,6 +353,15 @@ class Connect4(Games):
     async def connect4(self, ctx):
         """connect4/connect4-help"""
         pass
+
+    @connect4.command(description='connect4/here-desc')
+    async def here(self, ctx, against: discord.Member = None):
+        try:
+            player1, player2, specs = await self._gather_game(ctx, against)
+        except (TypeError, ValueError):
+            return
+        await self.connect4_global((DummyCtx(author=player1),
+                                    DummyCtx(author=player2)), specs)
 
     @connect4.command(description='connect4/join-desc')
     async def join(self, ctx):

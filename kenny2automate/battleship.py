@@ -179,11 +179,11 @@ class Battleship(Games):
 		embed3, embed4 = d.Embed(
 			title=i18n(dmx1, 'battleship/hitboard'),
 			description=boardmsg(hit1),
-			color=0xffffff
+			color=0xfffffe
 		), d.Embed(
 			title=i18n(dmx2, 'battleship/hitboard'),
 			description=boardmsg(hit2),
-			color=0xffffff
+			color=0xfffffe
 		)
 		embed3.set_footer(text=i18n(dmx1, 'battleship/fire-instructions'))
 		embed4.set_footer(text=i18n(dmx2, 'battleship/wait-instructions'))

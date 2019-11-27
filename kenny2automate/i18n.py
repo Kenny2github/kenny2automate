@@ -7,6 +7,7 @@ import requests
 import discord as d
 from discord.ext import commands as c
 from discord.ext.commands import command, has_permissions, Cog
+from .utils import DummyCtx
 
 db = None
 i18ndir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'i18n')
@@ -32,7 +33,7 @@ def lang(ctx):
         (leid,)
     ).fetchone()
     if res is None or res['lang'] is None:
-        if not hasattr(ctx, 'id'):
+        if not hasattr(ctx, 'id') and not isinstance(ctx, DummyCtx):
             leid = ctx.channel.id
         res = db.execute(
             'SELECT lang FROM channels WHERE channel_id=?',

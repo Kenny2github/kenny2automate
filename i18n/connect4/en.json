@@ -1,5 +1,6 @@
 {
   "cog-desc": "Play Connect 4!",
+  "here-desc": "Look for an opponent within your server.",
   "join-desc": "Join a game of Connect 4.",
   "spectate-desc": "Spectate a game of Connect 4.",
   "leave-desc": "Leave your current game of Connect 4.",

@@ -52,7 +52,7 @@ class Numguess(Cog):
 				limUp = guess
 			tries -= 1
 			result += i18n(ctx, 'numguess/numguess-range', limDn, limUp, tries)
-			await ctx.send(embed=d.Embed(description=result, color=0xffffff))
+			await ctx.send(embed=d.Embed(description=result, color=0xfffffe))
 		await ctx.send(embed=embed(ctx,
 			title=('numguess/numguess-end',),
 			description=(
