@@ -143,7 +143,7 @@ class Fish(Games):
 
 	DECK = [Card(i, j) for i in range(4) for j in range(13)]
 
-	async def do_fish(self, ctxs):
+	async def do_fish(self, ctxs, specs):
 		players = [ctx.author for ctx in ctxs]
 		deck = self.DECK[:]
 		random.shuffle(deck)
@@ -258,7 +258,7 @@ class Fish(Games):
 						'fish/fish-turn',
 						str(player)
 					),
-					color=0xffffff
+					color=0xfffffe
 				)))
 			await dmx[pid].send(embed=stats(
 				pid, 'fish/fish-m-card'
@@ -471,6 +471,7 @@ class Fish(Games):
 			)))
 
 	name = 'Go Fish'
+	coro = 'do_fish'
 	maxim = 10
 	minim = 2
 	scn = 'fish start'
@@ -482,9 +483,14 @@ class Fish(Games):
 		"""fish/fish-cmd-help"""
 		pass
 
+	@fish.command(name='here', description='fish/fish-here-desc')
+	async def fish_here(self, ctx):
+		players = await self._gather_multigame(ctx)
+		return await self.do_fish(players, ())
+
 	@fish.command(name='join', description='fish/fish-join-desc')
 	async def fish_join(self, ctx):
-		await self._join_global_game(ctx, self.do_fish)
+		await self._join_global_game(ctx)
 
 	@fish.command(name='leave', description='fish/fish-leave-desc')
 	async def fish_leave(self, ctx):
@@ -510,7 +516,7 @@ class Uno(Games):
 	DECK.extend([SpecialUnoCard(True) for i in range(4)])
 	DECK.extend([SpecialUnoCard(False) for i in range(4)])
 
-	async def do_uno(self, ctxs):
+	async def do_uno(self, ctxs, specs):
 		players = [ctx.author for ctx in ctxs]
 		deck = self.DECK[:]
 		for i in deck[-8:]:
@@ -791,6 +797,7 @@ class Uno(Games):
 			)))
 
 	name = 'Uno'
+	coro = 'do_uno'
 	maxim = float('inf')
 	minim = 2
 	scn = 'uno start'
@@ -802,9 +809,14 @@ class Uno(Games):
 		"""uno/uno-cmd-help"""
 		pass
 
+	@uno.command(name='here', description='uno/uno-here-desc')
+	async def uno_here(self, ctx):
+		players = await self._gather_multigame(ctx)
+		return await self.do_uno(players, ())
+
 	@uno.command(name='join', description='uno/uno-join-desc')
 	async def uno_join(self, ctx):
-		await self._join_global_game(ctx, self.do_uno)
+		await self._join_global_game(ctx)
 
 	@uno.command(name='leave', description='uno/uno-leave-desc')
 	async def uno_leave(self, ctx):
@@ -828,7 +840,7 @@ class Blackjack(Games):
 
 	DECK = Fish.DECK[:]
 
-	async def do_blackjack(self, ctxs):
+	async def do_blackjack(self, ctxs, specs):
 		players = [ctx.author for ctx in ctxs]
 		timedout = set()
 		deck = self.DECK[:]
@@ -924,7 +936,7 @@ class Blackjack(Games):
 			await asyncio.gather(*(p.send(embed=embed(p,
 				title=('blackjack/starting-cards',),
 				description=msg,
-				color=0xffffff
+				color=0xfffffe
 			)) for i, p in enumerate(players) if i not in timedout))
 			await asyncio.gather(*(
 				foreach(i)
@@ -1019,6 +1031,7 @@ class Blackjack(Games):
 			)))
 
 	name = 'Blackjack'
+	coro = 'do_blackjack'
 	minim = 2
 	maxim = float('inf')
 	scn = 'blackjack start'
@@ -1030,9 +1043,14 @@ class Blackjack(Games):
 		"""blackjack/blackjack-cmd-help"""
 		pass
 
+	@blackjack.command(name='here', description='blackjack/blackjack-here-desc')
+	async def here(self, ctx):
+		players = await self._gather_multigame(ctx)
+		return await self.do_blackjack(players, ())
+
 	@blackjack.command(description='blackjack/join-desc')
 	async def join(self, ctx):
-		await self._join_global_game(ctx, self.do_blackjack)
+		await self._join_global_game(ctx)
 
 	@blackjack.command(description='blackjack/leave-desc')
 	async def leave(self, ctx):
@@ -1063,8 +1081,9 @@ class SetGame(Games):
 
 	COORD_REGEX = re.compile(r'^([a-c][0-9]+|[0-9]+[a-c])[,\s]+([a-c][0-9]+|[0-9]+[a-c])[,\s]+([a-c][0-9]+|[0-9]+[a-c])$', re.I)
 
-	async def do_setgame(self, ctxs):
+	async def do_setgame(self, ctxs, specs):
 		players = [ctx.author for ctx in ctxs]
+		specs = [ctx.author for ctx in specs]
 		deck = self.DECK[:]
 		random.shuffle(deck)
 		table = [deck.pop() for _ in range(9)]
@@ -1090,6 +1109,25 @@ class SetGame(Games):
 						if i.isset(j, k):
 							return True
 			return False
+		def sendcards(surf, hs):
+			for p in players + specs:
+				background(sendsurf(
+					p.send, surf, 'set', 'table.png',
+					embed=embed(p,
+						title=('setgame/table-title',),
+						description=(
+							('setgame/table', points[p.id])
+							if p in players else None
+						),
+						fields=(((
+							('setgame/instructions-title',),
+							('setgame/instructions',),
+							False
+						),) if hs else None) if p in players else None,
+						footer=None if hs else ('setgame/nosets',),
+						color=0xfffffe
+					).set_image(url='attachment://table.png')
+				))
 		while deck:
 			while len(table) < 12:
 				try:
@@ -1098,41 +1136,13 @@ class SetGame(Games):
 					pass
 			surf = tablesurf(table)
 			hs = hasset(table)
-			for p in players:
-				background(sendsurf(
-					p.send, surf, 'set', 'table.png',
-					embed=embed(p,
-						title=('setgame/table-title',),
-						description=('setgame/table', points[p.id]),
-						fields=((
-							('setgame/instructions-title',),
-							('setgame/instructions',),
-							False
-						),) if hs else None,
-						footer=None if hs else ('setgame/nosets',),
-						color=0xffffff
-					).set_image(url='attachment://table.png')
-				))
+			sendcards(surf, hs)
 			while deck and not hasset(table):
 				for i in range(min(3, len(deck))):
 					table.append(deck.pop())
 				surf = tablesurf(table)
 				hs = hasset(table)
-				for p in players:
-					background(sendsurf(
-						p.send, surf, 'set', 'table.png',
-						embed=embed(p,
-							title=('setgame/table-title',),
-							description=('setgame/table', points[p.id]),
-							fields=((
-								('setgame/instructions-title',),
-								('setgame/instructions',),
-								False
-							),) if hs else None,
-							footer=None if hs else ('setgame/nosets',),
-							color=0xffffff
-						).set_image(url='attachment://table.png')
-					))
+				sendcards(surf, hs)
 			if not deck and not hasset(table):
 				break
 			cards = []
@@ -1179,7 +1189,7 @@ class SetGame(Games):
 			i: j for i, j in points.items()
 			if j == max_points
 		}
-		for player in players:
+		for player in players + specs:
 			background(player.send(embed=embed(player,
 				title=('uno/uno-winners-title',),
 				description=(
@@ -1206,10 +1216,13 @@ class SetGame(Games):
 			)))
 
 	name = 'Set'
+	coro = 'do_setgame'
 	maxim = float('inf')
 	minim = 1 #you can just try to beat your score
 	scn = 'setgame start'
 	jcn = 'setgame join'
+	specs = float('inf')
+	spec = True
 
 	@group(invoke_without_command=True, description='setgame/setgame-cmd-desc')
 	@lone_group(True)
@@ -1217,9 +1230,18 @@ class SetGame(Games):
 		"""setgame/setgame-cmd-help"""
 		pass
 
+	@setgame.command(name='here', description='setgame/setgame-here-desc')
+	async def here(self, ctx):
+		players, specs = await self._gather_multigame(ctx)
+		return await self.do_setgame(players, specs)
+
 	@setgame.command(description='setgame/setgame-join-desc')
 	async def join(self, ctx):
-		await self._join_global_game(ctx, self.do_setgame)
+		await self._join_global_game(ctx)
+
+	@setgame.command(aliases=['spec'], description='setgame/setgame-spec-desc')
+	async def spectate(self, ctx):
+		await self._spec_global_game(ctx)
 
 	@setgame.command(description='setgame/setgame-leave-desc')
 	async def leave(self, ctx):

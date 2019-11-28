@@ -39,6 +39,7 @@ class Boggle(Games):
     """boggle/cog-desc"""
 
     name = 'Boggle'
+    coro = 'do_boggle'
     maxim = float('inf')
     minim = 2
     scn = 'boggle start'
@@ -52,7 +53,7 @@ class Boggle(Games):
 
     @boggle.command(description='boggle/join-desc')
     async def join(self, ctx):
-        await self._join_global_game(ctx, self.do_boggle)
+        await self._join_global_game(ctx)
 
     @boggle.command(description='boggle/leave-desc')
     async def leave(self, ctx):
@@ -82,7 +83,7 @@ class Boggle(Games):
             lewords.add(msg.content.strip().upper())
             asyncio.create_task(ctx.author.send(embed=discord.Embed(
                 description=self.board(board),
-                color=0xffffff
+                color=0xfffffe
             )))
 
     @staticmethod
@@ -136,7 +137,7 @@ class Boggle(Games):
                     return True
         return False
 
-    async def do_boggle(self, ctxs):
+    async def do_boggle(self, ctxs, specs):
         await self.mass_message(ctxs,
             title=('boggle/get-ready-title',),
             description=('boggle/get-ready', 3),
@@ -152,7 +153,7 @@ class Boggle(Games):
         await self.mass_message(ctxs,
             title=('boggle/board-title',),
             description=('boggle/board', self.board(board)),
-            color=0xffffff
+            color=0xfffffe
         )
         await asyncio.sleep(180) # 3 minutes
         for task in tasks:

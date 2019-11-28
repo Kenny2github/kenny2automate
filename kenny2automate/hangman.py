@@ -109,7 +109,7 @@ class Hangman(Cog):
 				(('hangman/missed',), 'None', True),
 				(('hangman/gotten',), '`{0}`'.format(''.join(letters)), True)
 			),
-			color=0xffffff
+			color=0xfffffe
 		))
 		while "".join(letters) != WORD and shanpe < len(DGHANGMANSHANPES) - 1:
 			try:
@@ -142,7 +142,7 @@ class Hangman(Cog):
 					(('hangman/missed',), i18n(ctx, 'comma-sep').join(missed), True),
 					(('hangman/gotten',), '`{0}`'.format(''.join(letters)), True)
 				),
-				color=0xffffff
+				color=0xfffffe
 			))
 		await ctx.send(embed=embed(ctx,
 			title=('hangman/end',),
@@ -215,7 +215,7 @@ class Hangman(Cog):
 				(('hangman/missed',), 'None', True),
 				(('hangman/gotten',), '`{0}`'.format(''.join(letters)), True)
 			),
-			color=0xffffff
+			color=0xfffffe
 		))
 		reactionmsg1 = await ctx.send('_ _')
 		reactionmsg2 = await ctx.send('_ _')
@@ -237,7 +237,7 @@ class Hangman(Cog):
 				(('hangman/missed',), 'None', True),
 				(('hangman/gotten',), '`{0}`'.format(''.join(letters)), True)
 			),
-			color=0xffffff
+			color=0xfffffe
 		))
 		while "".join(letters) != WORD and shanpe < len(DGHANGMANSHANPES) - 1:
 			try:
@@ -291,7 +291,7 @@ class Hangman(Cog):
 					(('hangman/missed',), i18n(ctx, 'comma-sep').join(missed) or '\1', True),
 					(('hangman/gotten',), '`{0}`'.format(''.join(letters)), True)
 				),
-				color=0xffffff
+				color=0xfffffe
 			))
 		await ctx.send(embed=embed(ctx,
 			title=('hangman/end',),

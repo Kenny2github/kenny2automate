@@ -68,6 +68,7 @@ class Kenny2help(commands.HelpCommand):
 		ctx = self.context
 		title = ctx.prefix + cmd.qualified_name
 		title += ' ' + (i18n(ctx, cmd.usage) or cmd.signature)
+		title = title.strip()
 		return '`{}`'.format(title)
 
 	async def send_group_help(self, group):
@@ -83,7 +84,7 @@ class Kenny2help(commands.HelpCommand):
 			description=desc,
 			color=0x55acee,
 			fields=(
-				(i.name, (i.description, ctx.prefix), False)
+				(self.command_string(i), (i.description, ctx.prefix), False)
 				for i in filtered
 			)
 		)

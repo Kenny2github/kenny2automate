@@ -1,0 +1,14 @@
+{
+  "cog-desc": "Play 2048!",
+  "cmd-desc": "Play 2048!",
+  "board-title": "Board",
+  "board-footer": "Click an arrow twice to move that direction.",
+  "points-title": "Points",
+  "points": "You have **{0}** points. (Your highscore: **{1}**)",
+  "won-title": "You Won!",
+  "won": "Congratulations! You reached the 2048 tile!",
+  "won-high": "Congratulations! You reached the 2048 tile!\n**New highscore**: {0}",
+  "lost-title": "Game Over",
+  "lost": "No more legal moves! Better luck next time!",
+  "lost-high": "No more legal moves! Better luck next time!\n**New highscore**: {0}"
+}

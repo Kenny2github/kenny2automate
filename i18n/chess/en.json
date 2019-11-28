@@ -5,6 +5,7 @@
   "here-desc": "Look for an opponent within your server.",
   "join-desc": "Join a game with anyone at all.",
   "leave-desc": "Stop looking for a game.",
+  "start-desc": "Start the game of chess.",
   "board-title": "Board",
   "instructions": "Send the [algebraic notation](https://en.wikipedia.org/wiki/Algebraic_notation_(chess%29) for your move, e.g. `d4` or `Na3`.",
   "waiting": "Waiting for your opponent...",
@@ -12,5 +13,7 @@
   "game-end-title": "Game Over",
   "draw": "The game is a draw!",
   "game-end": "The game has ended! Winner: {0}",
-  "last-move": "Last move: {0}"
+  "last-move": "Last move: {0}",
+  "game-start": "game start",
+  "status-title": "Status"
 }
