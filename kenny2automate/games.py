@@ -543,7 +543,7 @@ class Games(Cog):
 			),
 			color=0x55acee
 		))
-		players = [ctx.author]
+		players = [ctx]
 		background(msg.add_reaction(SHAKE))
 		background(msg.add_reaction(CHECK))
 		if self.specs > 0:
@@ -592,13 +592,12 @@ class Games(Cog):
 			if r.emoji == SHAKE:
 				async for u in r.users():
 					if u.id != self.bot.user.id:
-						players.append(u)
+						players.append(DummyCtx(author=u))
 				break
 		specs = await self._spectators(msg, ctx)
 		await asyncio.gather(*(
-			player.create_dm()
+			self._base_needs(player)
 			for player in players
-			if not player.dm_channel
 		))
 		clear_listener()
 		return (players, specs) if self.specs > 0 else players

@@ -1,5 +1,6 @@
 import os
 import re
+import json
 import asyncio
 import pygame
 from chess import Board
@@ -13,21 +14,8 @@ from .utils import DummyCtx, lone_group, background
 # +y => down
 # white starts on y 0
 
-EMOJIS = {'black': {
-    'queen': 649206000330735617,
-    'rook': 649206000397582349,
-    'pawn': 649206000422748170,
-    'bishop': 649206000481599488,
-    'king': 649206000607428618,
-    'knight': 649206000762748930,
-}, 'white': {
-    'king': 649206000523411457,
-    'rook': 649206000599171091,
-    'knight': 649206000607297536,
-    'queen': 649206000955686912,
-    'bishop': 649206001102487552,
-    'pawn': 649206001257414656,
-}}
+with open(os.path.join('resources', 'chess', 'emojis.json')) as f:
+    EMOJIS = json.load(f)
 
 def emote(p):
     piece = {
@@ -101,7 +89,7 @@ class Chess(Games):
         def boardimg(bd, color):
             BLACK, WHITE, SPACE = '\u2b1b\u2b1c\u200b'
             rows = []
-            caps = BLACK + ' ' + '\u200b'.join(chr(i + 0x1f1e6) for i in range(8)) + ' ' + BLACK
+            caps = BLACK + '\u200b' + '\u200b'.join(chr(i + 0x1f1e6) for i in range(8)) + '\u200b' + BLACK
             result = '\n'
             for x in range(8):
                 rows.append([f'{x+1}\u20e3']) #20e3 is number emoji char
