@@ -103,7 +103,7 @@ dbw = sql.connect(os.path.join(CWD, 'kenny2automate.db'),
                   detect_types=sql.PARSE_DECLTYPES)
 dbw.row_factory = sql.Row
 db = dbw.cursor()
-LATEST_DBV = 5
+LATEST_DBV = 6
 dbv = dbv or db.execute('PRAGMA user_version').fetchone()[0]
 if dbv < LATEST_DBV:
     logger.info('Current dbv {} is less than latest {}, upgrading...'.format(
@@ -289,6 +289,10 @@ if 'place' not in cmdargs.disable:
     logger.info('Loading Place', extra={'ctx': dmx})
     from kenny2automate.place import Place
     client.add_cog(Place())
+if '2048' not in cmdargs.disable:
+    logger.info('Loading 2048', extra={'ctx': dmx})
+    from kenny2automate.pow211 import Pow211
+    client.add_cog(Pow211(client, db))
 
 logger.info('Loading Eval', extra={'ctx': dmx})
 from kenny2automate.eval_ import eval_

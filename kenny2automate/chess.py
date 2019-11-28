@@ -2,7 +2,6 @@ import os
 import re
 import json
 import asyncio
-import pygame
 from chess import Board
 import discord
 from discord.ext.commands import group
