@@ -10,5 +10,6 @@
   "won-high": "Congratulations! You reached the 2048 tile!\n**New highscore**: {0}",
   "lost-title": "Game Over",
   "lost": "No more legal moves! Better luck next time!",
-  "lost-high": "No more legal moves! Better luck next time!\n**New highscore**: {0}"
+  "lost-high": "No more legal moves! Better luck next time!\n**New highscore**: {0}",
+  "timed-out": "You didn't make a move for 10 minutes! Your game has been discarded."
 }
