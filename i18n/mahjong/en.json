@@ -1,0 +1,13 @@
+{
+  "cog-desc": "Play Mahjong!",
+  "cmd-desc": "Play Mahjong!",
+  "cmd-help": "[Mahjong](https://en.wikipedia.org/wiki/Mahjong) is a traditional Chinese game played all around Asia. Play it here ex machina!",
+  "here-desc": "Find a game of Mahjong in this server.",
+  "join-desc": "Join a game of Mahjong.",
+  "leave-desc": "Leave your game of Mahjong.",
+  "can-use-title": "Discard Tile Usable",
+  "can-use-chow": "Do you want to use the discard tile to make a 上?",
+  "can-use-pong": "Do you want to use the discard tile to make a 碰?",
+  "can-use-kong": "Do you want to use the discard tile to make a 降?",
+  "can-use-eyes": "Do you want to use the discard tile to make a 眼?"
+}

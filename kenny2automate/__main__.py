@@ -293,6 +293,10 @@ if '2048' not in cmdargs.disable:
     logger.info('Loading 2048', extra={'ctx': dmx})
     from kenny2automate.pow211 import Pow211
     client.add_cog(Pow211(client, db))
+if 'mahjong' not in cmdargs.disable:
+    logger.info('Loading Mahjong', extra={'ctx': dmx})
+    from kenny2automate.mahjong import Mahjong
+    client.add_cog(Mahjong(client, db))
 
 logger.info('Loading Eval', extra={'ctx': dmx})
 from kenny2automate.eval_ import eval_
