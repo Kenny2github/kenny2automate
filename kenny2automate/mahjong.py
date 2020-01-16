@@ -115,18 +115,6 @@ class Mahjong(Games):
             return 'pong'
         return None
 
-    async def _choice(self, user, emb):
-        msg = await user.send(embed=emb)
-        YEA, NAY = '\u2705\u274e'
-        await msg.add_reaction(YEA)
-        await msg.add_reaction(NAY)
-        reaction, user = await self.bot.wait_for('reaction_add', check=lambda r, u: (
-            str(r) in (YEA, NAY)
-            and r.message.id == msg.id
-            and u.id == user.id
-        ))
-        return str(reaction) == YEA
-
     async def _mahjong(self, ctxs, specs):
         players = [c.author for c in ctxs]
         wall = self._wall()
