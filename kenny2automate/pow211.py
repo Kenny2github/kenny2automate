@@ -1,4 +1,5 @@
 import random
+import asyncio
 from discord.ext.commands import command, Cog
 from .games import Games
 from .i18n import embed, i18n
@@ -96,10 +97,18 @@ user_id=?', (ctx.author.id,)).fetchone()
                 inline=emb.fields[0].inline
             )
             background(msg.edit(embed=emb))
-            r, u = await self.bot.wait_for('reaction_remove', check=lambda r, u: (
-                r.message.id == msg.id
-                and u.id == ctx.author.id
-            ))
+            try:
+                r, u = await self.bot.wait_for('reaction_remove', check=lambda r, u: (
+                    r.message.id == msg.id
+                    and u.id == ctx.author.id
+                ), timeout=60.0)
+            except asyncio.TimeoutError:
+                await ctx.send(embed=embed(ctx,
+                    title=('error',),
+                    description=('2048/timed-out',),
+                    color=0xff0000
+                ))
+                return
             # 0 = left, 1 = right, 2 = up, 3 = down
             direc = ARROWS.index(r.emoji)
             changed = 2
