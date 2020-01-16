@@ -629,6 +629,18 @@ class Games(Cog):
 			await qyoo.join()
 		return data2
 
+	async def _choice(self, user, emb):
+		msg = await user.send(embed=emb)
+		YEA, NAY = '\u2705\u274e'
+		await msg.add_reaction(YEA)
+		await msg.add_reaction(NAY)
+		reaction, user = await self.bot.wait_for('reaction_add', check=lambda r, u: (
+			str(r) in (YEA, NAY)
+			and r.message.id == msg.id
+			and u.id == user.id
+		))
+		return str(reaction) == YEA
+
 @command(description='games/players-desc')
 async def players(ctx, *, game: str):
 	game = game.title()

@@ -299,8 +299,8 @@ if 'mahjong' not in cmdargs.disable:
     client.add_cog(Mahjong(client, db))
 
 logger.info('Loading Eval', extra={'ctx': dmx})
-from kenny2automate.eval_ import eval_
-client.add_command(eval_)
+from kenny2automate.eval_ import Eval
+client.add_cog(Eval())
 logger.info('Loading Games', extra={'ctx': dmx})
 from kenny2automate.games import players
 client.add_command(players)
