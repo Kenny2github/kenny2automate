@@ -1,6 +1,7 @@
 import os
 import random
 import json
+from mahjong import Game
 import discord
 from discord.ext.commands import group
 from .games import Games
@@ -10,15 +11,18 @@ from .utils import DummyCtx, lone_group, background
 with open(os.path.join('resources', 'mahjong', 'emojis.json')) as f:
     EMOJIS = json.load(f)
 
-def tile(path, number=None):
-    thing = EMOJIS
-    for i in path.split('/'):
-        if i.isdecimal():
-            i = int(i) - 1
-        thing = thing[i]
-    if number is not None:
-        thing = thing[number]
-    return thing
+def tile(path):
+    # if path is already string, it's unaffected
+    # if it's a Tile, it's cast to a path
+    suit, number = str(path).split('/')
+    if number.isdecimal():
+        number = int(number)
+    return EMOJIS[suit][number]
+
+def tiles(paths):
+    if not isinstance(paths, (list, tuple)):
+        paths = str(paths).split('|')
+    return ''.join(tile(path) for path in paths)
 
 class Mahjong(Games):
     """mahjong/cog-desc"""
@@ -51,21 +55,6 @@ class Mahjong(Games):
     async def leave(self, ctx):
         await self._unjoin_global_game(ctx)
 
-    def _wall(self):
-        wall = []
-        for suit in ('zhu', 'tong', 'wan'):
-            for num in range(1, 10):
-                wall.extend([f'{suit}/{num}'] * 4)
-        for wind in ('dong', 'nan', 'xi', 'bei'):
-            wall.extend([f'feng/{wind}'] * 4)
-        for dragon in ('zhong', 'fa', 'ban'):
-            wall.extend([f'long/{dragon}'] * 4)
-        for i in range(4):
-            wall.append(f'jia/hua/{i}')
-            wall.append(f'jia/gui/{i}')
-        random.shuffle(wall)
-        return wall
-
     def _state(self, discard, players, revealed, hand, player):
         revealed.sort()
         hand.sort()
@@ -84,36 +73,6 @@ class Mahjong(Games):
     def _can_use(self, hand, tile):
         # returns list of usable melds
         pass
-
-    def _meld_type(self, meld):
-        # returns either 'chow', 'pong', 'kong', 'eyes', or None
-        meld.sort()
-        if len(meld) == 4: #kong
-            return 'kong'
-        if len(meld) == 2: #eyes
-            return 'eyes'
-        if meld[0][-1].isdecimal(): #ends with number, could be chow
-            last, suit, stop = None, None, False
-            for t in meld:
-                nsuit, nlast = t.rsplit('/')[-2:]
-                nlast = int(nlast)
-                if last is not None:
-                    if nsuit != suit or nlast != last + 1:
-                        break
-                suit, last = nsuit, nlast
-            else:
-                stop = True
-            if stop:
-                return 'chow'
-        suit = None
-        for t in meld:
-            nsuit = [i for i in t.split('/') if not i.isdecimal()][-1]
-            if suit is not None and nsuit != suit:
-                break
-            suit = nsuit
-        else:
-            return 'pong'
-        return None
 
     async def _mahjong(self, ctxs, specs):
         players = [c.author for c in ctxs]
