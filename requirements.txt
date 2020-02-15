@@ -4,3 +4,4 @@ aiohttp
 pygame
 python-datamuse
 python-chess
+googletrans

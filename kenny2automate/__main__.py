@@ -129,7 +129,7 @@ if dbv < LATEST_DBV:
 del dbv
 
 def get_command_prefix(bot=None, msg=None):
-    if bot is None or msg is None:
+    if msg is None:
         return cmdargs.prefix
     res = db.execute('SELECT prefix FROM users WHERE user_id=?', (msg.author.id,)).fetchone()
     if res is None or res['prefix'] is None:
