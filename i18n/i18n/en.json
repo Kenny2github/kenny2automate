@@ -5,8 +5,20 @@
   "channel_lang-desc": "(Re)Set the channel's language",
   "i18n-desc": "Get the text of an i18n key.",
   "translate-desc": "Translate text into a language.",
-  "blank": "Translate API returned a blank string",
   "unknown-lang": "Unrecognized langage: {0}. Valid languages are:\n{1}",
   "lang-success": "Successfully set langage for {0} to {1}.",
-  "lang-success-reset": "Successfully reset language for {0}."
+  "lang-success-reset": "Successfully reset language for {0}.",
+  "translation-censored": "This server has censored part of this translation!",
+  "translation-failed": "Translation was the original message back out.",
+  "message-translation": "*[Message]({2}) in {0}->{1}*",
+  "translation-requested-by": "Translation requested by {0}",
+  "autotranslate-desc": "Automatically translate messages sent in this channel to a different language.",
+  "at-on-desc": "Turn automatic translation on.",
+  "at-off-desc": "Turn automatic translation off.",
+  "already-autoing": "Messages are already being translated to all the specified languages!",
+  "autolang-ended-title": "Automatic Translation Ended",
+  "autolang-ended": "Messages are no longer being automatically translated to {0}.",
+  "at-off-not-on": "Messages are not currently being translated from {0}!",
+  "at-on-title": "Automatic Translation Started",
+  "at-on": "Messages are being automatically translated to {0}."
 }

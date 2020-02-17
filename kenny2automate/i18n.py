@@ -1,13 +1,12 @@
 import os
 import re
-import time
 import json
 import functools
-import requests
+import asyncio
 import discord as d
-from discord.ext import commands as c
-from discord.ext.commands import command, has_permissions, Cog
-from .utils import DummyCtx
+from discord.ext.commands import command, group, has_permissions, Cog
+from googletrans import Translator, LANGUAGES
+from .utils import DummyCtx, lone_group, background
 
 db = None
 i18ndir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'i18n')
@@ -142,11 +141,11 @@ class I18n(Cog):
         global db
         self.bot = bot
         self.deleters = deleters
+        self.trans = Translator()
         db = cur
 
         INDICATOR_RANGE = range(0x1f1e6, 0x1f1ff)
         LETTERS = ''.join(chr(ord('A') + i) for i in range(26))
-        globs = [time.time()]
         @self.bot.event
         async def on_raw_reaction_add(event):
             emoji = event.emoji.name
@@ -156,50 +155,33 @@ class I18n(Cog):
                 and ord(emoji[1]) in INDICATOR_RANGE
             ):
                 return
-            if time.time() - globs[0] < 20.0:
-                return
-            globs[0] = time.time()
             code = LETTERS[INDICATOR_RANGE.index(ord(emoji[0]))] \
                 + LETTERS[INDICATOR_RANGE.index(ord(emoji[1]))]
-            lang = LANGS[code][0]
+            erroridx = 0
+            while 1:
+                lang = LANGS[code][erroridx]
+                if lang in LANGUAGES:
+                    break
+                if '-' in lang:
+                    lang = lang.split('-', 1)[0]
+                if lang in LANGUAGES:
+                    break
+                erroridx += 1
+            guild = self.bot.get_guild(event.guild_id)
             channel = self.bot.get_channel(event.channel_id)
+            user = self.bot.get_user(event.user_id)
             if channel is None:
-                user = self.bot.get_user(event.user_id)
                 await user.create_dm()
                 channel = user.dm_channel
-            text = (await channel.fetch_message(event.message_id)).content
-            erroridx = 0
-            while erroridx >= 0:
-                try:
-                    req = await self.bot.loop.run_in_executor(None, functools
-                        .partial(requests.get,
-                        'https://translate-service.scratch.mit.edu/translate',
-                        params={'language': lang, 'text': text})
-                    )
-                    print(req.text)
-                    text = req.json()['result']
-                    erroridx = -1
-                except KeyError:
-                    print(lang, 'failed')
-                    if '-' in lang:
-                        #cache failed locale
-                        LANGS[code][erroridx] = LANGS[code][erroridx] \
-                            .split('-')[0]
-                        lang = LANGS[code][erroridx]
-                    else:
-                        erroridx += 1
-                        try:
-                            lang = LANGS[code][erroridx]
-                        except IndexError:
-                            return
-            print('sending text:', text)
-            if not text:
-                await channel.send(embed=d.Embed(
-                    title=('error',),
-                    description=('i18n/blank',),
-                    color=0xff0000
-                ))
-            await channel.send(text)
+            message = await channel.fetch_message(event.message_id)
+            ctx = DummyCtx(
+                guild=guild,
+                channel=channel,
+                message=message,
+                author=user
+            )
+            text = message.clean_content
+            await self._translate(ctx, lang, text, message.jump_url)
 
     @command(description='i18n/ogham-desc')
     async def ogham(self, ctx, *, text: str):
@@ -347,34 +329,133 @@ class I18n(Cog):
         await ctx.send(i18n(ctx, key, *params))
 
     @command(aliases=['t', 'trans'], description='i18n/translate-desc')
-    @c.cooldown(1, 20.0)
-    async def translate(self, ctx, lang = None, *, text = None):
-        if not lang:
-            res = db.execute(
-                'SELECT lang FROM users WHERE user_id=?',
-                (ctx.author.id,)
-            ).fetchone()
-            if res is None or res['lang'] is None:
-                res = db.execute(
-                    'SELECT lang FROM channels WHERE channel_id=?',
-                    (ctx.channel.id,)
-                ).fetchone()
-                if res is None or res['lang'] is None:
-                    res = {'lang': 'en'}
-            lang = res['lang']
-        if not text:
-            arg = (await ctx.channel.history(limit=2).flatten())[1].content
+    async def translate(self, ctx, language=None, *, text=None):
+        if not language:
+            _lang = lang(ctx)
         else:
-            arg = text
-        req = await self.bot.loop.run_in_executor(None, functools.partial(
-            requests.get, 'https://translate-service.scratch.mit.edu/translate',
-            params={'language': lang, 'text': arg},
-            headers={
-                'Origin': 'https://llk.github.io',
-                'Referer': 'https://llk.github.io/scratch-gui/develop/',
-                'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
-AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36"
-            }
+            _lang = language
+        url = ctx.message.jump_url
+        if not text:
+            msg = (await ctx.channel.history(limit=2).flatten())[1]
+            url = msg.jump_url
+            text = msg.clean_content
+        await self._translate(ctx, _lang, text, url)
+
+    async def _translate(self, ctx, tl, q, url, error_if_same=True):
+        q = q.strip()
+        # get bad words for guild
+        if ctx.guild is None:
+            bad_words = '\1'
+        else:
+            res = db.execute(
+                'SELECT words_censor FROM guilds WHERE guild_id=?',
+                (ctx.guild.id,)
+            ).fetchone()
+            if res is None or res[0] is None:
+                bad_words = '\1'
+            else:
+                bad_words = res[0] or '\1' #res[0] could still be empty
+        # get translated text
+        trans = await self.bot.loop.run_in_executor(None, functools.partial(
+            self.trans.translate, q, dest=tl
         ))
-        msg = await ctx.send(list(req.json().values())[0] or '\1')
+        if re.search(bad_words, trans.text, re.I):
+            background(ctx.send(embed=embed(ctx,
+                title=('error',),
+                description=('i18n/translation-censored',),
+                color=0xff0000
+            )))
+            return
+        if trans.text.casefold() == trans.origin.casefold():
+            if error_if_same:
+                background(ctx.send(embed=embed(ctx,
+                    title=('error',),
+                    description=('i18n/translation-failed',),
+                    color=0xff0000
+                )))
+            return
+        msg = await ctx.channel.send(embed=embed(ctx, #channel cuz DummyCtx
+            description=i18n(ctx, 'i18n/message-translation',
+                             trans.src, trans.dest, url)
+                + '\n' + trans.text,
+            color=0x36393f,
+            footer=('i18n/translation-requested-by', str(ctx.author)),
+            url=url,
+        ))
         self.deleters[ctx.message.id] = msg.id
+
+    autolangs = {}
+
+    @group(
+        aliases=['at', 'autotrans'],
+        description='i18n/autotranslate-desc',
+        invoke_without_command=True,
+    )
+    @lone_group(True)
+    async def autotranslate(self, ctx):
+        pass
+
+    @autotranslate.command(description='i18n/at-on-desc')
+    async def on(self, ctx, *_lang):
+        _lang = list(_lang)
+        if not _lang:
+            _lang.append(lang(ctx))
+        alangs = self.autolangs.setdefault(ctx.channel.id, set())
+        _lang = [la for la in _lang if la not in alangs]
+        if not _lang:
+            background(ctx.send(embed=embed(ctx,
+                title=('error',),
+                description=('i18n/already-autoing'),
+                color=0xff0000
+            )))
+            return
+        for la in _lang:
+            background(self._at(la, ctx))
+
+    async def _at(self, lang, ctx):
+        self.autolangs[ctx.channel.id].add(lang)
+        background(ctx.send(embed=embed(ctx,
+            title=('i18n/at-on-title',),
+            description=('i18n/at-on', lang),
+            color=0x55acee
+        )))
+        while lang in self.autolangs[ctx.channel.id]:
+            try:
+                msg = await self.bot.wait_for('message', check=lambda m: (
+                    m.channel.id == ctx.channel.id
+                    and not m.author.bot # skip bots
+                    and not m.content.startswith(
+                        self.bot.command_prefix(None, m)
+                    ) # skip commands
+                ), timeout=2.0) # check for stoppage every 2 secs
+            except asyncio.TimeoutError:
+                pass
+            else:
+                background(self._translate(
+                    ctx, lang, msg.clean_content,
+                    msg.jump_url, False
+                ))
+        background(ctx.send(embed=embed(ctx,
+            title=('i18n/autolang-ended-title',),
+            description=('i18n/autolang-ended', lang),
+            color=0x55acee
+        )))
+
+    @autotranslate.command(description='i18n/at-off-desc')
+    async def off(self, ctx, *_lang):
+        alangs = len(self.autolangs.get(ctx.channel.id, set()))
+        if len(_lang) == 1 and _lang[0] == '*':
+            _lang = list(self.autolangs[ctx.channel.id])
+        elif not _lang and alangs == 1:
+            _lang = list(self.autolangs[ctx.channel.id])
+        elif not _lang:
+            _lang = [lang(ctx)]
+        for la in _lang:
+            try:
+                self.autolangs.get(ctx.channel.id, set()).remove(la)
+            except KeyError:
+                background(ctx.send(embed=embed(ctx,
+                    title=('error',),
+                    description=('i18n/at-off-not-on', _lang),
+                    color=0xff0000
+                )))
