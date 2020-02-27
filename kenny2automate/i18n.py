@@ -2,9 +2,13 @@ import os
 import re
 import json
 import functools
+import typing
 import asyncio
-import discord as d
-from discord.ext.commands import command, group, has_permissions, Cog
+import discord
+from discord.ext.commands import (
+    command, group, has_permissions, Cog,
+    Converter, BadArgument
+)
 from googletrans import Translator, LANGUAGES
 from .utils import DummyCtx, lone_group, background
 
@@ -98,7 +102,7 @@ def embed(ctx, title=None, description=None, fields=None, footer=None, **kwargs)
     3-tuples, where name and value are i18n objects and inline is a boolean.
     Any fields will be added in the same order as they come in the iterable.
     """
-    e = d.Embed(
+    e = discord.Embed(
         title=(
             title
             if isinstance(title, (str, type(None)))
@@ -134,6 +138,12 @@ def embed(ctx, title=None, description=None, fields=None, footer=None, **kwargs)
             inline=inline
         )
     return e
+
+class Lang(Converter):
+    async def convert(self, ctx, argument):
+        if argument not in LANGUAGES and argument != '*':
+            raise BadArgument(i18n(ctx, 'i18n/invalid-lang', repr(argument)))
+        return argument
 
 class I18n(Cog):
     """i18n/cog-desc"""
@@ -181,7 +191,7 @@ class I18n(Cog):
                 author=user
             )
             text = message.clean_content
-            await self._translate(ctx, lang, text, message.jump_url)
+            await self._translate(ctx, 'auto', lang, text, message.jump_url)
 
     @command(description='i18n/ogham-desc')
     async def ogham(self, ctx, *, text: str):
@@ -273,7 +283,7 @@ class I18n(Cog):
         self,
         ctx,
         lang: str = None,
-        channel: d.TextChannel = None
+        channel: discord.TextChannel = None
     ):
         if channel is None:
             channel = ctx.channel
@@ -329,19 +339,24 @@ class I18n(Cog):
         await ctx.send(i18n(ctx, key, *params))
 
     @command(aliases=['t', 'trans'], description='i18n/translate-desc')
-    async def translate(self, ctx, language=None, *, text=None):
-        if not language:
+    async def translate(self, ctx, fromlanguage: typing.Optional[Lang] = 'auto',
+                        language: typing.Optional[Lang] = None,
+                        count: typing.Optional[int] = 1, *, text=None):
+        if not language and fromlanguage == 'auto':
             _lang = lang(ctx)
+        elif not language:
+            _lang = fromlanguage
+            fromlanguage = 'auto'
         else:
             _lang = language
         url = ctx.message.jump_url
         if not text:
-            msg = (await ctx.channel.history(limit=2).flatten())[1]
-            url = msg.jump_url
-            text = msg.clean_content
-        await self._translate(ctx, _lang, text, url)
+            msg = (await ctx.channel.history(limit=count+1).flatten())[:0:-1]
+            url = msg[0].jump_url
+            text = '\n\n'.join(m.clean_content for m in msg)
+        await self._translate(ctx, fromlanguage, _lang, text, url)
 
-    async def _translate(self, ctx, tl, q, url, error_if_same=True):
+    async def _translate(self, ctx, sl, tl, q, url, error_if_same=True):
         q = q.strip()
         # get bad words for guild
         if ctx.guild is None:
@@ -357,14 +372,15 @@ class I18n(Cog):
                 bad_words = res[0] or '\1' #res[0] could still be empty
         # get translated text
         trans = await self.bot.loop.run_in_executor(None, functools.partial(
-            self.trans.translate, q, dest=tl
+            self.trans.translate, q, src=sl, dest=tl
         ))
-        if re.search(bad_words, trans.text, re.I):
-            background(ctx.send(embed=embed(ctx,
-                title=('error',),
-                description=('i18n/translation-censored',),
-                color=0xff0000
-            )))
+        if trans.src == trans.dest:
+            if error_if_same:
+                background(ctx.send(embed=embed(ctx,
+                    title=('error',),
+                    description=('i18n/translation-same',),
+                    color=0xff0000
+                )))
             return
         if trans.text.casefold() == trans.origin.casefold():
             if error_if_same:
@@ -373,6 +389,13 @@ class I18n(Cog):
                     description=('i18n/translation-failed',),
                     color=0xff0000
                 )))
+            return
+        if re.search(bad_words, trans.text, re.I):
+            background(ctx.send(embed=embed(ctx,
+                title=('error',),
+                description=('i18n/translation-censored',),
+                color=0xff0000
+            )))
             return
         msg = await ctx.channel.send(embed=embed(ctx, #channel cuz DummyCtx
             description=i18n(ctx, 'i18n/message-translation',
@@ -396,7 +419,7 @@ class I18n(Cog):
         pass
 
     @autotranslate.command(description='i18n/at-on-desc')
-    async def on(self, ctx, *_lang):
+    async def on(self, ctx, *_lang: Lang):
         _lang = list(_lang)
         if not _lang:
             _lang.append(lang(ctx))
@@ -432,7 +455,7 @@ class I18n(Cog):
                 pass
             else:
                 background(self._translate(
-                    ctx, lang, msg.clean_content,
+                    ctx, 'auto', lang, msg.clean_content,
                     msg.jump_url, False
                 ))
         background(ctx.send(embed=embed(ctx,
@@ -442,7 +465,7 @@ class I18n(Cog):
         )))
 
     @autotranslate.command(description='i18n/at-off-desc')
-    async def off(self, ctx, *_lang):
+    async def off(self, ctx, *_lang: Lang):
         alangs = len(self.autolangs.get(ctx.channel.id, set()))
         if len(_lang) == 1 and _lang[0] == '*':
             _lang = list(self.autolangs[ctx.channel.id])

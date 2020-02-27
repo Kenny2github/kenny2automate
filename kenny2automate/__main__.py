@@ -435,7 +435,7 @@ async def purge(ctx, limit: int = 100, user: discord.Member = None, *, matches: 
             if matches not in msg.content:
                 return False
         return True
-    deleted = await ctx.channel.purge(limit=limit, check=check_msg)
+    deleted = await ctx.channel.purge(limit=limit+1, check=check_msg)
     msg = await ctx.send(embed=embed(ctx,
         title=('purge-title',),
         description=('purge', len(deleted)),

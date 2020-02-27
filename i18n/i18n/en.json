@@ -10,6 +10,8 @@
   "lang-success-reset": "Successfully reset language for {0}.",
   "translation-censored": "This server has censored part of this translation!",
   "translation-failed": "Translation was the original message back out.",
+  "translation-same": "Translation source and destination languages were the same.",
+  "invalid-lang": "{0} is not a valid language code.",
   "message-translation": "*[Message]({2}) in {0}->{1}*",
   "translation-requested-by": "Translation requested by {0}",
   "autotranslate-desc": "Automatically translate messages sent in this channel to a different language.",
