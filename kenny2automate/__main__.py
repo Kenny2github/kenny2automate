@@ -293,6 +293,10 @@ if '2048' not in cmdargs.disable:
     logger.info('Loading 2048', extra={'ctx': dmx})
     from kenny2automate.pow211 import Pow211
     client.add_cog(Pow211(client, db))
+if '007' not in cmdargs.disable:
+    logger.info('Loading 007', extra={'ctx': dmx})
+    from kenny2automate.dbl07 import Dbl07
+    client.add_cog(Dbl07(client, db))
 
 logger.info('Loading Eval', extra={'ctx': dmx})
 from kenny2automate.eval_ import Eval
@@ -346,6 +350,25 @@ async def whoami(ctx):
         value=', '.join(role_list), inline=False
     )
     await ctx.send(embed=emb)
+
+@client.command(description='info-desc')
+async def info(ctx):
+    ainfo = await client.application_info()
+    if cmdargs.prefix == ';':
+        homepage = 'http://hkugawiki.ddns.net:8080'
+    else:
+        homepage = 'http://localhost:8080'
+    await ctx.send(embed=embed(ctx,
+        title=str(client.user),
+        description=('description',),
+        fields=(
+            (('info-id',), str(ainfo.id), True),
+            (('info-owner',), str(ainfo.owner), True),
+            (('info-prefix',), f'`{cmdargs.prefix}`', True),
+            (('info-url',), homepage, False)
+        ),
+        color=0x55acee
+    ).set_thumbnail(url=client.user.avatar_url))
 
 @client.group(invoke_without_command=True, description='prefix-desc')
 @lone_group(False)
