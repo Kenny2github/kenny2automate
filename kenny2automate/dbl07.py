@@ -31,11 +31,11 @@ class Dbl07(Games):
     @dbl07.command(description='007/here-desc')
     async def here(self, ctx, against: discord.Member = None):
         try:
-            player1, player2, specs = await self._gather_game(ctx, against)
+            player1, player2 = await self._gather_game(ctx, against)
         except (TypeError, ValueError):
             return
         await self._dbl07((DummyCtx(author=player1),
-                           DummyCtx(author=player2)), specs)
+                           DummyCtx(author=player2)), ())
 
     async def _dbl07(self, ctxs, specs):
         LOAD, FIRE, PROTECT = ACTIONS = '\U0001f4e5\U0001f52b\U0001f6e1'
