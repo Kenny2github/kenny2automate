@@ -1,0 +1,21 @@
+{
+  "cog-desc": "Play 007, a quick children's game!",
+  "cmd-desc": "Play 007! Run `{0}help 007` for more.",
+  "cmd-help": "The game progresses as follows:\n\nEach round, both players choose (at once) to either load (\ud83d\udce5), shoot (\ud83d\udd2b), or shield (\ud83d\udee1).\nEach time you load, your ammo goes up by one; each time you shield, your shields go up by one.\nIf you shoot while the other is shielding, your ammo gets deducted from their shields, then zeroed - unless you have more ammo than they have shields, in which case you win.\nIf you shoot while the other is loading, you win.\nIf you both shoot at the same time, whoever has more ammo wins.\n\n(Note: Variations of this game played in real life have rebounding shields, where if shields exceed ammo then the shooter loses instead of just being emptied.)",
+  "join-desc": "Join a game of 007.",
+  "leave-desc": "Leave your game of 007.",
+  "here-desc": "Find a game of 007 in the current server.",
+  "action-title": "Choose Your Action",
+  "action": "LOAD: {0} - add 1 to your ammo\nSHOOT: {1} - shoot your opponent\nSHIELD: {2} - protect yourself from being shot",
+  "player-you": "Your action",
+  "player-them": "Their action",
+  "ammo-title": "Ammo",
+  "shields-title": "Shields",
+  "start-title": "Game Start",
+  "start": "The game has started.",
+  "round-title": "Round Results",
+  "round": "Here's what went down:",
+  "game-over-title": "Game Over!",
+  "you-won": "Congratulations! You are the true 007.",
+  "you-lost": "You have been shot down by the real 007."
+}

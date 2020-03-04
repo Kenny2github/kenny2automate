@@ -1,11 +1,11 @@
 import random
 import asyncio
-from discord.ext.commands import command, Cog
+from discord.ext.commands import command
 from .games import Games
 from .i18n import embed, i18n
 from .utils import background
 
-class Pow211(Games, name='2048'):
+class Pow211(Games):
     """2048/cog-desc"""
 
     @command(name='2048', description='2048/cmd-desc')

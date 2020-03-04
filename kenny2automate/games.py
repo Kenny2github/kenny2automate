@@ -319,8 +319,6 @@ class Games(Cog):
 			if j.author.id == ctx.author.id:
 				del self._global_games[self.name]['ctxs'][i]
 				break
-		if not len(self._global_games[self.name]['ctxs']):
-			del self._global_games[self.name]
 		background(ctx.send(embed=embed(ctx,
 			title=('games/unjoined-title',),
 			description=('games/unjoined', self.name),

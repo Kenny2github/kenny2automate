@@ -1,6 +1,7 @@
 import re
-import asyncio as a
-import discord as d
+from typing import Optional as Opt
+import asyncio
+import discord
 from discord.ext.commands import command
 from discord.ext.commands import bot_has_permissions
 from .games import Games
@@ -31,7 +32,7 @@ class Battleship(Games):
 	@command(description='battleship/cmd-desc')
 	@bot_has_permissions(add_reactions=True, read_message_history=True)
 	async def battleship(
-		self, ctx, ascii: bool, against: d.Member = None
+		self, ctx, ascii: Opt[bool] = False, against: discord.Member = None
 	):
 		try:
 			player1, player2 = await self._gather_game(ctx, against)
@@ -164,7 +165,7 @@ class Battleship(Games):
 							dq = False
 			await msg.delete()
 			return (board, ships, emb)
-		(board1, ships1, embed1), (board2, ships2, embed2) = await a.gather(
+		(board1,ships1,embed1), (board2,ships2,embed2) = await asyncio.gather(
 			set_ships(dmx1), set_ships(dmx2)
 		)
 		embed1.set_footer()
@@ -176,11 +177,11 @@ class Battleship(Games):
 		], [
 			[BLUE for _ in range(10)] for _ in range(10)
 		]
-		embed3, embed4 = d.Embed(
+		embed3, embed4 = discord.Embed(
 			title=i18n(dmx1, 'battleship/hitboard'),
 			description=boardmsg(hit1),
 			color=0xfffffe
-		), d.Embed(
+		), discord.Embed(
 			title=i18n(dmx2, 'battleship/hitboard'),
 			description=boardmsg(hit2),
 			color=0xfffffe
@@ -294,7 +295,7 @@ class Battleship(Games):
 						description=('battleship/ship-sunk',),
 						color=0x00ff00
 					))
-					await a.sleep(2)
+					await asyncio.sleep(2)
 					await m.delete()
 			embed2.description = boardmsg(board2)
 			await msg2.edit(embed=embed2)
@@ -327,7 +328,7 @@ class Battleship(Games):
 						description=('battleship/ship-sunk',),
 						color=0x00ff00
 					))
-					await a.sleep(2)
+					await asyncio.sleep(2)
 					await m.delete()
 			embed1.description = boardmsg(board1)
 			await msg1.edit(embed=embed1)
@@ -338,12 +339,12 @@ class Battleship(Games):
 			await msg3.edit(embed=embed3)
 			lost1, lost2 = checklost(board1), checklost(board2)
 		del msg1, msg2, msg3, msg4, embed1, embed2, embed3, embed4
-		won_embed = d.Embed(
+		won_embed = discord.Embed(
 			title=i18n(dmx2 if lost1 else dmx1, 'battleship/won-title'),
 			description=i18n(dmx2 if lost1 else dmx1, 'battleship/won'),
 			color=0x55acee
 		)
-		lost_embed = d.Embed(
+		lost_embed = discord.Embed(
 			title=i18n(dmx1 if lost1 else dmx2, 'battleship/lost-title'),
 			description=i18n(dmx1 if lost1 else dmx2, 'battleship/lost'),
 			color=0xff0000
