@@ -486,7 +486,8 @@ class Fish(Games):
 	@fish.command(name='here', description='fish/fish-here-desc')
 	async def fish_here(self, ctx):
 		players = await self._gather_multigame(ctx)
-		return await self.do_fish(players, ())
+		if players:
+			await self.do_fish(players, ())
 
 	@fish.command(name='join', description='fish/fish-join-desc')
 	async def fish_join(self, ctx):
@@ -812,7 +813,8 @@ class Uno(Games):
 	@uno.command(name='here', description='uno/uno-here-desc')
 	async def uno_here(self, ctx):
 		players = await self._gather_multigame(ctx)
-		return await self.do_uno(players, ())
+		if players:
+			await self.do_uno(players, ())
 
 	@uno.command(name='join', description='uno/uno-join-desc')
 	async def uno_join(self, ctx):
@@ -1046,7 +1048,8 @@ class Blackjack(Games):
 	@blackjack.command(name='here', description='blackjack/blackjack-here-desc')
 	async def here(self, ctx):
 		players = await self._gather_multigame(ctx)
-		return await self.do_blackjack(players, ())
+		if players:
+			await self.do_blackjack(players, ())
 
 	@blackjack.command(description='blackjack/join-desc')
 	async def join(self, ctx):
@@ -1233,7 +1236,8 @@ class SetGame(Games):
 	@setgame.command(name='here', description='setgame/setgame-here-desc')
 	async def here(self, ctx):
 		players, specs = await self._gather_multigame(ctx)
-		return await self.do_setgame(players, specs)
+		if players:
+			await self.do_setgame(players, specs)
 
 	@setgame.command(description='setgame/setgame-join-desc')
 	async def join(self, ctx):

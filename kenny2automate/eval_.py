@@ -97,20 +97,12 @@ class Eval(commands.Cog):
                 put = repr(ret)
             finally:
                 put = (out.getvalue() + put + '\n>>>').splitlines()
-                i = 0
-                while i < len(put):
-                    j = 0
-                    while len(put[i]) > 1992: #2000 - ```\n\n```
-                        j += 1
-                        put.insert(i+j, put[i][1992:])
-                        put[i] = put[i][:1992]
-                    i += 1
-                puts = ['```\n']
+                pages = commands.Paginator(prefix='```\n', suffix='\n```')
                 for line in put:
-                    if len(puts[-1]) + len(line) + len('\n```') > 2000:
-                        puts[-1] += '```'
-                        puts.append('```\n')
-                    puts[-1] += line + '\n'
-                puts[-1] += '```'
-                for put in puts:
-                    await ctx.send(put)
+                    try:
+                        pages.add_line(line)
+                    except RuntimeError: #even the line was too long for one msg
+                        for i in range(0, len(line), 1990):
+                            pages.add_line(line[i:i+1990])
+                for page in pages.pages:
+                    await ctx.send(page)

@@ -15,7 +15,8 @@ LANG = {i: i18n(i, 'qqq') for i in LANG}
 GLOBAL_GAMES = [
     'Go Fish', 'Connect 4',
     'Fight', 'Boggle', 'Uno',
-    'Blackjack', 'Set', 'Chess'
+    'Blackjack', 'Set', 'Chess',
+    '007',
 ]
 
 class Handler:
