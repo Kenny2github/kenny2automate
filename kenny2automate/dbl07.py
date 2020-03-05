@@ -3,7 +3,7 @@ import discord
 from discord.ext.commands import group
 from .games import Games
 from .i18n import embed
-from .utils import background, lone_group
+from .utils import background, lone_group, DummyCtx
 
 class Dbl07(Games):
     """007/cog-desc"""
