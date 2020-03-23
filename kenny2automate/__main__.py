@@ -358,6 +358,13 @@ async def info(ctx):
         homepage = 'http://hkugawiki.ddns.net:8080'
     else:
         homepage = 'http://localhost:8080'
+    invite = discord.utils.oauth_url(ainfo.id, permissions=discord.Permissions(
+        send_messages=True,
+        embed_links=True,
+        attach_files=True,
+        read_message_history=True,
+        external_emojis=True
+    ))
     await ctx.send(embed=embed(ctx,
         title=str(client.user),
         description=('description',),
@@ -365,7 +372,8 @@ async def info(ctx):
             (('info-id',), str(ainfo.id), True),
             (('info-owner',), str(ainfo.owner), True),
             (('info-prefix',), f'`{cmdargs.prefix}`', True),
-            (('info-url',), homepage, False)
+            (('info-url',), ('info-url-url', homepage), True),
+            (('info-invite',), ('info-inv', invite), True)
         ),
         color=0x55acee
     ).set_thumbnail(url=client.user.avatar_url))
