@@ -123,7 +123,7 @@ class Games(Cog):
 				if str(member.status) != 'online':
 					continue
 				if user.dm_channel is None:
-					background(user.create_dm())
+					await user.create_dm()
 				coros.append(user.dm_channel.send(embed=embed(
 					DummyCtx(
 						author=user,
