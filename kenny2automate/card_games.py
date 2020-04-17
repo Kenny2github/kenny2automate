@@ -629,7 +629,7 @@ class Uno(Games):
 			if turned:
 				try:
 					def checc(m):
-						if m.channel.id != player.dm_channel.id:
+						if not isinstance(m.channel, discord.DMChannel):
 							return False
 						if m.author.id != player.id:
 							return False
