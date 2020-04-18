@@ -5,6 +5,7 @@ import math
 import random
 #mid-level
 import asyncio
+from enum import IntEnum
 #3rd-party
 from pygame import Surface, SRCALPHA
 import pygame.image
@@ -137,6 +138,133 @@ class SetCard:
 					getattr(other2, attr)}) not in {1, 3}:
 				return False
 		return True
+
+class BigTwoCard(Card):
+	_SUITS = (3, 1, 2, 0) # indexes in Card.SUITS, in Big Two precedence order
+	_NUMBERS = (2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0, 1) # likewise
+
+	@property
+	def _suit(self):
+		return self._SUITS.index(self.suit)
+	@property
+	def _number(self):
+		return self._NUMBERS.index(self.number)
+	def __lt__(self, other):
+		if not isinstance(other, type(self)):
+			return NotImplemented
+		if self.number == other.number:
+			return self._suit < other._suit
+		return self._number < other._number
+	def __le__(self, other):
+		if not isinstance(other, type(self)):
+			return NotImplemented
+		return self < other or self == other
+	def __gt__(self, other):
+		if not isinstance(other, type(self)):
+			return NotImplemented
+		return not self <= other
+	def __ge__(self, other):
+		if not isinstance(other, type(self)):
+			return NotImplemented
+		return not self < other
+
+class BigTwoTricks(IntEnum):
+	SINGLE = 0
+	PAIR = 1
+	TRIPLET = 2
+	STRAIGHT = 3
+	FLUSH = 4
+	FULLHOUSE = 5
+	QUADRUPLET = 6
+	STRAIGHTFLUSH = 7
+
+class BigTwoTrick:
+	cards = []
+	trick = 0
+	def __init__(self, cards, trick):
+		self.cards = cards
+		self.cards.sort()
+		self.trick = BigTwoTricks(trick)
+		getattr(self, 'check_' + self.trick.name.lower(), self.error)()
+
+	def check_straightflush(self):
+		if len(self.cards) != 5:
+			raise ValueError('Straight flush consists of 5 cards')
+		self.check_straight()
+		self.check_flush()
+
+	def check_quadruplet(self):
+		if len(self.cards) != 5:
+			raise ValueError('Four-of-a-kind consists of 5 cards')
+		if self.cards[0].number == self.cards[1].number:
+			cards = self.cards[:-1]
+		else:
+			cards = self.cards[1:]
+		if any(cards[i].number != cards[i+1].number for i in range(3)):
+			raise ValueError('Not four-of-a-kind')
+
+	def check_fullhouse(self):
+		if len(self.cards) != 5:
+			raise ValueError('Full house consists of 5 cards')
+		cards = self.cards
+		if cards[0].number != cards[1].number \
+				or cards[-1].number != cards[-2].number:
+			# after sorting, the first two and last two must each be equal
+			# only the middle can differ from one side
+			raise ValueError('Not full house')
+		if cards[2].number not in (cards[0].number, cards[-1].number):
+			# middle card must be same as start or end card
+			raise ValueError('Not full house')
+
+	def check_flush(self):
+		if len(self.cards) != 5:
+			raise ValueError('Flush consists of 5 cards')
+		if any(self.cards[i].suit != self.cards[i+1] for i in range(4)):
+			raise ValueError('Not flush') # not same suit
+
+	def check_straight(self):
+		if len(self.cards) != 5:
+			raise ValueError('Straight consists of 5 cards')
+		if any(self.cards[i]._number + 1 != self.cards[i+1]._number
+				for i in range(4)):
+			raise ValueError('Not straight') # must be sequential
+		if sum(card.number in range(3) for card in self.cards) >= 3:
+			raise ValueError('Straight cannot have A, 2, and 3 at once')
+
+	def check_triplet(self):
+		if len(self.cards) != 3:
+			raise ValueError('Triplet consists of 3 cards')
+		if any(self.cards[i].number != self.cards[i].number for i in range(2)):
+			raise ValueError('Not triplet')
+
+	def check_pair(self):
+		if len(self.cards) != 2:
+			raise ValueError('Pair consists of 2 cards')
+		if self.cards[0].number != self.cards[1].number:
+			raise ValueError('Not pair')
+
+	def check_single(self):
+		if len(self.cards) != 1:
+			raise ValueError('dude a single is one card, how hard can it be')
+
+	def __eq__(self, other):
+		return self is other
+
+	def __lt__(self, other):
+		if not isinstance(other, type(self)):
+			return NotImplemented
+		if self.trick != other.trick:
+			return self.trick < other.trick
+		return all(i < j for i, j in zip(self.cards, other.cards))
+
+	def __le__(self, other):
+		return self == other or self < other
+
+	def __gt__(self, other):
+		return not self <= other
+
+	def __ge__(self, other):
+		return not self < other
 
 class Fish(Games):
 	"""fish/cog-desc"""
@@ -1253,4 +1381,88 @@ class SetGame(Games):
 
 	@setgame.command(description='setgame/setgame-start-desc')
 	async def start(self, ctx):
+		await self._start_global_game(ctx)
+
+class BigTwo(Games):
+	"""bigtwo/cog-desc"""
+
+	DECK = [BigTwoCard(i, j) for i in range(4) for j in range(13)]
+
+	async def do_bigtwo(self, ctxs, specs):
+		players = [ctx.author for ctx in ctxs]
+		deck = self.DECK[:]
+		random.shuffle(deck)
+		if len(players) == 2:
+			hands = (deck[:26], deck[26:])
+		else:
+			hands = (deck[:13], deck[13:26], deck[26:39], deck[39:])
+		discard = None
+		pid = 0
+		while all(hands):
+			hands[pid].sort()
+			def checc(m):
+				if not isinstance(m.channel, discord.DMChannel):
+					return False
+				if m.author.id != players[pid].id:
+					return False
+				if not re.match(r'^([0-9]+(\s[0-9]+){,4}|pass)$', m.content):
+					return False
+				return True
+			while 1:
+				msg = await self.bot.wait_for('message', check=checc)
+				if msg.content == 'pass':
+					break
+				idxes = list(map(int, msg.content.split()))
+				cards = [hands[pid][i] for i in idxes]
+				for i in range(8)[::-1]:
+					try:
+						trick = BigTwoTrick(cards, i)
+						if not discard < trick:
+							continue
+					except ValueError:
+						continue # invalid trick, try next
+					else:
+						break # valid trick, we're done
+				else:
+					continue # no valid tricks, invalid message
+				break # valid trick, stop asking for messages
+			if msg.content == 'pass':
+				pass # lol
+			else:
+				discard = trick
+				hands[pid] = [card for i, card in enumerate(hands[pid])
+							  if i not in idxes]
+			pid += 1
+			pid %= len(players)
+		#TODO: interface
+
+	name = 'Big Two'
+	coro = 'do_bigtwo'
+	maxim = 4
+	minim = 2
+	scn = 'bigtwo start'
+	jcn = 'bigtwo join'
+
+	@group(invoke_without_command=True, description='bigtwo/bigtwo-cmd-desc')
+	@lone_group(True)
+	async def bigtwo(self, ctx):
+		"""bigtwo/bigtwo-cmd-help"""
+		pass
+
+	@bigtwo.command(name='here', description='bigtwo/bigtwo-here-desc')
+	async def bigtwo_here(self, ctx):
+		players = await self._gather_multigame(ctx)
+		if players:
+			await self.do_bigtwo(players, ())
+
+	@bigtwo.command(name='join', description='bigtwo/bigtwo-join-desc')
+	async def bigtwo_join(self, ctx):
+		await self._join_global_game(ctx)
+
+	@bigtwo.command(name='leave', description='bigtwo/bigtwo-leave-desc')
+	async def bigtwo_leave(self, ctx):
+		await self._unjoin_global_game(ctx)
+
+	@bigtwo.command(name='start', description='bigtwo/bigtwo-start-desc')
+	async def bigtwo_start(self, ctx):
 		await self._start_global_game(ctx)
