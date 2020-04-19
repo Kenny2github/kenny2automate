@@ -1,0 +1,18 @@
+{
+  "cog-desc": "Play Big Two!",
+  "cmd-desc": "Play Big Two!",
+  "cmd-help": "See [Wikipedia](https://en.wikipedia.org/wiki/Big_two) for the rules.",
+  "here-desc": "Look for a game in your current server.",
+  "join-desc": "Join a game of Big Two!",
+  "leave-desc": "Leave your current game of Big Two.",
+  "start-desc": "Start the game of Big Two, if not enough players are there to automatically start.",
+  "turn-footer": "It is now {0}'s turn.",
+  "your-turn": "It is now your turn",
+  "next-turn-title": "Next Turn",
+  "player-played": "{0} played the trick below:",
+  "player-passed": "{0} passed, so the last trick remains as:",
+  "game-started-title": "Game Started",
+  "game-started": "The game has started.",
+  "instructions-title": "Instructions",
+  "instructions": "Send the numbers of the cards you want to play in your trick (in any order).\nThe leftmost card in your hand is numbered 1, the second-to-left 2, and so on.\nIf you like, you can also do the same from the right using negative numbers - rightmost card is -1, second-to-right is -2, and so on.\nSo if you wanted to play the last five cards in your hand, send `-1 -2 -3 -4 -5`."
+}

@@ -220,7 +220,8 @@ class BigTwoTrick:
 		if len(self.cards) != 5:
 			raise ValueError('Flush consists of 5 cards')
 		if any(self.cards[i].suit != self.cards[i+1] for i in range(4)):
-			raise ValueError('Not flush') # not same suit
+			# not same suit
+			raise ValueError('Not flush')
 
 	def check_straight(self):
 		if len(self.cards) != 5:
@@ -255,7 +256,18 @@ class BigTwoTrick:
 			return NotImplemented
 		if self.trick != other.trick:
 			return self.trick < other.trick
-		return all(i < j for i, j in zip(self.cards, other.cards))
+		if self.trick in (
+				BigTwoTricks.SINGLE, BigTwoTricks.PAIR, BigTwoTricks.TRIPLET
+		):
+			return self.cards[0]._number < other.cards[0]._number
+		if self.trick in (
+				BigTwoTricks.STRAIGHT, BigTwoTricks.FLUSH,
+				BigTwoTricks.STRAIGHTFLUSH
+		):
+			return any(i < j for i, j in
+					   zip(self.cards[::-1], other.cards[::-1]))
+		if self.trick in (BigTwoTricks.FULLHOUSE, BigTwoTricks.QUADRUPLET):
+			return self.cards[2]._number < other.cards[2]._number
 
 	def __le__(self, other):
 		return self == other or self < other
@@ -1392,14 +1404,50 @@ class BigTwo(Games):
 		players = [ctx.author for ctx in ctxs]
 		deck = self.DECK[:]
 		random.shuffle(deck)
+		# deal, split the deck with 2 people
+		# but get rid of one hand with 3
 		if len(players) == 2:
-			hands = (deck[:26], deck[26:])
+			hands = [deck[:26], deck[26:]]
 		else:
-			hands = (deck[:13], deck[13:26], deck[26:39], deck[39:])
+			hands = [deck[:13], deck[13:26], deck[26:39], deck[39:]]
+			hands = hands[:len(players)]
+		# figure out who goes first
+		idx = None
+		suit = 0
+		number = 0
+		while idx is None:
+			for i, hand in enumerate(hands):
+				for card in hand:
+					if card._suit == suit and card._number == number:
+						idx = i
+						break
+				if idx is not None:
+					break
+			number += 1
+			if number > 12:
+				number = 0
+				suit += 1
+		hands.insert(0, hands.pop(idx))
+		players.insert(0, players.pop(idx))
+		# done with that
 		discard = None
 		pid = 0
+		for p in players:
+			background(p.send(embed=embed(p,
+				title=('bigtwo/game-started-title',),
+				description=('bigtwo/game-started',),
+				footer=('your-turn',)
+					   if p is players[pid]
+					   else ('turn-footer', str(players[pid])),
+				color=0x55acee
+			)))
 		while all(hands):
 			hands[pid].sort()
+			background(players[pid].send(embed=embed(players[pid],
+				title=('bigtwo/instructions-title',),
+				description=('bigtwo/instructions',),
+				color=0xffff00
+			)))
 			def checc(m):
 				if not isinstance(m.channel, discord.DMChannel):
 					return False
@@ -1413,6 +1461,8 @@ class BigTwo(Games):
 				if msg.content == 'pass':
 					break
 				idxes = list(map(int, msg.content.split()))
+				idxes = [(i - 1) if i >= 0 else (len(hands[pid]) + i)
+						 for i in idxes]
 				cards = [hands[pid][i] for i in idxes]
 				for i in range(8)[::-1]:
 					try:
@@ -1434,7 +1484,50 @@ class BigTwo(Games):
 							  if i not in idxes]
 			pid += 1
 			pid %= len(players)
-		#TODO: interface
+			for p in players:
+				background(p.send(embed=embed(p,
+					title=('bigtwo/next-turn-title',),
+					description=('player-passed' if msg.content == 'passed'
+								 else 'player-played', str(players[pid-1])),
+					footer=('your-turn',)
+						   if p is players[pid]
+						   else ('turn-footer', str(players[pid]))
+				)))
+		points = [len(hands[i]) for i in range(len(players))]
+		winners = {
+			i: points[i] for i in range(len(points))
+			if points[i] == 0
+		}
+		for i in range(len(points)):
+			if points[i] >= 13:
+				points[i] *= 3
+			elif points[i] > 10:
+				points[i] *= 2
+		for pid, player in enumerate(players):
+			background(player.send(embed=embed(player,
+				title=('uno/uno-winners-title',),
+				description=(
+					'uno/winners',
+					'\n'.join(
+						i18n(
+							player, 'uno/point',
+							str(p), points[pid]
+						)
+						for i, p in enumerate(players)
+						if i in winners
+					)
+				),
+				fields=((
+					('uno/points',),
+					'\n'.join(
+						i18n(player, 'uno/point', str(p), points[i])
+						for i, p in enumerate(players)
+						if i not in winners
+					) or i18n(player, 'none'),
+					False
+				),),
+				color=0x55acee
+			)))
 
 	name = 'Big Two'
 	coro = 'do_bigtwo'
@@ -1443,26 +1536,26 @@ class BigTwo(Games):
 	scn = 'bigtwo start'
 	jcn = 'bigtwo join'
 
-	@group(invoke_without_command=True, description='bigtwo/bigtwo-cmd-desc')
+	@group(invoke_without_command=True, description='bigtwo/cmd-desc')
 	@lone_group(True)
 	async def bigtwo(self, ctx):
-		"""bigtwo/bigtwo-cmd-help"""
+		"""bigtwo/cmd-help"""
 		pass
 
-	@bigtwo.command(name='here', description='bigtwo/bigtwo-here-desc')
-	async def bigtwo_here(self, ctx):
+	@bigtwo.command(name='here', description='bigtwo/here-desc')
+	async def here(self, ctx):
 		players = await self._gather_multigame(ctx)
 		if players:
 			await self.do_bigtwo(players, ())
 
-	@bigtwo.command(name='join', description='bigtwo/bigtwo-join-desc')
-	async def bigtwo_join(self, ctx):
+	@bigtwo.command(name='join', description='bigtwo/join-desc')
+	async def join(self, ctx):
 		await self._join_global_game(ctx)
 
-	@bigtwo.command(name='leave', description='bigtwo/bigtwo-leave-desc')
-	async def bigtwo_leave(self, ctx):
+	@bigtwo.command(name='leave', description='bigtwo/leave-desc')
+	async def leave(self, ctx):
 		await self._unjoin_global_game(ctx)
 
-	@bigtwo.command(name='start', description='bigtwo/bigtwo-start-desc')
-	async def bigtwo_start(self, ctx):
+	@bigtwo.command(name='start', description='bigtwo/start-desc')
+	async def start(self, ctx):
 		await self._start_global_game(ctx)
