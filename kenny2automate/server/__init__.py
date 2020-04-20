@@ -16,7 +16,7 @@ GLOBAL_GAMES = [
     'Go Fish', 'Connect 4',
     'Fight', 'Boggle', 'Uno',
     'Blackjack', 'Set', 'Chess',
-    '007',
+    '007', 'Big Two'
 ]
 
 class Handler:

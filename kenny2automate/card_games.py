@@ -29,10 +29,15 @@ def setimg(name):
 	return os.path.join(SET_CARDS, name + '.png')
 
 class Card:
-	SUITS = ('\u2660', '\u2663', '\u2665', '\u2666')
+	SUITS = ('<:spades:701646576153526353>', '<:clubs:701646604347637801>',
+			 '\u2665', '\u2666')
 	NUMBERS = ('\U0001f1e6', '2\u20e3', '3\u20e3', '4\u20e3', '5\u20e3',
 		'6\u20e3', '7\u20e3', '8\u20e3', '9\u20e3', '\U0001f51f', '\U0001f1ef',
 		'\U0001f1f6', '\U0001f1f0')
+	ASCII_NUMBERS = (
+		'A', '2', '3', '4', '5', '6', '7',
+		'8', '9', '10', 'J', 'Q', 'K'
+	)
 
 	suit = 0
 	number = 0
@@ -42,9 +47,10 @@ class Card:
 		self.number = number
 
 	def __repr__(self):
-		return self.NUMBERS[self.number] + self.SUITS[self.suit]
+		return self.ASCII_NUMBERS[self.number] + ('S', 'C', 'H', 'D')[self.suit]
 
-	__str__ = __repr__
+	def __str__(self):
+		return self.NUMBERS[self.number] + '\u2060' + self.SUITS[self.suit]
 
 	def __hash__(self):
 		return hash((self.suit, self.number))
@@ -185,7 +191,10 @@ class BigTwoTrick:
 		self.cards = cards
 		self.cards.sort()
 		self.trick = BigTwoTricks(trick)
-		getattr(self, 'check_' + self.trick.name.lower(), self.error)()
+		getattr(self, 'check_' + self.trick.name.casefold(), self.error)()
+
+	def error(self):
+		raise ValueError('Invalid trick')
 
 	def check_straightflush(self):
 		if len(self.cards) != 5:
@@ -219,7 +228,7 @@ class BigTwoTrick:
 	def check_flush(self):
 		if len(self.cards) != 5:
 			raise ValueError('Flush consists of 5 cards')
-		if any(self.cards[i].suit != self.cards[i+1] for i in range(4)):
+		if any(self.cards[i].suit != self.cards[i+1].suit for i in range(4)):
 			# not same suit
 			raise ValueError('Not flush')
 
@@ -259,7 +268,7 @@ class BigTwoTrick:
 		if self.trick in (
 				BigTwoTricks.SINGLE, BigTwoTricks.PAIR, BigTwoTricks.TRIPLET
 		):
-			return self.cards[0]._number < other.cards[0]._number
+			return max(self.cards) < max(other.cards)
 		if self.trick in (
 				BigTwoTricks.STRAIGHT, BigTwoTricks.FLUSH,
 				BigTwoTricks.STRAIGHTFLUSH
@@ -405,10 +414,7 @@ class Fish(Games):
 			))
 			timedout = False
 			while matches and hands[pid]:
-				num = (
-					'A', '2', '3', '4', '5', '6', '7', '8', '9',
-					'10', 'J', 'Q', 'K'
-				)
+				num = Card.ASCII_NUMBERS
 				def checc(m):
 					if (
 						m.channel.id != dmx[pid].channel.id
@@ -1403,14 +1409,31 @@ class BigTwo(Games):
 	async def do_bigtwo(self, ctxs, specs):
 		players = [ctx.author for ctx in ctxs]
 		deck = self.DECK[:]
-		random.shuffle(deck)
-		# deal, split the deck with 2 people
-		# but get rid of one hand with 3
-		if len(players) == 2:
-			hands = [deck[:26], deck[26:]]
-		else:
-			hands = [deck[:13], deck[13:26], deck[26:39], deck[39:]]
-			hands = hands[:len(players)]
+		# redeal this situation
+		def two_face_no_ace(hand):
+			faces = 0
+			for card in hand:
+				if card._number > 10:
+					return False
+				if card._number > 7:
+					faces += 1
+					if faces > 2:
+						return False
+			return True
+		while 1:
+			random.shuffle(deck)
+			# deal, split the deck with 2 people
+			# but get rid of one hand with 3
+			if len(players) == 2:
+				hands = [deck[:26], deck[26:]]
+			else:
+				hands = [deck[:13], deck[13:26], deck[26:39], deck[39:]]
+				hands = hands[:len(players)]
+			for hand in hands:
+				if two_face_no_ace(hand):
+					break # break from for loop
+			else:
+				break # break from while loop
 		# figure out who goes first
 		idx = None
 		suit = 0
@@ -1431,21 +1454,29 @@ class BigTwo(Games):
 		players.insert(0, players.pop(idx))
 		# done with that
 		discard = None
+		last_player = None
 		pid = 0
 		for p in players:
 			background(p.send(embed=embed(p,
 				title=('bigtwo/game-started-title',),
 				description=('bigtwo/game-started',),
-				footer=('your-turn',)
+				footer=('bigtwo/your-turn',)
 					   if p is players[pid]
-					   else ('turn-footer', str(players[pid])),
+					   else ('bigtwo/turn-footer', str(players[pid])),
 				color=0x55acee
 			)))
 		while all(hands):
 			hands[pid].sort()
 			background(players[pid].send(embed=embed(players[pid],
-				title=('bigtwo/instructions-title',),
-				description=('bigtwo/instructions',),
+				title=('bigtwo/hand-title',),
+				description=' '.join(('\n' if i % 7 == 0 else '')
+									 + f'`{i+1:02}`:\xa0{card!s}'
+									 for i, card in enumerate(hands[pid])),
+				fields=((
+					('bigtwo/instructions-title',),
+					('bigtwo/instructions',),
+					False
+				),),
 				color=0xffff00
 			)))
 			def checc(m):
@@ -1453,21 +1484,23 @@ class BigTwo(Games):
 					return False
 				if m.author.id != players[pid].id:
 					return False
-				if not re.match(r'^([0-9]+(\s[0-9]+){,4}|pass)$', m.content):
+				if not re.match(r'^([0-9]+(\s[0-9]+){,4}|pass)$',
+								m.content, re.I):
 					return False
 				return True
 			while 1:
 				msg = await self.bot.wait_for('message', check=checc)
-				if msg.content == 'pass':
+				if msg.content.casefold() == 'pass':
 					break
 				idxes = list(map(int, msg.content.split()))
-				idxes = [(i - 1) if i >= 0 else (len(hands[pid]) + i)
-						 for i in idxes]
+				if discard is not None and len(idxes) != len(discard.cards):
+					continue
+				idxes = [i - 1 for i in idxes]
 				cards = [hands[pid][i] for i in idxes]
 				for i in range(8)[::-1]:
 					try:
 						trick = BigTwoTrick(cards, i)
-						if not discard < trick:
+						if discard is not None and not discard < trick:
 							continue
 					except ValueError:
 						continue # invalid trick, try next
@@ -1476,22 +1509,39 @@ class BigTwo(Games):
 				else:
 					continue # no valid tricks, invalid message
 				break # valid trick, stop asking for messages
-			if msg.content == 'pass':
+			if msg.content.casefold() == 'pass':
 				pass # lol
 			else:
 				discard = trick
+				last_player = players[pid]
 				hands[pid] = [card for i, card in enumerate(hands[pid])
 							  if i not in idxes]
+				if len(hands[pid]) == 1:
+					for p in players:
+						if p is players[pid]:
+							continue
+						background(p.send(embed=embed(p,
+							title=('bigtwo/last-card-title',),
+							description=('bigtwo/last-card', str(players[pid])),
+							color=0xff0000
+						)))
 			pid += 1
 			pid %= len(players)
+			if last_player is players[pid]:
+				discard = None
 			for p in players:
 				background(p.send(embed=embed(p,
 					title=('bigtwo/next-turn-title',),
-					description=('player-passed' if msg.content == 'passed'
-								 else 'player-played', str(players[pid-1])),
-					footer=('your-turn',)
+					description=('bigtwo/player-passed'
+								 if msg.content.casefold() == 'pass'
+								 else 'bigtwo/player-played',
+								 str(players[pid-1])),
+					fields=(('\1', ' '.join(map(str, discard.cards))
+								   if discard is not None
+								   else ('none',), False),),
+					footer=('bigtwo/your-turn',)
 						   if p is players[pid]
-						   else ('turn-footer', str(players[pid]))
+						   else ('bigtwo/turn-footer', str(players[pid]))
 				)))
 		points = [len(hands[i]) for i in range(len(players))]
 		winners = {
@@ -1511,7 +1561,7 @@ class BigTwo(Games):
 					'\n'.join(
 						i18n(
 							player, 'uno/point',
-							str(p), points[pid]
+							str(p), points[i]
 						)
 						for i, p in enumerate(players)
 						if i in winners

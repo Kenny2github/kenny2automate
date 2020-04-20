@@ -13,6 +13,9 @@
   "player-passed": "{0} passed, so the last trick remains as:",
   "game-started-title": "Game Started",
   "game-started": "The game has started.",
+  "hand-title": "Your Hand",
   "instructions-title": "Instructions",
-  "instructions": "Send the numbers of the cards you want to play in your trick (in any order).\nThe leftmost card in your hand is numbered 1, the second-to-left 2, and so on.\nIf you like, you can also do the same from the right using negative numbers - rightmost card is -1, second-to-right is -2, and so on.\nSo if you wanted to play the last five cards in your hand, send `-1 -2 -3 -4 -5`."
+  "instructions": "Send the numbers of the cards you want to play in your trick (in any order),\ne.g. `1 3 4 6 8`. Each card above is labelled with a number.\nTo pass, send `pass` (there is no automatic passing).",
+  "last-card-title": "Last Card!",
+  "last-card": "{0} is on their last card!"
 }
