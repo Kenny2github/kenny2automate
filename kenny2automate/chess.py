@@ -191,7 +191,7 @@ class Chess(Games):
         )
         cont = boardimg(board, 'white')
         if winner is None:
-            for p in (player1, player2) + specs:
+            for p in [player1, player2] + specs:
                 background(p.send(embed=embed(p,
                     title=('chess/game-end-title',),
                     description=cont,
@@ -202,7 +202,7 @@ class Chess(Games):
                     color=0x808080
                 )))
         else:
-            for p in (player1, player2) + specs:
+            for p in [player1, player2] + specs:
                 background(p.send(embed=embed(p,
                     title=('chess/game-end-title',),
                     description=cont,
