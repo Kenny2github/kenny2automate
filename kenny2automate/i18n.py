@@ -243,16 +243,12 @@ class I18n(Cog):
             ))
             return
         if (
-            not os.path.isfile(os.path.join(i18ndir, lang + '.json'))
+            lang not in LANG
             and not lang == 'qqx'
         ):
             await ctx.send(embed=embed(ctx,
                 title=('error',),
-                description=('i18n/unknown-lang', lang, ', '.join(
-                    i[:-5]
-                    for i in os.listdir(i18ndir)
-                    if i.endswith('.json')
-                )),
+                description=('i18n/unknown-lang', lang, ', '.join(LANG)),
                 color=0xff0000
             ))
             return
@@ -300,16 +296,12 @@ class I18n(Cog):
             ))
             return
         if (
-            not os.path.isfile(os.path.join(i18ndir, lang + '.json'))
+            lang not in LANG
             and not lang == 'qqx'
         ):
             await ctx.send(embed=embed(ctx,
                 title=('error',),
-                description=('i18n/unknown-lang', lang, ', '.join(
-                    i[:2]
-                    for i in os.listdir(i18ndir)
-                    if i.endswith('.json')
-                )),
+                description=('i18n/unknown-lang', lang, ', '.join(LANG)),
                 color=0xff0000
             ))
             return
