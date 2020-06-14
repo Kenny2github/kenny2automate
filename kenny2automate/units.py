@@ -10212,7 +10212,7 @@ class Units(Cog):
 
     @C.command(aliases=['Farenheit'], invoke_without_command=True, description='units/temperature-C-F-desc')
     async def F(ctx, amount: float):
-        await ctx.send(amount * 9 / 5 + 32)
+        await ctx.send(amount * 1.8 + 32)
 
     del F
 
@@ -10222,6 +10222,12 @@ class Units(Cog):
 
     del K
 
+    @C.command(aliases=['Rankine'], invoke_without_command=True, description='units/temperature-C-R-desc')
+    async def R(ctx, amount: float):
+        await ctx.send(amount * 1.8 + 491.67)
+
+    del R
+
     @temperature.group(aliases=['Farenheit'], invoke_without_command=True, description='units/temperature-F-desc')
     @lone_group(True)
     async def F(self, ctx):
@@ -10230,15 +10236,21 @@ class Units(Cog):
 
     @F.command(aliases=['Celsius'], invoke_without_command=True, description='units/temperature-F-C-desc')
     async def C(ctx, amount: float):
-        await ctx.send((amount - 32) * 5 / 9)
+        await ctx.send((amount - 32) / 1.8)
 
     del C
 
     @F.command(aliases=['Kelvin'], invoke_without_command=True, description='units/temperature-F-K-desc')
     async def K(ctx, amount: float):
-        await ctx.send((amount - 32) * 5 / 9 + 273.15)
+        await ctx.send((amount - 32) / 1.8 + 273.15)
 
     del K
+
+    @F.command(aliases=['Rankine'], invoke_without_command=True, description='units/temperature-F-R-desc')
+    async def R(ctx, amount: float):
+        await ctx.send(amount + 459.67)
+
+    del R
 
     @temperature.group(aliases=['Kelvin'], invoke_without_command=True, description='units/temperature-K-desc')
     @lone_group(True)
@@ -10254,9 +10266,39 @@ class Units(Cog):
 
     @K.command(aliases=['Farenheit'], invoke_without_command=True, description='units/temperature-K-F-desc')
     async def F(ctx, amount: float):
-        await ctx.send((amount - 273.15) * 9 / 5 + 32)
+        await ctx.send((amount - 273.15) * 1.8 + 32)
 
     del F
+
+    @K.command(aliases=['Rankine'], invoke_without_command=True, description='units/temperature-K-R-desc')
+    async def R(ctx, amount: float):
+        await ctx.send(amount * 1.8)
+
+    del R
+
+    @temperature.group(aliases=['Rankine'], invoke_without_command=True, description='units/temperature-R-desc')
+    @lone_group(True)
+    async def R(self, ctx):
+        pass
+
+
+    @R.command(aliases=['Celsius'], invoke_without_command=True, description='units/temperature-R-C-desc')
+    async def C(ctx, amount: float):
+        await ctx.send((amount - 491.67) / 1.8)
+
+    del C
+
+    @R.command(aliases=['Farenheit'], invoke_without_command=True, description='units/temperature-R-F-desc')
+    async def F(ctx, amount: float):
+        await ctx.send(amount - 459.67)
+
+    del F
+
+    @R.command(aliases=['Kelvin'], invoke_without_command=True, description='units/temperature-R-K-desc')
+    async def K(ctx, amount: float):
+        await ctx.send(amount / 1.8)
+
+    del K
 
 
     @convert.group(aliases=[], invoke_without_command=True, description='units/time-desc')

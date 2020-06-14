@@ -127,7 +127,8 @@ units = (
     (['temperature', 'temp'], (
         (['C', 'Celsius'], '#TODO: CHANGE CELSIUS'),
         (['F', 'Farenheit'], '#TODO: CHANGE FAHRENHEIT'),
-        (['K', 'Kelvin'], '#TODO: CHANGE KELVIN')
+        (['K', 'Kelvin'], '#TODO: CHANGE KELVIN'),
+        (['R', 'Rankine'], '#TODO: CHANGE RANKINE'),
     )),
     (['time'], (
         (['ns', 'nanosecond', 'nanoseconds'], '1e-9'),
@@ -204,17 +205,32 @@ for kind, pairs in units:
             if kind == 'temperature':
                 if unit1 == 'C':
                     if unit2 == 'F':
-                        factor = 'amount * 9 / 5 + 32'
+                        factor = 'amount * 1.8 + 32'
                     elif unit2 == 'K':
                         factor = 'amount + 273.15'
+                    elif unit2 == 'R':
+                        factor = 'amount * 1.8 + 491.67'
                 elif unit1 == 'F':
-                    factor = '(amount - 32) * 5 / 9'
-                    if unit2 == 'K':
-                        factor += ' + 273.15'
+                    if unit2 == 'R':
+                        factor = 'amount + 459.67'
+                    elif unit2 == 'C':
+                        factor = '(amount - 32) / 1.8'
+                    elif unit2 == 'K':
+                        factor = '(amount - 32) / 1.8 + 273.15'
                 elif unit1 == 'K':
-                    factor = '(amount - 273.15)'
-                    if unit2 == 'F':
-                        factor += ' * 9 / 5 + 32'
+                    if unit2 == 'R':
+                        factor = 'amount * 1.8'
+                    elif unit2 == 'C':
+                        factor = '(amount - 273.15)'
+                    elif unit2 == 'F':
+                        factor = '(amount - 273.15) * 1.8 + 32'
+                elif unit1 == 'R':
+                    if unit2 == 'K':
+                        factor = 'amount / 1.8'
+                    elif unit2 == 'C':
+                        factor = '(amount - 491.67) / 1.8'
+                    elif unit2 == 'F':
+                        factor = 'amount - 459.67'
                 print(f"""    @{unit1}.command(aliases={aliases!r}, invoke_without_command=True, description='units/{kind}-{unit1}-{unit2}-desc')
     async def {unit2}(ctx, amount: float):
         await ctx.send({factor})
