@@ -12,6 +12,7 @@ from kenny2automate.i18n import LANG, i18n
 
 DISCORD_API = 'https://discordapp.com/api/v6'
 LANG = {i: i18n(i, 'qqq') for i in LANG}
+ONE_YEAR = 31557600
 GLOBAL_GAMES = [
     'Go Fish', 'Connect 4',
     'Fight', 'Boggle', 'Uno',
@@ -81,7 +82,7 @@ class Handler:
         sess = self.getsesh(sesh)
         if (
                 not sess
-                or time.time() - sess['last_use'] > 31557600 # 1 year
+                or time.time() - sess['last_use'] > ONE_YEAR
         ):
             sess = {
                 'logged_in': None,
@@ -89,8 +90,8 @@ class Handler:
                 'state': str(time.time())
             }
             if resp is not None:
-                resp.set_cookie('session', sesh)
-                resp.set_cookie('state', sess['state'])
+                resp.set_cookie('session', sesh, max_age=ONE_YEAR)
+                resp.set_cookie('state', sess['state'], max_age=ONE_YEAR)
             self.setsesh(sesh, sess)
             return sesh
         if sess['logged_in'] is not None:
