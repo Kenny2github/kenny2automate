@@ -13,6 +13,7 @@ import pickle
 import json
 import sqlite3 as sql
 import typing
+import unicodedata
 #high-level
 import asyncio
 import argparse
@@ -533,6 +534,25 @@ async def sdow(ctx, page1: str, page2: str):
             .format(urlquote(page1, ''), urlquote(page2, ''))
         ),
         color=0x55acee
+    ))
+
+@client.command(description='charinfo-desc')
+async def charinfo(ctx, *, chars: str):
+    # modified from:
+    # https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/meta.py#L223-L237
+    if '\\' in chars:
+        try:
+            chars = chars.encode().decode('unicode-escape')
+        except UnicodeDecodeError:
+            pass # don't convert
+    def to_string(c):
+        digit = f'{ord(c):x}'
+        name = unicodedata.name(c, i18n(ctx, 'charname-not-found'))
+        return i18n(ctx, 'charinfo', digit, name, c)
+    msg = '\n'.join(map(to_string, chars))
+    await ctx.send(embed=embed(ctx,
+        title=('charinfo-title',),
+        description=msg[:2000]
     ))
 
 @client.group(invoke_without_command=True, description='sentence-desc',
