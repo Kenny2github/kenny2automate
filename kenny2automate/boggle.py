@@ -3,7 +3,7 @@ import random
 from contextlib import ExitStack
 import asyncio
 import discord
-from discord.ext.commands import group
+from discord.ext.commands import group, Greedy
 from .emoji import LETTERS
 from .games import Games
 from .i18n import embed
@@ -51,6 +51,13 @@ class Boggle(Games):
     async def boggle(self, ctx):
         """boggle/boggle-help"""
         pass
+
+    @boggle.command(description='boggle/here-desc')
+    async def here(self, ctx, against: Greedy[discord.Member] = ()):
+        players = await self._gather_multigame(ctx, against)
+        if players:
+            self._starting(ctx)
+            await self.do_boggle(players, ())
 
     @boggle.command(description='boggle/join-desc')
     async def join(self, ctx):

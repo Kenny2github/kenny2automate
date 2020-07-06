@@ -4,7 +4,7 @@ import json
 import asyncio
 from chess import Board
 import discord
-from discord.ext.commands import group
+from discord.ext.commands import group, Greedy
 from .emoji import BLACK_SQUARE, WHITE_SQUARE, ZWSP, LETTERS, NUMBERS
 from .games import Games
 from .i18n import embed, i18n
@@ -60,13 +60,13 @@ class Chess(Games):
         pass
 
     @chess.command(description='chess/here-desc')
-    async def here(self, ctx, against: discord.Member = None):
+    async def here(self, ctx, against: Greedy[discord.Member] = ()):
         try:
-            player1, player2, specs = await self._gather_game(ctx, against)
+            players, specs = await self._gather_multigame(ctx, against)
         except (TypeError, ValueError):
             return
-        await self._chess((DummyCtx(author=player1),
-                           DummyCtx(author=player2)), specs)
+        self._starting(ctx)
+        await self._chess((players[0], players[1]), specs)
 
     @chess.command(description='chess/join-desc')
     async def join(self, ctx):

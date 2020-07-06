@@ -1,9 +1,9 @@
 import asyncio
 import discord
-from discord.ext.commands import group
+from discord.ext.commands import group, Greedy
 from .games import Games
 from .i18n import embed
-from .utils import background, lone_group, DummyCtx
+from .utils import background, lone_group
 
 class Dbl07(Games):
     """007/cog-desc"""
@@ -29,13 +29,13 @@ class Dbl07(Games):
         await self._unjoin_global_game(ctx)
 
     @dbl07.command(description='007/here-desc')
-    async def here(self, ctx, against: discord.Member = None):
+    async def here(self, ctx, against: Greedy[discord.Member] = ()):
         try:
-            player1, player2 = await self._gather_game(ctx, against)
+            players = await self._gather_multigame(ctx, against)
         except (TypeError, ValueError):
             return
-        await self._dbl07((DummyCtx(author=player1),
-                           DummyCtx(author=player2)), ())
+        self._starting(ctx)
+        await self._dbl07((players[0], players[1]), ())
 
     async def _dbl07(self, ctxs, specs):
         LOAD, FIRE, PROTECT = ACTIONS = (

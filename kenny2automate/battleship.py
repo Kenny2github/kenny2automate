@@ -2,12 +2,10 @@ import re
 from typing import Optional as Opt
 import asyncio
 import discord
-from discord.ext.commands import command
-from discord.ext.commands import bot_has_permissions
+from discord.ext.commands import command, bot_has_permissions, Greedy
 from .emoji import NUMBERS as _NUMBERS, LETTERS as _LETTERS
 from .games import Games
 from .i18n import i18n, embed
-from .utils import DummyCtx
 
 class Battleship(Games):
 	"""battleship/cog-desc"""
@@ -33,20 +31,19 @@ class Battleship(Games):
 	@command(description='battleship/cmd-desc')
 	@bot_has_permissions(add_reactions=True, read_message_history=True)
 	async def battleship(
-		self, ctx, ascii: Opt[bool] = False, against: discord.Member = None
+		self, ctx, ascii: Opt[bool] = False,
+		against: Greedy[discord.Member] = ()
 	):
 		try:
-			player1, player2 = await self._gather_game(ctx, against)
+			players = await self._gather_multigame(ctx, against)
+			player1, player2 = players
 		except (TypeError, ValueError):
 			return
-		dmx1, dmx2 = (
-			DummyCtx(
-				send=player.dm_channel.send,
-				channel=player.dm_channel,
-				author=player
-			)
-			for player in (player1, player2)
-		)
+		self._starting(ctx)
+		dmx1 = player1
+		dmx1.channel = player1.author.dm_channel
+		dmx2 = player2
+		dmx2.channel = player2.author.dm_channel
 		if ascii:
 			LETTERS = 'ABCDEFGHIJ'
 			NUMBERS = '0123456789'

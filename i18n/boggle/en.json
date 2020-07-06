@@ -1,6 +1,7 @@
 {
   "cog-desc": "Play Boggle!",
   "boggle-desc": "Play Boggle!",
+  "here-desc": "Look for a game of Boggle in this server.",
   "join-desc": "Join a game of Boggle.",
   "leave-desc": "Leave your game of Boggle.",
   "start-desc": "Start (or vote to start) your game of Boggle.",

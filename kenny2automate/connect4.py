@@ -1,13 +1,13 @@
 import asyncio
 import discord
-from discord.ext.commands import group
+from discord.ext.commands import group, Greedy
 from .emoji import (
     BLUE_CIRCLE as BLUE, RED_CIRCLE as RED,
     BLACK_SQUARE as BLACK, CR0SS as NEIN, NUMBERS
 )
 from .games import Games
 from .i18n import i18n, embed
-from .utils import lone_group, background, DummyCtx
+from .utils import lone_group, background
 
 DOWN = '\N{DOWNWARDS BLACK ARROW}'
 REGA, REGB, REGC, REGD, REGE, REGF, REGG = REGS = NUMBERS[1:8]
@@ -357,13 +357,13 @@ class Connect4(Games):
         pass
 
     @connect4.command(description='connect4/here-desc')
-    async def here(self, ctx, against: discord.Member = None):
+    async def here(self, ctx, against: Greedy[discord.Member] = ()):
         try:
-            player1, player2, specs = await self._gather_game(ctx, against)
+            players, specs = await self._gather_multigame(ctx, against)
         except (TypeError, ValueError):
             return
-        await self.connect4_global((DummyCtx(author=player1),
-                                    DummyCtx(author=player2)), specs)
+        self._starting(ctx)
+        await self.connect4_global((players[0], players[1]), specs)
 
     @connect4.command(description='connect4/join-desc')
     async def join(self, ctx):

@@ -7,6 +7,8 @@
   "game-timeout": "Nobody joined after {0} seconds! The game has been automatically cancelled.",
   "game-cancelled-title": "Game Cancelled",
   "game-cancelled": "Game cancelled by starter.",
+  "game-starting-title": "Game Starting",
+  "game-starting": "The game is starting - anyone joining past this point is too late.",
   "no-bots": "Wait, you can't play against a bot! Game cancelled.",
   "no-offline": "Wait, Player 2 is offline! Game cancelled.",
   "unready-player-2": "Player 2 didn't join after {0} seconds! The game has been automatically cancelled.",

@@ -10,7 +10,7 @@ from enum import IntEnum
 from pygame import Surface, SRCALPHA
 import pygame.image
 import discord
-from discord.ext.commands import group
+from discord.ext.commands import group, Greedy
 #relative
 from .emoji import LETTERS, NUMBERS, PLUS, CHECK, \
 				   SPADES, CLUBS, HEARTS, DIAMONDS
@@ -631,9 +631,10 @@ class Fish(Games):
 		pass
 
 	@fish.command(name='here', description='fish/fish-here-desc')
-	async def fish_here(self, ctx):
-		players = await self._gather_multigame(ctx)
+	async def fish_here(self, ctx, against: Greedy[discord.Member] = ()):
+		players = await self._gather_multigame(ctx, against)
 		if players:
+			self._starting(ctx)
 			await self.do_fish(players, ())
 
 	@fish.command(name='join', description='fish/fish-join-desc')
@@ -963,9 +964,10 @@ class Uno(Games):
 		pass
 
 	@uno.command(name='here', description='uno/uno-here-desc')
-	async def uno_here(self, ctx):
-		players = await self._gather_multigame(ctx)
+	async def uno_here(self, ctx, against: Greedy[discord.Member] = ()):
+		players = await self._gather_multigame(ctx, against)
 		if players:
+			self._starting(ctx)
 			await self.do_uno(players, ())
 
 	@uno.command(name='join', description='uno/uno-join-desc')
@@ -1197,9 +1199,10 @@ class Blackjack(Games):
 		pass
 
 	@blackjack.command(name='here', description='blackjack/blackjack-here-desc')
-	async def here(self, ctx):
-		players = await self._gather_multigame(ctx)
+	async def here(self, ctx, against: Greedy[discord.Member] = ()):
+		players = await self._gather_multigame(ctx, against)
 		if players:
+			self._starting(ctx)
 			await self.do_blackjack(players, ())
 
 	@blackjack.command(description='blackjack/join-desc')
@@ -1385,9 +1388,10 @@ class SetGame(Games):
 		pass
 
 	@setgame.command(name='here', description='setgame/setgame-here-desc')
-	async def here(self, ctx):
-		players, specs = await self._gather_multigame(ctx)
+	async def here(self, ctx, against: Greedy[discord.Member] = ()):
+		players, specs = await self._gather_multigame(ctx, against)
 		if players:
+			self._starting(ctx)
 			await self.do_setgame(players, specs)
 
 	@setgame.command(description='setgame/setgame-join-desc')
@@ -1598,9 +1602,10 @@ class BigTwo(Games):
 		pass
 
 	@bigtwo.command(name='here', description='bigtwo/here-desc')
-	async def here(self, ctx):
-		players = await self._gather_multigame(ctx)
+	async def here(self, ctx, against: Greedy[discord.Member] = ()):
+		players = await self._gather_multigame(ctx, against)
 		if players:
+			self._starting(ctx)
 			await self.do_bigtwo(players, ())
 
 	@bigtwo.command(name='join', description='bigtwo/join-desc')

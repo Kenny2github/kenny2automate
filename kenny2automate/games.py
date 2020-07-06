@@ -1,5 +1,4 @@
 import asyncio
-import discord
 from discord.ext.commands import Cog, command
 from .emoji import CHECK, CROSS, SHAKE, QUESTION, MAG
 from .i18n import i18n, embed
@@ -402,140 +401,15 @@ class Games(Cog):
 						ctxs.remove(c)
 						break
 
-	async def _gather_game(self, ctx, against):
-		msg = await ctx.send(embed=embed(ctx,
-			title=('games/playing', self.name),
-			description=(
-				'games/ready-player-1', ctx.author.mention, SHAKE
-			) if against is None else (
-				'games/ready-player-2', ctx.author.mention, against.mention
-			),
+	def _starting(self, ctx):
+		background(ctx.send(embed=embed(
+			title=('games/game-starting-title',),
+			description=('games/game-starting',),
 			color=0x55acee
-		))
-		player1 = ctx.author
-		if against is not None:
-			if against.bot:
-				background(ctx.send(embed=embed(ctx,
-					title=('error',),
-					description=('games/no-bots',),
-					color=0xff0000
-				)))
-				return
-			elif against.status == discord.Status.offline:
-				background(ctx.send(embed=embed(ctx,
-					title=('error',),
-					description=('games/no-offline',),
-					color=0xff0000
-				)))
-				return
-		background(msg.add_reaction(SHAKE))
-		if self.specs > 0:
-			background(msg.add_reaction(MAG))
-		if self.help is not None:
-			background(msg.add_reaction(QUESTION))
-			@self.bot.listen()
-			async def on_reaction_add(reaction, user):
-				if all((
-					reaction.emoji == QUESTION,
-					reaction.message.id == msg.id,
-					not user.bot
-				)):
-					dmx = DummyCtx(author=user, channel=user.dm_channel)
-					background(user.send(embed=self.help(dmx)
-						if callable(self.help)
-						else embed(user,
-							title=('games/help-title', self.name),
-							description=(self.help,),
-							color=0x55acee
-						)
-					))
-		def clear_listener():
-			if self.help is not None:
-				self.bot.remove_listener(on_reaction_add)
-		if against is None:
-			try:
-				reaction, user = await self.bot.wait_for('reaction_add',
-					check=lambda r, u: \
-						r.emoji == SHAKE \
-						and r.message.id == msg.id \
-						and u.id != self.bot.user.id \
-						and r.message.channel == ctx.channel,
-					timeout=60.0
-				)
-			except asyncio.TimeoutError:
-				background(msg.edit(
-					embed=embed(ctx,
-						title=('games/game-timeout-title',),
-						description=('games/game-timeout', 60),
-						color=0xff0000
-					)
-				))
-				background(msg.clear_reactions())
-				clear_listener()
-				return
-			if user.id == ctx.author.id:
-				background(ctx.send(embed=embed(ctx,
-					title=('games/game-cancelled-title',),
-					description=('games/game-cancelled',),
-					color=0xff0000
-				)))
-				clear_listener()
-				return
-			player2 = user
-			del reaction, user
-		else:
-			try:
-				reaction, user = await self.bot.wait_for('reaction_add',
-					check=lambda r, u: \
-						r.emoji == SHAKE \
-						and r.message.id == msg.id \
-						and u.id in (against.id, ctx.author.id) \
-						and r.message.channel == ctx.channel,
-					timeout=60.0
-				)
-			except asyncio.TimeoutError:
-				background(msg.edit(
-					embed=embed(ctx,
-						title=('games/game-timeout-title',),
-						description=('games/unready-player-2', 60),
-						color=0xff0000
-					)
-				))
-				background(msg.clear_reactions())
-				clear_listener()
-				return
-			if user.id == ctx.author.id:
-				background(ctx.send(embed=embed(ctx,
-					title=('games/game-cancelled-title',),
-					description=('games/game-cancelled',),
-					color=0xff0000
-				)))
-				clear_listener()
-				return
-			player2 = user
-			del reaction, user
-		msg = await ctx.fetch_message(msg.id)
-		specs = await self._spectators(msg, ctx)
-		if not player1.dm_channel:
-			background(player1.create_dm())
-		if not player2.dm_channel:
-			background(player2.create_dm())
-		clear_listener()
-		return (player1, player2, specs) if self.specs>0 else (player1, player2)
+		)))
 
-	async def _spectators(self, msg, ctx):
-		if self.specs > 0:
-			specs = []
-			for r in msg.reactions:
-				if r.emoji == '\U0001f50d':
-					async for u in r.users():
-						if u.id != self.bot.user.id:
-							specs.append(DummyCtx(author=u))
-					break
-			return specs
-		return None
-
-	async def _gather_multigame(self, ctx):
+	@needs_dms(react=False)
+	async def _gather_multigame(self, ctx, against = ()):
 		msg = await ctx.send(embed=embed(ctx,
 			title=('games/playing', self.name),
 			description=(
@@ -544,41 +418,76 @@ class Games(Cog):
 			),
 			color=0x55acee
 		))
-		players = [ctx]
+		players = [ctx.author]
+		specs = []
 		background(msg.add_reaction(SHAKE))
 		background(msg.add_reaction(CHECK))
 		if self.specs > 0:
 			background(msg.add_reaction(MAG))
 		if self.help is not None:
 			background(msg.add_reaction(QUESTION))
-			@self.bot.listen()
-			async def on_reaction_add(reaction, user):
-				if all((
-					reaction.emoji == QUESTION,
-					reaction.message.id == msg.id,
-					not user.bot
-				)):
-					dmx = DummyCtx(author=user, channel=user.dm_channel)
-					background(user.send(embed=self.help(dmx)
-						if callable(self.help)
-						else embed(user,
-							title=('games/help-title', self.name),
-							description=(self.help,),
-							color=0x55acee
-						)
-					))
-		def clear_listener():
-			if self.help is not None:
-				self.bot.remove_listener(on_reaction_add)
-		try:
-			reaction, user = await self.bot.wait_for('reaction_add',
-				check=lambda r, u: \
-					r.emoji in (CHECK, SHAKE) \
-					and r.message.id == msg.id \
-					and u.id == ctx.author.id,
-				timeout=60.0
+		fut = self.bot.loop.create_future()
+		@self.bot.listen()
+		async def on_reaction_add(reaction, user):
+			if not all((
+				reaction.message.id == msg.id,
+				not user.bot
+			)):
+				return
+			dmx = DummyCtx(
+				send=ctx.send, author=user,
+				channel=user.dm_channel
 			)
-			if reaction.emoji == SHAKE:
+			if reaction.emoji == QUESTION and self.help is not None:
+				background(user.send(embed=self.help(dmx)
+					if callable(self.help)
+					else embed(user,
+						title=('games/help-title', self.name),
+						description=(self.help,),
+						color=0x55acee
+					)
+				))
+			elif reaction.emoji in {SHAKE, MAG}:
+				if user.id == ctx.author.id:
+					fut.cancel()
+				elif await check_dms_open(dmx):
+					if reaction.emoji == SHAKE:
+						if (
+							len(players) < self.maxim
+							and (not against or user in against)
+						):
+							players.append(user)
+					elif self.specs > 0 and len(specs) < self.specs:
+						specs.append(user)
+					if (
+						len(players) >= self.maxim
+						and (not self.spec or len(specs) >= self.specs)
+					):
+						fut.set_result(True)
+			elif reaction.emoji == CHECK and user.id == ctx.author.id:
+				if len(players) >= self.minim:
+					fut.set_result(True)
+		@self.bot.listen()
+		async def on_reaction_remove(reaction, user):
+			if not all((
+				reaction.message.id == msg.id,
+				not user.bot
+			)):
+				return
+			try:
+				if reaction.emoji == SHAKE:
+					players.remove(user)
+				elif reaction.emoji == MAG and self.specs > 0:
+					specs.remove(user)
+			except ValueError:
+				pass # lists can't discard fsr
+		def clear_listener():
+			self.bot.remove_listener(on_reaction_add)
+			self.bot.remove_listener(on_reaction_remove)
+		try:
+			await asyncio.wait_for(fut, 60.0)
+		except asyncio.TimeoutError:
+			if len(players) < self.minim:
 				background(ctx.send(embed=embed(ctx,
 					title=('games/game-cancelled-title',),
 					description=('games/game-cancelled',),
@@ -586,49 +495,18 @@ class Games(Cog):
 				)))
 				clear_listener()
 				return
-		except asyncio.TimeoutError:
-			pass
-		msg = await ctx.fetch_message(msg.id)
-		for r in msg.reactions:
-			if r.emoji == SHAKE:
-				async for u in r.users():
-					if u.id != self.bot.user.id:
-						players.append(DummyCtx(author=u))
-				break
-		specs = await self._spectators(msg, ctx)
-		await asyncio.gather(*(
-			self._base_needs(player)
-			for player in players
-		))
+		except asyncio.CancelledError:
+			background(ctx.send(embed=embed(ctx,
+				title=('games/game-cancelled-title',),
+				description=('games/game-cancelled',),
+				color=0xff0000
+			)))
+			clear_listener()
+			return
+		players = [DummyCtx(author=u, send=u.send) for u in players]
+		specs = [DummyCtx(author=u, send=u.send) for u in specs]
 		clear_listener()
 		return (players, specs) if self.specs > 0 else players
-
-	async def _game(self, ctx, against, coro1, coro2, **kwargs):
-		player1, player2 = await self._gather_game(ctx, against)
-		qyoo = asyncio.Queue()
-		background(coro1(ctx, player1, qyoo, **kwargs))
-		background(coro2(ctx, player2, qyoo, **kwargs))
-
-	@staticmethod
-	def unblock_me(qyoo):
-		try:
-			qyoo.get_nowait()
-			qyoo.task_done()
-		except asyncio.QueueEmpty:
-			pass
-	@staticmethod
-	async def snr(qyoo, data, whoami):
-		if whoami == 1:
-			qyoo.put_nowait(data)
-			await qyoo.join()
-			data2 = await qyoo.get()
-			qyoo.task_done()
-		else:
-			data2 = await qyoo.get()
-			qyoo.task_done()
-			qyoo.put_nowait(data)
-			await qyoo.join()
-		return data2
 
 	async def _choice(self, user, emb):
 		msg = await user.send(embed=emb)
