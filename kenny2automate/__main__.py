@@ -12,6 +12,7 @@ import traceback
 import pickle
 import json
 import sqlite3 as sql
+import typing
 #high-level
 import asyncio
 import argparse
@@ -455,10 +456,16 @@ async def ping(ctx):
         description='{}ms'.format(round(client.latency * 1000, 3))
     ))
 
-@client.command(description='purge-desc')
-@has_permissions(manage_messages=True, read_message_history=True)
-@bot_has_permissions(manage_messages=True, read_message_history=True)
-async def purge(ctx, limit: int = 100, user: discord.Member = None, *, matches: str = None):
+async def _purged(ctx, count):
+    msg = await ctx.send(embed=embed(ctx,
+        title=('purge-title',),
+        description=('purge', count),
+        color=0xff0000
+    ))
+    await asyncio.sleep(2)
+    await msg.delete()
+
+def _purge_check(ctx, user, matches):
     def check_msg(msg):
         if msg.id == ctx.message.id:
             return True
@@ -469,14 +476,31 @@ async def purge(ctx, limit: int = 100, user: discord.Member = None, *, matches: 
             if matches not in msg.content:
                 return False
         return True
-    deleted = await ctx.channel.purge(limit=limit+1, check=check_msg)
-    msg = await ctx.send(embed=embed(ctx,
-        title=('purge-title',),
-        description=('purge', len(deleted)),
-        color=0xff0000
-    ))
-    await asyncio.sleep(2)
-    await msg.delete()
+    return check_msg
+
+@client.group(description='purge-desc', invoke_without_command=True)
+@has_permissions(manage_messages=True, read_message_history=True)
+@bot_has_permissions(manage_messages=True, read_message_history=True)
+async def purge(
+    ctx, limit: int = 100,
+    user: typing.Optional[discord.Member] = None,
+    *, matches: str = None
+):
+    deleted = await ctx.channel.purge(
+        limit=limit+1, check=_purge_check(ctx, user, matches)
+    )
+    await _purged(ctx, len(deleted))
+
+@purge.command(description='purge-after-desc')
+async def after(
+    ctx, msgid: int,
+    user: typing.Optional[discord.Member] = None,
+    *, matches: str = None
+):
+    deleted = await ctx.channel.purge(
+        after=discord.Object(msgid), check=_purge_check(ctx, user, matches)
+    )
+    await _purged(ctx, len(deleted))
 
 @client.command(name='8ball', description='8ball-desc')
 async def ball(ctx, *, question: str):
