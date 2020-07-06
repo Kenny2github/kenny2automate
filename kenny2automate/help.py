@@ -1,5 +1,6 @@
 from discord import Forbidden
 from discord.ext import commands
+from .emoji import SEE_DM
 from .i18n import i18n, embed
 
 class Kenny2help(commands.HelpCommand):
@@ -9,12 +10,17 @@ class Kenny2help(commands.HelpCommand):
 	async def send_the_help(self, emb):
 		try:
 			await self.get_destination().send(embed=emb)
-		except Forbidden:
-			await self.context.send(embed=embed(self.context,
-				title=('error',),
-				description=('help-failed',),
-				color=0xff0000
-			))
+		except Forbidden as exc:
+			if exc.code == 50007:
+				await self.context.send(embed=embed(self.context,
+					title=('error',),
+					description=('cant-dm', self.context.author.mention),
+					color=0xff0000
+				))
+			else:
+				raise
+		else:
+			await self.context.message.add_reaction(SEE_DM)
 
 	async def send_bot_help(self, mapping):
 		ctx = self.context

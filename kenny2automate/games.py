@@ -4,6 +4,7 @@ from discord.ext.commands import Cog, command
 from .emoji import CHECK, CROSS, SHAKE, QUESTION, MAG
 from .i18n import i18n, embed
 from .utils import DummyCtx, background
+from .dms import needs_dms, check_dms_open
 
 class Games(Cog):
 	def __init__(self, bot, db):
@@ -137,6 +138,7 @@ class Games(Cog):
 				)))
 			await asyncio.gather(*coros, return_exceptions=True)
 
+	@needs_dms()
 	async def _base_needs(self, ctx):
 		assert self.maxim >= self.minim
 		res = self.db.execute(
@@ -270,6 +272,7 @@ class Games(Cog):
 		))
 
 	async def _start_global_game(self, ctx):
+		await self._base_needs(ctx)
 		game = self._global_games[self.name]
 		if self.name not in self._global_games:
 			return

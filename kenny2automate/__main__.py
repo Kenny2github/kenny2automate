@@ -172,6 +172,7 @@ async def on_command_error(ctx, exc):
         commands.CheckFailure,
         commands.CommandNotFound,
         commands.TooManyArguments,
+        discord.Forbidden
     )):
         return
     logger.error(''.join(traceback.format_exception(
