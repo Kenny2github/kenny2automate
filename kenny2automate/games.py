@@ -532,8 +532,7 @@ async def players(ctx, *, game: str):
 	background(ctx.author.send(embed=embed(ctx,
 		title=('games/players-title', game),
 		description=i18n(ctx, 'comma-sep').join(
-			i.author.name + '#' + i.author.discriminator
-			for i in Games._global_games[game]['ctxs']
+			str(i.author) for i in Games._global_games[game]['ctxs']
 		) or ('none',),
 		color=0x55acee
 	)))

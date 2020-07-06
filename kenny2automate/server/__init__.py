@@ -107,7 +107,7 @@ class Handler:
                 async with self.sessions[sesh].post(
                     DISCORD_API + '/oauth2/token',
                     data=data,
-                    content_type='application/x-www-form-urlencoded'
+                    headers={'Content-Type':'application/x-www-form-urlencoded'}
                 ) as r:
                     body = await r.json()
                     body['logged_in'] = time.time()

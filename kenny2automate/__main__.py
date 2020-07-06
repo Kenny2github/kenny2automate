@@ -591,7 +591,8 @@ async def get(ctx):
         color=0xfffffe
     )))
 
-SENTENCE_REGEX = re.compile('((?!^)[([{><=@#$*]|[\x7f-\U0010ffff\x00-\x1f _|&-]|[],.:;")}?!%](?!$))')
+SENTENCE_REGEX = re.compile('((?!^)[([{><=@#$*]|[\x7f-\U0010ffff\x00-\x1f _|&-]'
+                            '|[],.:;")}?!%](?!$))')
 SENTENCE_OK_REGEX = re.compile('^[-&]$')
 SENTENCE_ENDS = '!.?'
 
