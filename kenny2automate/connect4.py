@@ -1,14 +1,16 @@
 import asyncio
 import discord
 from discord.ext.commands import group
+from .emoji import (
+    BLUE_CIRCLE as BLUE, RED_CIRCLE as RED,
+    BLACK_SQUARE as BLACK, CR0SS as NEIN, NUMBERS
+)
 from .games import Games
 from .i18n import i18n, embed
 from .utils import lone_group, background, DummyCtx
 
-BLUE, RED, BLACK, SHAKE, NEIN, DOWN = \
-    '\U0001f535\U0001f534\u2b1b\U0001f91d\u274c\u2b07'
-REGA, REGB, REGC, REGD, REGE, REGF, REGG = REGS = \
-    '1\u20e3 2\u20e3 3\u20e3 4\u20e3 5\u20e3 6\u20e3 7\u20e3'.split(' ')
+DOWN = '\N{DOWNWARDS BLACK ARROW}'
+REGA, REGB, REGC, REGD, REGE, REGF, REGG = REGS = NUMBERS[1:8]
 
 class Connect4(Games):
     """connect4/cog-desc"""

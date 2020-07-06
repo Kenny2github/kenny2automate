@@ -5,12 +5,31 @@ from .games import Games
 from .i18n import embed, i18n
 from .utils import background
 
+LEFT = '\N{LEFTWARDS BLACK ARROW}'
+RIGHT = '\N{BLACK RIGHTWARDS ARROW}'
+UP = '\N{UPWARDS BLACK ARROW}'
+DOWN = '\N{DOWNWARDS BLACK ARROW}'
+ARROWS = LEFT, RIGHT, UP, DOWN
+
+HORI = '\N{BOX DRAWINGS LIGHT HORIZONTAL}'
+LEFTSIDE = '\N{BOX DRAWINGS VERTICAL DOUBLE AND RIGHT SINGLE}'
+RIGHTSIDE = '\N{BOX DRAWINGS VERTICAL DOUBLE AND LEFT SINGLE}'
+JOINT = '\N{BOX DRAWINGS LIGHT VERTICAL AND HORIZONTAL}'
+TOPLEFT = '\N{BOX DRAWINGS DOUBLE DOWN AND RIGHT}'
+DBL = '\N{BOX DRAWINGS DOUBLE HORIZONTAL}'
+TOPSIDE = '\N{BOX DRAWINGS DOWN SINGLE AND HORIZONTAL DOUBLE}'
+TOPRIGHT = '\N{BOX DRAWINGS DOUBLE DOWN AND LEFT}'
+BOTLEFT = '\N{BOX DRAWINGS DOUBLE UP AND RIGHT}'
+BOTSIDE = '\N{BOX DRAWINGS UP SINGLE AND HORIZONTAL DOUBLE}'
+BOTRIGHT = '\N{BOX DRAWINGS DOUBLE UP AND LEFT}'
+VERT = '\N{BOX DRAWINGS LIGHT VERTICAL}'
+DBLV = '\N{BOX DRAWINGS DOUBLE VERTICAL}'
+
 class Pow211(Games):
     """2048/cog-desc"""
 
     @command(name='2048', description='2048/cmd-desc')
     async def pow211(self, ctx):
-        ARROWS = LEFT, RIGHT, UP, DOWN = '\u2b05\u27a1\u2b06\u2b07'
         board = [[None] * 4 for _ in range(4)]
         highscore = self.db.execute('SELECT score FROM pow211_highscores WHERE \
 user_id=?', (ctx.author.id,)).fetchone()
@@ -59,17 +78,14 @@ user_id=?', (ctx.author.id,)).fetchone()
                 return
             board[x][y] = value
         def boardtxt():
-            sep = '\n\u255f\u2500\u2500\u2500\u2500\u253c\u2500\u2500\u2500\
-\u2500\u253c\u2500\u2500\u2500\u2500\u253c\u2500\u2500\u2500\u2500\u2562\n'
+            sep = f'\n{LEFTSIDE}{HORI*4}{(JOINT+HORI*4)*3}{RIGHTSIDE}\n'
             #top border
-            cont = '\u2554\u2550\u2550\u2550\u2550\u2564\u2550\u2550\u2550\
-\u2550\u2564\u2550\u2550\u2550\u2550\u2564\u2550\u2550\u2550\u2550\u2557\n'
-            cont += sep.join('\u2551' + '\u2502'.join(
+            cont = F'{TOPLEFT}{DBL*4}{(TOPSIDE+DBL*4)*3}{TOPRIGHT}\n'
+            cont += sep.join(DBLV + VERT.join(
                 str(tile or '').center(4) for tile in row
-            ) + '\u2551' for row in board)
+            ) + DBLV for row in board)
             #bottom border
-            cont += '\n\u255a\u2550\u2550\u2550\u2550\u2567\u2550\u2550\u2550\
-\u2550\u2567\u2550\u2550\u2550\u2550\u2567\u2550\u2550\u2550\u2550\u255d'
+            cont += F'\n{BOTLEFT}{DBL*4}{(BOTSIDE+DBL*4)*3}{BOTRIGHT}'
             cont = f'```{cont}```'
             return cont
         add_random_tile()

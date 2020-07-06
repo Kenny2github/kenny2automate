@@ -3,6 +3,7 @@ import pickle
 import sqlite3 as sql
 import discord as d
 from discord.ext.commands import group, Cog
+from .emoji import CHECK, CROSS
 from .i18n import i18n, embed
 from .utils import dataclass, DummyCtx
 
@@ -275,8 +276,8 @@ entry_id DESC').fetchone()[0]
             ),
             color=0xff0000
         ))
-        await msg.add_reaction('\u2705') #check
-        await msg.add_reaction('\u274c') #cross
+        await msg.add_reaction(CHECK)
+        await msg.add_reaction(CROSS)
         await ctx.send(embed=embed(ctx,
             title=('evolution/proposed-title',),
             description=('evolution/proposed',),
@@ -284,10 +285,10 @@ entry_id DESC').fetchone()[0]
         ))
         @self.bot.listen()
         async def on_reaction_add(reaction, user):
-            if reaction.emoji not in '\u2705\u274c' or user.id != dmx.author.id:
+            if reaction.emoji not in {CHECK, CROSS} or user.id != dmx.author.id:
                 return
             self.bot.remove_listener(on_reaction_add, 'on_reaction_add')
-            if reaction.emoji == '\u274c':
+            if reaction.emoji == CROSS:
                 await ctx.send(embed=embed(ctx,
                     title=('evolution/proposal-rejected-title',),
                     description=(
@@ -305,7 +306,7 @@ entry_id DESC').fetchone()[0]
                     color=0
                 ))
                 return
-            if reaction.emoji == '\u2705':
+            if reaction.emoji == CHECK:
                 me = await self.load_player(ctx)
                 you = await self.load_player(dmx)
                 me * you

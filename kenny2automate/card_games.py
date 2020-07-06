@@ -12,6 +12,8 @@ import pygame.image
 import discord
 from discord.ext.commands import group
 #relative
+from .emoji import LETTERS, NUMBERS, PLUS, CHECK, \
+				   SPADES, CLUBS, HEARTS, DIAMONDS
 from .games import Games
 from .i18n import i18n, embed
 from .utils import DummyCtx, lone_group, background
@@ -29,11 +31,9 @@ def setimg(name):
 	return os.path.join(SET_CARDS, name + '.png')
 
 class Card:
-	SUITS = ('<:spades:701646576153526353>', '<:clubs:701646604347637801>',
-			 '\u2665', '\u2666')
-	NUMBERS = ('\U0001f1e6', '2\u20e3', '3\u20e3', '4\u20e3', '5\u20e3',
-		'6\u20e3', '7\u20e3', '8\u20e3', '9\u20e3', '\U0001f51f', '\U0001f1ef',
-		'\U0001f1f6', '\U0001f1f0')
+	SUITS = (SPADES, CLUBS, HEARTS, DIAMONDS)
+	NUMBERS = (LETTERS[0],) + NUMBERS[2:] \
+			  + (LETTERS[9], LETTERS[16], LETTERS[10])
 	ASCII_NUMBERS = (
 		'A', '2', '3', '4', '5', '6', '7',
 		'8', '9', '10', 'J', 'Q', 'K'
@@ -50,7 +50,8 @@ class Card:
 		return self.ASCII_NUMBERS[self.number] + ('S', 'C', 'H', 'D')[self.suit]
 
 	def __str__(self):
-		return self.NUMBERS[self.number] + '\u2060' + self.SUITS[self.suit]
+		return '%s\N{WORD JOINER}%s' % (self.NUMBERS[self.number],
+										self.SUITS[self.suit])
 
 	def __hash__(self):
 		return hash((self.suit, self.number))
@@ -821,7 +822,12 @@ class Uno(Games):
 								description=('uno/choose-color',),
 								color=0x55acee
 							))
-							HEARTS = '\u2764\U0001f49b\U0001f49a\U0001f499'
+							HEARTS = ''.join((
+								'\N{HEAVY BLACK HEART}',
+								'\N{YELLOW HEART}',
+								'\N{GREEN HEART}',
+								'\N{BLUE HEART}'
+							))
 							for i in HEARTS:
 								background(msg.add_reaction(i))
 							reaction, user = await self.bot\
@@ -1015,7 +1021,6 @@ class Blackjack(Games):
 				return sum1
 			return max(sum1, sum2)
 		async def foreach(pid):
-			PLUS, CHEK = '\u2795\u2714'
 			player = players[pid]
 			cancelled = False
 			try:
@@ -1033,15 +1038,15 @@ class Blackjack(Games):
 					if pts >= 21: #over even if A is 1
 						return
 					background(msg.add_reaction(PLUS))
-					background(msg.add_reaction(CHEK))
+					background(msg.add_reaction(CHECK))
 					reaction, user = await self.bot.wait_for('reaction_add',
 															 timeout=600.0,
 															 check=lambda r, u: (
 						r.message.id == msg.id
 						and u.id == players[pid].id
-						and str(r) in {PLUS, CHEK}
+						and str(r) in {PLUS, CHECK}
 					))
-					if str(reaction) == CHEK:
+					if str(reaction) == CHECK:
 						return
 					try:
 						hands[pid].append(deck.pop())

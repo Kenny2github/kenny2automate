@@ -5,6 +5,7 @@ import asyncio
 from chess import Board
 import discord
 from discord.ext.commands import group
+from .emoji import BLACK_SQUARE, WHITE_SQUARE, ZWSP, LETTERS, NUMBERS
 from .games import Games
 from .i18n import embed, i18n
 from .utils import DummyCtx, lone_group, background
@@ -41,8 +42,9 @@ class Chess(Games):
                            r"[=/]?(?P<promotion>[BNRQ])?" #pawn got promoted
                            r"|(?P<kingside>[0O]-[0O])" #OR, kingside castling
                            r"|(?P<queenside>[0O]-[0O]-[0O]))" #queenside
-                           r"(?:(?P<check>\+\+?|\u2020)" #check
-                           r"|(?P<checkmate>[#\u2021\u2260]))?$") #checkmate
+                           "(?:(?P<check>\\+\\+?|\N{DAGGER})" #check
+                           "|(?P<checkmate>[#\N{DOUBLE DAGGER}\N{NOT EQUAL TO}]"
+                           r"))?$") #checkmate
 
     name = 'Chess'
     coro = '_chess'
@@ -86,24 +88,25 @@ class Chess(Games):
         player1, player2 = ctxs[0].author, ctxs[1].author
         board = Board()
         def boardimg(bd, color):
-            BLACK, WHITE, SPACE = '\u2b1b\u2b1c\u200b'
             rows = []
-            caps = BLACK + '\u200b' + '\u200b'.join(chr(i + 0x1f1e6) for i in range(8)) + '\u200b' + BLACK
+            caps = BLACK_SQUARE + ZWSP + ZWSP.join(LETTERS[:8]) \
+                   + ZWSP + BLACK_SQUARE
             result = '\n'
             for x in range(8):
-                rows.append([f'{x+1}\u20e3']) #20e3 is number emoji char
+                rows.append([NUMBERS[x+1]])
                 for y in range(8):
                     square = y + x * 8
                     piece = board.piece_at(square)
                     if piece:
                         rows[-1].append(emote(piece.symbol()))
                     else:
-                        rows[-1].append((BLACK, WHITE)[(x % 2) ^ (y % 2)])
-                rows[-1].append(f'{x+1}\u20e3')
+                        rows[-1].append((BLACK_SQUARE, WHITE_SQUARE)\
+                                        [(x % 2) ^ (y % 2)])
+                rows[-1].append(NUMBERS[x+1])
             if color == 'white':
                 rows = reversed(rows)
             result += caps + '\n'
-            result += '\n'.join('\u200b'.join(row) for row in rows)
+            result += '\n'.join(ZWSP.join(row) for row in rows)
             result += '\n' + caps
             return result
         async def sendboard(bd, turn, mov):

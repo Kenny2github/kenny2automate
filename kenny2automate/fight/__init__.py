@@ -6,6 +6,9 @@ from ..games import Games, DummyCtx
 from ..i18n import i18n
 from .data import Weapon, weapons, Armor, armors, Item, items, monsters, Player
 
+FIGHT = '\N{CROSSED SWORDS}'
+ITEM = '\N{PILL}'
+
 locked = set()
 @contextmanager
 def lock(leid):
@@ -133,7 +136,6 @@ fight_gold=?, fight_items=? WHERE user_id=?', (
             player.items.remove(item)
 
     async def fight_npc(self, ctx, enemy):
-        FIGHT, ITEM = '\u2694\U0001f48a'
         GREEN, RED, BLUE, YELLOW = 0x77b255, 0xff0000, 0x00aaff, 0xffff00
         player = await self.load_player(ctx)
         def checc(msg):
@@ -241,7 +243,6 @@ user_id=?', (ctx.author.id,))
             ))
 
     async def fight_player(self, player1, player2, at_stake):
-        FIGHT, ITEM = '\u2694\U0001f48a'
         GREEN, RED, BLUE, YELLOW = 0x77b255, 0xff0000, 0x00aaff, 0xffff00
         dmx1 = DummyCtx(
             author=player1,

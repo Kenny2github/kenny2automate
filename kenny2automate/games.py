@@ -1,6 +1,7 @@
 import asyncio
 import discord
 from discord.ext.commands import Cog, command
+from .emoji import CHECK, CROSS, SHAKE, QUESTION, MAG
 from .i18n import i18n, embed
 from .utils import DummyCtx, background
 
@@ -351,7 +352,8 @@ class Games(Cog):
 	async def _rematch(self, messages, ctxs):
 		messages = list(messages)
 		ctxs = list(ctxs)
-		REMATCH, STOP = '\U0001f502\u23f9'
+		REMATCH = '\U0001f502' # loop with 1 overlay
+		STOP = '\N{BLACK SQUARE FOR STOP}'
 		await asyncio.gather(*[m.add_reaction(REMATCH) for m in messages],
 							 *[m.add_reaction(STOP) for m in messages])
 		ts = set()
@@ -398,7 +400,6 @@ class Games(Cog):
 						break
 
 	async def _gather_game(self, ctx, against):
-		SHAKE, QUESTION, MAG = '\U0001f91d\u2753\U0001f50d'
 		msg = await ctx.send(embed=embed(ctx,
 			title=('games/playing', self.name),
 			description=(
@@ -532,7 +533,6 @@ class Games(Cog):
 		return None
 
 	async def _gather_multigame(self, ctx):
-		SHAKE, CHECK, QUESTION, MAG = '\U0001f91d\u2705\u2753\U0001f50d'
 		msg = await ctx.send(embed=embed(ctx,
 			title=('games/playing', self.name),
 			description=(
@@ -629,15 +629,14 @@ class Games(Cog):
 
 	async def _choice(self, user, emb):
 		msg = await user.send(embed=emb)
-		YEA, NAY = '\u2705\u274e'
-		await msg.add_reaction(YEA)
-		await msg.add_reaction(NAY)
+		await msg.add_reaction(CHECK)
+		await msg.add_reaction(CROSS)
 		reaction, user = await self.bot.wait_for('reaction_add', check=lambda r, u: (
-			str(r) in (YEA, NAY)
+			str(r) in (CHECK, CROSS)
 			and r.message.id == msg.id
 			and u.id == user.id
 		))
-		return str(reaction) == YEA
+		return str(reaction) == CHECK
 
 @command(description='games/players-desc')
 async def players(ctx, *, game: str):

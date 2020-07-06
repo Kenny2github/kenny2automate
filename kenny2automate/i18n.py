@@ -222,10 +222,10 @@ class I18n(Cog):
             122: 5774,
         }
         await ctx.send(
-            '\u169b'
+            '\N{OGHAM FEATHER MARK}'
             + re.sub('[^a-ik-vxz ]', '', text.lower())
             .translate(OGHAM)
-            + '\u169c'
+            + '\N{OGHAM REVERSED FEATHER MARK}'
         )
 
     @command(description='i18n/lang-desc')

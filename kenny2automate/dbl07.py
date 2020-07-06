@@ -38,7 +38,9 @@ class Dbl07(Games):
                            DummyCtx(author=player2)), ())
 
     async def _dbl07(self, ctxs, specs):
-        LOAD, FIRE, PROTECT = ACTIONS = '\U0001f4e5\U0001f52b\U0001f6e1'
+        LOAD, FIRE, PROTECT = ACTIONS = (
+            '\N{INBOX TRAY}', '\N{PISTOL}', '\N{SHIELD}'
+        )
         players = tuple(i.author for i in ctxs)
         deeta = tuple({'shields': 0, 'ammo': 0} for _ in range(2))
         async def action(player):

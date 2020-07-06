@@ -2,6 +2,7 @@ import os
 import pygame
 from discord.ext import commands
 from discord.ext.commands import group, Cog
+from .emoji import CHECK, CROSS
 from .i18n import embed
 from .utils import lone_group
 from .tmpfiles import sendsurf
@@ -51,7 +52,6 @@ class Place(Cog):
     @commands.cooldown(1, 300.0, commands.BucketType.user)
     @place.command(description='place/set-desc')
     async def set(self, ctx, x: int, y: int, r: int, g: int, b: int):
-        CHECK, CROSS = '\u2705\u274e'
         if not (0 <= x < WIDTH and 0 <= y < HEIGHT):
             return await ctx.send(embed=embed(ctx,
                 title=('error',),

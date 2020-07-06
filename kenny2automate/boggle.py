@@ -4,6 +4,7 @@ from contextlib import ExitStack
 import asyncio
 import discord
 from discord.ext.commands import group
+from .emoji import LETTERS
 from .games import Games
 from .i18n import embed
 from .utils import lone_group
@@ -29,7 +30,7 @@ CUBES = [
 
 REGS = {chr(i): chr(j) for i, j in zip(
     range(ord('A'), ord('Z') + 1),
-    range(ord('\U0001f1e6'), ord('\U0001f1e6') + 26)
+    range(ord(LETTERS[0]), ord(LETTERS[25]))
 )}
 
 with open(os.path.join('kenny2automate', 'all_words.txt')) as f:

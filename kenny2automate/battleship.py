@@ -4,6 +4,7 @@ import asyncio
 import discord
 from discord.ext.commands import command
 from discord.ext.commands import bot_has_permissions
+from .emoji import NUMBERS as _NUMBERS, LETTERS as _LETTERS
 from .games import Games
 from .i18n import i18n, embed
 from .utils import DummyCtx
@@ -46,22 +47,36 @@ class Battleship(Games):
 			)
 			for player in (player1, player2)
 		)
-		LETTERS = list(
-			chr(0x1f1e6 + i) for i in range(10)
-		) if not ascii else 'ABCDEFGHIJ'
-		NUMBERS = list(
-			'{}\u20e3'.format(i) for i in range(10)
-		) if not ascii else '0123456789'
-		RED, BLUE, ORANGE = '\U0001f6a9\U0001f535\u26f5' if not ascii else '!~1'
+		if ascii:
+			LETTERS = 'ABCDEFGHIJ'
+			NUMBERS = '0123456789'
+			RED, BLUE, ORANGE = '!~1'
+			BLACK, HIT, MISS = '_XO'
+		else:
+			LETTERS = _LETTERS[:10]
+			NUMBERS = _NUMBERS[:10]
+			RED = '\N{TRIANGULAR FLAG ON POST}'
+			BLUE = '\N{LARGE BLUE CIRCLE}'
+			ORANGE = '\N{SAILBOAT}'
+			BLACK = '\N{BLACK LARGE SQUARE}'
+			HIT = '\N{CROSS MARK}'
+			MISS = '\N{HEAVY LARGE CIRCLE}'
 		(
 			LEFT, DBLLEFT, UP, DBLUP, DOWN, DBLDOWN,
 			RIGHT, DBLRIGHT, LR, UD, CHECK
 		) = CONTROLS = (
-			'\u2b05', '\u23ea', '\u2b06', '\u23eb', '\u2b07', '\u23ec',
-			'\u27a1', '\u23e9', '\u2194', '\u2195', '\u2705'
+			'\N{LEFTWARDS BLACK ARROW}',
+			'\N{BLACK LEFT-POINTING DOUBLE TRIANGLE}',
+			'\N{UPWARDS BLACK ARROW}',
+			'\N{BLACK UP-POINTING DOUBLE TRIANGLE}',
+			'\N{DOWNWARDS BLACK ARROW}',
+			'\N{BLACK DOWN-POINTING DOUBLE TRIANGLE}',
+			'\N{BLACK RIGHTWARDS ARROW}',
+			'\N{BLACK RIGHT-POINTING DOUBLE TRIANGLE}',
+			'\N{LEFT RIGHT ARROW}',
+			'\N{UP DOWN ARROW}',
+			'\N{WHITE HEAVY CHECK MARK}'
 		)
-		BLACK = '\u2b1b' if not ascii else '_'
-		HIT, MISS = '\u274c\u2b55' if not ascii else 'XO'
 		def boardmsg(board):
 			descrip = ('`{}`' if ascii else '{}').format(
 				BLACK + (' ' if ascii else '')
