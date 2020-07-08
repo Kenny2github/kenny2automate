@@ -29,7 +29,7 @@
   "8ball-desc": "Ask the Magic 8 Ball a question.",
   "sdow-desc": "Find paths of links from one Wikipedia page to another, a la Six Degrees of Wikipedia.",
   "charname-not-found": "Name not found.",
-  "charinfo": "`\\U{0:>08}`: {1} \u2014 {2} \u2014 <http://www.fileformat.info/info/unicode/char/{0}>",
+  "charinfo": "`\\U{0:>08}`: {1} \u2014 \"{2}\" \u2014 <http://www.fileformat.info/info/unicode/char/{0}>",
   "charinfo-title": "Character Information",
   "charinfo-desc": "Get information about a sequence of characters.",
   "whois-desc": "Get the mention of a user.",

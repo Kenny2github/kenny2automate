@@ -755,7 +755,7 @@ recurse_mtimes(os.path.abspath('kenny2automate'))
 @tasks.loop(minutes=5.0)
 async def set_playing_status():
     if set_playing_status.current_loop & 1:
-        lestat = str(sum(i.member_count for i in client.guilds)) + ' people'
+        lestat = f'{len(client.users)} people'
     else:
         lestat = cmdargs.prefix + 'help'
     await client.change_presence(activity=discord.Activity(
