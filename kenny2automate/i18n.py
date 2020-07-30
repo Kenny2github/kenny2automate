@@ -188,7 +188,8 @@ class I18n(Cog):
                 guild=guild,
                 channel=channel,
                 message=message,
-                author=user
+                author=user,
+                send=channel.send
             )
             text = message.clean_content
             await self._translate(ctx, 'auto', lang, text, message.jump_url)
