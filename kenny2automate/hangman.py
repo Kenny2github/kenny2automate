@@ -210,7 +210,7 @@ class Hangman(Cog):
 	)
 	async def hangman(self, ctx):
 		"""hangman/hangman-help"""
-		REGS = LETTERS
+		REGS = list(LETTERS)
 		REGS1, REGS2 = REGS[:13], REGS[13:]
 		await ctx.send(embed=embed(ctx,
 			title=('hangman/awaiting-dm-title',),
