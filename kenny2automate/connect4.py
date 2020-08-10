@@ -19,7 +19,7 @@ class Connect4(Games):
         """Global connect4 coroutine!"""
         _ctx1, _ctx2 = ctxs
         ctx1, ctx2 = _ctx1.author, _ctx2.author
-        regs = REGS[:]
+        regs = list(REGS)
         board = self.genboard()
         redwon, bluewon = False, False
         checkwin = self.checkwin

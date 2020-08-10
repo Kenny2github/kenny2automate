@@ -380,6 +380,7 @@ class Games(Cog):
 						ctx = c
 						break
 				ctxs.remove(ctx)
+				ctx.prefix = getattr(ctx, 'prefix', self.bot.command_prefix())
 				await self._join_global_game(ctx)
 				for c in ctxs:
 					background(c.author.send(embed=embed(c,
@@ -402,7 +403,7 @@ class Games(Cog):
 						break
 
 	def _starting(self, ctx):
-		background(ctx.send(embed=embed(
+		background(ctx.send(embed=embed(ctx,
 			title=('games/game-starting-title',),
 			description=('games/game-starting',),
 			color=0x55acee
