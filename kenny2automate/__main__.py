@@ -549,8 +549,9 @@ async def charinfo(ctx, *, chars: str):
     def to_string(c):
         digit = f'{ord(c):x}'
         name = unicodedata.name(c, i18n(ctx, 'charname-not-found'))
-        return i18n(ctx, 'charinfo', digit, name, c)
+        return i18n(ctx, 'charinfo', digit, name, c, json.dumps(c).strip('"'))
     msg = '\n'.join(map(to_string, chars))
+    msg = i18n(ctx, 'charinfo-start') + '\n' + msg
     await ctx.send(embed=embed(ctx,
         title=('charinfo-title',),
         description=msg[:2000]

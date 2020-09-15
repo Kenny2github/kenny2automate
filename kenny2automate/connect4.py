@@ -350,7 +350,8 @@ class Connect4(Games):
     specs = float('inf')
     spec = True
 
-    @group(aliases=['c4'], invoke_without_command=True, description='connect4/connect4-desc')
+    @group(aliases=['c4'], invoke_without_command=True,
+           description='connect4/connect4-desc')
     @lone_group(True)
     async def connect4(self, ctx):
         """connect4/connect4-help"""
