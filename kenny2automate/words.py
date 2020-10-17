@@ -135,7 +135,7 @@ class Words(Cog):
     words_matching_consonants_with = words_cns \
         = words_that_match_consonants_with = _words('cns', 'rel_cns')
 
-    @command(aliases=['define'], description='words/word-description')
+    @command(aliases=['define', 'd'], description='words/word-description')
     async def word(self, ctx, *, leword):
         async with ctx.channel.typing():
             lewords = await q(
