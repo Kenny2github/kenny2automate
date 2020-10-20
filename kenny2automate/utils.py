@@ -1,5 +1,6 @@
 import asyncio
 from functools import wraps, partial
+from discord.ext import commands
 
 class DummyCtx(object):
 	def __init__(self, **kwargs):
@@ -60,16 +61,16 @@ def dataclass(cls):
 
 def lone_group(in_cls=True):
 	def wrapper(func):
-		if in_cls:
-			@wraps(func)
-			async def newfunc(self, ctx):
-				ctx.bot.help_command.context = ctx
-				await ctx.bot.help_command.send_group_help(ctx.command)
-		else:
-			@wraps(func)
-			async def newfunc(ctx):
-				ctx.bot.help_command.context = ctx
-				await ctx.bot.help_command.send_group_help(ctx.command)
+		@wraps(func)
+		async def newfunc(*args):
+			for arg in args:
+				if isinstance(arg, commands.Context):
+					ctx = arg
+					break
+			else:
+				return
+			ctx.bot.help_command.context = ctx
+			await ctx.bot.help_command.send_group_help(ctx.command)
 		return newfunc
 	return wrapper
 
