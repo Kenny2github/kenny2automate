@@ -142,7 +142,9 @@ client = Bot(
     description="description",
     command_prefix=get_command_prefix,
     help_command=Kenny2help(command_attrs={'description': 'help-desc'}),
-    activity=discord.Activity(type=discord.ActivityType.watching, name=cmdargs.prefix + 'help')
+    activity=discord.Activity(type=discord.ActivityType.watching,
+                              name=cmdargs.prefix + 'help'),
+    intents=discord.Intents.all()
 )
 
 @client.event
