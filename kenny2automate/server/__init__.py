@@ -1,6 +1,7 @@
 import os
 import re
 import time
+from html import escape
 from urllib.parse import quote_plus as urlquote
 import sqlite3 as sql
 from hashlib import sha256
@@ -327,7 +328,7 @@ class Handler:
                 'settings.html',
                 i18n(lang or 'en', 'server/settings;h1')
             ).format(
-                prefix,
+                escape(prefix),
                 options,
                 ping_th,
                 ping_options,
@@ -379,7 +380,7 @@ class Handler:
     <img src="{}" />
 </a>
 """.strip().format(
-            str(request.path), i.id, i.name, i.icon_url_as(format='png', size=64)
+            str(request.path), i.id, escape(i.name), i.icon_url_as(format='png', size=64)
         ) for i in guilds)
         return web.Response(
             text=self.letext(
@@ -516,7 +517,7 @@ FROM guilds WHERE guild_id=?',
     <option value={option}>
         {option}
     </option>""".format(option=cog)
-        h1 = i18n(lan, 'server/server;h1', guild.name)
+        h1 = i18n(lan, 'server/server;h1', escape(guild.name))
         return web.Response(
             text=self.letext(
                 'server.html',
