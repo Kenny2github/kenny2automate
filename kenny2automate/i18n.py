@@ -102,19 +102,15 @@ def embed(ctx, title=None, description=None, fields=None, footer=None, **kwargs)
     3-tuples, where name and value are i18n objects and inline is a boolean.
     Any fields will be added in the same order as they come in the iterable.
     """
-    e = discord.Embed(
-        title=(
-            title
-            if isinstance(title, (str, type(None)))
-            else i18n(ctx, *title)
-        ),
-        description=(
-            description
-            if isinstance(description, (str, type(None)))
-            else i18n(ctx, *description)
-        ),
-        **kwargs
-    )
+    if isinstance(title, str):
+        kwargs['title'] = title
+    elif title is not None:
+        kwargs['title'] = i18n(ctx, *title)
+    if isinstance(description, str):
+        kwargs['description'] = description
+    elif description is not None:
+        kwargs['description'] = i18n(ctx, *description)
+    e = discord.Embed(**kwargs)
     if footer is not None:
         e.set_footer(text=(
             footer
