@@ -495,7 +495,7 @@ async def purge(
     )
     await _purged(ctx, len(deleted))
 
-@purge.command(description='purge-after-desc')
+@purge.command(aliases=['upto'], description='purge-after-desc')
 async def after(
     ctx, msgid: int,
     user: typing.Optional[discord.Member] = None,
