@@ -5,3 +5,7 @@ kenny2automate.txt
 *.egg-info
 temp/
 resources/place.png
+Scripts/
+include/
+Lib/
+pyvenv.cfg
