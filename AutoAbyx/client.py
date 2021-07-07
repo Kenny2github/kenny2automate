@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from .config import PREFIX
+from .i18n import Embed, Msg
 from .logger import getLogger
 
 SIGNALLED_EXCS = (
@@ -44,7 +45,8 @@ async def on_command_error(ctx: commands.Context, exc: Exception):
             return
         del meth
     if isinstance(exc, SIGNALLED_EXCS):
-        await ctx.send(exc) # i18n TODO
+        await ctx.send(embed=Embed(
+            ctx, Msg('error'), str(exc), color=0xff0000))
         return
     if isinstance(exc, UNLOGGED_EXCS):
         return
@@ -55,3 +57,8 @@ async def before_invoke(ctx: commands.Context):
     logger.info('User %s\t(% 17d) in channel %s\t(% 17d) running %s%s',
                 ctx.author, ctx.author.id, ctx.channel,
                 ctx.channel.id, ctx.prefix, ctx.command)
+
+@client.event
+async def on_ready():
+    await Msg.load_state()
+    logger.info('Ready!')
