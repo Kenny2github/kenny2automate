@@ -65,6 +65,12 @@ class Msg:
             self.set_message()
         return self.message.format(*self.params, **self.kwparams)
 
+    def __add__(self, other: str) -> str:
+        return str(self) + str(other)
+
+    def __radd__(self, other: str) -> str:
+        return str(other) + str(self)
+
     def default(self) -> str:
         """Default message (without brackets) if no i18n available."""
         result = self.key

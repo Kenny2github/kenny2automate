@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from .config import PREFIX
+from .help import AbyxHelp
 from .i18n import Embed, Msg
 from .logger import getLogger
 
@@ -29,7 +30,7 @@ async def get_command_prefix(
 client = commands.Bot(
     description="description",
     command_prefix=get_command_prefix,
-    # TODO: help command
+    help_command=AbyxHelp(),
     intents=discord.Intents.all()
 )
 
