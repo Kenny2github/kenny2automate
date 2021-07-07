@@ -1,0 +1,17 @@
+{
+	"cog-desc": "Description of Units cog",
+	"convert-desc": "Description of ;convert",
+	"convert-help": "Explanation of fuzzy matching mechanics",
+	"units-desc": "Description of ;units",
+	"units-help": "Explanation of category vs unit behavior",
+	"category": "\"the category of units\" part of \"assuming the category of units is x\" - goes into parameter 0 of `assumption`",
+	"assumptions": "{1} - the converted value; {0} - list of assumptions made",
+	"assumption": "A single assumption: {0} is the user string while {1} is the fuzzy-matched string",
+	"same-unit": "Error message for when specified units are the same",
+	"nothing": "Substituted into parameter 0 of `assumptions` when no assumptions are made",
+	"category-list": "Description of list of unit categories",
+	"unit-list": "Description of list of category units",
+	"fuzzy-list": "Description of list of category units when the category name is fuzzily matched",
+	"aka": "Surrounds the comma-separated list of unit aliases",
+	"no-aka": "Replaces the list of unit aliases when there are no aliases"
+}
