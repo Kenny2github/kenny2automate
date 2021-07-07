@@ -5,6 +5,7 @@ from typing import Iterable, Union
 import aiofiles
 import discord
 from discord.ext import commands
+from .chars import LABR, RABR
 
 ROOT = 'l10n'
 SUPPORTED_LANGS = set(
@@ -51,9 +52,7 @@ class Msg:
         else:
             self.message = self.unformatted[self.lang].get(self.key)
             if self.message is None:
-                self.message = '\N{MATHEMATICAL LEFT ANGLE BRACKET}'
-                self.message += self.default()
-                self.message += '\N{MATHEMATICAL RIGHT ANGLE BRACKET}'
+                self.message = LABR + self.default() + RABR
 
     def __str__(self) -> str:
         """Format the message and return it for use."""
@@ -136,10 +135,10 @@ def Embed(
     ctx: commands.Context,
     title: MsgStr = None,
     description: MsgStr = None,
-    fields: Iterable[tuple[MsgStr, MsgStr, bool]] = None,
+    fields: Iterable[tuple[MsgStr, MsgStr, bool]] = (),
     footer: MsgStr = None,
     **kwargs
-):
+) -> discord.Embed:
     """Return an Embed with internationalized data."""
     if title:
         kwargs['title'] = cast(ctx, title)
