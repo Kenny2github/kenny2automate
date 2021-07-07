@@ -7,7 +7,8 @@ from .status import SetStatus
 from .watcher import stop_on_change
 
 MODULES = {
-    'Miscellaneous Commands': ('misc_cmds', 'misc')
+    'Miscellaneous Commands': ('misc_cmds', 'misc'),
+    'Unit Conversions': ('units', 'units')
 }
 
 logger = getLogger('init')
