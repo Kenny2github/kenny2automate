@@ -1,6 +1,8 @@
 discord.py<3.0.0
 requests
 aiohttp
+aiofiles
+aiosqlite
 pygame
 python-datamuse
 python-chess

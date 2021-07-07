@@ -1,30 +1,30 @@
 import importlib
 from discord.ext import commands
-from .logger import getLogger
 from .client import client
 from .config import TOKEN, cmdargs
+from .logger import getLogger
 from .status import SetStatus
 from .watcher import stop_on_change
 
 MODULES = {
-    'Miscellaneous Commands': 'misc_cmds'
+    'Miscellaneous Commands': ('misc_cmds', 'misc')
 }
 
 logger = getLogger('init')
 
-def import_cog(bot: commands.Bot, name: str):
-    module = importlib.import_module('.' + MODULES[name], __name__)
+def import_cog(bot: commands.Bot, name: str, fname: str):
+    module = importlib.import_module('.' + fname, __name__)
     module.setup(bot)
     logger.info('Loaded %s', name)
 
 globs = {}
 
 def run():
-    for name in MODULES:
-        if MODULES[name] in cmdargs.disable:
+    for name, (fname, cmdname) in MODULES.items():
+        if cmdname in cmdargs.disable:
             logger.info('Not loading %s', name)
         else:
-            import_cog(client, name)
+            import_cog(client, name, fname)
     globs['status'] = SetStatus(client)
     globs['wakeup'] = client.loop.create_task(stop_on_change(client, 'AutoAbyx'))
     globs['status'].start()

@@ -4,7 +4,7 @@ import time
 import logging
 from .config import cmdargs
 
-FORMAT = '{levelname}\t{asctime}: {name}:\t{message}'
+FORMAT = '{levelname}\t{asctime} {name:20}{message}'
 TIME = '%Y-%m-%d'
 
 os.makedirs('logs', exist_ok=True)

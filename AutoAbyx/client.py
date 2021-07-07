@@ -54,7 +54,7 @@ async def on_command_error(ctx: commands.Context, exc: Exception):
 
 @client.before_invoke
 async def before_invoke(ctx: commands.Context):
-    logger.info('User %s\t(% 17d) in channel %s\t(% 17d) running %s%s',
+    logger.info('User %s\t(%18d) in channel %s\t(%18d) running %s%s',
                 ctx.author, ctx.author.id, ctx.channel,
                 ctx.channel.id, ctx.prefix, ctx.command)
 
