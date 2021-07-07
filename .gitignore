@@ -9,3 +9,5 @@ Scripts/
 include/
 Lib/
 pyvenv.cfg
+.vs*
+config.json
