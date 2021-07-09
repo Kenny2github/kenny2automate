@@ -4,6 +4,7 @@
 	"lang-get-desc": "Get your current language setting.",
 	"lang-set-desc": "Set your language preference.",
 	"lang-reset-desc": "Reset (clear, not set to English) your language preference.",
+	"lang-channel-desc": "Get, set, or reset channel language settings. Run `{0}help lang channel`",
 	"lang-channel-get-desc": "Get this channel's language setting.",
 	"lang-channel-set-desc": "Set this channel's language.",
 	"lang-channel-reset-desc": "Reset (clear, not set to English) this channel's language setting.",

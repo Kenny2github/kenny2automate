@@ -3,6 +3,7 @@ from discord.ext import commands
 from .client import client
 from .config import TOKEN, cmdargs
 from .db import db
+from .i18n import Msg
 from .logger import getLogger
 from .status import SetStatus
 from .watcher import stop_on_change
@@ -32,6 +33,7 @@ def run():
     globs['wakeup'] = client.loop.create_task(stop_on_change(client, 'AutoAbyx'))
     globs['status'].start()
     client.loop.run_until_complete(db.init())
+    client.loop.run_until_complete(Msg.load_state())
     client.loop.run_until_complete(client.start(TOKEN))
 
 def done():
@@ -43,6 +45,7 @@ def done():
     except RuntimeError as exc:
         print(exc)
     client.loop.run_until_complete(client.close())
-    client.loop.run_until_complete(db.stop())
+    if db.conn is not None:
+        client.loop.run_until_complete(db.stop())
     client.loop.stop()
     client.loop.close()

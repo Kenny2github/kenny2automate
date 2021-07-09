@@ -5,6 +5,7 @@ from discord.ext import commands
 T = TypeVar('T')
 
 class AttrDict:
+    """Access data by key or attribute."""
     def __init__(self, attrs: dict[str, T]):
         self.__dict__.update(attrs)
     def __getitem__(self, key: str) -> T:
@@ -19,6 +20,7 @@ class AttrDict:
         return self.__dict__.get(key, default)
 
 def lone_group(func):
+    """Send group help if the group itself is invoked."""
     @wraps(func)
     async def newfunc(*args):
         for arg in args:
@@ -26,6 +28,8 @@ def lone_group(func):
                 ctx = arg
                 break
         else:
+            return
+        if ctx.invoked_subcommand is not None:
             return
         await ctx.send_help(ctx.command)
     return newfunc

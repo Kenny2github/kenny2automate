@@ -4,6 +4,7 @@
 	"lang-get-desc": "Description of ;lang get",
 	"lang-set-desc": "Description of ;lang set",
 	"lang-reset-desc": "Description of ;lang reset",
+	"lang-channel-desc": "Description of ;lang channel",
 	"lang-channel-get-desc": "Description of ;lang channel get",
 	"lang-channel-set-desc": "Description of ;lang channel set",
 	"lang-channel-reset-desc": "Description of ;lang channel reset",

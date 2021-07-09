@@ -7,11 +7,14 @@ import discord
 from discord.ext import commands
 from .chars import LABR, RABR
 from .db import db
+from .logger import getLogger
 from .utils import lone_group
 
-ROOT = 'l10n'
+ROOT = 'l10n' # TODO: change to i18n
 SUPPORTED_LANGS = set(
     fn[:-5] for fn in os.listdir(ROOT) if fn.endswith('.json'))
+
+logger = getLogger('i18n')
 
 IDContext = Union[commands.Context, discord.abc.Snowflake]
 
@@ -53,6 +56,8 @@ class Msg:
             self.message = f'({self.default()})'
         else:
             self.message = self.unformatted[self.lang].get(self.key)
+            if self.message is None:
+                self.message = self.unformatted['en'].get(self.key)
             if self.message is None:
                 self.message = LABR + self.default() + RABR
 
@@ -99,24 +104,29 @@ class Msg:
                 continue
             for lang in SUPPORTED_LANGS:
                 path = os.path.join(ROOT, dirname, f'{lang}.json')
+                if not os.path.isfile(path):
+                    if lang != 'qqx': # qqx only has one file
+                        logger.warning('No %s i18n for %s', lang, dirname)
+                    continue
                 async with aiofiles.open(path) as f:
                     data: dict = json.loads(await f.read())
                 for key, value in data.items():
                     cls.unformatted[lang][f'{dirname}/{key}'] = value
         cls.user_langs.update(await db.user_langs())
         cls.channel_langs.update(await db.channel_langs())
+        logger.info('Loaded i18n cache')
 
     @classmethod
     def get_lang(cls, ctx: IDContext) -> str:
         """Get the correct language for the context."""
         if not isinstance(ctx, commands.Context):
             # None may
-            if cls.user_langs.get(ctx.id, None) is None:
+            if cls.user_langs.get(ctx.id, None) is not None:
                 return cls.user_langs[ctx.id]
-        elif cls.user_langs.get(ctx.author.id, None) is None:
+        elif cls.user_langs.get(ctx.author.id, None) is not None:
             return cls.user_langs[ctx.author.id]
         if isinstance(ctx, commands.Context):
-            if cls.channel_langs.get(ctx.channel.id, None) is None:
+            if cls.channel_langs.get(ctx.channel.id, None) is not None:
                 return cls.channel_langs[ctx.channel.id]
         return 'en'
 
@@ -159,7 +169,7 @@ def Embed(
         )
     return embed
 
-class LanguageConverter:
+class LanguageConverter(commands.Converter):
     async def convert(self, ctx: commands.Context, argument: str) -> str:
         """Convert a language argument or fail with BadArgument."""
         language = argument.strip().strip('`').casefold()
@@ -173,11 +183,11 @@ class Internationalization(commands.Cog):
 
     @commands.group(brief='i18n/lang-desc')
     @lone_group
-    async def lang(self):
+    async def lang(self, ctx):
         pass
 
-    @lang.command(brief='i18n/lang-get-desc')
-    async def get(self, ctx: commands.Context):
+    @lang.command(name='get', brief='i18n/lang-get-desc')
+    async def user_get(self, ctx: commands.Context):
         if Msg.user_langs.get(ctx.author.id, None) is None:
             await ctx.send(embed=Embed(
                 ctx, description=Msg('i18n/lang-get-null'),
@@ -191,8 +201,11 @@ class Internationalization(commands.Cog):
                 color=discord.Color.blue()
             ))
 
-    @lang.command(brief='i18n/lang-set-desc')
-    async def set(self, ctx: commands.Context, language: LanguageConverter):
+    @lang.command(name='set', brief='i18n/lang-set-desc')
+    async def user_set(
+        self, ctx: commands.Context,
+        *, language: LanguageConverter
+    ):
         Msg.user_langs[ctx.author.id] = language
         await db.set_user_lang(ctx.author.id, language)
         await ctx.send(embed=Embed(
@@ -200,8 +213,8 @@ class Internationalization(commands.Cog):
             color=discord.Color.blue()
         ))
 
-    @lang.command(brief='i18n/lang-reset-desc')
-    async def reset(self, ctx: commands.Context):
+    @lang.command(name='reset', brief='i18n/lang-reset-desc')
+    async def user_reset(self, ctx: commands.Context):
         Msg.user_langs.pop(ctx.author.id, None)
         await db.set_user_lang(ctx.author.id, None)
         await ctx.send(embed=Embed(
@@ -209,14 +222,14 @@ class Internationalization(commands.Cog):
             color=discord.Color.blue()
         ))
 
-    @commands.has_permissions(manage_channel=True)
+    @commands.has_permissions(manage_channels=True)
     @lang.group(brief='i18n/lang-channel-desc')
     @lone_group
-    async def channel(self):
+    async def channel(self, ctx):
         pass
 
-    @channel.command(brief='i18n/lang-channel-get-desc')
-    async def get(self, ctx: commands.Context):
+    @channel.command(name='get', brief='i18n/lang-channel-get-desc')
+    async def channel_get(self, ctx: commands.Context):
         if Msg.channel_langs.get(ctx.channel.id, None) is None:
             await ctx.send(embed=Embed(
                 ctx, description=Msg('i18n/lang-channel-get-null'),
@@ -230,8 +243,11 @@ class Internationalization(commands.Cog):
                 color=discord.Color.blue()
             ))
 
-    @channel.command(brief='i18n/lang-channel-set-desc')
-    async def set(self, ctx: commands.Context, language: LanguageConverter):
+    @channel.command(name='set', brief='i18n/lang-channel-set-desc')
+    async def channel_set(
+        self, ctx: commands.Context,
+        *, language: LanguageConverter
+    ):
         Msg.channel_langs[ctx.channel.id] = language
         await db.set_channel_lang(ctx.channel.id, language)
         await ctx.send(embed=Embed(
@@ -239,8 +255,8 @@ class Internationalization(commands.Cog):
             color=discord.Color.blue()
         ))
 
-    @channel.command(brief='i18n/lang-channel-reset-desc')
-    async def reset(self, ctx: commands.Context):
+    @channel.command(name='reset', brief='i18n/lang-channel-reset-desc')
+    async def channel_reset(self, ctx: commands.Context):
         Msg.channel_langs.pop(ctx.channel.id, None)
         await db.set_channel_lang(ctx.channel.id, None)
         await ctx.send(embed=Embed(

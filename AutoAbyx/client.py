@@ -61,5 +61,4 @@ async def before_invoke(ctx: commands.Context):
 
 @client.event
 async def on_ready():
-    await Msg.load_state()
     logger.info('Ready!')
