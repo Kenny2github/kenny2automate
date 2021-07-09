@@ -9,7 +9,8 @@ from .watcher import stop_on_change
 
 MODULES = {
     'Miscellaneous Commands': ('misc_cmds', 'misc'),
-    'Unit Conversions': ('units', 'units')
+    'Unit Conversions': ('units', 'units'),
+    'Internationalization': ('i18n', 'i18n'),
 }
 
 logger = getLogger('init')

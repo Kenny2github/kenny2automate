@@ -1,0 +1,19 @@
+{
+	"cog-desc": "Internationalization and language-related commands.",
+	"lang-desc": "Get, set, or reset language preferences. Run `{0}help lang`",
+	"lang-get-desc": "Get your current language setting.",
+	"lang-set-desc": "Set your language preference.",
+	"lang-reset-desc": "Reset (clear, not set to English) your language preference.",
+	"lang-channel-get-desc": "Get this channel's language setting.",
+	"lang-channel-set-desc": "Set this channel's language.",
+	"lang-channel-reset-desc": "Reset (clear, not set to English) this channel's language setting.",
+	"lang-get": "Your current configured language is `{0}`.",
+	"lang-get-null": "You don't have a language set. Commands you run will be in the language set by the channel in which you run them, or English if the channel has no language set.",
+	"lang-set": "Your command language has been set to `{0}`.",
+	"lang-reset": "Your command language has been reset. Commands you run will be in the language set by the channel in which you run them, or English if the channel has no language set.",
+	"lang-channel-get": "The current configured for this channel is `{0}`.",
+	"lang-channel-get-null": "There is no language set for this channel. Commands run in this channel by users without languages configured themselves will be in English.",
+	"lang-channel-set": "The command language for this channel has been set to `{0}`.",
+	"lang-channel-reset": "The command language for this channel has been reset. Commands run in this channel by users without languages configured themselves will be in English.",
+	"unsupported-lang": "Unsupported language: `{0}`"
+}

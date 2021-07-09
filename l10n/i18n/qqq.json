@@ -1,0 +1,19 @@
+{
+	"cog-desc": "Description of Internationalization cog",
+	"lang-desc": "Description of ;lang",
+	"lang-get-desc": "Description of ;lang get",
+	"lang-set-desc": "Description of ;lang set",
+	"lang-reset-desc": "Description of ;lang reset",
+	"lang-channel-get-desc": "Description of ;lang channel get",
+	"lang-channel-set-desc": "Description of ;lang channel set",
+	"lang-channel-reset-desc": "Description of ;lang channel reset",
+	"lang-get": "Message showing the user their configured language",
+	"lang-get-null": "Message explaining the effects of having no configured language",
+	"lang-set": "Success message for when the user's language is set",
+	"lang-reset": "Success message for when the user's language is reset, explaining the effects of it",
+	"lang-channel-get": "Message showing the channel's configured language",
+	"lang-channel-get-null": "Message explaining the effects of a channel having no configured language",
+	"lang-channel-set": "Success message for when the channel's language is set",
+	"lang-channel-reset": "Success message for when the channel's langauge is reset, explaining the effects of it",
+	"unsupported-lang": "Error message for when a language code is invalid or unsupported"
+}

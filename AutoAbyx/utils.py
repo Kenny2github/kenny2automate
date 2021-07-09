@@ -1,4 +1,6 @@
+from functools import wraps
 from typing import Optional, TypeVar
+from discord.ext import commands
 
 T = TypeVar('T')
 
@@ -15,3 +17,15 @@ class AttrDict:
         return str(self.__dict__)
     def get(self, key: str, default: T = None) -> Optional[T]:
         return self.__dict__.get(key, default)
+
+def lone_group(func):
+    @wraps(func)
+    async def newfunc(*args):
+        for arg in args:
+            if isinstance(arg, commands.Context):
+                ctx = arg
+                break
+        else:
+            return
+        await ctx.send_help(ctx.command)
+    return newfunc

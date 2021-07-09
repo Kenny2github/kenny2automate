@@ -75,4 +75,36 @@ class Database:
         await self.conn.close()
         self.conn = self.cur = None
 
+    async def asterisk_langs(self, asterisk: str) -> dict[int, str]:
+        """Get * i18n language settings."""
+        langs: dict[int, str] = {}
+        query = f'SELECT {asterisk}_id, lang FROM {asterisk}s'
+        async with self.lock:
+            await self.cur.execute(query)
+            async for row in self.cur:
+                langs[row[f'{asterisk}_id']] = row['lang']
+        return langs
+
+    async def user_langs(self) -> dict[int, str]:
+        """Get user i18n language settings."""
+        return await self.asterisk_langs('user')
+
+    async def channel_langs(self) -> dict[int, str]:
+        """Get channel i18n language settings."""
+        return await self.asterisk_langs('channel')
+
+    async def set_lang(self, asterisk: str, obj_id: int, lang: Optional[str]):
+        """Set the language for a *."""
+        query = f'INSERT INTO {asterisk}s ({asterisk}_id, lang) VALUES (?, ?) ' \
+            f'ON CONFLICT({asterisk}_id) DO UPDATE SET lang=excluded.lang'
+        await self.cur.execute(query, (obj_id, lang))
+
+    async def set_user_lang(self, user_id: int, lang: Optional[str]):
+        """Set the language for a user."""
+        await self.set_lang('user', user_id, lang)
+
+    async def set_channel_lang(self, channel_id: int, lang: Optional[str]):
+        """Set the language for a channel."""
+        await self.set_lang('channel', channel_id, lang)
+
 db: Database = Database()
