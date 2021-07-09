@@ -4,11 +4,11 @@ from .i18n import Msg
 class Miscellaneous(Cog):
     """misc/cog-desc"""
 
-    @command(description='misc/hello-desc')
+    @command(brief='misc/hello-desc')
     async def hello(self, ctx: Context):
         await ctx.send(Msg(ctx, 'hello'))
 
-    @command(description='misc/hmmst-desc')
+    @command(brief='misc/hmmst-desc')
     async def hmmst(self, ctx: Context):
         await ctx.send(Msg(ctx, 'hmmst'))
 

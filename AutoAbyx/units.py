@@ -233,7 +233,7 @@ def similarity(a: str, b: str) -> float:
 class Units(commands.Cog):
     """units/cog-desc"""
 
-    @commands.command(description='units/convert-desc')
+    @commands.command(brief='units/convert-desc')
     async def convert(
         self,
         ctx: commands.Context,
@@ -346,7 +346,7 @@ class Units(commands.Cog):
         return max(UNITS[cat], key=lambda unit: max(
             similarity(name, key) for name in unit[0]))
 
-    @commands.command(description='units/units-desc')
+    @commands.command(brief='units/units-desc')
     async def units(self, ctx: commands.Context, category: str = None):
         """units/units-help"""
         if category is None:

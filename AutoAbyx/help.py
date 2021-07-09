@@ -21,7 +21,7 @@ class AbyxHelp(commands.HelpCommand):
     def command_desc(self, cmd: commands.Command) -> str:
         """Get the complete description of a command."""
         ctx = self.context
-        desc = Msg(ctx, cmd.description, ctx.prefix) if cmd.description else ''
+        desc = Msg(ctx, cmd.brief, ctx.prefix) if cmd.brief else ''
         if cmd.help:
             desc += '\n\n' + Msg(ctx, cmd.help, ctx.prefix)
         return desc or ZWNJ
@@ -31,8 +31,8 @@ class AbyxHelp(commands.HelpCommand):
         """List commands as Embed fields."""
         return ((
             self.command_string(cmd),
-            Msg(cmd.description, self.context.prefix)
-            if cmd.description else ZWNJ,
+            Msg(cmd.brief, self.context.prefix)
+            if cmd.brief else ZWNJ,
             False
         ) for cmd in filtered)
 
