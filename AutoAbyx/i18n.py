@@ -5,7 +5,7 @@ from typing import Iterable, Union
 import aiofiles
 import discord
 from discord.ext import commands
-from .chars import LABR, RABR
+from .chars import LABR, RABR, DONE
 from .db import db
 from .logger import getLogger
 from .utils import lone_group
@@ -180,6 +180,12 @@ class LanguageConverter(commands.Converter):
 
 class Internationalization(commands.Cog):
     """i18n/cog-desc"""
+
+    @commands.is_owner()
+    @commands.command(brief='i18n/r24n-desc')
+    async def r25n(self, ctx: commands.Context):
+        await Msg.load_state()
+        await ctx.message.add_reaction(DONE)
 
     @commands.group(brief='i18n/lang-desc')
     @lone_group
