@@ -1,0 +1,11 @@
+{
+	"cog-desc": "Configure your command prefix.",
+	"desc": "Configure your command prefix.",
+	"get-desc": "Get your command prefix.",
+	"set-desc": "Set your command prefix.",
+	"set-help": "If you want trailing spaces in your prefix (e.g. @bot<space>), surround the prefix with quotes. If you want quotes in your prefix, surround it with an extra set of quotes. Only one quote character will be removed from either end of your prefix if one is present at both ends. Leading spaces will be removed regardless.",
+	"reset-desc": "Reset your command prefix to the default.",
+	"get": "Your command prefix is \"{0}\" (without outermost quotes)",
+	"set": "Your command prefix has been set to \"{0}\" (without outermost quotes)",
+	"set-footer": "Your prefix had exactly one quote stripped off the start and end of it because they were there. If you want quotes in your prefix, surround your prefix in an extra set of quotes."
+}

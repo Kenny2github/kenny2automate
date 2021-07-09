@@ -4,6 +4,7 @@ from .config import PREFIX
 from .help import AbyxHelp
 from .i18n import Embed, Msg
 from .logger import getLogger
+from .prefix import Prefix
 
 SIGNALLED_EXCS = (
     commands.BotMissingPermissions,
@@ -20,16 +21,9 @@ UNLOGGED_EXCS = (
 
 logger = getLogger('client')
 
-async def get_command_prefix(
-    bot: commands.Bot,
-    msg: discord.Message
-) -> tuple[str]:
-    # get custom prefix
-    return (PREFIX)
-
 client = commands.Bot(
     description="description",
-    command_prefix=get_command_prefix,
+    command_prefix=Prefix.get_command_prefix,
     help_command=AbyxHelp(),
     intents=discord.Intents.all()
 )

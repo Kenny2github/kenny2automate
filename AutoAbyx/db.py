@@ -75,36 +75,54 @@ class Database:
         await self.conn.close()
         self.conn = self.cur = None
 
-    async def asterisk_langs(self, asterisk: str) -> dict[int, str]:
-        """Get * i18n language settings."""
-        langs: dict[int, str] = {}
-        query = f'SELECT {asterisk}_id, lang FROM {asterisk}s'
+    async def asterisk_strings(
+        self, asterisk: str,
+        string: str = 'lang',
+        table: str = None
+    ) -> dict[int, Optional[str]]:
+        """Get ID->string settings."""
+        langs: dict[int, Optional[str]] = {}
+        query = f'SELECT {asterisk}_id, {string} FROM {table or asterisk+"s"}'
         async with self.lock:
             await self.cur.execute(query)
             async for row in self.cur:
-                langs[row[f'{asterisk}_id']] = row['lang']
+                langs[row[f'{asterisk}_id']] = row[string]
         return langs
 
-    async def user_langs(self) -> dict[int, str]:
+    async def user_langs(self) -> dict[int, Optional[str]]:
         """Get user i18n language settings."""
-        return await self.asterisk_langs('user')
+        return await self.asterisk_strings('user')
 
-    async def channel_langs(self) -> dict[int, str]:
+    async def channel_langs(self) -> dict[int, Optional[str]]:
         """Get channel i18n language settings."""
-        return await self.asterisk_langs('channel')
+        return await self.asterisk_strings('channel')
 
-    async def set_lang(self, asterisk: str, obj_id: int, lang: Optional[str]):
-        """Set the language for a *."""
-        query = f'INSERT INTO {asterisk}s ({asterisk}_id, lang) VALUES (?, ?) ' \
-            f'ON CONFLICT({asterisk}_id) DO UPDATE SET lang=excluded.lang'
-        await self.cur.execute(query, (obj_id, lang))
+    async def set_string(
+        self, asterisk: str,
+        obj_id: int, value: Optional[str],
+        setting: str = 'lang',
+        table: str = None
+    ):
+        """Set an ID->string setting."""
+        query = f'INSERT INTO {table or asterisk+"s"} ({asterisk}_id, ' \
+            f'{setting}) VALUES (?, ?) ON CONFLICT({asterisk}_id) DO ' \
+            f'UPDATE SET {setting}=excluded.{setting}'
+        await self.cur.execute(query, (obj_id, setting))
 
     async def set_user_lang(self, user_id: int, lang: Optional[str]):
         """Set the language for a user."""
-        await self.set_lang('user', user_id, lang)
+        await self.set_string('user', user_id, lang)
 
     async def set_channel_lang(self, channel_id: int, lang: Optional[str]):
         """Set the language for a channel."""
-        await self.set_lang('channel', channel_id, lang)
+        await self.set_string('channel', channel_id, lang)
+
+    async def get_prefixes(self) -> dict[int, Optional[str]]:
+        """Get all users' command prefixes."""
+        return await self.asterisk_strings('user', 'prefix')
+
+    async def set_prefix(self, user_id: int, prefix: Optional[str]):
+        """Set a user's command prefix."""
+        await self.set_string('user', user_id, prefix, 'prefix')
 
 db: Database = Database()
