@@ -3,6 +3,7 @@ from discord.ext import commands
 from .client import client
 from .config import TOKEN, cmdargs
 from .db import db
+from .disabling import Disabling
 from .i18n import Msg
 from .logger import getLogger
 from .prefix import Prefix
@@ -30,6 +31,7 @@ async def pre_start():
     await db.init()
     await Msg.load_state()
     await Prefix.load_prefixes()
+    await Disabling.load_disabled()
 
 def run():
     """Run the bot."""

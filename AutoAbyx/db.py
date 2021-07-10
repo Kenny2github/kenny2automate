@@ -1,6 +1,6 @@
 import asyncio
 import os
-from typing import Optional
+from typing import Iterable, Literal, Optional, Union
 import aiofiles
 import aiosqlite
 from .logger import getLogger
@@ -124,5 +124,48 @@ class Database:
     async def set_prefix(self, user_id: int, prefix: Optional[str]):
         """Set a user's command prefix."""
         await self.set_string('user', user_id, prefix, 'prefix')
+
+    async def disabled_commands(self, guild_id: int = None) -> dict[int, dict[
+            Union[Literal['cmd'], Literal['cog']], set[str]]]:
+        """Get disabled commands, either globally or guild-specifically"""
+        disabled: dict[int, dict[
+            Union[Literal['cmd'], Literal['cog']], set[str]]] = {}
+        query = 'SELECT guild_id, entry_type, obj_name ' \
+            'FROM guild_disabled_commands'
+        if guild_id is not None:
+            query += ' WHERE guild_id=?'
+        async with self.lock:
+            await self.cur.execute(query, (guild_id,))
+            async for row in self.cur:
+                d = disabled.setdefault(row['guild_id'],
+                                        {'cmd': set(), 'cog': set()})
+                d[{1: 'cmd', 2: 'cog'}[row['type']]].add(row['obj_name'])
+        return disabled
+
+    async def touch_guild(self, guild_id: int):
+        """Create a row for this guild if it does not exist."""
+        query = 'INSERT INTO guilds (guild_id) VALUES (?) ' \
+            'ON CONFLICT(guild_id) DO NOTHING'
+        await self.cur.execute(query, (guild_id,))
+
+    async def set_disabled(
+        self, guild_id: int,
+        type: int, objs: Iterable[str]
+    ):
+        """Set disabled commands or cogs for a guild."""
+        query = 'INSERT INTO guild_disabled_commands VALUES (?, ?, ?) ' \
+            'ON CONFLICT(guild_id, entry_type, obj_name) DO NOTHING'
+        await self.touch_guild(guild_id)
+        await self.cur.executemany(query, (
+            (guild_id, type, obj) for obj in objs
+        ))
+
+    async def set_disabled_commands(self, guild_id: int, cmds: Iterable[str]):
+        """Set disabled commands (not cogs) for a guild."""
+        await self.set_disabled(guild_id, 1, cmds)
+
+    async def set_disabled_cogs(self, guild_id: int, cogs: Iterable[str]):
+        """Set disabled cogs (not commands) for a guild."""
+        await self.set_disabled(guild_id, 2, cogs)
 
 db: Database = Database()
