@@ -140,7 +140,7 @@ class Database:
             async for row in self.cur:
                 d = disabled.setdefault(row['guild_id'],
                                         {'cmd': set(), 'cog': set()})
-                d[{1: 'cmd', 2: 'cog'}[row['type']]].add(row['obj_name'])
+                d[{1: 'cmd', 2: 'cog'}[row['entry_type']]].add(row['obj_name'])
         return disabled
 
     async def touch_guild(self, guild_id: int):

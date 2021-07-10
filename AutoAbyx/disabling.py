@@ -20,6 +20,7 @@ class Disabling:
         while parent:
             if parent.qualified_name in cls.cache[ctx.guild.id]['cmd']:
                 return False # disabled specifically or by parent
+            parent = parent.parent
         return True
 
     @classmethod
