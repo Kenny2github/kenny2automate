@@ -39,4 +39,5 @@ class Disabling:
         await cls.load_disabled(guild_id)
 
 def setup(bot: commands.Bot):
+    bot.loop.run_until_complete(Disabling.load_disabled())
     bot.add_check(Disabling.check_enabled)

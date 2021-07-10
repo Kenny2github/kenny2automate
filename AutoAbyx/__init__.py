@@ -14,7 +14,8 @@ MODULES = {
     'Miscellaneous Commands': ('misc_cmds', 'misc'),
     'Unit Conversions': ('units', 'units'),
     'Internationalization': ('i18n', 'i18n'),
-    'Prefix': ('prefix', 'prefix')
+    'Prefix': ('prefix', 'prefix'),
+    'Command Disabling': ('disabling', 'disabling'),
 }
 
 logger = getLogger('init')
@@ -27,14 +28,9 @@ def import_cog(bot: commands.Bot, name: str, fname: str):
 
 globs = {}
 
-async def pre_start():
-    await db.init()
-    await Msg.load_state()
-    await Prefix.load_prefixes()
-    await Disabling.load_disabled()
-
 def run():
     """Run the bot."""
+    client.loop.run_until_complete(db.init())
     for name, (fname, cmdname) in MODULES.items():
         if cmdname in cmdargs.disable:
             logger.info('Not loading %s', name)
@@ -43,7 +39,6 @@ def run():
     globs['status'] = SetStatus(client)
     globs['wakeup'] = client.loop.create_task(stop_on_change(client, 'AutoAbyx'))
     globs['status'].start()
-    client.loop.run_until_complete(pre_start())
     client.loop.run_until_complete(client.start(TOKEN))
 
 def done():

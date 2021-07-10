@@ -134,8 +134,9 @@ class Database:
             'FROM guild_disabled_commands'
         if guild_id is not None:
             query += ' WHERE guild_id=?'
+        params = () if guild_id is None else (guild_id,)
         async with self.lock:
-            await self.cur.execute(query, (guild_id,))
+            await self.cur.execute(query, params)
             async for row in self.cur:
                 d = disabled.setdefault(row['guild_id'],
                                         {'cmd': set(), 'cog': set()})

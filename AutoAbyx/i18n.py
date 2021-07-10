@@ -271,4 +271,5 @@ class Internationalization(commands.Cog):
         ))
 
 def setup(bot: commands.Bot):
+    bot.loop.run_until_complete(Msg.load_state())
     bot.add_cog(Internationalization())

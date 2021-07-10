@@ -62,4 +62,5 @@ class Prefix(commands.Cog):
         await ctx.message.add_reaction(DONE)
 
 def setup(bot: commands.Bot):
+    bot.loop.run_until_complete(Prefix.load_prefixes())
     bot.add_cog(Prefix())
