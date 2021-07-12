@@ -1,6 +1,8 @@
 import asyncio
 import os
+from time import time
 from typing import Iterable, Literal, Optional, Union
+from secrets import token_hex
 import aiofiles
 import aiosqlite
 from .logger import getLogger
@@ -143,11 +145,19 @@ class Database:
                 d[{1: 'cmd', 2: 'cog'}[row['entry_type']]].add(row['obj_name'])
         return disabled
 
+    async def touch(self, obj_type: str, obj_id: int):
+        """Create a row for this object if it does not exist."""
+        query = f'INSERT INTO {obj_type}s ({obj_type}_id) VALUES (?)' \
+            f'ON CONFLICT({obj_type}_id) DO NOTHING'
+        await self.cur.execute(query, (obj_id,))
+
     async def touch_guild(self, guild_id: int):
         """Create a row for this guild if it does not exist."""
-        query = 'INSERT INTO guilds (guild_id) VALUES (?) ' \
-            'ON CONFLICT(guild_id) DO NOTHING'
-        await self.cur.execute(query, (guild_id,))
+        await self.touch('guild', guild_id)
+
+    async def touch_user(self, user_id: int):
+        """Create a row for this user if it does not exist."""
+        await self.touch('user', user_id)
 
     async def set_disabled(
         self, guild_id: int,
@@ -168,5 +178,55 @@ class Database:
     async def set_disabled_cogs(self, guild_id: int, cogs: Iterable[str]):
         """Set disabled cogs (not commands) for a guild."""
         await self.set_disabled(guild_id, 2, cogs)
+
+    async def session_cache(
+        self, session_id: str = None
+    ) -> list[aiosqlite.Row]:
+        """Load the session cache."""
+        cache: dict[str, tuple[Optional[int], Optional[str]]] = {}
+        columns = 'session_id, user_id, access_token, logged_in, token_expiry'
+        query = f'SELECT {columns} FROM web_sessions'
+        if session_id is not None:
+            query += ' WHERE session_id=?'
+        async with self.lock:
+            if session_id is None:
+                await self.cur.execute(query)
+            else:
+                await self.cur.execute(query, (session_id,))
+            return list(await self.cur.fetchall())
+
+    async def refresh_token(self, session_id: str) -> str:
+        """Get a refresh token for a session."""
+        query = 'SELECT refresh_token FROM web_sessions WHERE session_id=?'
+        async with self.lock:
+            await self.cur.execute(query)
+            row = await self.cur.fetchone()
+        return row[0]
+
+    async def session_response(
+        self, session_id: str,
+        body: dict[str, Union[str, int]]
+    ):
+        """Update a session after receiving an access token response."""
+        values = ', '.join(f'{col}=:{name}' for col, name in {
+            'access_token': 'access_token',
+            'token_expiry': 'expires_in',
+            'refresh_token': 'refresh_token',
+            'logged_in': 'logged_in',
+            'user_id': 'user_id'
+        }.items())
+        query = f'UPDATE web_sessions SET {values} WHERE session_id=:sid'
+        body['sid'] = session_id
+        body['logged_in'] = time()
+        await self.cur.execute(query, body)
+
+    async def create_session(self) -> str:
+        """Generate a new session and return its ID."""
+        session_id = token_hex()
+        state = token_hex()
+        columns = '(session_id, auth_state)'
+        query = f'INSERT INTO web_sessions {columns} VALUES (?, ?)'
+        await self.cur.execute(query, (session_id, state))
+        return session_id
 
 db: Database = Database()
