@@ -1,9 +1,0 @@
-{
-	"hello": "Message sent by ;hello",
-	"hmmst": "hmmst",
-	"error": "Title of error embeds",
-	"description": "Description of the bot shown in ;info and ;help",
-	"help-cmds": "Transition paragraph between cogs and uncategorized commands",
-	"help-footer": "Footer of ;help",
-	",": "Comma separator"
-}
