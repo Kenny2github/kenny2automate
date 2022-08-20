@@ -1,6 +1,7 @@
 import os
 import re
 import json
+import random
 import functools
 import typing
 import asyncio
@@ -18,6 +19,10 @@ with open(os.path.join(
     os.path.dirname(i18ndir), 'kenny2automate', 'countrylangs.json'
 )) as f:
     LANGS = json.load(f)
+with open(os.path.join(
+    os.path.dirname(i18ndir), 'kenny2automate', 'user-agents.json'
+)) as f:
+    UAS = json.load(f)
 
 LANG = tuple(
     i[:-5]
@@ -147,7 +152,7 @@ class I18n(Cog):
         global db
         self.bot = bot
         self.deleters = deleters
-        self.trans = Translator()
+        self.trans = Translator(user_agent=random.choice(UAS))
         db = cur
 
         INDICATOR_RANGE = range(0x1f1e6, 0x1f1ff)
