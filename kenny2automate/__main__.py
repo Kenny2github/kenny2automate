@@ -680,7 +680,7 @@ async def update_if_changed():
         for f, mtime in WATCHED_FILES_MTIMES:
             if os.path.getmtime(f) > mtime:
                 if cmdargs.loop:
-                    os.system('/home/pi/discordapp restart')
+                    os.system('~/discordapp restart')
                 raise KeyboardInterrupt
         try:
             await asyncio.sleep(1)
