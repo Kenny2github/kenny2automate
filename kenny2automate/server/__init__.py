@@ -576,6 +576,9 @@ FROM guilds WHERE guild_id=?',
             param['ping'] = '|'.join(param.get('ping', ())) or None
             params.append(param)
         otherparams['guild_id'] = guild.id
+        if set(param['channel_id'] for param in params) \
+                - set(channel.id for channel in guild.channels): # is not empty
+            raise web.HTTPBadRequest
         try:
             with self.db.connection:
                 self.db.executemany(
