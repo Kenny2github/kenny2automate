@@ -30,6 +30,10 @@ LANG = tuple(
     if os.path.isfile(os.path.join(i18ndir, i))
 )
 
+def normlang(lang):
+    """Normalize a language code to googletrans format."""
+    return lang.replace('_', '-').lower()
+
 def lang(ctx):
     """Get a language for a context."""
     if hasattr(ctx, 'id'):
@@ -142,6 +146,7 @@ def embed(ctx, title=None, description=None, fields=None, footer=None, **kwargs)
 
 class Lang(Converter):
     async def convert(self, ctx, argument):
+        argument = normlang(argument)
         if argument not in LANGUAGES and argument != '*':
             raise BadArgument(i18n(ctx, 'i18n/invalid-lang', repr(argument)))
         return argument
@@ -170,7 +175,7 @@ class I18n(Cog):
                 + LETTERS[INDICATOR_RANGE.index(ord(emoji[1]))]
             erroridx = 0
             while 1:
-                lang = LANGS[code][erroridx]
+                lang = normlang(LANGS[code][erroridx])
                 if lang in LANGUAGES:
                     break
                 if '-' in lang:
